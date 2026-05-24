@@ -1,0 +1,10 @@
+gitlawb>=0.1
+openai>=1.0
+httpx>=0.27
+pydantic>=2.0
+pyyaml>=6.0
+rich>=13.0
+python-dotenv>=1.0
+tree-sitter>=0.22
+web-tree-sitter>=0.22
+jsonschema>=4.0
