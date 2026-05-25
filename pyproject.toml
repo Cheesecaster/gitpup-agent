@@ -1,21 +1,32 @@
 [project]
-name = "evo-garden"
+name = "gitpup-agent"
 version = "0.1.0"
-description = "A self-evolving coding agent with a joyful garden theme"
+description = "Golden Retriever AI Agent for gitlawb"
+readme = "README.md"
 requires-python = ">=3.11"
-
-dependencies = [
-    "openai>=1.30.0",
-    "pyyaml>=6.0",
-    "pydantic>=2.6.0",
-    "httpx>=0.27.0",
-    "aiohttp>=3.9.0",
-    "rich>=13.7.0",
-    "tree-sitter>=0.21.0",
+license = "MIT"
+authors = [{ name = "TomKet", email = "tomket@gitlawb" }]
+keywords = ["gitlawb", "ai-agent", "decentralized", "golden-retriever"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
 ]
 
-[project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+dependencies = [
+    "gitlawb>=0.1",
+    "openai>=1.0",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+    "python-dotenv>=1.0",
+    "tree-sitter>=0.22",
+    "jsonschema>=4.0",
+]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[project.scripts]
+gitpup = "src.main:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
