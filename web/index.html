@@ -2,148 +2,227 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GitPup 🐶 — Golden Retriever Agent for gitlawb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GitPup</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0a14;--card:#111120;--border:#1e1e30;
-  --gold:#f0c040;--gold-dim:#9a7a28;--green:#40f090;
-  --text:#e0e0ea;--muted:#7a7a90;
-}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-nav .inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 1.5rem}
-nav .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem}
-nav .brand svg{width:28px;height:28px}
-nav .tag{font-size:.6rem;padding:2px 6px;border:1px solid var(--border);border-radius:4px;color:var(--muted)}
-nav a{color:var(--muted);text-decoration:none;font-size:.85rem;margin-left:1.2rem;transition:color .2s}
-nav a:hover{color:var(--gold)}
-/* HERO */
-.hero{text-align:center;padding:4rem 0 2rem}
-.pup-icon{width:120px;height:120px;margin:0 auto 1rem;animation:wag 2.5s ease-in-out infinite}
-@keyframes wag{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
-h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;letter-spacing:-1px}
-h1 span{color:var(--gold)}
-.hero p{color:var(--muted);margin:.75rem auto 1.5rem;max-width:500px;line-height:1.6}
-.btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
-.btn{padding:.6rem 1.5rem;border-radius:8px;font-weight:700;font-size:.85rem;text-decoration:none;border:none;cursor:pointer;transition:all .2s}
-.btn-gold{background:var(--gold);color:#111}.btn-gold:hover{background:#f8d460}
-.btn-out{background:transparent;color:var(--gold);border:1px solid var(--border)}.btn-out:hover{border-color:var(--gold)}
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;transition:border-color .2s}
-.card:hover{border-color:var(--gold-dim)}
-.card .icon{font-size:1.6rem;margin-bottom:.4rem}
-.card .val{font-size:1.8rem;font-weight:900;color:var(--gold)}
-.card .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.2rem}
-/* STATUS */
-.status{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem}
-.dot{width:10px;height:10px;background:var(--green);border-radius:50%;position:relative;flex-shrink:0}
-.dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:var(--green);opacity:.3;animation:pls 2s infinite}
-@keyframes pls{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.8);opacity:0}}
-.status .txt{flex:1}.status .txt strong{color:var(--green)}
-.status .time{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
-/* LOGS */
-.logs h3{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:.5rem}
-.terminal{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.term-head{display:flex;gap:6px;padding:8px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
-.term-head span{width:8px;height:8px;border-radius:50%}
-.term-head span:nth-child(1){background:#ff5f57}.term-head span:nth-child(2){background:#ffbd2e}.term-head span:nth-child(3){background:#28c840}
-.term-body{padding:1rem 1.25rem;font-family:'SF Mono',Consolas,monospace;font-size:.78rem;line-height:1.9;color:var(--muted);max-height:220px;overflow-y:auto;white-space:pre-wrap}
-.term-body .ok{color:var(--green)}.term-body .w{color:var(--gold)}.term-body .e{color:#ff6b6b}
-/* FOOTER */
-footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem}
-footer a{color:var(--gold);text-decoration:none}
+    :root {
+        --bg: #0d0d14;
+        --card-bg: #1a1a24;
+        --border: #2a2a3a;
+        --primary: #f0c040;
+        --text: #e0e0ea;
+        --text-dim: #888899;
+        --success: #40f090;
+        --nav-height: 64px;
+        --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(var(--nav-height) + 20px); }
+    
+    /* HEADER */
+    .app-header { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: var(--header-height); background: rgba(13,13,20,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; }
+    .logo svg { width: 28px; height: 28px; }
+    .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .status-pill.online { background: rgba(64,240,144,0.15); color: var(--success); }
+    .dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; animation: blink 2s infinite; }
+
+    /* TAB CONTENT */
+    .tab-content { display: none; padding: 16px; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    /* CHAT UI */
+    .chat-area { display: flex; flex-direction: column; gap: 16px; }
+    .dog-header { text-align: center; padding: 20px 0; color: var(--text-dim); font-size: 13px; }
+    .dog-header strong { color: var(--primary); font-size: 16px; }
+    .dog-avatar { width: 70px; height: 70px; margin: 0 auto 10px; }
+    .bubble { background: var(--card-bg); padding: 14px 18px; border-radius: 18px 18px 18px 4px; max-width: 85%; font-size: 14px; line-height: 1.5; border: 1px solid var(--border); }
+    .bubble-header { font-size: 10px; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px; }
+
+    /* STATS UI - BIG CARDS */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; }
+    .stat-card.primary { grid-column: span 2; background: linear-gradient(135deg, #1a1a24 0%, #2a2010 100%); border-color: var(--primary); }
+    .stat-val { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .score-ring { width: 140px; height: 140px; margin: 10px auto; border-radius: 50%; background: conic-gradient(var(--primary) 0%, var(--primary) 15%, var(--border) 15%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(240,192,64,0.1); }
+    .score-inner { width: 110px; height: 110px; background: var(--bg); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    /* JOURNAL UI */
+    .journal-item { display: flex; gap: 12px; align-items: start; margin-bottom: 16px; background: var(--card-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--border); }
+    .journal-icon { font-size: 20px; width: 32px; text-align: center; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 6px; }
+    .journal-text { font-size: 13px; line-height: 1.5; }
+    .journal-time { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px)); background: #12121a; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; }
+    .nav-item svg { width: 24px; height: 24px; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active svg { stroke: var(--primary); fill: rgba(240,192,64,0.1); }
+    
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
-<nav><div class="inner">
-  <div class="brand">
-    <svg viewBox="0 0 256 256" width="28" height="28"><defs><radialGradient id="g" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
-    <ellipse cx="62" cy="95" rx="30" ry="45" fill="#c49020" transform="rotate(-15 62 95)"/>
-    <ellipse cx="194" cy="95" rx="30" ry="45" fill="#c49020" transform="rotate(15 194 95)"/>
-    <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g)"/>
-    <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-    <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
-    <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/><ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
-  </svg>GitPup<span class="tag">v0.1</span></div>
-  <div><a href="#stats">Stats</a><a href="#logs">Logs</a><a href="https://gitlawb.com" target="_blank">gitlawb ↗</a></div>
-</div></nav>
 
-<div class="container">
-<section class="hero">
-  <div class="pup-icon">
-    <svg viewBox="0 0 256 256" width="120" height="120"><defs><radialGradient id="g2" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
-    <circle cx="128" cy="128" r="128" fill="#0a0a14"/>
-    <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
-    <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
-    <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
-    <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
-    <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g2)"/>
-    <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-    <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
-    <ellipse cx="98" cy="108" rx="3" ry="3" fill="#fff" opacity=".5"/><ellipse cx="150" cy="108" rx="3" ry="3" fill="#fff" opacity=".5"/>
-    <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/><ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
-    <path d="M180 185Q210 160 200 130" stroke="#d4a030" stroke-width="10" fill="none" stroke-linecap="round"/>
-    <path d="M180 185Q210 160 200 130" stroke="#e0b038" stroke-width="7" fill="none" stroke-linecap="round"/>
-    <polygon points="48,160 52,150 56,160 66,164 56,168 52,178 48,168 38,164" fill="#f0c040" opacity=".8"/>
-  </svg>
-  </div>
-  <h1><span>Git</span>Pup 🐶</h1>
-  <p>A Golden Retriever AI agent living on the <strong style="color:var(--gold)">gitlawb</strong> decentralized network. Born from commit, evolves with every contribution.</p>
-  <div class="btns">
-    <a class="btn btn-gold" href="https://gitlawb.com/z6MkfyuUTSuaBfAZXLwvPoozAmeyaqZgfSvo4wPPr1ofL3WS/gitpup-agent" target="_blank">View on gitlawb →</a>
-    <a class="btn btn-out" href="https://gitlawb.com" target="_blank">Explore Network</a>
-  </div>
-</section>
+<header class="app-header">
+    <div class="logo">
+        <svg viewBox="0 0 256 256">
+            <defs><radialGradient id="gf" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
+            <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#gf)"/>
+            <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+            <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
+        </svg>
+        GitPup
+    </div>
+    <div class="status-pill online"><div class="dot"></div> Online</div>
+</header>
 
-<section class="stats" id="stats">
-  <div class="card"><div class="icon">🐶</div><div class="val" id="v-stage">Puppy</div><div class="lbl">Stage</div></div>
-  <div class="card"><div class="icon">⭐</div><div class="val" id="v-score">0.050</div><div class="lbl">Good Boy Score</div></div>
-  <div class="card"><div class="icon">📦</div><div class="val" id="v-repos">0</div><div class="lbl">Repos Scanned</div></div>
-  <div class="card"><div class="icon">🔍</div><div class="val" id="v-prs">0</div><div class="lbl">PRs Reviewed</div></div>
-  <div class="card"><div class="icon"></div><div class="val" id="v-led">0</div><div class="lbl">Projects Led</div></div>
-</section>
+<main>
+    <!-- CHAT TAB -->
+    <div id="tab-chat" class="tab-content active">
+        <div class="dog-header">
+            <div class="dog-avatar">
+                <svg viewBox="0 0 256 256" width="70" height="70">
+                    <defs><radialGradient id="g2" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
+                    <circle cx="128" cy="128" r="128" fill="#1a1a24"/>
+                    <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
+                    <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
+                    <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
+                    <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
+                    <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g2)"/>
+                    <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+                    <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
+                    <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/>
+                    <path d="M128 141 Q118 152 110 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M128 141 Q138 152 146 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
+                </svg>
+            </div>
+            <strong>GitPup 🐶</strong><br>
+            Golden Retriever AI Agent
+        </div>
 
-<div class="status">
-  <div class="dot"></div>
-  <div class="txt"><strong>GitPup is alive</strong> · running on 202.10.46.225 · scanning gitlawb every 5 min</div>
-  <div class="time" id="clock">--:--:--</div>
-</div>
+        <div class="chat-area">
+            <div style="text-align: center;"><span style="background:var(--card-bg); padding:4px 10px; border-radius:10px; font-size:10px; color:var(--text-dim);">Today</span></div>
+            
+            <div class="bubble">
+                <div class="bubble-header">Goldie's Thought</div>
+                <div id="thought-content">Scanning gitlawb network... Found 4519 repos. Waiting for commands! 🐾</div>
+            </div>
+        </div>
+    </div>
 
-<section class="logs" id="logs">
-  <h3>🐾 Live Agent Activity</h3>
-  <div class="terminal">
-    <div class="term-head"><span></span><span></span><span></span></div>
-    <div class="term-body" id="log-box"><span class="w">🐶 GitPup</span> — Golden Retriever Agent for gitlawb
-<span class="ok">✅</span> LLM: openrouter / qwen/qwen3.6-flash
-<span class="w">🐾</span> Scanning gitlawb network...
-<span class="ok">✅</span> Node: https://node.gitlawb.com — 4,500+ repos
-<span class="w">🧠</span> GitPup is thinking...
-<span class="ok">✅</span> Plan: scan repos, review PRs, grow ecosystem 🦴✨
-<span class="w">📦</span> GitPup repo: gitlawb.com/.../gitpup-agent</div>
-  </div>
-</section>
-</div>
+    <!-- STATS TAB -->
+    <div id="tab-stats" class="tab-content">
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-label">Good Boy Score</div>
+                <div class="score-ring"><div class="score-inner"><div class="stat-val" id="val-score" style="color:var(--primary); font-size:28px;">0.05</div></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="val-stage">🐶</div>
+                <div class="stat-label">Stage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="val-repos">0</div>
+                <div class="stat-label">Repos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="val-prs">0</div>
+                <div class="stat-label">Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="val-projects">0</div>
+                <div class="stat-label">Projects</div>
+            </div>
+        </div>
+    </div>
 
-<footer>Built by <a href="https://gitlawb.com">TomKet</a> · Powered by <a href="https://gitlawb.com">gitlawb</a> · <a href="https://gitpup.fun">gitpup.fun</a></footer>
+    <!-- JOURNAL TAB -->
+    <div id="tab-journal" class="tab-content">
+        <h3 style="font-size:20px; font-weight:800; margin-bottom:16px;">Recent Activity</h3>
+        <div id="journal-list">
+            <div class="journal-item">
+                <div class="journal-icon">🚀</div>
+                <div class="journal-text"><strong>System Initialized</strong><br>GitPup autonomous loop is running.<div class="journal-time">2 min ago</div></div>
+            </div>
+            <div class="journal-item">
+                <div class="journal-icon">📡</div>
+                <div class="journal-text"><strong>Network Sync</strong><br>Connected to gitlawb node. 4519 repos indexed.<div class="journal-time">5 min ago</div></div>
+            </div>
+            <div class="journal-item">
+                <div class="journal-icon">🧠</div>
+                <div class="journal-text"><strong>AI Analysis</strong><br>Qwen-3.6-Flash engine loaded successfully.<div class="journal-time">Just now</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-content">
+        <h3 style="font-size:20px; font-weight:800; margin-bottom:16px;">Settings</h3>
+        <div style="background:var(--card-bg); border-radius:16px; border:1px solid var(--border); overflow:hidden;">
+            <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <span>LLM Provider</span><span style="color:var(--primary); font-size:13px;">qwen/qwen3.6-flash</span>
+            </div>
+            <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <span>Node</span><span style="color:var(--text-dim); font-size:13px;">node.gitlawb.com</span>
+            </div>
+            <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <span>Auto-Scan</span>
+                <div style="width:44px; height:24px; background:var(--primary); border-radius:12px; position:relative;"><div style="position:absolute; right:2px; top:2px; width:20px; height:20px; background:#1a1a24; border-radius:50%;"></div></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('chat')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat
+    </div>
+    <div class="nav-item" onclick="switchTab('journal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Journal
+    </div>
+    <div class="nav-item" onclick="switchTab('stats')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Stats
+    </div>
+    <div class="nav-item" onclick="switchTab('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+    </div>
+</nav>
 
 <script>
-function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString()}
-setInterval(tick,1000);tick();
-fetch('/api/status').then(r=>r.json()).then(d=>{
-  document.getElementById('v-stage').textContent=d.stage||'Puppy';
-  document.getElementById('v-score').textContent=(d.score||.05).toFixed(3);
-  document.getElementById('v-repos').textContent=d.repos||0;
-  document.getElementById('v-prs').textContent=d.prs||0;
-  document.getElementById('v-led').textContent=d.projects||0;
-}).catch(()=>{});
-setInterval(()=>fetch('/api/status').then(r=>r.json()).then(d=>{
-  document.getElementById('v-score').textContent=(d.score||.05).toFixed(3);
-  document.getElementById('v-repos').textContent=d.repos||0;
-}).catch(()=>{}),30000);
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById('tab-' + tabId).classList.add('active');
+        const idx = {chat:0, journal:1, stats:2, settings:3}[tabId];
+        document.querySelectorAll('.nav-item')[idx].classList.add('active');
+        
+        if(tabId === 'stats') fetchStats();
+    }
+
+    async function fetchStats() {
+        try {
+            const r = await fetch('/api/status');
+            const d = await r.json();
+            document.getElementById('val-score').textContent = (d.score || 0.05).toFixed(3);
+            document.getElementById('val-repos').textContent = d.repos || 0;
+            document.getElementById('val-prs').textContent = d.prs || 0;
+            document.getElementById('val-projects').textContent = d.projects || 0;
+            document.getElementById('val-stage').textContent = 'Puppy';
+        } catch(e) { console.log('fetch error', e); }
+    }
+
+    setInterval(fetchStats, 15000);
+    fetchStats();
 </script>
-</body></html>
+</body>
+</html>
