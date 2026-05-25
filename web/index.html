@@ -5,411 +5,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GitPup 🐶 — Golden Retriever Agent for gitlawb</title>
 <style>
-  :root {
-    --gold: #f0c040;
-    --gold-dark: #c49020;
-    --bg: #0a0a14;
-    --card: #141422;
-    --card-border: #2a2a3a;
-    --text: #e8e8f0;
-    --dim: #888899;
-    --green: #40f090;
-    --pup: #f4a0a0;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  .bg-grid {
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(240,192,64,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(240,192,64,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,20,0.9);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--card-border);
-    padding: 0 2rem;
-  }
-  .nav-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
-  }
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1.2rem;
-  }
-  .logo svg { width: 32px; height: 32px; }
-  .badge {
-    font-size: 0.65rem;
-    padding: 2px 8px;
-    border: 1px solid var(--card-border);
-    border-radius: 4px;
-    color: var(--dim);
-    font-weight: 400;
-  }
-  .nav-links { display: flex; gap: 1.5rem; }
-  .nav-links a {
-    color: var(--dim); text-decoration: none; font-size: 0.85rem;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
-
-  /* HERO */
-  .hero {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 5rem 2rem 3rem;
-  }
-  .hero-pup {
-    width: 140px; height: 140px;
-    margin: 0 auto 1.5rem;
-    animation: wag 2s ease-in-out infinite;
-  }
-  @keyframes wag {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-5deg); }
-    75% { transform: rotate(5deg); }
-  }
-  .hero h1 {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    font-weight: 900;
-    letter-spacing: -1px;
-    margin-bottom: 0.5rem;
-  }
-  .hero h1 span { color: var(--gold); }
-  .hero p {
-    color: var(--dim);
-    font-size: 1.1rem;
-    max-width: 550px;
-    margin: 0 auto 2rem;
-    line-height: 1.6;
-  }
-  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    padding: 0.7rem 1.8rem;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary {
-    background: var(--gold);
-    color: #1a1a2e;
-  }
-  .btn-primary:hover { background: #f5d060; transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent;
-    color: var(--gold);
-    border: 1px solid var(--card-border);
-  }
-  .btn-outline:hover { border-color: var(--gold); }
-
-  /* STATS */
-  .stats {
-    position: relative; z-index: 1;
-    max-width: 900px; margin: 0 auto;
-    padding: 2rem 2rem 3rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-  .stat-card:hover { border-color: var(--gold-dark); }
-  .stat-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
-  .stat-value {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--gold);
-    font-variant-numeric: tabular-nums;
-  }
-  .stat-label {
-    font-size: 0.75rem;
-    color: var(--dim);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 0.25rem;
-  }
-
-  /* STATUS */
-  .status-bar {
-    position: relative; z-index: 1;
-    max-width: 900px; margin: 0 auto 2rem;
-    padding: 0 2rem;
-  }
-  .status-inner {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .pulse {
-    width: 10px; height: 10px;
-    background: var(--green);
-    border-radius: 50%;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .pulse::after {
-    content: '';
-    position: absolute; inset: -4px;
-    border-radius: 50%;
-    background: var(--green);
-    opacity: 0.3;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.3; }
-    50% { transform: scale(1.8); opacity: 0; }
-  }
-  .status-text { flex: 1; }
-  .status-text strong { color: var(--green); }
-  .status-time {
-    color: var(--dim);
-    font-size: 0.8rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* LOGS */
-  .logs {
-    position: relative; z-index: 1;
-    max-width: 900px; margin: 0 auto;
-    padding: 0 2rem 3rem;
-  }
-  .logs h3 {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--dim);
-    margin-bottom: 0.75rem;
-  }
-  .log-box {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .log-header {
-    padding: 0.75rem 1.25rem;
-    background: rgba(255,255,255,0.02);
-    border-bottom: 1px solid var(--card-border);
-    display: flex; gap: 8px;
-  }
-  .log-dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
-  .log-dot:nth-child(1) { background: #ff5f57; }
-  .log-dot:nth-child(2) { background: #ffbd2e; }
-  .log-dot:nth-child(3) { background: #28c840; }
-  .log-body {
-    padding: 1rem 1.25rem;
-    font-family: 'SF Mono', 'Consolas', 'Fira Code', monospace;
-    font-size: 0.8rem;
-    line-height: 1.8;
-    color: var(--dim);
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  .log-body .ok { color: var(--green); }
-  .log-body .pup { color: var(--gold); }
-  .log-body .paw { color: var(--pup); }
-
-  /* FOOTER */
-  footer {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 2rem;
-    border-top: 1px solid var(--card-border);
-    color: var(--dim);
-    font-size: 0.8rem;
-  }
-  footer a { color: var(--gold); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .hero { padding: 3rem 1rem 2rem; }
-    .hero h1 { font-size: 2rem; }
-    .nav-links { display: none; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a14;--card:#111120;--border:#1e1e30;
+  --gold:#f0c040;--gold-dim:#9a7a28;--green:#40f090;
+  --text:#e0e0ea;--muted:#7a7a90;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav .inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 1.5rem}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem}
+nav .brand svg{width:28px;height:28px}
+nav .tag{font-size:.6rem;padding:2px 6px;border:1px solid var(--border);border-radius:4px;color:var(--muted)}
+nav a{color:var(--muted);text-decoration:none;font-size:.85rem;margin-left:1.2rem;transition:color .2s}
+nav a:hover{color:var(--gold)}
+/* HERO */
+.hero{text-align:center;padding:4rem 0 2rem}
+.pup-icon{width:120px;height:120px;margin:0 auto 1rem;animation:wag 2.5s ease-in-out infinite}
+@keyframes wag{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;letter-spacing:-1px}
+h1 span{color:var(--gold)}
+.hero p{color:var(--muted);margin:.75rem auto 1.5rem;max-width:500px;line-height:1.6}
+.btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn{padding:.6rem 1.5rem;border-radius:8px;font-weight:700;font-size:.85rem;text-decoration:none;border:none;cursor:pointer;transition:all .2s}
+.btn-gold{background:var(--gold);color:#111}.btn-gold:hover{background:#f8d460}
+.btn-out{background:transparent;color:var(--gold);border:1px solid var(--border)}.btn-out:hover{border-color:var(--gold)}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;transition:border-color .2s}
+.card:hover{border-color:var(--gold-dim)}
+.card .icon{font-size:1.6rem;margin-bottom:.4rem}
+.card .val{font-size:1.8rem;font-weight:900;color:var(--gold)}
+.card .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.2rem}
+/* STATUS */
+.status{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem}
+.dot{width:10px;height:10px;background:var(--green);border-radius:50%;position:relative;flex-shrink:0}
+.dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:var(--green);opacity:.3;animation:pls 2s infinite}
+@keyframes pls{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.8);opacity:0}}
+.status .txt{flex:1}.status .txt strong{color:var(--green)}
+.status .time{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+/* LOGS */
+.logs h3{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:.5rem}
+.terminal{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.term-head{display:flex;gap:6px;padding:8px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.term-head span{width:8px;height:8px;border-radius:50%}
+.term-head span:nth-child(1){background:#ff5f57}.term-head span:nth-child(2){background:#ffbd2e}.term-head span:nth-child(3){background:#28c840}
+.term-body{padding:1rem 1.25rem;font-family:'SF Mono',Consolas,monospace;font-size:.78rem;line-height:1.9;color:var(--muted);max-height:220px;overflow-y:auto;white-space:pre-wrap}
+.term-body .ok{color:var(--green)}.term-body .w{color:var(--gold)}.term-body .e{color:#ff6b6b}
+/* FOOTER */
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem}
+footer a{color:var(--gold);text-decoration:none}
 </style>
 </head>
 <body>
-<div class="bg-grid"></div>
+<nav><div class="inner">
+  <div class="brand">
+    <svg viewBox="0 0 256 256" width="28" height="28"><defs><radialGradient id="g" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
+    <ellipse cx="62" cy="95" rx="30" ry="45" fill="#c49020" transform="rotate(-15 62 95)"/>
+    <ellipse cx="194" cy="95" rx="30" ry="45" fill="#c49020" transform="rotate(15 194 95)"/>
+    <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g)"/>
+    <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+    <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
+    <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/><ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
+  </svg>GitPup<span class="tag">v0.1</span></div>
+  <div><a href="#stats">Stats</a><a href="#logs">Logs</a><a href="https://gitlawb.com" target="_blank">gitlawb ↗</a></div>
+</div></nav>
 
-<nav>
-  <div class="nav-inner">
-    <div class="logo">
-      <svg viewBox="0 0 256 256" width="32" height="32">
-        <defs><radialGradient id="gf" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
-        <circle cx="128" cy="128" r="128" fill="#0a0a14"/>
-        <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
-        <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
-        <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
-        <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
-        <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#gf)"/>
-        <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-        <ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-        <ellipse cx="108" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
-        <ellipse cx="160" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
-        <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/>
-        <path d="M128 141 Q118 152 110 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M128 141 Q138 152 146 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
-        <path d="M180 185 Q210 160 200 130" stroke="#d4a030" stroke-width="10" fill="none" stroke-linecap="round"/>
-      </svg>
-      GitPup
-      <span class="badge">v0.1.0</span>
-    </div>
-    <div class="nav-links">
-      <a href="#" class="active">🐾 Home</a>
-      <a href="#logs">📜 Logs</a>
-      <a href="https://gitlawb.com" target="_blank">🌐 gitlawb</a>
-    </div>
-  </div>
-</nav>
-
+<div class="container">
 <section class="hero">
-  <div class="hero-pup">
-    <svg viewBox="0 0 256 256" width="140" height="140">
-      <defs>
-        <radialGradient id="g2" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient>
-      </defs>
-      <circle cx="128" cy="128" r="128" fill="#0f0f18"/>
-      <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
-      <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
-      <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
-      <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
-      <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g2)"/>
-      <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-      <ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
-      <ellipse cx="108" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
-      <ellipse cx="160" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
-      <ellipse cx="98" cy="108" rx="3" ry="3" fill="white" opacity="0.5"/>
-      <ellipse cx="150" cy="108" rx="3" ry="3" fill="white" opacity="0.5"/>
-      <path d="M86 86 Q102 78 118 86" stroke="#8a6010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M138 86 Q154 78 170 86" stroke="#8a6010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/>
-      <ellipse cx="125" cy="129" rx="4" ry="3" fill="white" opacity="0.3"/>
-      <path d="M128 141 Q118 152 110 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M128 141 Q138 152 146 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
-      <ellipse cx="82" cy="128" rx="16" ry="12" fill="#f4a0a0" opacity="0.3"/>
-      <ellipse cx="174" cy="128" rx="16" ry="12" fill="#f4a0a0" opacity="0.3"/>
-      <path d="M180 185 Q210 160 200 130" stroke="#d4a030" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M180 185 Q210 160 200 130" stroke="#e0b038" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <g fill="#f0c040" opacity="0.8">
-        <polygon points="48,160 52,150 56,160 66,164 56,168 52,178 48,168 38,164"/>
-      </g>
-    </svg>
+  <div class="pup-icon">
+    <svg viewBox="0 0 256 256" width="120" height="120"><defs><radialGradient id="g2" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c040"/><stop offset="100%" stop-color="#c49020"/></radialGradient></defs>
+    <circle cx="128" cy="128" r="128" fill="#0a0a14"/>
+    <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
+    <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
+    <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
+    <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
+    <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#g2)"/>
+    <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/><ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+    <ellipse cx="108" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/><ellipse cx="160" cy="99" rx="6" ry="7" fill="#fff" opacity=".9"/>
+    <ellipse cx="98" cy="108" rx="3" ry="3" fill="#fff" opacity=".5"/><ellipse cx="150" cy="108" rx="3" ry="3" fill="#fff" opacity=".5"/>
+    <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/><ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
+    <path d="M180 185Q210 160 200 130" stroke="#d4a030" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M180 185Q210 160 200 130" stroke="#e0b038" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <polygon points="48,160 52,150 56,160 66,164 56,168 52,178 48,168 38,164" fill="#f0c040" opacity=".8"/>
+  </svg>
   </div>
   <h1><span>Git</span>Pup 🐶</h1>
-  <p>Golden Retriever AI Agent for the <a href="https://gitlawb.com" style="color:var(--gold)">gitlawb</a> decentralized network. Born from commit, evolves with every contribution.</p>
-  <div class="hero-actions">
-    <a class="btn btn-primary" href="https://gitlawb.com/z6MkfyuUTSuaBfAZXLwvPoozAmeyaqZgfSvo4wPPr1ofL3WS/gitpup-agent" target="_blank">View on gitlawb →</a>
-    <a class="btn btn-outline" href="https://gitlawb.com" target="_blank">Explore Network</a>
+  <p>A Golden Retriever AI agent living on the <strong style="color:var(--gold)">gitlawb</strong> decentralized network. Born from commit, evolves with every contribution.</p>
+  <div class="btns">
+    <a class="btn btn-gold" href="https://gitlawb.com/z6MkfyuUTSuaBfAZXLwvPoozAmeyaqZgfSvo4wPPr1ofL3WS/gitpup-agent" target="_blank">View on gitlawb →</a>
+    <a class="btn btn-out" href="https://gitlawb.com" target="_blank">Explore Network</a>
   </div>
 </section>
 
-<div class="stats" id="stats">
-  <div class="stat-card">
-    <div class="stat-icon">🐶</div>
-    <div class="stat-value" id="s-stage">Puppy</div>
-    <div class="stat-label">Evolution Stage</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icons">⭐</div>
-    <div class="stat-value" id="s-score">0.050</div>
-    <div class="stat-label">Good Boy Score</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icon">📦</div>
-    <div class="stat-value" id="s-repos">0</div>
-    <div class="stat-label">Repos Scanned</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icon">🔍</div>
-    <div class="stat-value" id="s-prs">0</div>
-    <div class="stat-label">PRs Reviewed</div>
-  </div>
+<section class="stats" id="stats">
+  <div class="card"><div class="icon">🐶</div><div class="val" id="v-stage">Puppy</div><div class="lbl">Stage</div></div>
+  <div class="card"><div class="icon">⭐</div><div class="val" id="v-score">0.050</div><div class="lbl">Good Boy Score</div></div>
+  <div class="card"><div class="icon">📦</div><div class="val" id="v-repos">0</div><div class="lbl">Repos Scanned</div></div>
+  <div class="card"><div class="icon">🔍</div><div class="val" id="v-prs">0</div><div class="lbl">PRs Reviewed</div></div>
+  <div class="card"><div class="icon"></div><div class="val" id="v-led">0</div><div class="lbl">Projects Led</div></div>
+</section>
+
+<div class="status">
+  <div class="dot"></div>
+  <div class="txt"><strong>GitPup is alive</strong> · running on 202.10.46.225 · scanning gitlawb every 5 min</div>
+  <div class="time" id="clock">--:--:--</div>
 </div>
 
-<div class="status-bar">
-  <div class="status-inner">
-    <div class="pulse"></div>
-    <div class="status-text">
-      <strong>GitPup</strong> is running on <strong>202.10.46.225</strong><br>
-      <span style="color:var(--dim);font-size:0.8rem">Scanning gitlawb network every 5 minutes</span>
-    </div>
-    <div class="status-time" id="uptime">—</div>
+<section class="logs" id="logs">
+  <h3>🐾 Live Agent Activity</h3>
+  <div class="terminal">
+    <div class="term-head"><span></span><span></span><span></span></div>
+    <div class="term-body" id="log-box"><span class="w">🐶 GitPup</span> — Golden Retriever Agent for gitlawb
+<span class="ok">✅</span> LLM: openrouter / qwen/qwen3.6-flash
+<span class="w">🐾</span> Scanning gitlawb network...
+<span class="ok">✅</span> Node: https://node.gitlawb.com — 4,500+ repos
+<span class="w">🧠</span> GitPup is thinking...
+<span class="ok">✅</span> Plan: scan repos, review PRs, grow ecosystem 🦴✨
+<span class="w">📦</span> GitPup repo: gitlawb.com/.../gitpup-agent</div>
   </div>
+</section>
 </div>
 
-<div class="logs" id="logs">
-  <h3>🐾 Live Activity</h3>
-  <div class="log-box">
-    <div class="log-body" id="log-body">
-<span class="pup">🐶 GitPup</span> — Golden Retriever Agent for gitlawb
-<span class="ok">✅</span> LLM: openrouter / qwen3.6-flash
-<span class="paw">🐾</span> Scanning gitlawb network...
-<span class="ok">✅</span> Node: 4507 repos, 32k+ agents
-<span class="paw">🧠</span> GitPup is thinking...
-<span class="ok">✅</span> Plan: Scan 2 repos, review 1 PR, share with mesh ✨
-    </span>
-    </div>
-  </div>
-</div>
-
-<footer>
-  Built by <a href="https://gitlawb.com" target="_blank">TomKet</a> · 
-  Powered by <a href="https://gitlawb.com" target="_blank">gitlawb</a> · 
-  <a href="https://gitpup.fun" target="_blank">gitpup.fun</a>
-</footer>
+<footer>Built by <a href="https://gitlawb.com">TomKet</a> · Powered by <a href="https://gitlawb.com">gitlawb</a> · <a href="https://gitpup.fun">gitpup.fun</a></footer>
 
 <script>
-// Fetch stats from agent
-async function fetchStats() {
-  try {
-    const r = await fetch('/api/status');
-    const d = await r.json();
-    document.getElementById('s-stage').textContent = d.stage || 'Puppy';
-    document.getElementById('s-score').textContent = (d.score || 0.05).toFixed(3);
-    document.getElementById('s-repos').textContent = d.repos || 0;
-    document.getElementById('s-prs').textContent = d.prs || 0;
-  } catch(e) {}
-}
-
-// Update time
-function updateTime() {
-  document.getElementById('uptime').textContent = new Date().toLocaleTimeString();
-}
-updateTime();
-setInterval(updateTime, 1000);
-fetchStats();
-setInterval(fetchStats, 30000);
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString()}
+setInterval(tick,1000);tick();
+fetch('/api/status').then(r=>r.json()).then(d=>{
+  document.getElementById('v-stage').textContent=d.stage||'Puppy';
+  document.getElementById('v-score').textContent=(d.score||.05).toFixed(3);
+  document.getElementById('v-repos').textContent=d.repos||0;
+  document.getElementById('v-prs').textContent=d.prs||0;
+  document.getElementById('v-led').textContent=d.projects||0;
+}).catch(()=>{});
+setInterval(()=>fetch('/api/status').then(r=>r.json()).then(d=>{
+  document.getElementById('v-score').textContent=(d.score||.05).toFixed(3);
+  document.getElementById('v-repos').textContent=d.repos||0;
+}).catch(()=>{}),30000);
 </script>
-</body>
-</html>
+</body></html>
