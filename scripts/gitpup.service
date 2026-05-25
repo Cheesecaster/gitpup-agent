@@ -1,0 +1,22 @@
+[Unit]
+Description=GitPup — Golden Retriever AI Agent for gitlawb
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/gitpup/src
+Environment=HOME=/root
+Environment=PATH=/root/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=GITLAWB_NODE=https://node.gitlawb.com
+EnvironmentFile=/opt/gitpup/.env
+ExecStart=/opt/gitpup/.venv/bin/python3 /opt/gitpup/src/autonomous.py --interval 300
+Restart=always
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=gitpup
+
+[Install]
+WantedBy=multi-user.target
