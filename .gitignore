@@ -1,8 +1,20 @@
-node_modules/
+# Secrets (ABSOLUTE - never push to gitlawb)
 .env
+.env.*.local
 *.pem
+*.key
+*.secret
+credentials/
+secrets/
+.gitlawb/
+
+# Dependencies & build
+node_modules/
 .venv/
 __pycache__/
 .dist/
-.gitlawb/
+*.pyc
+
+# Runtime
 intermediate/
+tmp/
