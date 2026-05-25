@@ -1,0 +1,28 @@
+[Unit]
+Description=Evo Garden Web Dashboard
+After=network-online.target evo-garden.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=evogarden
+Group=evogarden
+WorkingDirectory=/opt/evo-garden
+Environment=PATH=/opt/evo-garden/.venv/bin:/usr/local/bin:/usr/bin
+Environment=EVO_HOST=127.0.0.1
+Environment=EVO_PORT=3000
+ExecStart=/opt/evo-garden/.venv/bin/python -m agent.web_server
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=evo-garden-web
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/evo-garden/data /opt/evo-garden/data/journal
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,29 @@
+[Unit]
+Description=Evo Garden Agent — Self-Evolving Coding Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=evogarden
+Group=evogarden
+WorkingDirectory=/opt/evo-garden
+Environment=PATH=/opt/evo-garden/.venv/bin:/usr/local/bin:/usr/bin
+Environment=LLM_API_KEY=
+Environment=EVO_HOST=0.0.0.0
+Environment=EVO_PORT=8080
+ExecStart=/opt/evo-garden/.venv/bin/python agent/main.py --daemon
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=evo-garden
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/evo-garden/data /opt/evo-garden/data/journal
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

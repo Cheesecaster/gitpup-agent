@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+
+# Config secrets
+config.yaml
+.env
+
+# Data
+data/*.tmp
+data/state/
+
+# Node
+web/node_modules/
+web/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Understand-Anything
+.understand-anything/
+
+# Agent runtime
+*.log
+data/runs/

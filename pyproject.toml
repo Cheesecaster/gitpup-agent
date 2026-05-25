@@ -1,0 +1,21 @@
+[project]
+name = "evo-garden"
+version = "0.1.0"
+description = "A self-evolving coding agent with a joyful garden theme"
+requires-python = ">=3.11"
+
+dependencies = [
+    "openai>=1.30.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.6.0",
+    "httpx>=0.27.0",
+    "aiohttp>=3.9.0",
+    "rich>=13.7.0",
+    "tree-sitter>=0.21.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
