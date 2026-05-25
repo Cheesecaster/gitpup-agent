@@ -1,1 +1,1 @@
-__init__.py
+"""GitPup Agent — Golden Retriever for gitlawb."""
