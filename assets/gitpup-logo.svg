@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Golden Retriever Puppy - GitPup Avatar -->
+  <!-- Background circle -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0a0a14"/>
+    </radialGradient>
+    <radialGradient id="fur" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" style="stop-color:#f0c040"/>
+      <stop offset="100%" style="stop-color:#c49020"/>
+    </radialGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#f4a0a0" stop-opacity="0.6"/>
+      <stop offset="100%" style="stop-color:#f4a0a0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Dark background -->
+  <circle cx="128" cy="128" r="128" fill="url(#bg)"/>
+
+  <!-- Ears (floppy golden retriever style) -->
+  <ellipse cx="62" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(-15 62 95)"/>
+  <ellipse cx="194" cy="95" rx="38" ry="55" fill="#c49020" transform="rotate(15 194 95)"/>
+  <ellipse cx="62" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(-15 62 95)"/>
+  <ellipse cx="194" cy="95" rx="30" ry="45" fill="#d4a030" transform="rotate(15 194 95)"/>
+
+  <!-- Head -->
+  <ellipse cx="128" cy="118" rx="72" ry="68" fill="url(#fur)"/>
+
+  <!-- Forehead fur tuft -->
+  <path d="M 110 58 Q 128 42 146 58" stroke="#b08018" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 118 62 Q 128 48 138 62" stroke="#e0b038" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Eyes (big, cute, puppy eyes) -->
+  <ellipse cx="102" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+  <ellipse cx="154" cy="105" rx="16" ry="18" fill="#1a1a2e"/>
+  <!-- Eye shine -->
+  <ellipse cx="108" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
+  <ellipse cx="160" cy="99" rx="6" ry="7" fill="white" opacity="0.9"/>
+  <ellipse cx="98" cy="108" rx="3" ry="3" fill="white" opacity="0.5"/>
+  <ellipse cx="150" cy="108" rx="3" ry="3" fill="white" opacity="0.5"/>
+
+  <!-- Eyebrows -->
+  <path d="M 86 86 Q 102 78 118 86" stroke="#8a6010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 138 86 Q 154 78 170 86" stroke="#8a6010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <ellipse cx="128" cy="132" rx="12" ry="9" fill="#1a1a2e"/>
+  <ellipse cx="125" cy="129" rx="4" ry="3" fill="white" opacity="0.3"/>
+
+  <!-- Mouth (happy puppy smile) -->
+  <path d="M 128 141 Q 118 152 110 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 128 141 Q 138 152 146 148" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Tongue -->
+  <ellipse cx="128" cy="152" rx="7" ry="9" fill="#f4a0a0"/>
+
+  <!-- Cheeks (blush) -->
+  <ellipse cx="82" cy="128" rx="16" ry="12" fill="url(#cheek)"/>
+  <ellipse cx="174" cy="128" rx="16" ry="12" fill="url(#cheek)"/>
+
+  <!-- Neck / chest fluff -->
+  <ellipse cx="128" cy="185" rx="55" ry="35" fill="url(#fur)"/>
+  <ellipse cx="128" cy="180" rx="45" ry="28" fill="#e0b038" opacity="0.4"/>
+
+  <!-- Paws (peeking at bottom) -->
+  <ellipse cx="100" cy="220" rx="18" ry="12" fill="#d4a030"/>
+  <ellipse cx="156" cy="220" rx="18" ry="12" fill="#d4a030"/>
+  <!-- Paw pads -->
+  <circle cx="95" cy="218" r="5" fill="#f4a0a0" opacity="0.5"/>
+  <circle cx="106" cy="218" r="5" fill="#f4a0a0" opacity="0.5"/>
+  <circle cx="150" cy="218" r="5" fill="#f4a0a0" opacity="0.5"/>
+  <circle cx="161" cy="218" r="5" fill="#f4a0a0" opacity="0.5"/>
+
+  <!-- Tail (wagging!) -->
+  <path d="M 180 185 Q 210 160 200 130" stroke="#d4a030" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M 180 185 Q 210 160 200 130" stroke="#e0b038" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+  <!-- Sparkle / star accent -->
+  <g fill="#f0c040" opacity="0.8">
+    <polygon points="48,160 52,150 56,160 66,164 56,168 52,178 48,168 38,164"/>
+  </g>
+  <g fill="#f0c040" opacity="0.6">
+    <polygon points="200,100 202,95 204,100 209,102 204,104 202,109 200,104 195,102"/>
+  </g>
+
+  <!-- GitPup text -->
+  <text x="128" y="250" font-family="Arial Black, sans-serif" font-size="16" font-weight="900" fill="#f0c040" text-anchor="middle" letter-spacing="3">GITPUP</text>
+</svg>
