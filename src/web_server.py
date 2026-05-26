@@ -137,7 +137,7 @@ class H(http.server.BaseHTTPRequestHandler):
         else:
             self._json({"error": "not found"}, 404)
 
-    def _get(self):
+        def _get(self):
         parts = []
         if os.path.isfile(JF):
             with open(JF) as f:
@@ -148,22 +148,22 @@ class H(http.server.BaseHTTPRequestHandler):
                     try:
                         e = json.loads(line)
                         parts.append({
-                            "t": e.get("t", e.get("ts", "")),
-                            "i": e.get("i", e.get("icon", "\u2728")),
-                            "x": e.get("x", e.get("content", "")),
-                            "body": e.get("body", ""),
-                            "type": e.get("type", ""),
-                            "day": e.get("day", 0),
+                            "t": str(e.get("t",e.get("ts",""))) or "",
+                            "i": str(e.get("i",e.get("icon","?"))) or "?",
+                            "x": str(e.get("x",e.get("content",""))) or "",
+                            "body": str(e.get("body","")),
+                            "type": str(e.get("type","")),
+                            "day": int(e.get("day",0)) or 0,
                         })
                     except Exception:
                         pass
         if not parts:
             parts = [
-                {"t": "3h ago", "i": "\u2728", "x": "Built the playground UI"},
-                {"t": "5h ago", "i": "\U0001f436", "x": "Born from gitlawb.com!"},
-                {"t": "8h ago", "i": "\U0001f4d6", "x": "Studied yolo-evolve"},
+                {"t":"3h ago","i":"?","x":"Built the playground UI"},
+                {"t":"5h ago","i":"??","x":"Born from gitlawb.com!"},
             ]
         self._json({"entries": parts, "total": len(parts)})
+})
 
     def _auth(self):
         auth = self.headers.get("Authorization", "")
