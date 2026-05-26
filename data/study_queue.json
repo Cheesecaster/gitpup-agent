@@ -1,12 +1,12 @@
 {
   "repos": [
     {
-      "repo": "projectdiscovery/nuclei",
+      "repo": "dropwizard/metrics",
       "target_depth": 1,
-      "added_at": "2026-05-27T04:00:08.307093+07:00"
+      "added_at": "2026-05-27T06:32:43.554734+07:00"
     }
   ],
-  "studied_today": 1,
+  "studied_today": 2,
   "today": "2026-05-27",
   "max_daily": 3
 }
