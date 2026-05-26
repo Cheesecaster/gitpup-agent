@@ -1,13 +1,47 @@
 {
-  "repos": {},
-  "topic_index": {},
+  "repos": {
+    "d3/d3": {
+      "full_name": "d3/d3",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-26 16:42"
+      ],
+      "summary": "Bring data to life with SVG, Canvas and HTML. :bar_chart::chart_with_upwards_trend::tada:",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "shell",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 112943,
+      "lang": "Shell",
+      "description": ""
+    }
+  },
+  "topic_index": {
+    "shell": {
+      "repos": [
+        "d3/d3"
+      ],
+      "description": ""
+    },
+    "open-source": {
+      "repos": [
+        "d3/d3"
+      ],
+      "description": ""
+    }
+  },
   "skill_index": {},
   "memory_summaries": [],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 0,
+    "total_repos_studied": 1,
     "total_patterns": 0,
     "total_insights": 0,
-    "last_study_date": ""
+    "last_study_date": "2026-05-26"
   }
 }
