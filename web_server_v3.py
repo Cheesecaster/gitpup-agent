@@ -59,17 +59,7 @@ class H(http.server.SimpleHTTPRequestHandler):
             _json_resp(self, load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle', 'day': 1}))
         elif p == '/api/journal':
             entries = load_jsonl(JF)[-50:]
-            # Enrich narrative entries with mood data
-            for e in entries:
-                if e.get('type') == 'narrative' and 'mood' in e:
-                    pass  # Already rich
-                elif e.get('type') == 'evolve':
-                    # Legacy entries — add default mood
-                    if 'mood' not in e:
-                        e['mood'] = 'neutral'
-                        e['mood_color'] = '#5a6080'
-                        e['mood_label'] = 'Activity'
-            _json_resp(self, {'entries': list(reversed(entries)), 'total': len(entries)})
+            _json_resp(self, {'entries': entries, 'total': len(entries)})
         elif p == '/api/kb':
             _json_resp(self, cp.kb_stats() if hasattr(cp, 'kb_stats') else {'repos': 0})
         elif p == '/api/repos':

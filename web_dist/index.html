@@ -14,10 +14,33 @@ body{display:flex;flex-direction:column}
 #nb{width:100%;max-width:600px;margin:0 auto;height:72px;background:rgba(6,10,24,.98);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;padding:0 6px}
 .st{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.5;animation:tw 3s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}
-.moon{position:absolute;top:14px;right:25px;width:36px;height:36px;background:radial-gradient(circle at 36% 36%,#fef3c7,#fde68a,#d4a017);border-radius:50%;box-shadow:0 0 30px rgba(253,203,110,.25)}
-.cld{position:absolute;background:rgba(255,255,255,.05);border-radius:50px;animation:df 24s linear infinite}
+.moon{position:absolute;top:20px;right:20px;width:40px;height:40px;background:radial-gradient(circle at 30% 30%,#fff,#fef3c7,#d4a017);border-radius:50%;box-shadow:0 0 40px rgba(253,203,110,.3)}
+
+.cld{position:absolute;background:rgba(255,255,255,.06);border-radius:50px;animation:float 35s linear infinite}
+.cld::before{content:'';position:absolute;background:inherit;border-radius:50%}
+.c1{width:60px;height:16px;top:30px;left:-60px;opacity:.8}
+.c1::before{width:24px;height:24px;top:-12px;left:10px}
+.c2{width:40px;height:12px;top:50px;left:-40px;opacity:.5;animation-delay:-15s;animation-duration:45s}
+.c2::before{width:16px;height:16px;top:-8px;left:5px}
+@keyframes float{0%{transform:translateX(0)}100%{transform:translateX(750px)}}
+
 @keyframes df{0%{transform:translateX(0)}100%{transform:translateX(660px)}}
-.grb{position:absolute;bottom:0;width:100%;height:48px;background:linear-gradient(0deg,#1a5035,#2a6a40 50%,#388548)}
+
+.grb{position:absolute;bottom:0;width:100%;height:40px;background:linear-gradient(0deg,#1e5535,#287045 40%,#308550)}
+
+/* Doghouse */
+.dh{position:absolute;bottom:32px;left:16px;width:40px;height:36px;background:#c0392b;border-radius:4px;z-index:1}
+.dh::before{content:'';position:absolute;top:-14px;left:-6px;width:52px;height:16px;background:#8b2010;border-radius:8px 8px 0 0}
+.dh::after{content:'';position:absolute;bottom:0;left:10px;width:20px;height:20px;background:#2a1510;border-radius:4px 4px 0 0}
+.dh span{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:6px;color:#fff;opacity:.5}
+
+/* Slide */
+.sl{position:absolute;bottom:32px;right:16px;width:46px;height:32px;z-index:1}
+.sl-pole{position:absolute;top:0;left:2px;width:3px;height:32px;background:#555;border-radius:2px}
+.sl-platform{position:absolute;top:0;right:0;width:14px;height:32px;background:#f39c12;border-radius:0 0 4px 0}
+.sl-board{position:absolute;top:6px;left:2px;width:34px;height:3px;background:#eee;border-radius:2px;transform:rotate(20deg);transform-origin:left bottom}
+.sl-tube{position:absolute;top:9px;left:0;width:32px;height:20px;background:linear-gradient(90deg,#fff,#e0e0e0,#d0d0d0);border-radius:20px;transform:rotate(20deg);transform-origin:left bottom;border:1px solid #ccc;background:rgba(255,255,255,.25)}
+
 #tb{position:absolute;top:7px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:6px;align-items:center}
 .sb1{background:rgba(8,12,24,.7);border:1px solid rgba(212,160,23,.2);border-radius:14px;padding:3px 10px;font-size:9px;color:#d4a017;white-space:nowrap}
 .sb2{background:rgba(8,12,24,.7);border:1px solid rgba(100,255,218,.12);border-radius:12px;padding:3px 8px;font-size:8px;color:#64ffda;white-space:nowrap}
@@ -105,24 +128,21 @@ body{display:flex;flex-direction:column}
   <div class="st" style="top:24px;left:55px"></div>
   <div class="st" style="top:3px;left:290px;animation-delay:.8s"></div>
   <div class="moon"></div>
-  <div class="cld" style="position:absolute;top:36px;left:-55px;width:55px;height:14px;background:rgba(255,255,255,.05);border-radius:50px;animation:df 24s linear infinite"></div>
-  <div class="cld" style="position:absolute;top:56px;left:-36px;width:36px;height:12px;background:rgba(255,255,255,.05);border-radius:50px;animation:df 30s linear infinite;animation-delay:-12s"></div>
-  <div id="tb"><span class="sb1" id="stg">Loading...</span><span class="sb2" id="sts">...</span></div>
+  <div class="cld c1"></div><div class="cld c2"></div>
+  <div class="dh"></div>
+  <div class="sl"><div class="sl-tube"></div><div class="sl-pole"></div><div class="sl-platform"></div></div>
   <div class="grb"></div>
-  <div class="gt2" style="left:8px"></div><div class="gt2" style="left:42px"></div><div class="gt2" style="left:90px"></div><div class="gt2" style="left:165px"></div><div class="gt2" style="left:260px"></div><div class="gt2" style="left:325px"></div><div class="gt2" style="left:390px"></div>
   <div id="gc"><div id="gs" class="idle"><div id="aind">🐾</div><div class="dog">
-    <div class="d-body"></div>
-    <div class="d-leg fl"></div><div class="d-leg fr"></div><div class="d-leg bl"></div><div class="d-leg br"></div>
-    <div class="d-tail"></div>
-    <div class="d-head">
       <div class="d-ear l"></div><div class="d-ear r"></div>
-      <div class="d-eye l"></div><div class="d-eye r"></div>
-      <div class="d-snout" style="position:absolute;bottom:3px;right:-2px;width:16px;height:12px;background:rgba(255,235,160,.3);border-radius:50%;z-index:1"></div>
-      <div class="d-nose"></div><div class="d-mouth"></div>
-    </div>
-  </div></div></div>
-</div>
-<div id="ct">
+      <div class="d-body"></div>
+      <div class="d-head">
+        <div class="d-eye l"></div><div class="d-eye r"></div>
+        <div class="d-snout"><div class="d-nose"></div><div class="d-mouth"></div></div>
+      </div>
+      <div class="d-leg fl"></div><div class="d-leg fr"></div><div class="d-leg bl"></div><div class="d-leg br"></div>
+      <div class="d-tail"></div>
+    </div></div></div>
+</div><div id="ct">
   <div id="jr"></div>
   <div id="cp2">
     <div class="cp2-h"><h3>💬 Chat with Goldie</h3><button class="cp2-x" id="cc">✕</button></div>
@@ -144,61 +164,62 @@ body{display:flex;flex-direction:column}
   <a class="nb" href="https://github.com" target="_blank"><span class="ic">🐙</span><span class="lb">GitHub</span></a>
 </nav>
 <script>
+function el(id){return document.getElementById(id)}
+function qa(sel){return document.querySelectorAll(sel)}
 (function(){
-  var $=function(s){return document.querySelector(s)}, $$=function(s){return document.querySelectorAll(s)};
   var GH_CLIENT_ID='Ov23liLMEsHCQUzsfIKX';
   var GH_REDIRECT='https://gitpup.fun/auth/callback';
-  var LD=$('#ld'),GS=$('#gs'),STG=$('#stg'),STS=$('#sts'),JR=$('#jr'),AIND=$('#aind');
-  var CP=$('#cp2'),CB=$('#cb2'),CI2=$('#chati'),CS2=$('#cssb'),CC=$('#cc'),LG=$('#lg'),LG_LINK=$('#lg-link');
+  var LD=el('ld'),GS=el('gs'),JR=el('jr'),AIND=el('aind');
+  var CP=el('cp2'),CB=el('cb2'),CI2=el('chati'),CS2=el('cssb'),CC=el('cc'),LG=el('lg'),LG_LINK=el('lg-link');
   var ghToken=localStorage.getItem('gp_gh_token');
   if(!ghToken){try{var u=JSON.parse(localStorage.getItem('gp_gh_user')||'{}');ghToken=u.token||null}catch(e){}}
   LG_LINK.onclick=function(){window.location.href='https://github.com/login/oauth/authorize?client_id='+encodeURIComponent(GH_CLIENT_ID)+'&redirect_uri='+encodeURIComponent(GH_REDIRECT)+'&scope=read:user'};
   if(ghToken){CS2.disabled=false}else{CS2.disabled=true}
   function showView(id){
-    $$('.nb').forEach(function(b){b.classList.remove('act')});
-    $$('.nb').forEach(function(b){if(b.dataset.a===id)b.classList.add('act')});
+    qa('.nb').forEach(function(b){b.classList.remove('act')});
+    qa('.nb').forEach(function(b){if(b.dataset.a===id)b.classList.add('act')});
     CP.classList.remove('open');LG.classList.remove('show');
     if(id==='jr'){JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading journal...</p>';loadJournal();}
     else{JR.style.display='';}
   }
   function viewJournal(){JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading journal...</p>';loadJournal()}
   function viewStats(){
+    CP.classList.remove('open');LG.classList.remove('show');JR.style.display='';
     JR.innerHTML='<div class="sr3"><span>Stage</span><span id="vst">Loading...</span></div><div class="sr3"><span>Score</span><span id="vsc">...</span></div><div class="sr3"><span>Runs</span><span id="vru">...</span></div><div class="sr3"><span>State</span><span id="vsta">...</span></div><div class="sr3"><span>LLM</span><span id="vllm">qwen/qwen3.6-flash</span></div><div class="sr3"><span>Day</span><span id="vday">...</span></div><div class="sr3"><span>Last Run</span><span id="vlr">...</span></div>';
     loadStatus();
   }
-  function viewActivity(){JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading...</p>';loadActivity()}
+  function viewActivity(){CP.classList.remove('open');LG.classList.remove('show');JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading...</p>';loadActivity()}
   function loadJournal(){
     fetch('/api/journal').then(function(r){return r.json()}).then(function(d){
-      if(d.entries&&d.entries.length>0){
-        JR.innerHTML=d.entries.slice().reverse().map(function(e){
-          var bodyHtml='';
-          if(e.body&&e.body.length>0&&e.body!==''){bodyHtml='<div class="ji-b">'+e.body+'</div>'}
-          return '<div class="ji"><div class="ji-t"><span class="ji-i">'+(e.i||'✨')+'</span><span>'+(e.t||'')+'</span></div><div class="ji-x">'+(e.x||'')+'</div>'+bodyHtml+'</div>';
+      var entries=d.entries||[];
+      if(entries.length>0){
+        JR.innerHTML=entries.map(function(e){
+          var isNarrative=e.type==='narrative';
+          var moodColor=e.mood_color||'#5a6080';
+          var moodLabel=e.mood_label||'';
+          var moodBadge=isNarrative?'<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;color:'+moodColor+';background:'+moodColor+'15;border:1px solid '+moodColor+'40;margin-left:8px">'+moodLabel+'</span>':'';
+          var titleStyle=isNarrative?'font-weight:700;color:#e8e8f0':'';
+          var cardStyle=isNarrative?'display:block;border-radius:10px;padding:14px;margin:6px 0;background:rgba(15,18,35,.6);border-left:3px solid '+moodColor+'40;':'';
+          var html='';
+          if(isNarrative){
+            html='<div style="'+cardStyle+'">'+'<div style="font-size:10px;color:#555;margin-bottom:4px">'+(e.t||'')+' · Day '+(e.day||'?')+'</div>'+'<div class="ji-t">'+'<span class="ji-i">'+(e.i||'\U0001f9d0')+'</span>'+'<span class="ji-x" style="'+titleStyle+'">'+formatNarrative((e.x||'').substring(0,60))+'</span>'+moodBadge+'</div>'+'<div style="font-size:12px;color:#b0b0c0;line-height:1.7;margin-top:8px">'+formatNarrative(e.body||'')+'</div>'+'</div>';
+          }else{
+            html='<div class="ji">'+'<div class="ji-t">'+'<span class="ji-i">'+(e.i||'\u2728')+'</span>'+'<span>'+(e.t||'')+'</span>'+'</div>'+'<div class="ji-x">'+(e.x||'')+'</div>';
+            if(e.body&&e.body.length>0){html+='<div class="ji-b">'+e.body+'</div>'}
+            html+='</div>';
+          }
+          return html;
         }).join('');
-      }else{JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">No entries yet — Goldie is still sleeping </p>'}
-    }).catch(function(){JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">Failed to load</p>'});
+      }else{JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">Goldie is still learning...</p>'}
+    }).catch(function(){JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">Failed</p>'});
   }
-  function loadStatus(){
-    fetch('/api/status').then(function(r){return r.json()}).then(function(d){
-      var s={'puppy':'🐶 Puppy','learner':'🐕 Learner','coder':'💻 Coder','builder':'🏗️ Builder','architect':'🏛️ Architect','master':'👑 Master'};
-      STG.textContent=d.stage||'puppy';
-      var el=$(' #vst');if(el)el.textContent=s[d.stage]||d.stage;
-      var el=$('#vsc');if(el)el.textContent=''+(d.score||0);
-      var el=$('#vru');if(el)el.textContent=''+(d.runs||0);
-      var el=$('#vsta');if(el)el.textContent=d.state||'idle';
-      var el=$('#vday');if(el)el.textContent=''+(d.day||1);
-        var el5=$('#vlr');
-        if(el5){
-            if(d.last_run && d.last_run > 0){
-                var dt=new Date(d.last_run*1000);
-                el5.textContent=dt.toLocaleTimeString();
-            }else{
-                el5.textContent='never';
-            }
-        }
-        var el5=$('#vlr');if(el5)el5.textContent=d.last_run?new Date(d.last_run*1000).toLocaleTimeString():'never';
-      STS.textContent=d.score?d.score.toFixed(2):'0.05';
-    }).catch(function(){});
+  function formatNarrative(text){
+    if(!text)return '';
+    text=text.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+    text=text.replace(/\*(.+?)\*/g,'<i>$1</i>');
+    text=text.replace(/`([^`]+)`/g,'<code style="background:rgba(212,160,23,.12);color:#d4a017;padding:1px 6px;border-radius:4px">$1</code>');
+    text=text.replace(/\n/g,'<br>');
+    return text;
   }
   function loadActivity(){
     fetch('/api/journal').then(function(r){return r.json()}).then(function(d){
@@ -224,7 +245,7 @@ body{display:flex;flex-direction:column}
     LG.classList.remove('show');JR.style.display='none';CP.classList.add('open');
     setTimeout(function(){CI2&&CI2.focus()},200);
   }
-  $$('.nb').forEach(function(b){
+  qa('.nb').forEach(function(b){
     b.onclick=function(e){
       var a=b.dataset.a;if(!a)return;
       if(a==='chat'){openChat();return}

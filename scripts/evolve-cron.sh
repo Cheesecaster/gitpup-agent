@@ -15,5 +15,6 @@ try:
         exit(0)
 except: pass" 2>/dev/null || true
 fi
-python3 agent.py --all --force >> data/evolve.log 2>&1
+python3 agent.py --force >> data/evolve.log 2>&1
 echo "[$NOW] Done" >> data/evolve.log
+
