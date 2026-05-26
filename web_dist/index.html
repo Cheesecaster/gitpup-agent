@@ -202,7 +202,7 @@ function qa(sel){return document.querySelectorAll(sel)}
           var cardStyle=isNarrative?'display:block;border-radius:10px;padding:14px;margin:6px 0;background:rgba(15,18,35,.6);border-left:3px solid '+moodColor+'40;':'';
           var html='';
           if(isNarrative){
-            html='<div style="'+cardStyle+'">'+'<div style="font-size:10px;color:#555;margin-bottom:4px">'+(e.t||'')+' · Day '+(e.day||'?')+'</div>'+'<div class="ji-t">'+'<span class="ji-i">'+(e.i||'\U0001f9d0')+'</span>'+'<span class="ji-x" style="'+titleStyle+'">'+formatNarrative((e.x||'').substring(0,60))+'</span>'+moodBadge+'</div>'+'<div style="font-size:12px;color:#b0b0c0;line-height:1.7;margin-top:8px">'+formatNarrative(e.body||'')+'</div>'+'</div>';
+            html='<div style="'+cardStyle+'">'+'<div style="font-size:10px;color:#555;margin-bottom:4px">'+(e.t||'')+' · Day '+(e.day||'?')+'</div>'+'<div class="ji-t">'+'<span class="ji-i">'+(e.i||'🧐')+'</span>'+'<span class="ji-x" style="'+titleStyle+'">'+formatNarrative((e.x||'').substring(0,60))+'</span>'+moodBadge+'</div>'+'<div style="font-size:12px;color:#b0b0c0;line-height:1.7;margin-top:8px">'+formatNarrative(e.body||'')+'</div>'+'</div>';
           }else{
             html='<div class="ji">'+'<div class="ji-t">'+'<span class="ji-i">'+(e.i||'\u2728')+'</span>'+'<span>'+(e.t||'')+'</span>'+'</div>'+'<div class="ji-x">'+(e.x||'')+'</div>';
             if(e.body&&e.body.length>0){html+='<div class="ji-b">'+e.body+'</div>'}
