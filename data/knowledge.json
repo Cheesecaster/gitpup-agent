@@ -2,14 +2,24 @@
   "repos": {
     "d3/d3": {
       "full_name": "d3/d3",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-05-26 16:42"
+        "2026-05-26 16:42",
+        "2026-05-26 16:43"
       ],
-      "summary": "Bring data to life with SVG, Canvas and HTML. :bar_chart::chart_with_upwards_trend::tada:",
-      "patterns": [],
+      "summary": "A free, open-source JavaScript library for creating dynamic, data-driven visualizations using a low-level, web-standards-based approach.",
+      "patterns": [
+        "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
+        "Modular, foundational design intended to be extended by higher-level chart libraries",
+        "Direct DOM manipulation paradigm enabling custom graphic authoring"
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "D3 has sustained significant adoption and community growth for over a decade",
+        "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
+        "It serves as a critical infrastructure layer powering many modern data visualization tools",
+        "The project maintains a robust ecosystem with dedicated documentation, examples, and community support channels"
+      ],
       "code_examples": [],
       "arch_topics": [
         "shell",
@@ -40,8 +50,8 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 1,
-    "total_patterns": 0,
-    "total_insights": 0,
+    "total_patterns": 3,
+    "total_insights": 4,
     "last_study_date": "2026-05-26"
   }
 }

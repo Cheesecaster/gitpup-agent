@@ -1,6 +1,12 @@
 {
-  "repos": [],
-  "studied_today": 1,
+  "repos": [
+    {
+      "repo": "d3/d3",
+      "target_depth": 2,
+      "added_at": "2026-05-26T16:43:00"
+    }
+  ],
+  "studied_today": 2,
   "today": "2026-05-26",
   "max_daily": 3
 }
