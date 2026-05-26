@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os, sys, json, time, subprocess, re
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone as tz
 from openai import OpenAI
 
 BASE = Path("/opt/gitpup")
@@ -21,7 +21,7 @@ def set_status(state, thought=""):
         json.dump({"state": state, "thought": thought, "time": time.time()}, f)
 
 def log_journal(day, phase, content, mood="neutral", learning="", quote=""):
-    entry = {"day":day,"ts":datetime.utcnow().isoformat(),"phase":phase,"content":content,"mood":mood,"learning":learning,"quote":quote}
+    entry = {"day":day,"ts":datetime.now(timezone.utc).isoformat(),"phase":phase,"content":content,"mood":mood,"learning":learning,"quote":quote}
     with open(JOURNAL / "entries.jsonl", "a") as f: f.write(json.dumps(entry) + "\n")
 
 def update_stats(**kwargs):
@@ -38,8 +38,8 @@ def calc_day():
         stats = json.loads(sf.read_text())
         if stats.get("day_start"):
             started = datetime.fromisoformat(stats["day_start"])
-            return (datetime.utcnow() - started.replace(tzinfo=timezone.utc)).days + 1
-    update_stats(day_start=datetime.utcnow().isoformat(), agent_started=datetime.utcnow().isoformat())
+            return (datetime.now(timezone.utc) - started.replace(tzinfo=timezone.utc)).days + 1
+    update_stats(day_start=datetime.now(timezone.utc).isoformat(), agent_started=datetime.now(timezone.utc).isoformat())
     return 1
 
 def scan_codebase():
