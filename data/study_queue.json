@@ -1,12 +1,12 @@
 {
   "repos": [
     {
-      "repo": "d3/d3",
-      "target_depth": 2,
-      "added_at": "2026-05-26T16:43:00"
+      "repo": "sansan0/TrendRadar",
+      "target_depth": 1,
+      "added_at": "2026-05-26T18:14:50.855380"
     }
   ],
-  "studied_today": 2,
+  "studied_today": 3,
   "today": "2026-05-26",
   "max_daily": 3
 }
