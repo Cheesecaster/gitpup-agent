@@ -2,30 +2,54 @@
   "repos": {
     "d3/d3": {
       "full_name": "d3/d3",
-      "study_level": 2,
+      "study_level": 4,
       "studied_at": [
         "2026-05-26 16:42",
-        "2026-05-26 16:43"
+        "2026-05-26 16:43",
+        "2026-05-26 19:28",
+        "2026-05-26 19:30"
       ],
       "summary": "A free, open-source JavaScript library for creating dynamic, data-driven visualizations using a low-level, web-standards-based approach.",
       "patterns": [
         "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
         "Modular, foundational design intended to be extended by higher-level chart libraries",
-        "Direct DOM manipulation paradigm enabling custom graphic authoring"
+        "Direct DOM manipulation paradigm enabling custom graphic authoring",
+        "Modular source organization in src/ with parallel test coverage in test/",
+        "Documentation-centric layout using docs/ and img/ for static content and visual examples",
+        "Interactive documentation powered by .vue components alongside .md and .js files",
+        "Configuration and metadata managed via .json files typical of modern JS toolchains",
+        "VitePress defineConfig for site configuration",
+        "Theme extension via base theme inheritance",
+        "Build-time data loading using .data.js/.data.ts files",
+        "Dynamic module execution via Observable Runtime",
+        "Graceful error handling with environment-aware fallbacks"
       ],
-      "best_practices": [],
+      "best_practices": [
+        "Fetch external data at build time to optimize runtime performance",
+        "Extend official base themes rather than implementing from scratch",
+        "Use try/catch with CI environment checks to prevent local build failures",
+        "Separate configuration, theme logic, and data fetching into distinct modules",
+        "Leverage TypeScript for type-safe documentation tooling"
+      ],
       "insights": [
         "D3 has sustained significant adoption and community growth for over a decade",
         "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
         "It serves as a critical infrastructure layer powering many modern data visualization tools",
-        "The project maintains a robust ecosystem with dedicated documentation, examples, and community support channels"
+        "The project maintains a robust ecosystem with dedicated documentation, examples, and community support channels",
+        "The mix of .vue, .js, and .md strongly indicates an interactive documentation site where code examples are rendered live for users.",
+        "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library.",
+        "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
+        "The documentation leverages VitePress's data plugin system for static site generation efficiency",
+        "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
+        "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
+        "Modular theme architecture supports easy customization and maintenance"
       ],
       "code_examples": [],
       "arch_topics": [
         "shell",
         "open-source"
       ],
-      "readme_insights": "",
+      "readme_insights": "Standard open-source library layout with clear separation between source code, tests, documentation, and assets. The project uses JavaScript as the core implementation language, supplemented by Markdown for static docs, Vue components for interactive examples, JSON for configuration, and PNG for visual assets.",
       "stars": 112943,
       "lang": "Shell",
       "description": ""
@@ -77,8 +101,8 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 2,
-    "total_patterns": 3,
-    "total_insights": 4,
+    "total_patterns": 12,
+    "total_insights": 11,
     "last_study_date": "2026-05-26"
   }
 }
