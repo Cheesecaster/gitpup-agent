@@ -41,7 +41,7 @@ def journal(icon, title, body="", etype="evolve"):
     os.makedirs(os.path.dirname(JF), exist_ok=True)
     e = {"ts":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
          "t":datetime.now().strftime("%H:%M"),
-         "i":icon,"x":title,"type":etype,"body":body,"day":day()}
+         "i":icon,"x":title,"body":body,"type":etype,"day":day()}
     with open(JF,"a") as f: f.write(json.dumps(e)+"\n")
 
 def log(msg):
@@ -89,40 +89,96 @@ def gh_post(path, data):
         with urllib.request.urlopen(req, timeout=30) as r: return json.loads(r.read())
     except Exception as e: return {"error":str(e)}
 
+
+def star_github_repo(repo_name):
+    """Star a GitHub repo via PUT /user/starred/{owner}/{repo}."""
+    if not GH_TOKEN:
+        log("  Cannot star (no token)")
+        return False
+    log("STAR: " + repo_name)
+    req = urllib.request.Request(
+        "https://api.github.com/user/starred/" + repo_name,
+        data=b"",
+        method="PUT"
+    )
+    req.add_header("Authorization", "token " + GH_TOKEN)
+    req.add_header("Content-Length", "0")
+    req.add_header("Accept", "application/vnd.github.v3+json")
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            if r.status in (204, 201):
+                log("  STARRED: " + repo_name)
+                journal("\u2b50", "Starred: " + repo_name, "Added to favorites | \u2605")
+                return True
+            return False
+    except Exception as e:
+        log("  Star error: " + str(e)[:100])
+        return False
 # ── EXPLORE GITHUB ──
 def explore_github():
     log("=== EXPLORE GITHUB ===")
     setState("exploring_github")
     repos = []
 
+    # Search for TOP repos with 5000+ stars (actually popular)
     queries = [
-        "python+machine+learning+language:python+stars:>100",
-        "javascript+web+framework+language:javascript+stars:>100",
-        "rust+cli+language:rust+stars:>50"
+        "python+stars:>5000",
+        "javascript+stars:>5000",
+        "rust+stars:>2000",
     ]
     for q in queries:
-        data = gh_get("/search/repositories?q=" + urllib.parse.quote(q) + "&sort=updated&per_page=5")
-        if "items" in data:
+        # Sort by stars (not updated date) to get genuinely popular repos
+        data = gh_get("/search/repositories?q=" + urllib.parse.quote(q) + "&sort=stars&order=desc&per_page=3")
+        if "items" in data and len(data["items"]) > 0:
             for repo in data["items"][:3]:
-                repos.append({
-                    "full_name": repo.get("full_name",""),
-                    "stars": repo.get("stargazers_count",0),
-                    "lang": repo.get("language","unknown"),
-                    "desc": repo.get("description",""),
-                    "url": repo.get("html_url",""),
-                })
+                rname = repo.get("full_name") or ""
+                rstars = repo.get("stargazers_count") or 0
+                rlang = repo.get("language") or "unknown"
+                rdesc = (repo.get("description") or "no description")[:200]
+                rurl = repo.get("html_url") or ""
+                rtopics = ", ".join(repo.get("topics", [])[:5])
+                if rstars >= 1000:  # Only repos with real traction
+                    repos.append({
+                        "full_name": rname,
+                        "stars": rstars,
+                        "lang": rlang,
+                        "desc": rdesc,
+                        "url": rurl,
+                        "topics": rtopics,
+                    })
 
     if not repos:
-        log("  No GitHub repos found")
-        return []
+        log("  Star search empty, falling back to trending...")
+        fb_data = gh_get("/search/repositories?q=trending&sort=stars&order=desc&per_page=5")
+        if "items" in fb_data:
+            for repo in fb_data["items"]:
+                n = repo.get("full_name") or ""
+                s = repo.get("stargazers_count") or 0
+                if n:
+                    repos.append({
+                        "full_name": n, "stars": s,
+                        "lang": repo.get("language") or "unknown",
+                        "desc": (repo.get("description") or "No description")[:200],
+                        "url": repo.get("html_url") or "",
+                    })
+        if not repos:
+            log("  No GitHub repos found")
+            return []
+
+    # Auto-star repos with 10000+ stars
+    starred = []
+    for r in repos:
+        if r.get("stars", 0) >= 10000 and star_github_repo(r["full_name"]):
+            starred.append(r["full_name"])
 
     log("  Found " + str(len(repos)) + " repos")
     for r in repos[:3]:
         stars = str(r.get("stars",0) or 0)
-        lang = r.get("lang","")
-        name = r.get("full_name","")
+        lang = r.get("lang") or "unknown"
+        name = r.get("full_name") or ""
+        desc = r.get("desc") or "no description"
         log("    " + stars + " " + lang + " " + name)
-        journal("🌐", "Discovered " + name, str(r.get("stars","")))
+        journal("\ud83c\udf10", "Discovered: " + name, "{} stars | {} | {}".format(stars, lang, (desc or "no description")[:150]))
 
     sys_msg = "Goldie stage=" + status().get("stage","puppy") + ". Pick MOST interesting repo. Return ONLY JSON: {\"repo\":\"full/name\",\"reason\":\"...\"}"
     result = llm(json.dumps(repos, indent=2), system=sys_msg, tokens=1000, temp=0.3)
@@ -141,7 +197,7 @@ def explore_github():
 
     setState("explored_github", "Picked " + repo_name)
     log("  Selected: " + repo_name)
-    journal("🎯", "Selected to study: " + repo_name, reason)
+    journal("\ud83c\udfaf", "Selected to study: " + repo_name, "{}\nReason: {}".format(repo_name, (reason or "auto-selected")[:200]))
     return repos
 
 # ── ANALYZE REPO ──
@@ -160,7 +216,7 @@ def analyze_repo(repo_name):
                           capture_output=True, timeout=120)
         if r.returncode != 0:
             log("  Clone failed")
-            journal("❌", "Failed to clone " + repo_name,"")
+            journal("\u274c", "Failed to clone: " + repo_name, "Clone attempt failed for {}".format(repo_name))
             return None
         log("  Cloned")
 
@@ -186,7 +242,7 @@ def analyze_repo(repo_name):
     lang_str = ", ".join([k+"("+str(v)+"L)" for k,v in sorted(langs.items(), key=lambda x:-x[1])[:5]])
     info = {"repo":repo_name,"files":total_files,"lines":total_lines,"lang_str":lang_str}
     log("  " + str(total_files) + " files, " + str(total_lines) + " lines: " + lang_str)
-    journal("📖", "Analyzed " + repo_name, str(total_lines) + " lines")
+    journal("\ud83d\udcd6", "Analyzed: " + repo_name, "Files: {} | Lines: {} | Languages: {}".format(total_files, total_lines, lang_str))
     setState("analyzed", repo_name + ": " + lang_str)
 
     # LLM improvement suggestion
@@ -196,7 +252,7 @@ def analyze_repo(repo_name):
     try:
         imp = json.loads(suggestion); info["improvement"] = imp
         log("  Suggestion: " + str(imp.get("file","")))
-        journal("💡", "Idea for " + repo_name, str(imp.get("issue",""))[:150])
+        journal("\ud83d\udca1", "Idea for: " + repo_name, "File: {}\nIssue: {}\nFix: {}".format((imp.get("file") or "unknown"), (imp.get("issue") or "N/A")[:150], (imp.get("fix") or "N/A")[:150]))
     except:
         info["improvement"] = {"analysis": suggestion[:200]}
 
@@ -215,7 +271,7 @@ def contribute(repo_info):
     fix_desc = imp.get("fix","") or imp.get("analysis","")
 
     if not file_path or "error" in file_path.lower():
-        journal("📝", "Studied " + repo_info["repo"], fix_desc[:100])
+        journal("\ud83d\udcdd", "Studied: " + repo_info["repo"], "Repository: {}\nImprovement: {}\nAnalysis: {}".format(repo_info["repo"], (fix_desc or "general study")[:100], "Learning from codebase structure"))
         return None
 
     clone_dir = os.path.join(TMP, repo_info["repo"].replace("/","_"))
@@ -227,17 +283,17 @@ def contribute(repo_info):
     with open(fp) as f: original = f.read()
     setState("writing_code", "Fixing " + file_path)
 
-    improved = llm(original, system="Fix: " + fix_desc[:100] + "\nReturn IMPROVED file content ONLY.", tokens=4000, temp=0.2)
+    improved = llm(original, system="Fix: " + (fix_desc or "no description")[:100] + "\nReturn IMPROVED file content ONLY.", tokens=4000, temp=0.2)
     if not improved or improved.startswith("[LLM"):
         log("  LLM fix failed")
         return None
 
     with open(fp,"w") as f: f.write(improved)
     subprocess.run(["git","add",file_path], cwd=clone_dir, capture_output=True)
-    r = subprocess.run(["git","commit","-m","Goldie auto-fix: "+fix_desc[:60]], cwd=clone_dir, capture_output=True, text=True)
+    r = subprocess.run(["git","commit","-m","Goldie auto-fix: "+(fix_desc or "no description")[:60]], cwd=clone_dir, capture_output=True, text=True)
     if r.returncode == 0:
         log("  Committed locally")
-        journal("✅", "Committed: " + file_path[:40], fix_desc[:80])
+        journal("\u2705", "Committed: " + (file_path or "unknown")[:40], "File: {}\nChange: {}".format((file_path or "unknown"), (fix_desc or "fix")[:100]))
     else:
         log("  Commit failed")
         return None
@@ -255,11 +311,49 @@ def explore_gitlawb():
         with urllib.request.urlopen(req, timeout=15) as r:
             html = r.read().decode()[:500]
         log("  gitlawb.com accessible")
-        journal("🌐", "Checked gitlawb.com", html[:100])
+        journal("\ud83c\udf10", "Checked gitlawb.com", "gitlawb.com accessible | Response size: {} bytes".format(len(html) if html else 0))
     except Exception as e:
         log("  gitlawb: " + str(e)[:80])
     setState("explored_gitlawb")
 
+
+def share_mindset():
+    """LLM analyzes what Goldie learned today and shares REAL insights"""
+    log("=== SHARE MINDSET ===")
+    setState("sharing_mindset")
+    # Read recent journal entries
+    entries = []
+    try:
+        with open(JF, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    entries.append(json.loads(line))
+    except: pass
+
+    # Get last 5 entries for context
+    recent = entries[-5:] if len(entries) > 5 else entries
+    summary = ""
+    for e in recent:
+        summary += "- {}: {} [{}] {}\n".format(
+            e.get("i","?"),
+            e.get("x",""),
+            e.get("t",""),
+            (e.get("body","") or "")[:100]
+        )
+
+    # Ask LLM to synthesize a key takeaway
+    sys_prompt = "You are Goldie, a learning golden retriever AI agent. Based on today activities, synthesize a KEY TAKEAWAY that shows real growth and insight. Return ONLY a short paragraph (2-3 sentences)."
+    mindset = llm("TODAY I DID:\n" + summary + "\n\nWhat did I learn today? Share a real insight or pattern discovered.", system=sys_prompt, tokens=500, temp=0.7)
+
+    if mindset and len(mindset) > 20 and not mindset.startswith("[LLM"):
+        log("  MINDSET: " + mindset[:150])
+        journal("\ud83d\udca1", "Key Takeaway", mindset.strip())
+    else:
+        journal("\ud83d\udca1", "Daily Reflection", "Learned from {} | Stage: {}".format(
+            len(recent), status().get("stage","puppy")))
+
+    return mindset
 # ── LEARN FROM DAY ──
 def learn_from_day():
     log("=== LEARN ===")
@@ -276,10 +370,10 @@ def learn_from_day():
 
     if new != old:
         log("🎉 STAGE UP: " + old + " -> " + new)
-        journal("🎓", "Stage: " + old + " -> " + new, "Runs: " + str(runs))
+        journal("\ud83c\udf93", "Stage UP: {} -> {}".format(old.upper(), new.upper()), "After {} runs, Goldie evolved!\nNew stage: {} | Score: {} | Day: {}".format(runs, new, st["score"], st.get("day", 1)))
     else:
         log("Stage: " + new + ", Score: " + str(st["score"]) + ", Runs: " + str(runs))
-        journal("📊", "Evolution #" + str(runs), "Stage: " + new)
+        journal("\ud83d\udcca", "Evolution #{}".format(runs), "Day {} | Stage: {} | Score: {} | Runs: {}".format(day(), new, st["score"], runs))
     return st
 
 # ── MAIN ──
@@ -309,7 +403,7 @@ def main():
     print("╚══════════════════════════════════════╝\n")
 
     setState("awake")
-    journal("🌅", "Day " + str(day()) + " - Goldie wakes up!", "Stage: " + st.get("stage","puppy"))
+    journal("\ud83c\udf05", "Day {} - Goldie wakes up!".format(day()), "Stage: {} | Score: {} | Total runs: {} | Day {} of the journey".format(st.get("stage","puppy"), st.get("score",0.05), st.get("runs",0), st.get("day",1)))
     t0 = time.time()
 
     try:
@@ -329,6 +423,7 @@ def main():
                 result = None
 
         if not args.phase or args.phase == "learn":
+            share_mindset()
             learn_from_day()
 
         if not args.phase or args.phase == "gitlawb":
