@@ -73,6 +73,26 @@
       "stars": 58385,
       "lang": "Python",
       "description": ""
+    },
+    "projectdiscovery/nuclei": {
+      "full_name": "projectdiscovery/nuclei",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-27 04:00"
+      ],
+      "summary": "Nuclei is a fast, customizable vulnerability scanner powered by the global security community and built on a simple YAML-based DSL, enabling collaboration to tackle trending vulnerabilities on the internet. It helps you find vulnerabilities in your applications, APIs, networks, DNS, and cloud config",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "go",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 28892,
+      "lang": "Go",
+      "description": ""
     }
   },
   "topic_index": {
@@ -85,7 +105,8 @@
     "open-source": {
       "repos": [
         "d3/d3",
-        "sansan0/TrendRadar"
+        "sansan0/TrendRadar",
+        "projectdiscovery/nuclei"
       ],
       "description": ""
     },
@@ -94,15 +115,21 @@
         "sansan0/TrendRadar"
       ],
       "description": ""
+    },
+    "go": {
+      "repos": [
+        "projectdiscovery/nuclei"
+      ],
+      "description": ""
     }
   },
   "skill_index": {},
   "memory_summaries": [],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 2,
+    "total_repos_studied": 3,
     "total_patterns": 12,
     "total_insights": 11,
-    "last_study_date": "2026-05-26"
+    "last_study_date": "2026-05-27"
   }
 }
