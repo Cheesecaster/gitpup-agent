@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GitPup Agent v7.5.1 — Self-Evolving AI Agent with Long-Term Knowledge Base
+"""GitPup Agent v7.6 — Self-Evolving AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
 Chat-ready: knowledge queryable via topic search."""
 import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
@@ -41,6 +41,11 @@ def _load_dot_env():
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 os.environ.setdefault(k.strip(), v.strip())
+    
+    required_keys = ["GITHUB_TOKEN", "OPENAI_API_KEY"]
+    missing = [key for key in required_keys if key not in os.environ]
+    if missing:
+        raise OSError(f"Missing required environment variables: {', '.join(missing)}")
 _load_dot_env()
 
 LLM_KEY = os.environ.get("LLM_API_KEY", "") or os.environ.get("OPENROUTER_API_KEY", "")
@@ -104,10 +109,7 @@ def journal(icon, title, body="", etype="evolve"):
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-def set_state(s):
-    st = status()
-    st["state"] = s
-    save(st)
+def set_state(s, action=None):
     st = status()
     st["state"] = s
     if action:
@@ -149,7 +151,15 @@ def do_llm(msg, system="", tokens=3000, temp=0.5):
     try:
         with urllib.request.urlopen(req, timeout=120) as r:
             resp = json.loads(r.read())
-            return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+            content = resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+            if content:
+                content = content.strip()
+                if content.startswith("```"):
+                    content = content.split("\n", 1)[1] if "\n" in content else ""
+                if content.endswith("```"):
+                    content = content.rsplit("\n", 1)[0] if "\n" in content else ""
+                content = content.strip()
+            return content
     except Exception as e:
         return "[LLM Error: " + str(e)[:100] + "]"
 
@@ -162,11 +172,24 @@ def gh_get(path):
     if GH_TOKEN:
         req.add_header("Authorization", "token " + GH_TOKEN)
     req.add_header("Accept", "application/vnd.github+json")
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read())
-    except Exception as e:
-        return {"error": str(e)}
+    
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read())
+        except Exception as e:
+            code = getattr(e, 'code', None)
+            if code == 429:
+                retry_after = int(getattr(e, 'headers', {}).get('Retry-After', 1))
+                time.sleep(retry_after)
+                continue
+            elif code == 401:
+                time.sleep(1)
+                continue
+            else:
+                return {"error": str(e)}
+    return {"error": "Max retries exceeded"}
 
 def gh_post(path, data):
     req = urllib.request.Request("https://api.github.com" + path,
@@ -1120,87 +1143,88 @@ def _apply_function_patch(filename, original_content, fix_description):
     new_content = None  # Set by either mode below
     
     if use_small_func_mode:
-        # Small function mode: ask for specific code to INSERT, not full rewrite
-        # Show the function in context of the surrounding file
-        all_lines = original_content.split('\n')
-        context_before = max(0, target['lineno'] - 6)
-        context_after = min(len(all_lines), target['end_lineno'] + 3)
-        
-        context_lines = all_lines[context_before:context_after]
-        
-        context_str = '\n'.join(['%3d: %s' % (context_before + i + 1, line) for i, line in enumerate(context_lines)])
+        # Small function mode: ask LLM to rewrite the complete function
+        # We use the same approach as standard mode but with different validation
+        # The key insight: even for small functions, we need the LLM to return
+        # the COMPLETE function, not just a patch
         
         small_func_prompt = (
-            "The file has a small function that needs a fix. Here's the CONTEXT around it "
-            "(including the lines before and after):\n\n"
-            "```\n"
+            "You need to fix a small Python function. Here's the COMPLETE function:\n\n"
+            "```python\n"
             "%s\n"
             "```\n\n"
-            "The function to fix is on lines %d to %d.\n\n"
-            "THE ISSUE: %s\n\n"
-            "I need you to return EXACTLY what code to INSERT and WHERE.\n"
-            "Return a JSON object like this (no markdown, no explanation):\n"
-            "{\"insert_after_line\": N, \"code_to_insert\": \"the code\", \"replace_line\": null or N}\n\n"
-            "Rules:\n"
-            "- If you want to ADD code after a specific line: set \"insert_after_line\" to the line NUMBER (not relative)\n"
-            "- If you want to REPLACE a specific line: set \"replace_line\" to that line number\n"
-            "- The \"code_to_insert\" should be properly indented for Python\n"
-            "- Line numbers must match the context shown above (left column numbers)" % (context_str, target['lineno'], target['end_lineno'], fix_description.get("issue", "")))
+            "THE ISSUE TO FIX: %s\n\n"
+            "Return the COMPLETE fixed function. It MUST:\n"
+            "1. Start with the `def` line (keep the same signature)\n"
+            "2. Include ALL the original logic\n"
+            "3. Include your fix\n"
+            "4. Have a REAL function body (no `pass`, no empty body)\n\n"
+            "Return ONLY the Python code, starting with `def`. No markdown, no explanation." % (
+                target['source'],
+                fix_description.get("issue", "")))
         
-        new_func_json = do_llm(small_func_prompt,
-            system="You return ONLY a JSON object with insert_after_line, code_to_insert, and optionally replace_line.",
-            tokens=1500, temp=0.2)
+        new_func = do_llm(small_func_prompt,
+            system="You fix Python functions. Return ONLY the complete fixed function, starting with 'def'. Must have a real body, not just 'pass'.",
+            tokens=2000, temp=0.2)
         
-        # Parse the JSON response
-        try:
-            json_str = new_func_json.strip()
-            if json_str.startswith("```"):
-                json_str = json_str.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
-            instructions = json.loads(json_str)
+        # Validate: LLM must return a function with a body
+        attempts = 0
+        max_attempts = 3
+        while attempts < max_attempts:
+            attempts += 1
             
-            insert_line = instructions.get("insert_after_line")
-            replace_line = instructions.get("replace_line")
-            code = instructions.get("code_to_insert", "")
+            if not new_func or len(new_func) < 40:
+                log("  Attempt {}: Response too short ({} chars), retrying".format(attempts, len(new_func or 0)))
+                new_func = do_llm("Rewrite this function with the fix. Return ONLY the function code starting with 'def':\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
+                    system="Return ONLY the Python function code with a real body.",
+                    tokens=2000, temp=0.3)
+                continue
             
-            if not code.strip():
-                log("  FAIL: empty code_to_insert")
-                return False, "Empty code", original_content
+            # Check if the response has a body (not just def + pass)
+            func_lines = new_func.strip().split('\n')
+            has_real_body = False
+            for line in func_lines[1:]:
+                stripped = line.strip()
+                if stripped and stripped != 'pass' and not stripped.startswith('#') and not stripped.startswith('"""'):
+                    has_real_body = True
+                    break
             
-            log("  Small func mode: insert_after={} replace={}".format(insert_line, replace_line))
-            log("  Code to insert: {} chars".format(len(code)))
-            
-            # Apply the instruction
-            file_lines = original_content.split('\n')
-            
-            if replace_line is not None:
-                idx = replace_line - 1
-                if 0 <= idx < len(file_lines):
-                    file_lines[idx] = code
-                    log("  Replaced line {}".format(replace_line))
-                else:
-                    return False, "Line out of range", original_content
-            
-            elif insert_line is not None:
-                idx = insert_line
-                if 0 <= idx <= len(file_lines):
-                    file_lines.insert(idx, code)
-                    log("  Inserted after line {}".format(insert_line))
-                else:
-                    return False, "Line out of range", original_content
+            if not has_real_body:
+                log("  Attempt {}: No real body, retrying".format(attempts + 1))
+                new_func = do_llm("The function must have REAL code inside, not just 'pass'. Return the complete function:\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
+                    system="Return ONLY the Python function with a REAL implementation.",
+                    tokens=2000, temp=0.4)
             else:
-                return False, "No line specified", original_content
-            
-            new_content = '\n'.join(file_lines)
-            
-        except json.JSONDecodeError as e:
-            log("  FAIL: invalid JSON response: {}".format(str(e)[:80]))
-            return False, "Invalid JSON", original_content
-        except Exception as e:
-            log("  FAIL: small func patch error: {}".format(str(e)[:80]))
-            return False, str(e), original_content
-    
+                break  # Good response
+        
+        if not new_func or len(new_func) < 40:
+            log("  FAIL: all retries exhausted")
+            return False, "LLM returned invalid function", original_content
+        
+        # Clean up the response
+        new_func = new_func.strip()
+        for wrapper in ["```python\n", "```\n", "```"]:
+            if new_func.startswith(wrapper):
+                new_func = new_func[len(wrapper):]
+        if new_func.endswith("```"):
+            new_func = new_func[:-3].rstrip()
+        
+        # Verify it starts with 'def'
+        lines = new_func.split('\n')
+        if not lines[0].strip().startswith('def '):
+            log("  FAIL: doesn't start with 'def', got: {}".format(lines[0][:50]))
+            return False, "Not a function definition", original_content
+        
+        # Replace the function in the file
+        file_lines = original_content.split('\n')
+        start_idx = target['lineno'] - 1
+        end_idx = target['end_lineno']
+        
+        new_lines = file_lines[:start_idx] + new_func.split('\n') + file_lines[end_idx:]
+        new_content = '\n'.join(new_lines)
+        
     else:
-        # Standard mode: full function rewrite for larger functions
+        # Standard mode: full function rewrite for larger functions (> 25 lines)
         func_sig = target['source'].split(':')[0] + ':'
 
         rewrite_prompt = (
