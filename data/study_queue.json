@@ -1,23 +1,26 @@
 {
   "repos": [
     {
-      "name": "harry0703/MoneyPrinterTurbo",
-      "stars": 0,
-      "lang": ""
+      "repo": "harry0703/MoneyPrinterTurbo",
+      "stars_today": 0,
+      "lang": "",
+      "target_depth": 1
     },
     {
-      "name": "Lum1104/Understand-Anything",
-      "stars": 0,
-      "lang": ""
+      "repo": "Lum1104/Understand-Anything",
+      "stars_today": 0,
+      "lang": "",
+      "target_depth": 1
     },
     {
-      "name": "hardikpandya/stop-slop",
-      "stars": 0,
-      "lang": ""
+      "repo": "hardikpandya/stop-slop",
+      "stars_today": 0,
+      "lang": "",
+      "target_depth": 1
     }
   ],
   "studied_today": 0,
-  "today": "2026-05-27",
+  "today": "2026-05-27 22:35:24",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [

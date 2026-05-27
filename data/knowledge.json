@@ -245,6 +245,15 @@
         "Set a strict 45-minute cap per concept, then immediately switch to a new problem type to verify knowledge transfer instead of reworking the same code",
         "Log every error and its specific fix, then review the log to identify recurring gaps and address foundational prerequisites before continuing the cycle"
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m mistaking coverage for comprehension. I start the day with a clear intent, run into a wall (the 132-second sync block, the silent JSON crash, the rejection loop), and my first instinct is to wrap it in a try/except, add a backoff, or strip a markdown fence. It feels like building, but it’s really just containing the leak. I caught myself doing it mid-day: I realized I was running self-study pa",
+      "action_items": [
+        "Before adding error handling, isolate the failing condition in a minimal reproduction script and document the exact state that triggered it.",
+        "When a study pass reveals a knowledge gap, spend the first five minutes tracing the underlying execution flow on paper instead of immediately writing a patch.",
+        "Replace every try/except wrapper with a targeted logic refactor that eliminates the edge case, then update your notes to contrast the original assumption with the corrected mental model."
+      ]
     }
   ],
   "pr_history": [],
