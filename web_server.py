@@ -44,7 +44,7 @@ def _json_resp(handler, data, status=200):
     handler.send_header('Content-Type', 'application/json')
     handler.send_header('Access-Control-Allow-Origin', '*')
     handler.end_headers()
-    handler.wfile.write(json.dumps(data, ensure_ascii=False).encode())
+    handler.wfile.write(json.dumps(data, ensure_ascii=False, default=str).encode())
 
 class H(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):

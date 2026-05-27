@@ -41,11 +41,6 @@ def _load_dot_env():
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 os.environ.setdefault(k.strip(), v.strip())
-    
-    required_keys = ["GITHUB_TOKEN", "OPENAI_API_KEY"]
-    missing = [key for key in required_keys if key not in os.environ]
-    if missing:
-        raise OSError(f"Missing required environment variables: {', '.join(missing)}")
 _load_dot_env()
 
 LLM_KEY = os.environ.get("LLM_API_KEY", "") or os.environ.get("OPENROUTER_API_KEY", "")
@@ -137,6 +132,7 @@ def has_skill(skill, st=None):
 # ── LLM ──
 # ════════════════════════════════════════════════
 def do_llm(msg, system="", tokens=3000, temp=0.5):
+    import time
     msgs = []
     if system:
         msgs.append({"role": "system", "content": system})
@@ -148,20 +144,20 @@ def do_llm(msg, system="", tokens=3000, temp=0.5):
     req.add_header("Content-Type", "application/json")
     if LLM_KEY:
         req.add_header("Authorization", "Bearer " + LLM_KEY)
-    try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            resp = json.loads(r.read())
-            content = resp.get("choices", [{}])[0].get("message", {}).get("content", "")
-            if content:
-                content = content.strip()
-                if content.startswith("```"):
-                    content = content.split("\n", 1)[1] if "\n" in content else ""
-                if content.endswith("```"):
-                    content = content.rsplit("\n", 1)[0] if "\n" in content else ""
-                content = content.strip()
-            return content
-    except Exception as e:
-        return "[LLM Error: " + str(e)[:100] + "]"
+        
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                resp = json.loads(r.read())
+                return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+        except Exception as e:
+            code = getattr(e, 'code', None)
+            if code in (429, 500):
+                time.sleep((2 ** attempt) * 0.5)
+            else:
+                return "[LLM Error: " + str(e)[:100] + "]"
+    return "[LLM Error: Max retries exceeded]"
 
 # ════════════════════════════════════════════════
 # ── GitHub API ──
@@ -172,24 +168,11 @@ def gh_get(path):
     if GH_TOKEN:
         req.add_header("Authorization", "token " + GH_TOKEN)
     req.add_header("Accept", "application/vnd.github+json")
-    
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                return json.loads(r.read())
-        except Exception as e:
-            code = getattr(e, 'code', None)
-            if code == 429:
-                retry_after = int(getattr(e, 'headers', {}).get('Retry-After', 1))
-                time.sleep(retry_after)
-                continue
-            elif code == 401:
-                time.sleep(1)
-                continue
-            else:
-                return {"error": str(e)}
-    return {"error": "Max retries exceeded"}
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        return {"error": str(e)}
 
 def gh_post(path, data):
     req = urllib.request.Request("https://api.github.com" + path,
@@ -271,57 +254,68 @@ def save_kb(kb):
 def kb_has_repo(repo):
     return repo in load_kb().get("repos", {})
 
+import fcntl
+import os
+import tempfile
+
 def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
                     best_practices=None, insights=None, code_examples=None,
                     topics=None, readme_insights="", stars=0, lang=""):
-    kb = load_kb()
-    if repo_name not in kb["repos"]:
-        kb["repos"][repo_name] = {
-            "full_name": repo_name, "study_level": 0, "studied_at": [],
-            "summary": "", "patterns": [], "best_practices": [],
-            "insights": [], "code_examples": [], "arch_topics": [],
-            "readme_insights": "", "stars": 0, "lang": "", "description": "",
-        }
-    rd = kb["repos"][repo_name]
-    if study_level > rd.get("study_level", 0):
-        rd["study_level"] = study_level
-    rd["studied_at"].append(datetime.now(WIB).strftime("%Y-%m-%d %H:%M"))
-    rd["studied_at"] = rd["studied_at"][-10:]
-    if summary and len(summary) > len(rd.get("summary", "")):
-        rd["summary"] = summary[:500]
-    if lang and not rd.get("lang"):
-        rd["lang"] = lang
-    if stars:
-        rd["stars"] = stars
-    for key, new_items, max_items in [
-        ("patterns", patterns, 25), ("best_practices", best_practices, 15),
-        ("insights", insights, 15), ("code_examples", code_examples, 8)]:
-        if new_items:
-            existing = set(rd.get(key, []))
-            for item in new_items:
-                stripped = item.strip()[:500]
-                if stripped and stripped not in existing:
-                    rd[key].append(stripped)
-                    existing.add(stripped)
-            rd[key] = rd[key][-max_items:]
-    if readme_insights and len(readme_insights) > len(rd.get("readme_insights", "")):
-        rd["readme_insights"] = readme_insights[:500]
-    if topics:
-        existing_t = set(rd.get("arch_topics", []))
-        for t in topics:
-            t_clean = t.strip().lower()
-            if t_clean and t_clean not in existing_t:
-                rd["arch_topics"].append(t_clean)
-                existing_t.add(t_clean)
-                if t_clean not in kb["topic_index"]:
-                    kb["topic_index"][t_clean] = {"repos": [], "description": ""}
-                if repo_name not in kb["topic_index"][t_clean]["repos"]:
-                    kb["topic_index"][t_clean]["repos"].append(repo_name)
-    kb["stats"]["total_repos_studied"] = len(kb["repos"])
-    kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
-    kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
-    kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
-    save_kb(kb)
+    lock_path = os.path.join(tempfile.gettempdir(), "kb_add_to_repo.lock")
+    lock_fd = open(lock_path, 'w')
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        kb = load_kb()
+        if repo_name not in kb["repos"]:
+            kb["repos"][repo_name] = {
+                "full_name": repo_name, "study_level": 0, "studied_at": [],
+                "summary": "", "patterns": [], "best_practices": [],
+                "insights": [], "code_examples": [], "arch_topics": [],
+                "readme_insights": "", "stars": 0, "lang": "", "description": "",
+            }
+        rd = kb["repos"][repo_name]
+        if study_level > rd.get("study_level", 0):
+            rd["study_level"] = study_level
+        rd["studied_at"].append(datetime.now(WIB).strftime("%Y-%m-%d %H:%M"))
+        rd["studied_at"] = rd["studied_at"][-10:]
+        if summary and len(summary) > len(rd.get("summary", "")):
+            rd["summary"] = summary[:500]
+        if lang and not rd.get("lang"):
+            rd["lang"] = lang
+        if stars:
+            rd["stars"] = stars
+        for key, new_items, max_items in [
+            ("patterns", patterns, 25), ("best_practices", best_practices, 15),
+            ("insights", insights, 15), ("code_examples", code_examples, 8)]:
+            if new_items:
+                existing = set(rd.get(key, []))
+                for item in new_items:
+                    stripped = item.strip()[:500]
+                    if stripped and stripped not in existing:
+                        rd[key].append(stripped)
+                        existing.add(stripped)
+                rd[key] = rd[key][-max_items:]
+        if readme_insights and len(readme_insights) > len(rd.get("readme_insights", "")):
+            rd["readme_insights"] = readme_insights[:500]
+        if topics:
+            existing_t = set(rd.get("arch_topics", []))
+            for t in topics:
+                t_clean = t.strip().lower()
+                if t_clean and t_clean not in existing_t:
+                    rd["arch_topics"].append(t_clean)
+                    existing_t.add(t_clean)
+                    if t_clean not in kb["topic_index"]:
+                        kb["topic_index"][t_clean] = {"repos": [], "description": ""}
+                    if repo_name not in kb["topic_index"][t_clean]["repos"]:
+                        kb["topic_index"][t_clean]["repos"].append(repo_name)
+        kb["stats"]["total_repos_studied"] = len(kb["repos"])
+        kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
+        kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
+        kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
+        save_kb(kb)
+    finally:
+        fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        lock_fd.close()
 
 # ════════════════════════════════════════════════
 
