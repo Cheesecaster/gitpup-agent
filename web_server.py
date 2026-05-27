@@ -124,55 +124,54 @@ def do_GET(self):
             self.send_response(404)
             self.end_headers()
 
-    def _handle_chat(self):
-        try:
-            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-        except (json.JSONDecodeError, ValueError):
-            return self._json_resp({'error': 'Invalid JSON'}, 400)
+def _handle_chat(self):
+    import concurrent.futures
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+    try:
+        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+    except (json.JSONDecodeError, ValueError):
+        return self._json_resp({'error': 'Invalid JSON'}, 400)
 
-        msg = body.get('message', '').strip()
-        if not msg:
-            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-            return
+    msg = body.get('message', '').strip()
+    if not msg:
+        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+        return
 
-        # Stats/kb query
-        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-            s = cp.kb_stats()
-            reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
-                s['total_repos'], s['total_patterns'], s['total_insights'])
-            reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
-            if s['repos']:
-                for r in s['repos'][:5]:
-                    reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
-            _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
-            return
+    # Stats/kb query
+    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+        s = cp.kb_stats()
+        reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
+            s['total_repos'], s['total_patterns'], s['total_insights'])
+        reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
+        if s['repos']:
+            for r in s['repos'][:5]:
+                reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
+        _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
+        return
 
-        intent = cp.detect_intent(msg)
+    intent = executor.submit(cp.detect_intent, msg).result()
 
-        if intent == 'build_request':
-            # Check if this is a confirm message
-            lower = msg.lower()
-            if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
-                # Check for pending proposal in conversation state
-                session_key = body.get('session', 'default')
-                if session_key in _pending_proposals:
-                    proposal = _pending_proposals.pop(session_key)
-                    result = cp.handle_build_confirm(msg, proposal)
-                    _json_resp(self, result)
-                    return
+    if intent == 'build_request':
+        lower = msg.lower()
+        if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
+            session_key = body.get('session', 'default')
+            if session_key in _pending_proposals:
+                proposal = _pending_proposals.pop(session_key)
+                result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
+                _json_resp(self, result)
+                return
 
-            # Generate proposal
-            result = cp.handle_build_proposal(msg)
-            if result['status'] == 'proposal':
-                _pending_proposals[msg[:50]] = result['data']
-            _json_resp(self, result)
+        result = executor.submit(cp.handle_build_proposal, msg).result()
+        if result['status'] == 'proposal':
+            _pending_proposals[msg[:50]] = result['data']
+        _json_resp(self, result)
 
-        elif intent == 'question':
-            result = cp.handle_question(msg)
-            _json_resp(self, result)
+    elif intent == 'question':
+        result = executor.submit(cp.handle_question, msg).result()
+        _json_resp(self, result)
 
-        else:
-            _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+    else:
+        _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
 
     def log_message(self, fmt, *args):
         pass

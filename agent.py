@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""GitPup Agent v7.0 — Self-Modifying AI Agent with Long-Term Knowledge Base
+"""GitPup Agent v7.4 — Self-Evolving AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
-Self-Modify: reads own code → gap analysis → apply fixes → verify → commit.
 Chat-ready: knowledge queryable via topic search."""
 import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
 from collections import Counter
@@ -1083,8 +1082,18 @@ def _apply_function_patch(filename, original_content, fix_description):
     
     log("  Found {} functions".format(len(functions)))
     
-    # Find target function
-    target = _find_target_function(functions, fix_description.get("issue", ""), fix_description.get("fix", ""))
+    # Find target function - prefer explicit function name from gap analysis
+    explicit_func = fix_description.get("function", "")
+    if explicit_func:
+        for func in functions:
+            if func['name'].lower() == explicit_func.lower():
+                log("  Using explicit function match: {}".format(explicit_func))
+                target = func
+                break
+    
+    # Fallback to keyword matching if explicit match failed
+    if target is None:
+        target = _find_target_function(functions, fix_description.get("issue", ""), fix_description.get("fix", ""))
     if not target:
         log("  FAIL: couldn't identify target function")
         # Log available functions for debugging
@@ -1094,31 +1103,87 @@ def _apply_function_patch(filename, original_content, fix_description):
     
     log("  Target: {}  (lines {}-{})".format(target['name'], target['lineno'], target['end_lineno']))
     
+    # Skip functions that are too short - LLM can't meaningfully "fix" them
+    func_lines = target['end_lineno'] - target['lineno'] + 1
+    if func_lines < 8:
+        log("  SKIP: function too small for function-level patching ({} lines)".format(func_lines))
+        return False, "Function too small ({} lines)".format(func_lines), original_content
+    
     # Ask LLM to rewrite the function
     # Use %s formatting to avoid issues with curly braces in Python code
+    func_sig = target['source'].split(':')[0] + ':'  # Just the def line
+    
+    # Build context showing what the function currently does
+    body_preview = target['source'].split(':', 1)[-1].strip()[:200]
+    
     rewrite_prompt = (
-        "I need to fix a bug in this Python function.\n\n"
-        "Current function (%d lines):\n```\n%s\n```\n\n"
-        "Issue: %s\n"
-        "Fix needed: %s\n\n"
-        "Rewrite this ENTIRE function with the fix applied.\n"
-        "Return ONLY the function code, nothing else.\n"
-        "Keep the same function signature (name and parameters).\n"
-        "Don't add extra functions or helper code.\n"
-        "Maintain the same indentation level (%d spaces)." % (
-            len(target['source'].split('\n')),
+        "You are fixing a Python function. The function currently looks like this:\n\n"
+        "```python\n"
+        "%s\n"
+        "```\n\n"
+        "THE FIX NEEDED: %s\n\n"
+        "CRITICAL: You MUST return the COMPLETE function, including:\n"
+        "1. The full function signature (def line)\n"
+        "2. ALL the existing logic\n"
+        "3. Your fix applied to the relevant part\n\n"
+        "DO NOT return just the function signature.\n"
+        "DO NOT return 'pass'.\n"
+        "DO NOT truncate the function.\n"
+        "Include every line of the original function, with your fix integrated.\n\n"
+        "Return ONLY the Python code, starting with 'def'. No markdown, no explanations." % (
             target['source'],
-            fix_description.get("issue", ""),
-            fix_description.get("fix", ""),
-            target['indent']))
+            fix_description.get("issue", "")))
 
     new_func = do_llm(rewrite_prompt,
-        system="You are a code fixer. Return ONLY the corrected function. No markdown, no explanations.",
+        system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
         tokens=3000, temp=0.1)
     
-    if not new_func or len(new_func) < 20:
-        log("  FAIL: LLM returned empty or too-short function")
-        return False, "LLM response too short", original_content
+    # Validate response length
+    if not new_func or len(new_func) < 50:
+        log("  FAIL: LLM returned empty or too-short response ({} chars)".format(len(new_func or "")))
+        return False, "LLM response too short ({} chars)".format(len(new_func or "")), original_content
+    
+    # Second attempt if response seems bad
+    attempts = 0
+    max_attempts = 2
+    while attempts < max_attempts:
+        attempts += 1
+        
+        # Check if the response has a def statement AND a body
+        has_def = False
+        has_body = False
+        lines = new_func.strip().split('\n')
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped.startswith('def ') or stripped.startswith('async def '):
+                has_def = True
+                # Check subsequent lines for body
+                for l2 in lines[i+1:]:
+                    if l2.strip() and not l2.strip().startswith('#'):
+                        has_body = True
+                        break
+                break
+        
+        if not has_def or not has_body:
+            # Try again with simpler prompt
+            log("  Attempt {}: Missing def({}) or body({}), retrying".format(attempts + 1, has_def, has_body))
+            if not has_def:
+                retry_prompt = "Rewrite this Python function with the fix. Return ONLY the function code:\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
+                    target['source'], fix_description.get("issue", ""))
+            else:
+                retry_prompt = "The function must have a body with actual code. Rewrite the ENTIRE function (def line + body):\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
+                    target['source'], fix_description.get("issue", ""))
+            new_func = do_llm(retry_prompt,
+                system="Return ONLY the Python function code, starting with 'def' and including the full body.",
+                tokens=3000, temp=0.2)
+            if not new_func or len(new_func) < 50:
+                return False, "LLM retry failed", original_content
+            # Update lines for the next iteration check
+            lines = new_func.strip().split('\n')
+        else:
+            # Good response - ensure we have the latest lines
+            new_func = '\n'.join(lines)
+            break  # Good response
     
     # Clean up the response
     new_func = new_func.strip()
@@ -1131,6 +1196,28 @@ def _apply_function_patch(filename, original_content, fix_description):
     
     # Normalize indentation to match original
     lines = new_func.split('\n')
+    # Validate the response has actual code (not just a function def)
+    if len(lines) < 3:
+        log("  FAIL: LLM returned too few lines ({})".format(len(lines)))
+        return False, "LLM response too short ({} lines)".format(len(lines)), original_content
+    
+    # Check that it starts with 'def'
+    if not lines[0].strip().startswith('def '):
+        # Maybe the LLM didn't include the def line - prepend it
+        log("  WARN: LLM response doesn't start with 'def', prepending signature")
+        lines = ['def {}{}'.format(target['name'], target['source'].split('(')[1].split(':')[0] + ':')] + lines
+    
+    # Check that the function has a body (at least one non-empty line after def)
+    has_body = False
+    for line in lines[1:]:
+        if line.strip() and not line.strip().startswith('#'):
+            has_body = True
+            break
+    
+    if not has_body:
+        log("  FAIL: LLM returned a function definition with no body")
+        return False, "Function has no body", original_content
+    
     # Find the minimum indentation of non-empty lines (excluding the def line)
     min_indent = None
     for line in lines[1:]:
@@ -1301,21 +1388,24 @@ Rules:
     raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
         tokens=2500, temp=0.2)
     
-    for _ in range(3):
-        try:
-            gaps = json.loads(raw)
-            if isinstance(gaps, list):
-                log("  Found {} gaps".format(len(gaps)))
-                for g in gaps:
-                    log("  [P{}] {}::{}: {}".format(g.get("priority", "?"), g.get("file", "?"), g.get("function", "?"), g.get("issue", "")[:80]))
-                return gaps
-            else:
-                log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
-                return []
-        except json.JSONDecodeError:
-            raw = re.sub(r'```json\s*|\s*```', '', raw)
-    log("  Gap analysis parse fail after retries")
-    return []
+    try:
+        # Strip markdown code blocks if present
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+        gaps = json.loads(raw)
+        if isinstance(gaps, list):
+            log("  Found {} gaps".format(len(gaps)))
+            for g in gaps:
+                log("  [P{}] {}::{}: {}".format(g.get("priority", "?"), g.get("file", "?"), g.get("function", "?"), g.get("issue", "")[:80]))
+            return gaps
+        else:
+            log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
+            return []
+    except Exception as e:
+        log("  Gap analysis parse fail: {}".format(str(e)[:80]))
+        log("  Raw (first 200): {}".format(raw[:200]))
+        return []
 
 def do_self_commit(msg):
     """Git commit to both GitHub and GitLawb remotes."""
