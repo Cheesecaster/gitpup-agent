@@ -163,16 +163,25 @@ def do_llm(msg, system="", tokens=3000, temp=0.5):
 # ── GitHub API ──
 # ════════════════════════════════════════════════
 def gh_get(path):
+    import time
     url = "https://api.github.com" + path
     req = urllib.request.Request(url)
     if GH_TOKEN:
         req.add_header("Authorization", "token " + GH_TOKEN)
     req.add_header("Accept", "application/vnd.github+json")
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read())
-    except Exception as e:
-        return {"error": str(e)}
+    for _ in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                if r.status in (403, 429):
+                    time.sleep(int(r.headers.get("Retry-After", 5)))
+                    continue
+                return json.loads(r.read())
+        except Exception as e:
+            if hasattr(e, 'code') and e.code in (403, 429):
+                time.sleep(int(getattr(e, 'headers', {}).get("Retry-After", 5)))
+                continue
+            return {"error": str(e)}
+    return {"error": "Rate limit exceeded"}
 
 def gh_post(path, data):
     req = urllib.request.Request("https://api.github.com" + path,
@@ -240,7 +249,7 @@ def load_kb():
                 if not kb.get("stats"):
                     kb["stats"] = default_kb()["stats"]
                 return kb
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             pass
     kb = default_kb()
     save_kb(kb)
