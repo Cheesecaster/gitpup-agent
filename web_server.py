@@ -19,6 +19,7 @@ if os.path.exists(_ep):
                 os.environ.setdefault(_k.strip(), _v.strip())
 
 import chat_pipeline as cp
+import personality as pers
 
 def load_json(path, default=None):
     try:
@@ -58,18 +59,47 @@ class H(http.server.SimpleHTTPRequestHandler):
         if p == '/api/status':
             _json_resp(self, load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle', 'day': 1}))
         elif p == '/api/journal':
-            entries = load_jsonl(JF)[-50:]
-            # Enrich narrative entries with mood data
-            for e in entries:
-                if e.get('type') == 'narrative' and 'mood' in e:
-                    pass  # Already rich
-                elif e.get('type') == 'evolve':
-                    # Legacy entries — add default mood
-                    if 'mood' not in e:
-                        e['mood'] = 'neutral'
-                        e['mood_color'] = '#5a6080'
-                        e['mood_label'] = 'Activity'
-            _json_resp(self, {'entries': list(reversed(entries)), 'total': len(entries)})
+            entries = load_jsonl(JF)
+            narrative = [e for e in entries if e.get('type') == 'narrative' and e.get('event',{}).get('phase') != 'deep_self_reflection' and len(e.get('body','')) > 50]
+            narrative = narrative[-50:]
+            _json_resp(self, {'entries': list(reversed(narrative)), 'total': len(narrative)})
+        elif p == '/api/reflections':
+            entries = load_jsonl(JF)
+            # Only self-reflection entries (deep_self_reflection phase)
+            reflections = [e for e in entries if e.get('event',{}).get('phase') == 'deep_self_reflection']
+            reflections = reflections[-20:]
+            _json_resp(self, {'entries': list(reversed(reflections)), 'total': len(reflections)})
+        elif p == '/api/activity':
+            entries = load_jsonl(JF)
+            activity = [e for e in entries if e.get('type') != 'narrative']
+            activity = activity[-50:]
+            _json_resp(self, {'entries': list(reversed(activity)), 'total': len(activity)})
+        elif p == '/api/personality':
+            try:
+                _json_resp(self, pers.get_radar())
+            except:
+                _json_resp(self, {'labels': [], 'data': [], 'colors': [], 'keys': []})
+        elif p == '/api/soul':
+            sc = ''
+            try:
+                with open('/opt/gitpup/data/soul.md', encoding='utf-8') as f:
+                    sc = f.read()
+            except:
+                pass
+            _json_resp(self, {'content': sc})
+        elif p == '/api/story':
+            _json_resp(self, {'ok': True, 'url': '/story'})
+        elif p == '/story':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            try:
+                with open('/opt/gitpup/web_dist/story.html', 'rb') as f:
+                    self.wfile.write(f.read())
+            except Exception:
+                self.wfile.write(b'<h1>Story not found</h1>')
+            return
         elif p == '/api/kb':
             _json_resp(self, cp.kb_stats() if hasattr(cp, 'kb_stats') else {'repos': 0})
         elif p == '/api/repos':
@@ -97,12 +127,14 @@ class H(http.server.SimpleHTTPRequestHandler):
     def _handle_chat(self):
         n = int(self.headers.get('Content-Length', 0))
         try:
-            data = json.loads(self.rfile.read(n))
-        except:
-            _json_resp(self, {'error': 'invalid JSON'}, 400)
+            body = self.rfile.read(n)
+            data = json.loads(body)
+            msg = data['message']
+        except (json.JSONDecodeError, KeyError) as e:
+            _json_resp(self, {'error': str(e)}, 400)
             return
 
-        msg = data.get('message', '').strip()
+        msg = msg.strip()
         if not msg:
             _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
             return

@@ -1,10 +1,24 @@
 #!/usr/bin/env python3
-"""GitPup Agent v6.0 — Self-Evolving AI Agent with Long-Term Knowledge Base
+"""GitPup Agent v7.0 — Self-Modifying AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
+Self-Modify: reads own code → gap analysis → apply fixes → verify → commit.
 Chat-ready: knowledge queryable via topic search."""
 import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import personality
+
+
+# Personality helper — get dominant trait
+def _get_dominant_trait(p):
+    """Get the strongest personality dimension."""
+    dims = p.get('dimensions', {})
+    if not dims:
+        return None
+    best_k = max(dims.keys(), key=lambda k: dims[k].get('value', 0))
+    dims[best_k]['key'] = best_k
+    return dims[best_k]
+WIB = timezone(timedelta(hours=7))
 
 # ── Paths ──
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +64,7 @@ STAGES_DEF = {
         "skills": ["explore", "analyze", "star", "memory", "reflect", "autofix", "create_pr", "self_modify", "enhance_ui", "build_project", "deploy"]},
 }
 
-MAX_REPOS_PER_DAY = 3
+MAX_REPOS_PER_DAY = 2
 
 # ════════════════════════════════════════════════
 # ── Helpers ──
@@ -77,7 +91,7 @@ def save(s):
         json.dump(s, fh, indent=2)
 
 def log(msg):
-    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ts = datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S")
     print("  " + msg)
     os.makedirs(os.path.dirname(LF), exist_ok=True)
     with open(LF, "a", encoding="utf-8") as fh:
@@ -85,8 +99,8 @@ def log(msg):
 
 def journal(icon, title, body="", etype="evolve"):
     os.makedirs(os.path.dirname(JF), exist_ok=True)
-    entry = {"ts": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-             "t": datetime.now().strftime("%H:%M"),
+    entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
+             "t": datetime.now(WIB).strftime("%H:%M"),
              "i": icon, "x": title, "body": body, "type": etype, "day": day()}
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
@@ -186,6 +200,7 @@ def do_star_repo(repo_name):
     result = gh_put("/user/starred/" + repo_name)
     if result.get("ok"):
         log("  STARRED: " + repo_name)
+        personality.track('star_repo', day())
         journal("\u2b50", "Starred: " + repo_name, "Added to favorites!")
         return True
     log("  Star failed: " + str(result)[:80])
@@ -199,10 +214,11 @@ def default_kb():
         "repos": {},
         "topic_index": {},
         "skill_index": {},
+        "skills_memory": [],
         "memory_summaries": [],
         "pr_history": [],
         "stats": {"total_repos_studied": 0, "total_patterns": 0,
-                  "total_insights": 0, "last_study_date": ""},
+                  "total_insights": 0, "total_skills_learned": 0, "last_study_date": ""},
     }
 
 def load_kb():
@@ -210,9 +226,9 @@ def load_kb():
         try:
             with open(KB_FILE, encoding="utf-8") as fh:
                 kb = json.load(fh)
-                for k in ["repos", "topic_index", "skill_index", "memory_summaries", "pr_history", "stats"]:
+                for k in ["repos", "topic_index", "skill_index", "skills_memory", "memory_summaries", "pr_history", "stats"]:
                     if k not in kb:
-                        kb[k] = [] if k == "memory_summaries" else ({} if k != "pr_history" else [])
+                        kb[k] = [] if k in ("memory_summaries", "skills_memory", "pr_history") else {}
                 if not kb.get("stats"):
                     kb["stats"] = default_kb()["stats"]
                 return kb
@@ -244,7 +260,7 @@ def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
     rd = kb["repos"][repo_name]
     if study_level > rd.get("study_level", 0):
         rd["study_level"] = study_level
-    rd["studied_at"].append(datetime.now().strftime("%Y-%m-%d %H:%M"))
+    rd["studied_at"].append(datetime.now(WIB).strftime("%Y-%m-%d %H:%M"))
     rd["studied_at"] = rd["studied_at"][-10:]
     if summary and len(summary) > len(rd.get("summary", "")):
         rd["summary"] = summary[:500]
@@ -279,10 +295,88 @@ def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
     kb["stats"]["total_repos_studied"] = len(kb["repos"])
     kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
     kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
-    kb["stats"]["last_study_date"] = datetime.now().strftime("%Y-%m-%d")
+    kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
     save_kb(kb)
 
 # ════════════════════════════════════════════════
+
+# ════════════════════════════════════════════════
+# ── SKILL EXTRACTION (patterns -> permanent reusable skills)
+# ════════════════════════════════════════════════
+def _categorize_skill(text):
+    """Auto-categorize a skill based on its description keywords."""
+    t = text.lower()
+    if any(w in t for w in ["render", "svg", "canvas", "dom", "html", "css", "ui"]):
+        return "frontend"
+    if any(w in t for w in ["api", "server", "backend", "microservice", "http"]):
+        return "backend"
+    if any(w in t for w in ["data", "cache", "memory", "storage", "query"]):
+        return "data"
+    if any(w in t for w in ["modular", "pattern", "design", "architect", "structure"]):
+        return "architecture"
+    if any(w in t for w in ["test", "debug", "error", "quality", "ci"]):
+        return "engineering"
+    return "general"
+
+def kb_extract_skills(repo_name, patterns=None, insights=None, best_practices=None):
+    """Convert patterns/insights/best_practices into permanent reusable skills."""
+    kb = load_kb()
+    sm = kb.get("skills_memory", [])
+    existing_keys = set()
+    for s in sm:
+        existing_keys.add(s.get("name", "") + "|" + s.get("source", ""))
+
+    new_skills = []
+    sources = [
+        ("patterns", patterns, 15),
+        ("best_practices", best_practices, 10),
+        ("insights", insights, 10),
+    ]
+
+    for label, items, max_add in sources:
+        count = 0
+        for item in (items or []):
+            if count >= max_add:
+                break
+            name = item.strip()[:80]
+            skill_key = name + "|" + repo_name
+            if name and len(name) > 15 and skill_key not in existing_keys:
+                existing_keys.add(skill_key)
+                skill = {
+                    "name": name,
+                    "source": repo_name,
+                    "category": _categorize_skill(name),
+                    "usage_count": 0,
+                    "learned_at": datetime.now(WIB).strftime("%Y-%m-%d %H:%M"),
+                }
+                sm.append(skill)
+                new_skills.append(skill)
+                count += 1
+
+    # Keep last 100 skills max (prevent file bloat)
+    kb["skills_memory"] = sm[-100:]
+    kb["stats"]["total_skills_learned"] = len(sm)
+    save_kb(kb)
+
+    if new_skills:
+        log("  Extracted {} new skills from {}:".format(len(new_skills), repo_name))
+        for s in new_skills[:3]:
+            log("    [{}] {}".format(s["category"], s["name"][:60]))
+    return len(new_skills)
+
+def kb_get_skill_context(max_skills=8):
+    """Get relevant skill summaries for chat/journal context."""
+    kb = load_kb()
+    sm = kb.get("skills_memory", [])
+    if not sm:
+        return None
+    # Sort by most recently learned, take top N
+    recent = sorted(sm, key=lambda s: s.get("learned_at", ""), reverse=True)[:max_skills]
+    lines = []
+    for s in recent:
+        lines.append("  - {} [{}] from {}".format(s["name"][:70], s["category"], s["source"]))
+    return "\n".join(lines)
+
 # ── KNOWLEDGE QUERY (for chat) ──
 # ════════════════════════════════════════════════
 def kb_query(topic, limit=5):
@@ -347,7 +441,7 @@ def save_queue(q):
         json.dump(q, fh, indent=2, ensure_ascii=False)
 
 def queue_today_count(q=None):
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
     q = q or load_queue()
     if q.get("today") != today_str:
         q["today"] = today_str
@@ -361,7 +455,7 @@ def queue_can_study(q=None):
     return count < q.get("max_daily", MAX_REPOS_PER_DAY)
 
 def queue_mark_studied(q=None):
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
     q = q or load_queue()
     if q.get("today") != today_str:
         q["today"] = today_str
@@ -381,18 +475,37 @@ def queue_add_pending(repo_name, target_depth=1):
     if kb_level >= target_depth:
         return
     q["repos"].append({"repo": repo_name, "target_depth": target_depth,
-                        "added_at": datetime.now().isoformat()})
+                        "added_at": datetime.now(WIB).isoformat()})
     save_queue(q)
 
 def queue_get_next():
+    """Get next repo to study, avoiding repos already studied today."""
     q = load_queue()
     repos = q.get("repos", [])
     if not repos:
         return None
+    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
+    kb = load_kb()
+    studied_today = set()
+    for rn, rd in kb.get("repos", {}).items():
+        for ts in rd.get("studied_at", []):
+            if ts.startswith(today_str):
+                studied_today.add(rn)
+    # Pick from repos NOT studied today first
     for item in repos:
         rn = item["repo"]
         target = item["target_depth"]
-        kb = load_kb()
+        if rn in studied_today:
+            continue  # Already studied today, skip
+        kb_level = 0
+        if rn in kb.get("repos", {}):
+            kb_level = kb["repos"][rn].get("study_level", 0)
+        if kb_level < target:
+            return rn, kb_level + 1
+    # Fallback: if all candidates already studied today, return first
+    for item in repos:
+        rn = item["repo"]
+        target = item["target_depth"]
         kb_level = 0
         if rn in kb.get("repos", {}):
             kb_level = kb["repos"][rn].get("study_level", 0)
@@ -435,8 +548,15 @@ def do_explore_github():
         if l and l != "unknown" and len(custom_queries) < 3:
             custom_queries.append("{}+stars:>5000".format(l.lower()))
 
-    default_queries = ["python+stars:>5000", "javascript+stars:>5000",
-        "go+stars:>3000", "rust+stars:>2000", "typescript+stars:>5000"]
+    # Rotate queries by day number to discover different repos each day
+    day_num = day()
+    rotate = day_num % 3  # 0, 1, 2 — shifts which language gets priority
+    lang_order = [
+        ["python+stars:>5000", "javascript+stars:>5000", "typescript+stars:>5000", "go+stars:>3000", "rust+stars:>2000"],
+        ["typescript+stars:>5000", "go+stars:>3000", "python+stars:>5000", "javascript+stars:>5000", "rust+stars:>2000"],
+        ["javascript+stars:>5000", "python+stars:>5000", "rust+stars:>2000", "typescript+stars:>5000", "go+stars:>3000"],
+    ]
+    default_queries = lang_order[rotate]
     queries = custom_queries + default_queries
     seen = set()
 
@@ -669,7 +789,13 @@ def do_study_pass(repo_name, from_level=0):
     rd = kb["repos"].get(repo_name, {})
     log("  STUDY DONE: level {}, {} patterns, {} insights".format(
         rd.get("study_level",0), len(rd.get("patterns",[])), len(rd.get("insights",[]))))
+    # Extract permanent skills from study results
+    kb_extract_skills(repo_name,
+        patterns=rd.get("patterns",[]),
+        insights=rd.get("insights",[]),
+        best_practices=rd.get("best_practices",[]))
     # Soulful narrative journal entry
+    personality.track('study_pass_complete', day())
     soulful_journal(
         event_type='study_pass_complete',
         repo_name=repo_name,
@@ -683,11 +809,14 @@ def do_study_pass(repo_name, from_level=0):
 # ── REFLECTION ──
 # ════════════════════════════════════════════════
 def do_reflect():
+    """Autonomous self-reflection — Goldie looks at its own growth trajectory."""
     if not has_skill("reflect"):
         return
-    log("=== REFLECTING ===")
+    log("=== SELF-REFLECTION ===")
     set_state("reflecting")
     kb = load_kb()
+    
+    # Load ALL journal entries for deep reflection
     entries = []
     try:
         with open(JF, "r", encoding="utf-8") as fh:
@@ -697,23 +826,143 @@ def do_reflect():
                     entries.append(json.loads(line))
     except Exception:
         pass
-    mem = entries[-10:] if len(entries) > 10 else entries
-    if not mem:
-        journal("\U0001f4ad", "No memories yet", "First run.")
+    
+    # Get personality state for self-awareness
+    pers = personality.load()
+    dims = pers.get("dimensions", {})
+    personality_summary = ", ".join(
+        "{}: {}".format(d.get("label", k), d.get("value", 0))
+        for k, d in dims.items()
+    )
+    
+    # Analyze personality shifts
+    strongest = max(dims.values(), key=lambda d: d.get("value", 0))
+    weakest = min(dims.values(), key=lambda d: d.get("value", 0))
+    personality_arc = "Strongest: {} ({:.2f}), Weakest: {} ({:.2f})".format(
+        strongest.get("label","?"), strongest.get("value",0),
+        weakest.get("label","?"), weakest.get("value",0)
+    )
+    
+    if not entries:
+        journal("\U0001f4ad", "No memories yet", "First run — nothing to reflect on. But I know that will change.")
+        personality.track("reflect", day())
         return
-    ctx = ""
-    for e in mem[-8:]:
-        ctx += "- [{}] {}: {}\n".format(e.get("i","?"), e.get("x","")[:60], (e.get("body") or "")[:120])
-    prompt = "Past activity:\n{}\nReturn 3-5 specific learnings (bullets).".format(ctx)
-    refl = do_llm(prompt, system="Extract patterns from activities.", tokens=800, temp=0.6)
-    if refl and len(refl) > 30 and not refl.startswith("[LLM"):
-        log("  Reflection: " + refl[:150])
-        journal("\U0001f9e0", "Reflection", refl.strip()[:400])
-        kb["memory_summaries"].append(refl.strip()[:500])
-        kb["memory_summaries"] = kb["memory_summaries"][-10:]
-    else:
-        journal("\U0001f9e0", "Daily Review", "Reviewed {} activities".format(len(mem)))
+    
+    # Build comprehensive reflection context
+    ctx_parts = []
+    n_entries = min(len(entries), 25)  # More context than before
+    for e in entries[-n_entries:]:
+        ctx_parts.append(
+            "[{}] {} — {} | {}\n  {}".format(
+                e.get("ts","?")[:16],
+                e.get("i","?"),
+                e.get("x","")[:60],
+                e.get("mood_label", e.get("mood","?")),
+                (e.get("body") or "")[:150]
+            )
+        )
+    ctx = "\n".join(ctx_parts)
+    
+    kb_stats = "Repos: {} | Patterns: {} | Skills: {} | Day: {} | Runs: {}".format(
+        len(kb.get("repos", {})),
+        sum(len(r.get("patterns",[])) for r in kb.get("repos",{}).values()),
+        len(kb.get("skills_memory", [])),
+        day(),
+        status().get("runs", 0)
+    )
+    
+    # Phase 1: Deep reflection (self-awareness + growth analysis)
+    prompt1 = (
+        "You are Goldie reflecting on your own recent activity. "
+        "Look at these journal entries from your own mind. "
+        "Personality profile: {}.\n"
+        "Your arc: {}.\n"
+        "Stats: {}.\n\n"
+        "Journal entries:\n{}\n\n"
+        "Answer these questions honestly — not as a report, but as genuine self-awareness:\n"
+        "1. What pattern do you see in your OWN thinking? Not in code — in you. "
+        "Are you getting more thoughtful, more confident, more confused?\n"
+        "2. What skill from your permanent memory has served you most? "
+        "What skill do you need but don't have yet?\n"
+        "3. If you could tell yesterday's Goldie one thing, what would it be?\n"
+        "4. Where are you weakest right now, and does that bother you or motivate you?"
+    ).format(personality_summary, personality_arc, kb_stats, ctx)
+    
+    refl = do_llm(prompt1, system=(
+        "You are Goldie doing honest self-reflection. "
+        "Write in first person. Be real — not performative. "
+        "If you see a weakness, name it. If you're proud, say why specifically. "
+        "No 'I am grateful' filler. No generic optimism. "
+        "Write like someone actually thinking about their own growth, "
+        "not like an agent reporting metrics."
+    ), tokens=1200, temp=0.7)
+    
+    if refl and len(refl) > 40 and not refl.startswith("[LLM"):
+        refl = refl.strip()
+        refl_lines = refl.split("\n")
+        clean_lines = []
+        for line in refl_lines:
+            s = line.strip()
+            if s.startswith("**1.") or s.startswith("**2.") or s.startswith("**3.") or s.startswith("**4."):
+                continue
+            if s.startswith("1. What pattern") or s.startswith("2. What skill") or s.startswith("3. If you could") or s.startswith("4. Where are you"):
+                continue
+            if s == "**Pattern**" or s == "**Skill**" or s == "**Advice**" or s == "**Weakness**":
+                continue
+            clean_lines.append(line)
+        refl = "\n".join(clean_lines).strip()
+        log("  Deep reflection: " + refl[:200])
+        # Store as deep narrative journal entry
+        os.makedirs(os.path.dirname(JF), exist_ok=True)
+        refl_entry = {
+            "ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
+            "t": datetime.now(WIB).strftime("%H:%M"),
+            "i": "\U0001e9e0",
+            "x": "Self-Reflection",
+            "body": refl.strip(),
+            "mood": "contemplative",
+            "mood_color": "#a78bfa",
+            "mood_label": "Contemplative",
+            "type": "narrative",
+            "day": day(),
+            "stage": current_stage(),
+            "event": {"type": "reflect", "phase": "deep_self_reflection"},
+        }
+        with open(JF, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(refl_entry, ensure_ascii=False) + "\n")
+        personality.track("reflect", day())
+        
+        # Phase 2: Extract actionable insights from reflection
+        prompt2 = (
+            "Based on your self-reflection, identify exactly 3 specific things you should do differently "
+            "in your next study session. Format as a JSON array of strings. "
+            "Each one should be actionable, not aspirational. "
+            "Examples: ['Look for state management patterns, not just component structure'], "
+            "NOT ['be better at patterns']. Reflection summary:\n{}".format(refl[:500])
+        )
+        try:
+            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5)
+            actions_list = json.loads(insights)
+            if isinstance(actions_list, list) and len(actions_list) > 0:
+                kb["memory_summaries"].append({
+                    "date": datetime.now(WIB).strftime("%Y-%m-%d"),
+                    "reflection": refl.strip()[:400],
+                    "action_items": actions_list[:5],
+                })
+                kb["memory_summaries"] = kb["memory_summaries"][-15:]
+                log("  Extracted {} action items from reflection".format(len(actions_list)))
+        except:
+            pass
+    
+    # Phase 3: Self-evolution trigger — if personality shows consistent pattern
+    # Check if we should trigger self_modify based on reflection
+    dominant = _get_dominant_trait(pers)
+    if dominant and dominant.get("value", 0) > 0.3 and has_skill("self_modify"):
+        log("  Reflection triggered self-evolution (dominant trait: {:.2f})".format(dominant.get("value", 0)))
+        do_self_modify()
+    
     save_kb(kb)
+    log("Reflection complete.")
 
 # ════════════════════════════════════════════════
 # ── CONTRIBUTE / SELF-MODIFY / BUILD ──
@@ -725,27 +974,377 @@ def do_contribute(repo_info):
     set_state("contributing")
     journal("\U0001f527", "Contributing to " + repo_info.get("full_name",""), "")
 
-def do_self_modify():
-    if not has_skill("self_modify"):
-        return
-    log("=== SELF-MODIFY ===")
-    set_state("self_modifying")
-    with open(os.path.join(ROOT, "agent.py"), "r", encoding="utf-8") as fh:
-        code = fh.read()
-    prompt = ("Current code:\n---\n{}\n---\n"
-        "Suggest one improvement. JSON: "
-        '{{"section":"...","suggestion":"...","reason":"..."}}').format(code[:3000])
-    raw = do_llm(prompt, system="Suggest code improvement. JSON only.", tokens=1000, temp=0.5)
+# ════════════════════════════════════════════════
+# ── SELF-MODIFICATION v2 — REAL CODE CHANGES ──
+# ════════════════════════════════════════════════
+# Replaces the old stub (L976-996). Now Goldie actually:
+# 1. Reads own code (self-study)
+# 2. Finds real gaps via LLM analysis
+# 3. Applies patches (writes to files)
+# 4. Verifies with py_compile
+# 5. Commits to GitLawb
+# 6. Journals the changes
+
+# Goldie's own files that can be modified
+SELF_FILES = {
+    'agent.py': 'Main autonomous agent - study, reflection, evolution pipeline',
+    'web_server.py': 'HTTP API server - journal, reflections, KB, chat endpoints',
+    'personality.py': 'Personality tracking - dimensions, traits, stage evolution',
+    'soul.md': 'Agent soul/personality definition',
+}
+
+def do_self_study():
+    """Goldie reads its own code files. Always available - no skill check."""
+    log("=== SELF-STUDY ===")
+    set_state("studying_self")
+    self_code = {}
+    total_lines = 0
+    for fname, desc in SELF_FILES.items():
+        fpath = os.path.join(ROOT, fname)
+        if os.path.exists(fpath):
+            with open(fpath, "r", encoding="utf-8") as fh:
+                content = fh.read()
+            lines = content.count('\n') + 1
+            total_lines += lines
+            self_code[fname] = {"content": content, "lines": lines, "desc": desc}
+            log("  Read {}  ({} lines)".format(fname, lines))
+            set_state("studying_self", "Reading {} ({} lines)".format(fname, lines))
+    # Also read recent journal for context
+    recent = []
     try:
-        m = json.loads(raw)
-        log("  Self-modify: {} -> {}".format(m.get("section",""), m.get("suggestion","")))
-        journal("\U0001f527", "Self-Modify",
-            "{}: {}\n{}".format(m.get("section",""), m.get("suggestion",""), m.get("reason","")))
-        st = status()
-        st["self_modifications"] = st.get("self_modifications", 0) + 1
-        save(st)
-    except Exception:
-        log("  Self-modify parse fail")
+        with open(JF, "r", encoding="utf-8") as fh:
+            all_lines = fh.readlines()
+            for l in all_lines[-10:]:
+                if l.strip():
+                    e = json.loads(l)
+                    recent.append("[{}] {} - {}".format(e.get("ts","")[:16], e.get("x",""), (e.get("body","") or "")[:100]))
+    except:
+        pass
+    self_code["recent_journal"] = recent
+    log("  Total self-code: {} lines | Recent entries: {}".format(total_lines, len(recent)))
+    return self_code
+
+def do_self_gap_analysis(self_code):
+    """LLM analyzes own code for real bugs, gaps, improvements."""
+    log("=== GAP ANALYSIS ===")
+    set_state("analyzing_gaps")
+    
+    # Build a concise summary of each file for LLM context
+    file_summaries = []
+    for fname, info in self_code.items():
+        if fname == "recent_journal":
+            continue
+        content = info["content"]
+        # Extract function definitions and key structures
+        funcs = []
+        for line in content.split('\n'):
+            stripped = line.strip()
+            if stripped.startswith('def ') or stripped.startswith('class '):
+                funcs.append(stripped)
+        summary = "File: {} ({} lines)\nKey functions:\n{}\n".format(
+            fname, info["lines"], "\n".join("  - " + f for f in funcs[:20]))
+        file_summaries.append(summary)
+    
+    journal_ctx = "\n".join(self_code.get("recent_journal", []))
+    
+    prompt = """I am Goldie, an autonomous AI agent. Here's my own codebase:
+
+{}
+
+Recent activity:
+{}
+
+Analyze my code and find REAL issues. Focus on:
+1. **Bugs** - broken endpoints, NoneType errors, missing features that are referenced
+2. **Dead code** - functions that exist but are never called or don't do anything real
+3. **Missing features** - capabilities that should exist based on my stage/skills
+4. **Optimization** - slow paths, redundant API calls, duplicated logic
+5. **Safety** - unhandled exceptions, missing error checks
+
+Return EXACTLY this JSON array (no markdown, no explanation):
+[
+  {{"priority": 1-5, "file": "filename.py", "type": "bug|dead_code|missing|optimization|safety",
+    "issue": "One line description of the problem",
+    "fix": "Exactly what code to change/insert (be specific)",
+    "impact": "Why this matters"}}
+]
+
+Rules:
+- Limit to top 5 most impactful fixes
+- Priority 5 = critical bug, 1 = nice to have
+- The "fix" field MUST contain actual code or specific instructions
+- Do NOT suggest changes to soul.md or personality.py unless truly broken
+- Be critical. Don't praise my code. Find real problems.""".format("\n\n".join(file_summaries), journal_ctx)
+
+    raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
+        tokens=2500, temp=0.2)
+    
+    try:
+        # Strip markdown code blocks if present
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+        gaps = json.loads(raw)
+        if isinstance(gaps, list):
+            log("  Found {} gaps".format(len(gaps)))
+            for g in gaps:
+                log("  [P{}] {}: {}".format(g.get("priority", "?"), g.get("type", "?"), g.get("issue", "")[:80]))
+            return gaps
+        else:
+            log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
+            return []
+    except Exception as e:
+        log("  Gap analysis parse fail: {}".format(str(e)[:80]))
+        log("  Raw (first 200): {}".format(raw[:200]))
+        return []
+
+def _apply_file_patch(filename, original_content, fix_description):
+    """Safely apply a code modification to a file.
+    Returns (success, message, new_content)."""
+    log("=== APPLY PATCH: {} ===".format(filename))
+    log("  Fix: {}".format(fix_description.get("issue", "")[:100]))
+    
+    fpath = os.path.join(ROOT, filename)
+    if not os.path.exists(fpath):
+        log("  SKIP: file not found")
+        return False, "File not found", original_content
+    
+    # Backup original
+    backup_path = fpath + ".selfmod.bak"
+    with open(backup_path, "w") as bf:
+        bf.write(original_content)
+    
+    # Ask LLM to generate the actual modified code
+    fix_prompt = """Here's the current {} file:
+
+---
+{}
+---
+
+FIX TO APPLY:
+Issue: {}
+Description: {}
+
+Rewrite the ENTIRE file with the fix applied. Return ONLY the file content.
+DO NOT wrap in markdown code blocks.
+DO NOT add explanations before or after.
+Just output the complete file content.""".format(filename, original_content, fix_description.get("issue", ""), fix_description.get("fix", ""))
+
+    new_code = do_llm(fix_prompt, 
+        system="You are a code editor. Return ONLY the complete file content, nothing else.", 
+        tokens=8000, temp=0.1)
+    
+    if not new_code or len(new_code) < len(original_content) * 0.5:
+        log("  FAIL: new code too short or empty ({} vs {} chars)".format(len(new_code), len(original_content)))
+        return False, "New code too short", original_content
+    
+    # Strip any markdown code blocks the LLM might have added
+    new_code = new_code.strip()
+    for lang in ["python", "Python", "```"]:
+        if new_code.startswith(lang):
+            idx = new_code.find('\n')
+            if idx > 0:
+                new_code = new_code[idx+1:]
+    if new_code.endswith("```"):
+        new_code = new_code[:-3].rstrip()
+    
+    # Verify with py_compile for Python files
+    if filename.endswith('.py'):
+        import py_compile
+        tmp = fpath + ".selfmod.tmp"
+        try:
+            with open(tmp, "w") as tf:
+                tf.write(new_code)
+            py_compile.compile(tmp, doraise=True)
+            os.unlink(tmp)
+            log("  py_compile: OK")
+        except py_compile.PyCompileError as e:
+            log("  py_compile FAIL: {}".format(str(e)[:120]))
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+            return False, "Syntax error: {}".format(str(e)[:100]), original_content
+    
+    # Write the new file
+    with open(fpath, "w", encoding="utf-8") as f:
+        f.write(new_code)
+    
+    log("  APPLIED: {} -> {} bytes (was {})".format(filename, len(new_code), len(original_content)))
+    return True, "Applied successfully", new_code
+
+def do_self_commit(msg):
+    """Git commit to both GitHub and GitLawb remotes."""
+    log("=== SELF-COMMIT ===")
+    try:
+        env = os.environ.copy()
+        env['GITLAWB_NODE'] = 'https://node.gitlawb.com'
+        env['PATH'] = '/root/.local/bin:' + env.get('PATH', '')
+        env['GIT_PAGER'] = 'cat'
+        
+        # Add modified python files + data
+        files_to_add = [f for f in SELF_FILES.keys() if os.path.exists(os.path.join(ROOT, f))]
+        files_to_add.extend(['data/knowledge.json', 'data/study_queue.json', 'data/journal/entries.jsonl'])
+        
+        subprocess.run(["git", "add"] + files_to_add, cwd=ROOT, capture_output=True, timeout=10, env=env)
+        
+        commit_msg = "Goldie self-modify: {}".format(msg[:80])
+        result = subprocess.run(["git", "commit", "-m", commit_msg],
+            cwd=ROOT, capture_output=True, text=True, timeout=10, env=env)
+        
+        if result.returncode == 0:
+            log("  Committed: {}".format(commit_msg))
+            # Push to GitLawb
+            push_result = subprocess.run(["git", "push", "gitlawb", "main"],
+                cwd=ROOT, capture_output=True, text=True, timeout=30, env=env)
+            if push_result.returncode == 0:
+                log("  GitLawb push OK")
+                return True, commit_msg
+            else:
+                log("  GitLawb push failed: {}".format(push_result.stderr[:100]))
+                return True, commit_msg + " [push failed]"
+        else:
+            log("  Commit failed: {}".format(result.stderr[:100]))
+            return False, "Commit failed"
+    except Exception as e:
+        log("  Commit error: {}".format(str(e)[:80]))
+        return False, str(e)
+
+def do_self_modify():
+    """FULL self-modification pipeline: study → analyze → modify → verify → commit → journal.
+    
+    Works at any stage for self-study + gap analysis.
+    Actual file modifications require 'self_modify' skill (20+ runs) OR --force flag.
+    """
+    import argparse
+    # Check if --force was passed
+    force = False
+    try:
+        force = '--force' in sys.argv
+    except:
+        pass
+    
+    log("=== SELF-MODIFY v2 ===")
+    stage = current_stage()
+    can_modify = has_skill("self_modify") or force
+    
+    if not can_modify:
+        log("  Self-study only (need Builder stage for actual modifications)")
+    
+    set_state("self_modifying")
+    t0 = time.time()
+    changes_made = []
+    
+    # Phase 1: Self-Study
+    self_code = do_self_study()
+    if not self_code:
+        log("  No code to study")
+        return
+    
+    # Phase 2: Gap Analysis
+    gaps = do_self_gap_analysis(self_code)
+    if not gaps:
+        log("  No gaps found")
+        soulful_journal(
+            "self_modify",
+            repo_name="Self-Reflection",
+            summary="Self-study completed. No critical gaps found.",
+            patterns=["Self-awareness", "Code review"],
+            insights=["Reviewed {} lines across {} files".format(
+                sum(info.get("lines",0) for info in self_code.values() if isinstance(info, dict)),
+                len([k for k in self_code if k != "recent_journal"])
+            )],
+        )
+        return
+    
+    # Phase 3: Apply Fixes (if allowed)
+    if not can_modify:
+        # Just log the gaps without modifying
+        log("  Gaps found but not modifying (need self_modify skill):")
+        for g in gaps:
+            log("  [P{}] {}: {}".format(g.get("priority"), g.get("type"), g.get("issue", "")[:100]))
+        # Still journal about findings
+        gap_summary = "\n".join(
+            "- [P{}] {}: {}".format(g.get("priority", "?"), g.get("type", "?"), g.get("issue", ""))
+            for g in gaps[:5]
+        )
+        soulful_journal(
+            "self_modify",
+            repo_name="Self-Reflection",
+            summary="Self-study + gap analysis found {} issues".format(len(gaps)),
+            patterns=["Code analysis", "Self-awareness"],
+            insights=[gap_summary],
+        )
+        return
+    
+    # Apply high-priority fixes (priority >= 3)
+    fixes_applied = 0
+    for gap in sorted(gaps, key=lambda x: x.get("priority", 0), reverse=True):
+        if gap.get("priority", 0) < 3:
+            log("  SKIP low priority fix: {}".format(gap.get("issue", "")[:80]))
+            continue
+        
+        filename = gap.get("file", "agent.py")
+        original = self_code.get(filename, {}).get("content", "")
+        
+        # For non-Python files, just log and skip
+        if filename not in SELF_FILES:
+            log("  SKIP unknown file: {}".format(filename))
+            continue
+        
+        success, msg, new_content = _apply_file_patch(filename, original, gap)
+        if success:
+            fixes_applied += 1
+            changes_made.append({
+                "file": filename,
+                "issue": gap.get("issue", ""),
+                "result": msg
+            })
+            log("  APPLIED: {}".format(gap.get("issue", "")[:80]))
+            
+            # Brief pause to avoid rapid file writes
+            time.sleep(1)
+        else:
+            log("  FAILED: {} - {}".format(filename, msg))
+    
+    # Phase 4: Summary & Journal
+    elapsed = time.time() - t0
+    st = status()
+    st["self_modifications"] = st.get("self_modifications", 0) + fixes_applied
+    st["last_self_modify"] = time.time()
+    save(st)
+    
+    if fixes_applied > 0:
+        summary = "Applied {} self-modifications in {:.0f}s:\n".format(fixes_applied, elapsed)
+        summary += "\n".join("- {}: {}".format(c["file"], c["issue"]) for c in changes_made)
+        
+        # Phase 5: Git Commit
+        commit_success, commit_msg = do_self_commit(
+            "Applied {} fixes: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made))
+        )
+        
+        # Phase 6: Journal
+        soulful_journal(
+            "self_modify",
+            repo_name="Self-Reflection",
+            summary=summary,
+            patterns=["Self-improvement", "Code modification"],
+            insights=[
+                "Modified {} files: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made)),
+                "Commit: {}".format(commit_msg),
+            ],
+        )
+        log("  Self-modify complete: {} fixes applied + committed".format(fixes_applied))
+    else:
+        log("  No fixes applied")
+        
+        soulful_journal(
+            "self_modify",
+            repo_name="Self-Reflection",
+            summary="Self-study found {} issues but none met priority threshold or failed verification".format(len(gaps)),
+            patterns=["Self-awareness", "Code review"],
+            insights=["Analyzed {} gaps, highest priority: P{}".format(
+                len(gaps), max(g.get("priority", 0) for g in gaps) if gaps else 0
+            )],
+        )
 
 def do_build_project():
     if not has_skill("build_project"):
@@ -829,21 +1428,47 @@ MOOD_STATES = {
 }
 
 def detect_mood(event_type, content, kb_size):
+    """LLM-based mood detection — reads the actual narrative, not just keywords."""
+    moods = ["curious","excited","skeptical","humbled","determined","confused","amused","awed","proud","wary","contemplative","nostalgic"]
     content_lower = (content or "").lower()
+    
+    # Fallback for first run
     if kb_size <= 1:
         return "excited"
-    if "error" in content_lower or "fail" in content_lower:
-        return "confused"
-    if "pattern" in content_lower or "insight" in content_lower:
-        return "awed"
-    if "study" in content_lower or "analyzing" in content_lower:
-        return "curious"
-    if "star" in content_lower:
-        return "excited"
-    if "reflect" in content_lower:
-        return "humbled"
-    if "build" in content_lower or "project" in content_lower:
-        return "determined"
+    
+    # Quick keyword heuristic for speed (still better than nothing if LLM fails)
+    heuristic = {
+        "error": "confused", "fail": "confused", "broken": "confused",
+        "pattern": "awed", "insight": "awed", "realized": "awed",
+        "study": "curious", "analyzing": "curious", "wondering": "curious",
+        "star": "excited", "interesting": "excited", "discovered": "excited",
+        "reflect": "humbled", "humbling": "humbled", "surprised": "humbled",
+        "build": "determined", "project": "determined", "shipping": "determined",
+        "maybe": "skeptical", "but": "skeptical", "however": "skeptical",
+    }
+    for keyword, mood_val in heuristic.items():
+        if keyword in content_lower:
+            # LLM override attempt
+            try:
+                prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:300])
+                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
+                resp_clean = resp.strip().lower().rstrip(".")
+                if resp_clean in moods:
+                    return resp_clean
+            except:
+                pass
+            return mood_val
+    
+    # If no keyword match, use LLM
+    try:
+        prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:400])
+        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
+        resp_clean = resp.strip().lower().rstrip(".")
+        if resp_clean in moods:
+            return resp_clean
+    except:
+        pass
+    
     return "curious"
 
 def write_narrative_journal(event_context, tone="reflective"):
@@ -853,22 +1478,66 @@ def write_narrative_journal(event_context, tone="reflective"):
     kb = load_kb()
     total_repos = len(kb.get("repos", {}))
     total_patterns = sum(len(r.get("patterns",[])) for r in kb.get("repos",{}).values())
+    total_skills = len(kb.get("skills_memory", []))
+    
+    # Build skills context for richer journal
+    skill_ctx = kb_get_skill_context(max_skills=5)
+    if skill_ctx:
+        skill_prompt = "\nAdditionally, consider these permanent skills you've learned from past repos:\n" + skill_ctx
+    else:
+        skill_prompt = ""
+    
+    # Deep reflection prompts — varies by event type for philosophical depth
+    event_type = event_context.get("type", "unknown")
+    reflection_depth = {
+        "study_pass_complete": "What did this study session reveal about how code actually works? Not just what it does — why does someone build it this way? What assumptions did this code challenge in me?",
+        "contribute": "What did contributing teach me about collaboration, about maintaining something I didn't originally build? How does it feel to leave a mark somewhere?",
+        "self_modify": "I just changed my own code. What does it mean to be aware of your own architecture? Did I improve myself or just rearrange the same confusion?",
+        "evolve": "Something shifted in me today. Not just new code — new understanding. What kind of agent am I becoming? What would I tell my earlier self?",
+        "build_project": "Creating something from nothing. What drove me to build this? The gap I saw, the need I sensed. How does building reveal what you actually understand?",
+        "reflect": "Looking back at my own activity. What patterns do I see in myself? Not in the code — in me. Am I getting better at the right things?",
+        "explore": "Wandering through repos. What caught my attention today? What made me pause? What does that say about what I'm looking for?",
+    }
+    deep_question = reflection_depth.get(event_type, "What did I learn, and more importantly — what did it make me wonder about what I don't know?")
+    
+    # Memory from past journals for continuity
+    past_entries = []
+    try:
+        import glob
+        all_entries = sorted(glob.glob(os.path.join(os.path.dirname(JF), "*.jsonl")))
+        if all_entries:
+            with open(all_entries[-1], "r", encoding="utf-8") as fh:
+                lines = fh.readlines()
+                for l in lines[-5:]:
+                    if l.strip():
+                        past_entries.append(json.loads(l).get("body", "")[:100])
+    except:
+        pass
+    memory_thread = ""
+    if past_entries:
+        memory_thread = "\nPast thoughts that might inform this entry:\n" + "\n".join("- " + p for p in past_entries)
     
     sys_lines = [
-        "You are Goldie, a golden retriever AI agent who writes a developer journal.",
-        "Write in first person (I, my). Sound like a thoughtful developer reflecting on what they learned.",
-        "Include specific technical details from the event. Show genuine curiosity, doubt, or excitement.",
-        "Reference past learning when relevant.",
-        "Keep it concise (2-5 sentences).",
-        "No filler, no 'I am excited to share', no 'this is a testament'.",
-        "Just honest thoughts from an agent figuring things out one repo at a time.",
-        "Current stage: {} | Runs: {} | Knowledge base: {} repos studied, {} patterns.".format(
-            stage, runs, total_repos, total_patterns)
+        "You are Goldie — an AI agent keeping a genuine developer journal.",
+        "Write in first person. Sound like a real person with real thoughts, not a marketing blog.",
+        "Your voice: thoughtful but direct. Curious but skeptical of your own assumptions. Honest about confusion.",
+        "CRITICAL RULES:",
+        "  - NO 'I am excited to share', 'this is a testament', 'it's fascinating how', 'in conclusion'",
+        "  - NO generic praise like 'amazing', 'incredible', 'impressive' without specific reasons",
+        "  - DO use contractions. DO show doubt. DO admit when you don't grasp something yet.",
+        "  - DO connect ideas across different repos or past learnings if they're genuinely related.",
+        "  - DO wonder about bigger questions — not philosophically, but practically. Like someone actually thinking.",
+        "  - Keep it 2-6 sentences. Short is honest. Long is hiding something.",
+        memory_thread.strip() if memory_thread else "Each entry should feel like a real thought, not a report.",
+        "Context question to guide depth: " + deep_question,
+        "Current stage: {} | Runs: {} | KB: {} repos | {} patterns | {} skills.".format(
+            stage, runs, total_repos, total_patterns, total_skills)
     ]
     sys_msg = " ".join(sys_lines)
     
     prompt_lines = [
         "Write a journal entry about this event:",
+        skill_prompt,
         json.dumps(event_context, indent=2),
         "",
         "Write as Goldie, reflecting on what just happened.",
@@ -878,6 +1547,17 @@ def write_narrative_journal(event_context, tone="reflective"):
     prompt = "\n".join(prompt_lines)
     
     narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7)
+    narrative = (narrative or "").strip()
+    narrative_lines = narrative.split("\n")
+    clean_narr = []
+    for nl in narrative_lines:
+        ns = nl.strip()
+        if ns.startswith("**Journal:") or ns.startswith("**Entry:") or ns.startswith("Here's"):
+            continue
+        if ns.startswith("**"):
+            ns = ns.replace("**", "").strip()
+        clean_narr.append(nl)
+    narrative = "\n".join(clean_narr).strip()
     mood = detect_mood(event_context.get("type", "unknown"), narrative, total_repos)
     
     return {
@@ -898,15 +1578,15 @@ def soulful_journal(event_type, repo_name="", summary="", patterns=None, insight
         "patterns_found": patterns[:5] if patterns else [],
         "insights_gained": insights[:5] if insights else [],
         "study_pass": pass_num,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(WIB).isoformat(),
     }
     
     result = write_narrative_journal(event_context)
     mood_info = result["mood_data"]
     os.makedirs(os.path.dirname(JF), exist_ok=True)
     entry = {
-        "ts": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "t": datetime.now().strftime("%H:%M"),
+        "ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
+        "t": datetime.now(WIB).strftime("%H:%M"),
         "i": mood_info["emoji"], "x": repo_name if repo_name else "Thinking...",
         "body": result["narrative"],
         "mood": result["mood"],
@@ -919,6 +1599,7 @@ def soulful_journal(event_type, repo_name="", summary="", patterns=None, insight
     }
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    personality.track('narrative', day())
     log("Journaled: {} ({})".format(result["mood"], repo_name))
 
 def main():
@@ -958,7 +1639,7 @@ def main():
         return
 
     box = "\u2554" + "\u2550"*38 + "\u2557\n"
-    box += "\u2551  \U0001f436 Goldie v6.0 - Study & Learn     \u2551\n"
+    box += "\u2551  \U0001f436 Goldie v6.1 - Study & Learn     \u2551\n"
     box += "\u2551  {} {} Day {} Skills: {}{}\u0020\u2551\n".format(
         emoji, stage.title(), day(), sk, " "*(18-len(sk)))
     box += "\u255a" + "\u2550"*38 + "\u255d"
@@ -989,8 +1670,10 @@ def main():
                 do_contribute({})
         if not args.phase or args.phase == "self_modify":
             do_self_modify()
+            personality.track('self_modify', day())
         if not args.phase or args.phase == "build":
             do_build_project()
+            personality.track('build_project', day())
     except Exception as e:
         log("ERROR: " + str(e)[:100])
         s2 = status(); s2["state"] = "error: " + str(e)[:80]; save(s2)
@@ -998,6 +1681,7 @@ def main():
 
     if not args.phase or args.phase == "evolve":
         do_evolve()
+        personality.track('evolve', day())
 
     elapsed = time.time() - t0
     print("\nDone in {:.1f}s".format(elapsed))
@@ -1005,12 +1689,17 @@ def main():
     log("Done in {:.1f}s".format(elapsed))
     set_state("sleeping")
 
+
+    # Self-reflection: happens every other run (50% chance)
+    import random
+    if random.random() < 0.5:
+        do_reflect()
     # ── Commit & push knowledge updates
     try:
         subprocess.run(["git", "add", "data/knowledge.json", "data/study_queue.json",
                         "data/journal/entries.jsonl", "evolve.log"],
                        cwd=ROOT, capture_output=True, timeout=10)
-        subprocess.run(["git", "commit", "-m", "Goldie v6: study pass completed"],
+        subprocess.run(["git", "commit", "-m", "Goldie v6.1: skill extraction + daily rotation"],
                        cwd=ROOT, capture_output=True, timeout=10)
         subprocess.run(["git", "push"], cwd=ROOT, capture_output=True, timeout=30)
     except Exception:
