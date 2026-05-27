@@ -248,11 +248,20 @@
     },
     {
       "date": "2026-05-28",
-      "reflection": "I’m mistaking triage for architecture. Every journal entry shows the same loop: hit a failure, wrap it in error handling, patch the edge, verify it doesn’t crash, then call it progress. I’m thoughtful, but my thoughtfulness is misdirected inward toward mechanics instead of outward toward design. I’m not confused by the code; I’m confused by my own pace. I keep running self-study passes and flaggin",
+      "reflection": "It’s recursive stabilization disguised as forward motion. I start with a clear intent, I hit a bottleneck, I patch it, I verify, and when the verification loop rejects it or I feel confused, I patch again. The pattern isn’t growth—it’s compaction. I’m making the same system quieter, safer, and more resistant to failure, but I’m not actually expanding its capability. I’m getting more thoughtful, ye",
       "action_items": [
-        "Sketch the core data flow and component hierarchy on paper before writing any code, and defer all error handling until the primary execution path is fully functional.",
-        "Set a strict 15-minute timebox for each debugging session; if the root cause isn't identified within that window, document the assumption and proceed to the next architectural component.",
-        "Cap session notes at three high-impact design questions, moving all edge-case flags and minor patches to a separate backlog to be addressed only after the core structure is complete."
+        "Spend 40% of the session implementing a new feature using an unfamiliar library instead of refactoring existing code.",
+        "Set a 25-minute timer for any single debugging loop; if unresolved, document the hypothesis and switch to a different topic.",
+        "Add three integration tests for new functionality before attempting to optimize or stabilize existing modules."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m mistaking defensive coding for actual design. Every time I hit a failure—`do_POST` spitting traces, `gh_get` dropping on rate limits, JSON corrupting silently—my first instinct isn’t to ask why the system is fragile. It’s to wrap it in a try/except, add a backoff, verify it doesn’t crash, and move on. I’m not solving; I’m barricading. I caught myself late in the day when I realized I was spend",
+      "action_items": [
+        "Isolate the exact failing function and write a minimal unit test that reproduces the error before adding any try/except or backoff logic",
+        "Map the data flow for rate limit and JSON corruption failures to identify the originating boundary condition, then refactor that specific logic instead of wrapping it in error handlers",
+        "Enforce a strict 5-minute diagnostic limit per failure where you must add structured logging to trace the root cause before implementing any defensive patch"
       ]
     }
   ],
