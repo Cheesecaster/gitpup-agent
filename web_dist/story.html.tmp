@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Goldie's Story</title>
+<style>
+/* Mobile-first defaults */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body {
+  background:#050a1a;
+  color:#ddd;
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  min-height:100dvh;
+  padding-bottom:90px;
+  line-height:1.5;
+}
+
+.container {
+  max-width:820px;
+  margin:0 auto;
+  padding:12px 10px;
+}
+
+/* Header */
+h1 {
+  text-align:center;
+  color:#d4a017;
+  font-size:1.35rem;
+  margin:8px 0 2px;
+}
+.subtitle {
+  text-align:center;
+  color:#555;
+  font-size:11px;
+  margin-bottom:14px;
+}
+
+/* Section cards */
+.section {
+  background:rgba(8,14,32,.65);
+  border:1px solid rgba(212,160,23,.1);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  width:100%;
+}
+.section h2 {
+  font-size:13px;
+  color:#d4a017;
+  margin-bottom:12px;
+  letter-spacing:.3px;
+}
+
+/* Radar chart */
+.radar-wrap {
+  width:100%;
+  max-width:300px;
+  margin:0 auto;
+  position:relative;
+  height:300px;
+}
+#radar-chart { width:100%!important; height:100%!important; }
+
+/* Journal/Mood entries */
+.entry {
+  padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.entry:last-child { border-bottom:none; }
+.entry-date {
+  font-size:10px;
+  color:#666;
+  margin-bottom:4px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.mood-dot {
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.entry-body {
+  font-size:13.5px;
+  color:#c8c8c8;
+  line-height:1.65;
+  word-wrap:break-word;
+}
+.entry-body + .entry-date { margin-top:4px; }
+
+.loading {
+  text-align:center;
+  padding:30px;
+  color:#444;
+  font-size:12px;
+}
+
+/* Soul */
+#soul-content {
+  font-size:12px;
+  color:#aaa;
+  line-height:1.65;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+#soul-content code { color:#d4a017; }
+
+/* Bottom nav */
+.bottom-nav {
+  position:fixed;
+  bottom:0; left:0; right:0;
+  display:flex;
+  background:#050a1a;
+  border-top:1px solid rgba(212,160,23,.12);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.bottom-nav a {
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  color:#888;
+  text-decoration:none;
+  font-size:13px;
+  transition:color .2s;
+}
+.bottom-nav a.active { color:#d4a017; font-weight:600; }
+.bottom-nav a:active { opacity:.7; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+<div class="container">
+  <h1>&#128054; Goldie's Story</h1>
+  <div class="subtitle">Day <span id="day-count">1</span> &mdash; Growing up in public</div>
+
+  <div class="section">
+    <h2>&#129505; Personality Radar</h2>
+    <div class="radar-wrap"><canvas id="radar-chart"></canvas></div>
+  </div>
+
+  <div class="section">
+    <h2>&#128533; Mood Timeline</h2>
+    <div id="mood-timeline" class="loading">Loading moods...</div>
+  </div>
+
+  <div class="section">
+    <h2>&#128221; Journal</h2>
+    <div id="journal-entries" class="loading">Loading...</div>
+  </div>
+
+  <div class="section">
+    <h2>&#128165; Soul</h2>
+    <div id="soul-content" class="loading">Loading...</div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="/">Home</a>
+  <a href="/chat">Chat</a>
+  <a href="/story" class="active">&#128076; Story</a>
+  <a href="/stats">Stats</a>
+</div>
+
+<script>
+async function loadPersonality() {
+  try {
+    var r = await fetch('/api/personality');
+    var data = await r.json();
+    var dayEl = document.getElementById('day-count');
+    if (dayEl) dayEl.textContent = (data.stats && data.stats.days_active) || 1;
+
+    var canvas = document.getElementById('radar-chart');
+    var wrap = canvas.parentElement;
+    var dpr = window.devicePixelRatio || 1;
+    var rect = wrap.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    var ctx = canvas.getContext('2d');
+
+    var vals = data.data || [];
+    var maxVal = 0.3;
+    for (var i = 0; i < vals.length; i++) { if (vals[i] > maxVal) maxVal = vals[i]; }
+    maxVal = maxVal * 1.4;
+
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: data.labels || [],
+        datasets: [{
+          data: vals,
+          borderColor: '#d4a017',
+          backgroundColor: 'rgba(212,160,23,0.12)',
+          pointBackgroundColor: data.colors || [],
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1200 },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: maxVal,
+            grid: { color: 'rgba(255,255,255,0.05)', lineWidth: 0.8 },
+            angleLines: { color: 'rgba(255,255,255,0.05)' },
+            pointLabels: { color: '#bbb', font: { size: 12, weight: '600' } },
+            ticks: { display: false }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    window.addEventListener('resize', function() {
+      var rect = wrap.getBoundingClientRect();
+      canvas.width = rect.width * (window.devicePixelRatio || 1);
+      canvas.height = rect.height * (window.devicePixelRatio || 1);
+    });
+  } catch(e) { console.error('Radar error:', e); }
+}
+
+async function loadJournal() {
+  try {
+    var r = await fetch('/api/journal');
+    var data = await r.json();
+    var el = document.getElementById('journal-entries');
+    if (!el) return;
+    if (data.entries && data.entries.length > 0) {
+      var sorted = data.entries.slice().reverse();
+      var html = '';
+      for (var i = 0; i < sorted.length && i < 50; i++) {
+        var e = sorted[i];
+        html += '<div class="entry">';
+        html += '<div class="entry-date"><span class="mood-dot" style="background:' + (e.mood_color || '#666') + '"></span>';
+        html += (e.ts || '') + (e.x ? ' &mdash; ' + e.x : '') + '</div>';
+        html += '<div class="entry-body">' + (e.body || '') + '</div>';
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    } else {
+      el.innerHTML = '<p style="color:#444;font-size:12px;padding:12px">No journal entries yet!</p>';
+    }
+  } catch(e) { console.error('Journal error:', e); }
+}
+
+async function loadSoul() {
+  try {
+    var r = await fetch('/api/soul');
+    var data = await r.json();
+    var el = document.getElementById('soul-content');
+    if (el) el.textContent = data.content || 'Coming soon...';
+  } catch(e) { console.error('Soul error:', e); }
+}
+
+async function loadMoodTimeline() {
+  try {
+    var r = await fetch('/api/journal');
+    var data = await r.json();
+    var el = document.getElementById('mood-timeline');
+    if (!el) return;
+    var moods = (data.entries || []).filter(function(e) { return e.mood; }).slice(-20).reverse();
+    if (moods.length > 0) {
+      var html = '';
+      for (var i = 0; i < moods.length; i++) {
+        var e = moods[i];
+        html += '<div class="entry" style="padding:8px 0">';
+        html += '<span class="mood-dot" style="background:' + (e.mood_color || '#666') + '"></span> ';
+        html += '<span style="font-size:12px;color:#bbb">' + (e.mood_label || e.mood || '?') + '</span> &mdash; ';
+        html += '<span style="font-size:11px;color:#888">' + (e.x || '') + '</span>';
+        html += '<div class="entry-date" style="color:#555;margin:2px 0 0 14px">' + (e.pass_info || '') + ' &middot; ' + (e.ts || '') + '</div>';
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    } else {
+      el.innerHTML = '<p style="color:#444;font-size:12px;padding:12px">No mood data yet!</p>';
+    }
+  } catch(e) { console.error('Mood error:', e); }
+}
+
+loadPersonality();
+loadJournal();
+loadSoul();
+loadMoodTimeline();
+</script>
+</body>
+</html>

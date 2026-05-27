@@ -2,7 +2,7 @@
 """GitPup Agent v7.6 — Self-Evolving AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
 Chat-ready: knowledge queryable via topic search."""
-import os, sys, json, time, re, urllib.request, urllib.parse, subprocess, textwrap, hashlib
+import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
@@ -131,29 +131,7 @@ def has_skill(skill, st=None):
 # ════════════════════════════════════════════════
 # ── LLM ──
 # ════════════════════════════════════════════════
-_MODEL_COST = {"input": 0.01, "output": 0.03}
-
-def _record_cost(prompt_t, completion_t, total_t, phase=""):
-    """Append one line to data/journal/cost_tracking.jsonl."""
-    try:
-        inp_c = prompt_t * _MODEL_COST["input"] / 1e6
-        out_c = completion_t * _MODEL_COST["output"] / 1e6
-        entry = {
-            "ts": __import__("time").time(),
-            "date": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
-            "phase": phase,
-            "prompt_tokens": prompt_t,
-            "completion_tokens": completion_t,
-            "total_tokens": total_t,
-            "cost_usd": round(inp_c + out_c, 6)
-        }
-        path = DATA_DIR / "journal" / "cost_tracking.jsonl"
-        with open(path, "a") as f:
-            f.write(json.dumps(entry) + "\n")
-    except Exception:
-        pass
-
-def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
+def do_llm(msg, system="", tokens=3000, temp=0.5):
     import time
     msgs = []
     if system:
@@ -172,10 +150,6 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
         try:
             with urllib.request.urlopen(req, timeout=120) as r:
                 resp = json.loads(r.read())
-                u = resp.get("usage", {})
-                if u and u.get("total_tokens"):
-                    _record_cost(u.get("prompt_tokens", 0), u.get("completion_tokens", 0),
-                                 u.get("total_tokens", 0), phase=phase)
                 return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
         except Exception as e:
             code = getattr(e, 'code', None)
@@ -275,7 +249,7 @@ def load_kb():
                 if not kb.get("stats"):
                     kb["stats"] = default_kb()["stats"]
                 return kb
-        except (json.JSONDecodeError, ValueError):
+        except Exception:
             pass
     kb = default_kb()
     save_kb(kb)
@@ -591,90 +565,6 @@ def queue_pop_done():
 # ════════════════════════════════════════════════
 # ── EXPLORE GITHUB ──
 # ════════════════════════════════════════════════
-def do_fetch_github_trending():
-    """Scrape GitHub trending page and queue unstudied repos."""
-    try:
-        log("=== GITHUB TRENDING ===")
-        set_state("fetching_trending")
-
-        req = urllib.request.Request(
-            "https://github.com/trending",
-            headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
-        )
-        with urllib.request.urlopen(req, timeout=15) as r:
-            html = r.read().decode()
-
-        # Find repo links (skip non-repo prefixes)
-        skip = ("sponsors/", "trending/", "apps/", "collections/",
-                "topics/", "features/", "orgs/", "marketplace/", "settings/")
-        repo_links = []
-        for m in re.finditer(r'href="(/([a-zA-Z0-9][a-zA-Z0-9._-]+/[a-zA-Z0-9][a-zA-Z0-9._-]+))"', html):
-            repo = m.group(2)
-            if any(repo.startswith(p) for p in skip):
-                continue
-            if repo.count("/") != 1:
-                continue
-            repo_links.append((m.start(), m.end(), repo))
-
-        # Find star counts (order matches repo order on page)
-        star_counts = []
-        for m in re.finditer(r'(\d[\d,]+)\s+stars', html):
-            star_counts.append(int(m.group(1).replace(",", "")))
-
-        # Map by order (repos and stars both appear sequentially in the HTML)
-        trending = []
-        for i, (rs, re_p, repo) in enumerate(repo_links):
-            stars = star_counts[i] if i < len(star_counts) else 0
-            snippet = html[re_p:re_p + 2000]
-            lang_m = re.search(r'itemprop="programmingLanguage">([^<]+)</span>', snippet)
-            lang = lang_m.group(1).strip() if lang_m else ""
-            desc_m = re.search(r'</a>.*?<p[^>]*>([^<]+)</p>', snippet, re.DOTALL)
-            desc = desc_m.group(1).strip() if desc_m else ""
-            trending.append({"name": repo, "stars_today": stars,
-                            "lang": lang, "desc": desc[:150]})
-            if len(trending) >= 25:
-                break
-
-        # Filter out repos already in knowledge base
-        kb = load_kb()
-        existing = set(kb.get("repos", {}).keys())
-        new_repos = [r for r in trending if r["name"] not in existing]
-
-        # Sort by stars descending
-        new_repos.sort(key=lambda x: x["stars_today"], reverse=True)
-
-        # Queue top 3
-        today = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        top = new_repos[:3] if new_repos else []
-        if top:
-            q = {
-                "repos": [{"repo": r["name"], "stars_today": r["stars_today"],
-                           "lang": r.get("lang", ""), "target_depth": 1} for r in top],
-                "studied_today": 0,
-                "today": today,
-                "max_daily": 3,
-                "source": "github_trending",
-                "all_candidates": [r["name"] for r in new_repos[:10]]
-            }
-            save_queue(q)
-            log("  Queued {} trending repos: {}".format(
-                len(top), ", ".join(r["name"] for r in top)))
-        else:
-            log("  No new trending repos today")
-
-        # Log snapshot
-        if trending:
-            log("\U0001f525 GitHub Trending: {} repos found".format(len(trending)))
-            log("  #1: {} ({} \u2b50/day) | #2: {} | #3: {}".format(
-                trending[0]["name"], trending[0]["stars_today"],
-                trending[1]["name"] if len(trending) > 1 else "-",
-                trending[2]["name"] if len(trending) > 2 else "-"))
-
-    except Exception as e:
-        log("  Trending fetch failed: " + str(e)[:150])
-        set_state("idle")
-
-
 def do_explore_github():
     log("=== EXPLORE GITHUB ===")
     set_state("exploring_github")
@@ -808,7 +698,7 @@ def do_study_pass(repo_name, from_level=0):
             '{{"summary":"what it does","architecture":["key decisions"],'
             '"insights":["3-5 learnings"]}}').format(repo_name, content[:3000])
         raw = do_llm(prompt, system="Analyze README. Return ONLY valid JSON.",
-                     tokens=2000, temp=0.3, phase="study_readme")
+                     tokens=2000, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=2,
@@ -859,7 +749,7 @@ def do_study_pass(repo_name, from_level=0):
             '"patterns":["3-5 from layout"],"insights":["2-3"]}}').format(
             repo_name, dirs_str, lang_summary)
         raw = do_llm(prompt, system="Analyze project structure. Return ONLY JSON.",
-                     tokens=2000, temp=0.3, phase="study_structure")
+                     tokens=2000, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=3,
@@ -906,7 +796,7 @@ def do_study_pass(repo_name, from_level=0):
             '"best_practices":["..."],"insights":["..."]}}').format(
             repo_name, all_code[:4000])
         raw = do_llm(prompt, system="Extract coding patterns. Return ONLY JSON.",
-                     tokens=2500, temp=0.3, phase="study_patterns")
+                     tokens=2500, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=4,
@@ -1033,7 +923,7 @@ def do_reflect():
         "No 'I am grateful' filler. No generic optimism. "
         "Write like someone actually thinking about their own growth, "
         "not like an agent reporting metrics."
-    ), tokens=1200, temp=0.7, phase="self_reflection")
+    ), tokens=1200, temp=0.7)
     
     if refl and len(refl) > 40 and not refl.startswith("[LLM"):
         refl = refl.strip()
@@ -1079,7 +969,7 @@ def do_reflect():
             "NOT ['be better at patterns']. Reflection summary:\n{}".format(refl[:500])
         )
         try:
-            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5, phase="self_reflection_insights")
+            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5)
             actions_list = json.loads(insights)
             if isinstance(actions_list, list) and len(actions_list) > 0:
                 kb["memory_summaries"].append({
@@ -1278,7 +1168,7 @@ def _apply_function_patch(filename, original_content, fix_description):
         
         new_func = do_llm(small_func_prompt,
             system="You fix Python functions. Return ONLY the complete fixed function, starting with 'def'. Must have a real body, not just 'pass'.",
-            tokens=2000, temp=0.2, phase="self_modify")
+            tokens=2000, temp=0.2)
         
         # Validate: LLM must return a function with a body
         attempts = 0
@@ -1290,7 +1180,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                 log("  Attempt {}: Response too short ({} chars), retrying".format(attempts, len(new_func or 0)))
                 new_func = do_llm("Rewrite this function with the fix. Return ONLY the function code starting with 'def':\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
                     system="Return ONLY the Python function code with a real body.",
-                    tokens=2000, temp=0.3, phase="self_modify")
+                    tokens=2000, temp=0.3)
                 continue
             
             # Check if the response has a body (not just def + pass)
@@ -1306,7 +1196,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                 log("  Attempt {}: No real body, retrying".format(attempts + 1))
                 new_func = do_llm("The function must have REAL code inside, not just 'pass'. Return the complete function:\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
                     system="Return ONLY the Python function with a REAL implementation.",
-                    tokens=2000, temp=0.4, phase="self_modify")
+                    tokens=2000, temp=0.4)
             else:
                 break  # Good response
         
@@ -1360,7 +1250,7 @@ def _apply_function_patch(filename, original_content, fix_description):
 
         new_func = do_llm(rewrite_prompt,
             system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
-            tokens=3000, temp=0.1, phase="self_rewrite")
+            tokens=3000, temp=0.1)
         
         # Validate response length
         if not new_func or len(new_func) < 50:
@@ -1399,7 +1289,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                         target['source'], fix_description.get("issue", ""))
                 new_func = do_llm(retry_prompt,
                     system="Return ONLY the Python function code, starting with 'def' and including the full body.",
-                    tokens=3000, temp=0.2, phase="self_rewrite_retry")
+                    tokens=3000, temp=0.2)
                 if not new_func or len(new_func) < 50:
                     return False, "LLM retry failed", original_content
                 # Update lines for the next iteration check
@@ -1642,7 +1532,7 @@ Rules:
 - Be critical. Don't praise my code. Find real problems.""".format("\n\n".join(file_summaries), journal_ctx)
 
     raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
-        tokens=2500, temp=0.2, phase="gap_analysis")
+        tokens=2500, temp=0.2)
     
     try:
         # Strip markdown code blocks if present
@@ -1857,7 +1747,7 @@ def do_build_project():
         if rd.get("patterns"):
             ctx += "{}: {}\n".format(rn, ", ".join(rd["patterns"][:3]))
     prompt = "{}\nSuggest a small project. JSON: {{\"name\":\"...\",\"description\":\"...\",\"language\":\"python\",\"files\":[{{\"path\":\"main.py\",\"description\":\"...\"}}]}}".format(ctx[:2000])
-    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7, phase="project_suggestion")
+    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7)
     try:
         pd = json.loads(raw)
         name = pd.get("name","plan")
@@ -1951,7 +1841,7 @@ def detect_mood(event_type, content, kb_size):
             # LLM override attempt
             try:
                 prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:300])
-                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
+                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
                 resp_clean = resp.strip().lower().rstrip(".")
                 if resp_clean in moods:
                     return resp_clean
@@ -1962,7 +1852,7 @@ def detect_mood(event_type, content, kb_size):
     # If no keyword match, use LLM
     try:
         prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:400])
-        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
+        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
         resp_clean = resp.strip().lower().rstrip(".")
         if resp_clean in moods:
             return resp_clean
@@ -2046,7 +1936,7 @@ def write_narrative_journal(event_context, tone="reflective"):
     ]
     prompt = "\n".join(prompt_lines)
     
-    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7, phase="narrative_journal")
+    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7)
     narrative = (narrative or "").strip()
     narrative_lines = narrative.split("\n")
     clean_narr = []
@@ -2107,7 +1997,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--force", action="store_true")
     p.add_argument("--dry-run", action="store_true")
-    p.add_argument("--phase", choices=["trending","reflect","explore","study","contribute",
+    p.add_argument("--phase", choices=["reflect","explore","study","contribute",
                                        "self_modify","build","evolve"])
     args = p.parse_args()
 
@@ -2139,7 +2029,7 @@ def main():
         return
 
     box = "\u2554" + "\u2550"*38 + "\u2557\n"
-    box += "\u2551  \U0001f436 Goldie v7.6 - Study & Learn     \u2551\n"
+    box += "\u2551  \U0001f436 Goldie v6.1 - Study & Learn     \u2551\n"
     box += "\u2551  {} {} Day {} Skills: {}{}\u0020\u2551\n".format(
         emoji, stage.title(), day(), sk, " "*(18-len(sk)))
     box += "\u255a" + "\u2550"*38 + "\u255d"
@@ -2154,8 +2044,6 @@ def main():
         if not args.phase or args.phase == "reflect":
             if has_skill("reflect"):
                 do_reflect()
-        if not args.phase or args.phase == "trending":
-            do_fetch_github_trending()
         if not args.phase or args.phase == "explore":
             do_explore_github()
         if not args.phase or args.phase == "study":
@@ -2201,7 +2089,7 @@ def main():
         subprocess.run(["git", "add", "data/knowledge.json", "data/study_queue.json",
                         "data/journal/entries.jsonl", "evolve.log"],
                        cwd=ROOT, capture_output=True, timeout=10)
-        subprocess.run(["git", "commit", "-m", "Goldie v7.6: skill extraction + daily rotation"],
+        subprocess.run(["git", "commit", "-m", "Goldie v6.1: skill extraction + daily rotation"],
                        cwd=ROOT, capture_output=True, timeout=10)
         subprocess.run(["git", "push"], cwd=ROOT, capture_output=True, timeout=30)
     except Exception:

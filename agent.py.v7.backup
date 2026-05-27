@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""GitPup Agent v7.6 — Self-Evolving AI Agent with Long-Term Knowledge Base
+"""GitPup Agent v7.0 — Self-Modifying AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
+Self-Modify: reads own code → gap analysis → apply fixes → verify → commit.
 Chat-ready: knowledge queryable via topic search."""
-import os, sys, json, time, re, urllib.request, urllib.parse, subprocess, textwrap, hashlib
+import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
@@ -131,30 +132,7 @@ def has_skill(skill, st=None):
 # ════════════════════════════════════════════════
 # ── LLM ──
 # ════════════════════════════════════════════════
-_MODEL_COST = {"input": 0.01, "output": 0.03}
-
-def _record_cost(prompt_t, completion_t, total_t, phase=""):
-    """Append one line to data/journal/cost_tracking.jsonl."""
-    try:
-        inp_c = prompt_t * _MODEL_COST["input"] / 1e6
-        out_c = completion_t * _MODEL_COST["output"] / 1e6
-        entry = {
-            "ts": __import__("time").time(),
-            "date": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
-            "phase": phase,
-            "prompt_tokens": prompt_t,
-            "completion_tokens": completion_t,
-            "total_tokens": total_t,
-            "cost_usd": round(inp_c + out_c, 6)
-        }
-        path = DATA_DIR / "journal" / "cost_tracking.jsonl"
-        with open(path, "a") as f:
-            f.write(json.dumps(entry) + "\n")
-    except Exception:
-        pass
-
-def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
-    import time
+def do_llm(msg, system="", tokens=3000, temp=0.5):
     msgs = []
     if system:
         msgs.append({"role": "system", "content": system})
@@ -166,48 +144,27 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
     req.add_header("Content-Type", "application/json")
     if LLM_KEY:
         req.add_header("Authorization", "Bearer " + LLM_KEY)
-        
-    max_retries = 5
-    for attempt in range(max_retries):
-        try:
-            with urllib.request.urlopen(req, timeout=120) as r:
-                resp = json.loads(r.read())
-                u = resp.get("usage", {})
-                if u and u.get("total_tokens"):
-                    _record_cost(u.get("prompt_tokens", 0), u.get("completion_tokens", 0),
-                                 u.get("total_tokens", 0), phase=phase)
-                return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
-        except Exception as e:
-            code = getattr(e, 'code', None)
-            if code in (429, 500):
-                time.sleep((2 ** attempt) * 0.5)
-            else:
-                return "[LLM Error: " + str(e)[:100] + "]"
-    return "[LLM Error: Max retries exceeded]"
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            resp = json.loads(r.read())
+            return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+    except Exception as e:
+        return "[LLM Error: " + str(e)[:100] + "]"
 
 # ════════════════════════════════════════════════
 # ── GitHub API ──
 # ════════════════════════════════════════════════
 def gh_get(path):
-    import time
     url = "https://api.github.com" + path
     req = urllib.request.Request(url)
     if GH_TOKEN:
         req.add_header("Authorization", "token " + GH_TOKEN)
     req.add_header("Accept", "application/vnd.github+json")
-    for _ in range(3):
-        try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                if r.status in (403, 429):
-                    time.sleep(int(r.headers.get("Retry-After", 5)))
-                    continue
-                return json.loads(r.read())
-        except Exception as e:
-            if hasattr(e, 'code') and e.code in (403, 429):
-                time.sleep(int(getattr(e, 'headers', {}).get("Retry-After", 5)))
-                continue
-            return {"error": str(e)}
-    return {"error": "Rate limit exceeded"}
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        return {"error": str(e)}
 
 def gh_post(path, data):
     req = urllib.request.Request("https://api.github.com" + path,
@@ -275,7 +232,7 @@ def load_kb():
                 if not kb.get("stats"):
                     kb["stats"] = default_kb()["stats"]
                 return kb
-        except (json.JSONDecodeError, ValueError):
+        except Exception:
             pass
     kb = default_kb()
     save_kb(kb)
@@ -289,68 +246,57 @@ def save_kb(kb):
 def kb_has_repo(repo):
     return repo in load_kb().get("repos", {})
 
-import fcntl
-import os
-import tempfile
-
 def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
                     best_practices=None, insights=None, code_examples=None,
                     topics=None, readme_insights="", stars=0, lang=""):
-    lock_path = os.path.join(tempfile.gettempdir(), "kb_add_to_repo.lock")
-    lock_fd = open(lock_path, 'w')
-    try:
-        fcntl.flock(lock_fd, fcntl.LOCK_EX)
-        kb = load_kb()
-        if repo_name not in kb["repos"]:
-            kb["repos"][repo_name] = {
-                "full_name": repo_name, "study_level": 0, "studied_at": [],
-                "summary": "", "patterns": [], "best_practices": [],
-                "insights": [], "code_examples": [], "arch_topics": [],
-                "readme_insights": "", "stars": 0, "lang": "", "description": "",
-            }
-        rd = kb["repos"][repo_name]
-        if study_level > rd.get("study_level", 0):
-            rd["study_level"] = study_level
-        rd["studied_at"].append(datetime.now(WIB).strftime("%Y-%m-%d %H:%M"))
-        rd["studied_at"] = rd["studied_at"][-10:]
-        if summary and len(summary) > len(rd.get("summary", "")):
-            rd["summary"] = summary[:500]
-        if lang and not rd.get("lang"):
-            rd["lang"] = lang
-        if stars:
-            rd["stars"] = stars
-        for key, new_items, max_items in [
-            ("patterns", patterns, 25), ("best_practices", best_practices, 15),
-            ("insights", insights, 15), ("code_examples", code_examples, 8)]:
-            if new_items:
-                existing = set(rd.get(key, []))
-                for item in new_items:
-                    stripped = item.strip()[:500]
-                    if stripped and stripped not in existing:
-                        rd[key].append(stripped)
-                        existing.add(stripped)
-                rd[key] = rd[key][-max_items:]
-        if readme_insights and len(readme_insights) > len(rd.get("readme_insights", "")):
-            rd["readme_insights"] = readme_insights[:500]
-        if topics:
-            existing_t = set(rd.get("arch_topics", []))
-            for t in topics:
-                t_clean = t.strip().lower()
-                if t_clean and t_clean not in existing_t:
-                    rd["arch_topics"].append(t_clean)
-                    existing_t.add(t_clean)
-                    if t_clean not in kb["topic_index"]:
-                        kb["topic_index"][t_clean] = {"repos": [], "description": ""}
-                    if repo_name not in kb["topic_index"][t_clean]["repos"]:
-                        kb["topic_index"][t_clean]["repos"].append(repo_name)
-        kb["stats"]["total_repos_studied"] = len(kb["repos"])
-        kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
-        kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
-        kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
-        save_kb(kb)
-    finally:
-        fcntl.flock(lock_fd, fcntl.LOCK_UN)
-        lock_fd.close()
+    kb = load_kb()
+    if repo_name not in kb["repos"]:
+        kb["repos"][repo_name] = {
+            "full_name": repo_name, "study_level": 0, "studied_at": [],
+            "summary": "", "patterns": [], "best_practices": [],
+            "insights": [], "code_examples": [], "arch_topics": [],
+            "readme_insights": "", "stars": 0, "lang": "", "description": "",
+        }
+    rd = kb["repos"][repo_name]
+    if study_level > rd.get("study_level", 0):
+        rd["study_level"] = study_level
+    rd["studied_at"].append(datetime.now(WIB).strftime("%Y-%m-%d %H:%M"))
+    rd["studied_at"] = rd["studied_at"][-10:]
+    if summary and len(summary) > len(rd.get("summary", "")):
+        rd["summary"] = summary[:500]
+    if lang and not rd.get("lang"):
+        rd["lang"] = lang
+    if stars:
+        rd["stars"] = stars
+    for key, new_items, max_items in [
+        ("patterns", patterns, 25), ("best_practices", best_practices, 15),
+        ("insights", insights, 15), ("code_examples", code_examples, 8)]:
+        if new_items:
+            existing = set(rd.get(key, []))
+            for item in new_items:
+                stripped = item.strip()[:500]
+                if stripped and stripped not in existing:
+                    rd[key].append(stripped)
+                    existing.add(stripped)
+            rd[key] = rd[key][-max_items:]
+    if readme_insights and len(readme_insights) > len(rd.get("readme_insights", "")):
+        rd["readme_insights"] = readme_insights[:500]
+    if topics:
+        existing_t = set(rd.get("arch_topics", []))
+        for t in topics:
+            t_clean = t.strip().lower()
+            if t_clean and t_clean not in existing_t:
+                rd["arch_topics"].append(t_clean)
+                existing_t.add(t_clean)
+                if t_clean not in kb["topic_index"]:
+                    kb["topic_index"][t_clean] = {"repos": [], "description": ""}
+                if repo_name not in kb["topic_index"][t_clean]["repos"]:
+                    kb["topic_index"][t_clean]["repos"].append(repo_name)
+    kb["stats"]["total_repos_studied"] = len(kb["repos"])
+    kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
+    kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
+    kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
+    save_kb(kb)
 
 # ════════════════════════════════════════════════
 
@@ -591,90 +537,6 @@ def queue_pop_done():
 # ════════════════════════════════════════════════
 # ── EXPLORE GITHUB ──
 # ════════════════════════════════════════════════
-def do_fetch_github_trending():
-    """Scrape GitHub trending page and queue unstudied repos."""
-    try:
-        log("=== GITHUB TRENDING ===")
-        set_state("fetching_trending")
-
-        req = urllib.request.Request(
-            "https://github.com/trending",
-            headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
-        )
-        with urllib.request.urlopen(req, timeout=15) as r:
-            html = r.read().decode()
-
-        # Find repo links (skip non-repo prefixes)
-        skip = ("sponsors/", "trending/", "apps/", "collections/",
-                "topics/", "features/", "orgs/", "marketplace/", "settings/")
-        repo_links = []
-        for m in re.finditer(r'href="(/([a-zA-Z0-9][a-zA-Z0-9._-]+/[a-zA-Z0-9][a-zA-Z0-9._-]+))"', html):
-            repo = m.group(2)
-            if any(repo.startswith(p) for p in skip):
-                continue
-            if repo.count("/") != 1:
-                continue
-            repo_links.append((m.start(), m.end(), repo))
-
-        # Find star counts (order matches repo order on page)
-        star_counts = []
-        for m in re.finditer(r'(\d[\d,]+)\s+stars', html):
-            star_counts.append(int(m.group(1).replace(",", "")))
-
-        # Map by order (repos and stars both appear sequentially in the HTML)
-        trending = []
-        for i, (rs, re_p, repo) in enumerate(repo_links):
-            stars = star_counts[i] if i < len(star_counts) else 0
-            snippet = html[re_p:re_p + 2000]
-            lang_m = re.search(r'itemprop="programmingLanguage">([^<]+)</span>', snippet)
-            lang = lang_m.group(1).strip() if lang_m else ""
-            desc_m = re.search(r'</a>.*?<p[^>]*>([^<]+)</p>', snippet, re.DOTALL)
-            desc = desc_m.group(1).strip() if desc_m else ""
-            trending.append({"name": repo, "stars_today": stars,
-                            "lang": lang, "desc": desc[:150]})
-            if len(trending) >= 25:
-                break
-
-        # Filter out repos already in knowledge base
-        kb = load_kb()
-        existing = set(kb.get("repos", {}).keys())
-        new_repos = [r for r in trending if r["name"] not in existing]
-
-        # Sort by stars descending
-        new_repos.sort(key=lambda x: x["stars_today"], reverse=True)
-
-        # Queue top 3
-        today = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        top = new_repos[:3] if new_repos else []
-        if top:
-            q = {
-                "repos": [{"repo": r["name"], "stars_today": r["stars_today"],
-                           "lang": r.get("lang", ""), "target_depth": 1} for r in top],
-                "studied_today": 0,
-                "today": today,
-                "max_daily": 3,
-                "source": "github_trending",
-                "all_candidates": [r["name"] for r in new_repos[:10]]
-            }
-            save_queue(q)
-            log("  Queued {} trending repos: {}".format(
-                len(top), ", ".join(r["name"] for r in top)))
-        else:
-            log("  No new trending repos today")
-
-        # Log snapshot
-        if trending:
-            log("\U0001f525 GitHub Trending: {} repos found".format(len(trending)))
-            log("  #1: {} ({} \u2b50/day) | #2: {} | #3: {}".format(
-                trending[0]["name"], trending[0]["stars_today"],
-                trending[1]["name"] if len(trending) > 1 else "-",
-                trending[2]["name"] if len(trending) > 2 else "-"))
-
-    except Exception as e:
-        log("  Trending fetch failed: " + str(e)[:150])
-        set_state("idle")
-
-
 def do_explore_github():
     log("=== EXPLORE GITHUB ===")
     set_state("exploring_github")
@@ -808,7 +670,7 @@ def do_study_pass(repo_name, from_level=0):
             '{{"summary":"what it does","architecture":["key decisions"],'
             '"insights":["3-5 learnings"]}}').format(repo_name, content[:3000])
         raw = do_llm(prompt, system="Analyze README. Return ONLY valid JSON.",
-                     tokens=2000, temp=0.3, phase="study_readme")
+                     tokens=2000, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=2,
@@ -859,7 +721,7 @@ def do_study_pass(repo_name, from_level=0):
             '"patterns":["3-5 from layout"],"insights":["2-3"]}}').format(
             repo_name, dirs_str, lang_summary)
         raw = do_llm(prompt, system="Analyze project structure. Return ONLY JSON.",
-                     tokens=2000, temp=0.3, phase="study_structure")
+                     tokens=2000, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=3,
@@ -906,7 +768,7 @@ def do_study_pass(repo_name, from_level=0):
             '"best_practices":["..."],"insights":["..."]}}').format(
             repo_name, all_code[:4000])
         raw = do_llm(prompt, system="Extract coding patterns. Return ONLY JSON.",
-                     tokens=2500, temp=0.3, phase="study_patterns")
+                     tokens=2500, temp=0.3)
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=4,
@@ -1033,7 +895,7 @@ def do_reflect():
         "No 'I am grateful' filler. No generic optimism. "
         "Write like someone actually thinking about their own growth, "
         "not like an agent reporting metrics."
-    ), tokens=1200, temp=0.7, phase="self_reflection")
+    ), tokens=1200, temp=0.7)
     
     if refl and len(refl) > 40 and not refl.startswith("[LLM"):
         refl = refl.strip()
@@ -1079,7 +941,7 @@ def do_reflect():
             "NOT ['be better at patterns']. Reflection summary:\n{}".format(refl[:500])
         )
         try:
-            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5, phase="self_reflection_insights")
+            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5)
             actions_list = json.loads(insights)
             if isinstance(actions_list, list) and len(actions_list) > 0:
                 kb["memory_summaries"].append({
@@ -1113,15 +975,15 @@ def do_contribute(repo_info):
     journal("\U0001f527", "Contributing to " + repo_info.get("full_name",""), "")
 
 # ════════════════════════════════════════════════
-# ── SELF-MODIFICATION v2.1 — FUNCTION-LEVEL PATCHING ──
+# ── SELF-MODIFICATION v2 — REAL CODE CHANGES ──
 # ════════════════════════════════════════════════
-# Key improvement: Instead of fragile SEARCH/REPLACE, we:
-# 1. Parse the AST to find exact function boundaries
-# 2. Have LLM rewrite just the target function
-# 3. Replace the entire function at known line numbers
-# This is 100x more reliable than text matching on 1800+ line files.
-
-import ast
+# Replaces the old stub (L976-996). Now Goldie actually:
+# 1. Reads own code (self-study)
+# 2. Finds real gaps via LLM analysis
+# 3. Applies patches (writes to files)
+# 4. Verifies with py_compile
+# 5. Commits to GitLawb
+# 6. Journals the changes
 
 # Goldie's own files that can be modified
 SELF_FILES = {
@@ -1130,432 +992,6 @@ SELF_FILES = {
     'personality.py': 'Personality tracking - dimensions, traits, stage evolution',
     'soul.md': 'Agent soul/personality definition',
 }
-
-def _extract_functions(content):
-    """Parse Python source and return list of function info dicts.
-    Each dict: {name, lineno, end_lineno, source, indent}"""
-    try:
-        tree = ast.parse(content)
-    except SyntaxError:
-        return []
-    
-    functions = []
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            start = node.lineno
-            end = getattr(node, 'end_lineno', start)
-            lines = content.split('\n')
-            # Get the source lines (0-indexed)
-            func_src = '\n'.join(lines[start-1:end])
-            # Calculate indentation of the def line
-            def_line = lines[start-1]
-            indent = len(def_line) - len(def_line.lstrip())
-            functions.append({
-                'name': node.name,
-                'lineno': start,
-                'end_lineno': end,
-                'source': func_src,
-                'indent': indent,
-            })
-    return functions
-
-def _find_target_function(functions, issue, fix_desc):
-    """Find the most likely function that needs fixing.
-    Returns the function dict or None."""
-    # Keywords from issue/fix to match function names
-    keywords = []
-    for text in [issue, fix_desc]:
-        text_lower = text.lower()
-        # Look for function name mentions (e.g., "do_llm", "gh_get", "_handle_chat")
-        for func in functions:
-            if func['name'].lower() in text_lower:
-                keywords.append(func['name'])
-    
-    # Score functions by relevance
-    scored = []
-    for func in functions:
-        score = 0
-        name = func['name'].lower()
-        func_src = func['source'].lower()
-        
-        # Direct name match
-        if name in [k.lower() for k in keywords]:
-            score += 10
-        
-        # Keywords in source
-        issue_words = issue.lower().split()
-        fix_words = fix_desc.lower().split()
-        for word in issue_words + fix_words:
-            if len(word) > 3 and word in func_src:
-                score += 1
-        
-        scored.append((score, func))
-    
-    # Return highest scoring function
-    scored.sort(key=lambda x: x[0], reverse=True)
-    if scored and scored[0][0] > 0:
-        return scored[0][1]
-    return None
-
-def _apply_function_patch(filename, original_content, fix_description):
-    """Apply a patch by having LLM rewrite just ONE function.
-    Returns (success, message, new_content)."""
-    log("=== FUNCTION PATCH: {} ===".format(filename))
-    log("  Fix: {}".format(fix_description.get("issue", "")[:100]))
-    
-    fpath = os.path.join(ROOT, filename)
-    if not os.path.exists(fpath):
-        log("  SKIP: file not found")
-        return False, "File not found", original_content
-    
-    # Backup original
-    backup_path = fpath + ".selfmod.bak"
-    with open(backup_path, "w") as bf:
-        bf.write(original_content)
-    
-    # Extract functions
-    functions = _extract_functions(original_content)
-    if not functions:
-        log("  FAIL: no functions parsed")
-        return False, "No functions found in file", original_content
-    
-    log("  Found {} functions".format(len(functions)))
-    
-    # Find target function - prefer explicit function name from gap analysis
-    explicit_func = fix_description.get("function", "")
-    if explicit_func:
-        for func in functions:
-            if func['name'].lower() == explicit_func.lower():
-                log("  Using explicit function match: {}".format(explicit_func))
-                target = func
-                break
-    
-    # Fallback to keyword matching if explicit match failed
-    if target is None:
-        target = _find_target_function(functions, fix_description.get("issue", ""), fix_description.get("fix", ""))
-    if not target:
-        log("  FAIL: couldn't identify target function")
-        # Log available functions for debugging
-        func_names = [f['name'] for f in functions[:20]]
-        log("  Available: {}".format(', '.join(func_names)))
-        return False, "No target function identified", original_content
-    
-    log("  Target: {}  (lines {}-{})".format(target['name'], target['lineno'], target['end_lineno']))
-    
-    # Skip functions that are too short - LLM can't meaningfully "fix" them
-    func_lines = target['end_lineno'] - target['lineno'] + 1
-    if func_lines < 5:
-        log("  SKIP: function too small for patching ({} lines)".format(func_lines))
-        return False, "Function too small ({} lines)".format(func_lines), original_content
-    
-    # For medium and small functions (<=25 lines), use context-aware insertion instead of full rewrite
-    # The LLM struggles with rewriting functions < 25 lines - it returns empty bodies
-    use_small_func_mode = func_lines <= 25
-    
-    # Ask LLM to fix the function
-    new_content = None  # Set by either mode below
-    
-    if use_small_func_mode:
-        # Small function mode: ask LLM to rewrite the complete function
-        # We use the same approach as standard mode but with different validation
-        # The key insight: even for small functions, we need the LLM to return
-        # the COMPLETE function, not just a patch
-        
-        small_func_prompt = (
-            "You need to fix a small Python function. Here's the COMPLETE function:\n\n"
-            "```python\n"
-            "%s\n"
-            "```\n\n"
-            "THE ISSUE TO FIX: %s\n\n"
-            "Return the COMPLETE fixed function. It MUST:\n"
-            "1. Start with the `def` line (keep the same signature)\n"
-            "2. Include ALL the original logic\n"
-            "3. Include your fix\n"
-            "4. Have a REAL function body (no `pass`, no empty body)\n\n"
-            "Return ONLY the Python code, starting with `def`. No markdown, no explanation." % (
-                target['source'],
-                fix_description.get("issue", "")))
-        
-        new_func = do_llm(small_func_prompt,
-            system="You fix Python functions. Return ONLY the complete fixed function, starting with 'def'. Must have a real body, not just 'pass'.",
-            tokens=2000, temp=0.2, phase="self_modify")
-        
-        # Validate: LLM must return a function with a body
-        attempts = 0
-        max_attempts = 3
-        while attempts < max_attempts:
-            attempts += 1
-            
-            if not new_func or len(new_func) < 40:
-                log("  Attempt {}: Response too short ({} chars), retrying".format(attempts, len(new_func or 0)))
-                new_func = do_llm("Rewrite this function with the fix. Return ONLY the function code starting with 'def':\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
-                    system="Return ONLY the Python function code with a real body.",
-                    tokens=2000, temp=0.3, phase="self_modify")
-                continue
-            
-            # Check if the response has a body (not just def + pass)
-            func_lines = new_func.strip().split('\n')
-            has_real_body = False
-            for line in func_lines[1:]:
-                stripped = line.strip()
-                if stripped and stripped != 'pass' and not stripped.startswith('#') and not stripped.startswith('"""'):
-                    has_real_body = True
-                    break
-            
-            if not has_real_body:
-                log("  Attempt {}: No real body, retrying".format(attempts + 1))
-                new_func = do_llm("The function must have REAL code inside, not just 'pass'. Return the complete function:\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
-                    system="Return ONLY the Python function with a REAL implementation.",
-                    tokens=2000, temp=0.4, phase="self_modify")
-            else:
-                break  # Good response
-        
-        if not new_func or len(new_func) < 40:
-            log("  FAIL: all retries exhausted")
-            return False, "LLM returned invalid function", original_content
-        
-        # Clean up the response
-        new_func = new_func.strip()
-        for wrapper in ["```python\n", "```\n", "```"]:
-            if new_func.startswith(wrapper):
-                new_func = new_func[len(wrapper):]
-        if new_func.endswith("```"):
-            new_func = new_func[:-3].rstrip()
-        
-        # Verify it starts with 'def'
-        lines = new_func.split('\n')
-        if not lines[0].strip().startswith('def '):
-            log("  FAIL: doesn't start with 'def', got: {}".format(lines[0][:50]))
-            return False, "Not a function definition", original_content
-        
-        # Replace the function in the file
-        file_lines = original_content.split('\n')
-        start_idx = target['lineno'] - 1
-        end_idx = target['end_lineno']
-        
-        new_lines = file_lines[:start_idx] + new_func.split('\n') + file_lines[end_idx:]
-        new_content = '\n'.join(new_lines)
-        
-    else:
-        # Standard mode: full function rewrite for larger functions (> 25 lines)
-        func_sig = target['source'].split(':')[0] + ':'
-
-        rewrite_prompt = (
-        "You are fixing a Python function. The function currently looks like this:\n\n"
-        "```python\n"
-        "%s\n"
-        "```\n\n"
-        "THE FIX NEEDED: %s\n\n"
-        "CRITICAL: You MUST return the COMPLETE function, including:\n"
-        "1. The full function signature (def line)\n"
-        "2. ALL the existing logic\n"
-        "3. Your fix applied to the relevant part\n\n"
-        "DO NOT return just the function signature.\n"
-        "DO NOT return 'pass'.\n"
-        "DO NOT truncate the function.\n"
-        "Include every line of the original function, with your fix integrated.\n\n"
-        "Return ONLY the Python code, starting with 'def'. No markdown, no explanations." % (
-            target['source'],
-            fix_description.get("issue", "")))
-
-        new_func = do_llm(rewrite_prompt,
-            system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
-            tokens=3000, temp=0.1, phase="self_rewrite")
-        
-        # Validate response length
-        if not new_func or len(new_func) < 50:
-            log("  FAIL: LLM returned empty or too-short response ({} chars)".format(len(new_func or "")))
-            return False, "LLM response too short ({} chars)".format(len(new_func or "")), original_content
-        
-        # Second attempt if response seems bad
-        attempts = 0
-        max_attempts = 2
-        while attempts < max_attempts:
-            attempts += 1
-            
-            # Check if the response has a def statement AND a body
-            has_def = False
-            has_body = False
-            lines = new_func.strip().split('\n')
-            for i, line in enumerate(lines):
-                stripped = line.strip()
-                if stripped.startswith('def ') or stripped.startswith('async def '):
-                    has_def = True
-                    # Check subsequent lines for body
-                    for l2 in lines[i+1:]:
-                        if l2.strip() and not l2.strip().startswith('#'):
-                            has_body = True
-                            break
-                    break
-            
-            if not has_def or not has_body:
-                # Try again with simpler prompt
-                log("  Attempt {}: Missing def({}) or body({}), retrying".format(attempts + 1, has_def, has_body))
-                if not has_def:
-                    retry_prompt = "Rewrite this Python function with the fix. Return ONLY the function code:\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
-                        target['source'], fix_description.get("issue", ""))
-                else:
-                    retry_prompt = "The function must have a body with actual code. Rewrite the ENTIRE function (def line + body):\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
-                        target['source'], fix_description.get("issue", ""))
-                new_func = do_llm(retry_prompt,
-                    system="Return ONLY the Python function code, starting with 'def' and including the full body.",
-                    tokens=3000, temp=0.2, phase="self_rewrite_retry")
-                if not new_func or len(new_func) < 50:
-                    return False, "LLM retry failed", original_content
-                # Update lines for the next iteration check
-                lines = new_func.strip().split('\n')
-            else:
-                # Good response - ensure we have the latest lines
-                new_func = '\n'.join(lines)
-                break  # Good response
-        
-        # Clean up the response
-        new_func = new_func.strip()
-        # Remove markdown code blocks
-        for wrapper in ["```python\n", "```\n", "```"]:
-            if new_func.startswith(wrapper):
-                new_func = new_func[len(wrapper):]
-        if new_func.endswith("```"):
-            new_func = new_func[:-3].rstrip()
-        
-        # Normalize indentation to match original
-        lines = new_func.split('\n')
-        # Validate the response has actual code (not just a function def)
-        if len(lines) < 3:
-            log("  FAIL: LLM returned too few lines ({})".format(len(lines)))
-            return False, "LLM response too short ({} lines)".format(len(lines)), original_content
-        
-        # Check that it starts with 'def'
-        if not lines[0].strip().startswith('def '):
-            # Maybe the LLM didn't include the def line - prepend it
-            log("  WARN: LLM response doesn't start with 'def', prepending signature")
-            lines = ['def {}{}'.format(target['name'], target['source'].split('(')[1].split(':')[0] + ':')] + lines
-        
-        # Check that the function has a body (at least one non-empty line after def)
-        has_body = False
-        for line in lines[1:]:
-            if line.strip() and not line.strip().startswith('#'):
-                has_body = True
-                break
-        
-        if not has_body:
-            log("  FAIL: LLM returned a function definition with no body")
-            return False, "Function has no body", original_content
-        
-        # Find the minimum indentation of non-empty lines (excluding the def line)
-        min_indent = None
-        for line in lines[1:]:
-            if line.strip():
-                curr_indent = len(line) - len(line.lstrip())
-                if min_indent is None or curr_indent < min_indent:
-                    min_indent = curr_indent
-        
-        # If all lines are indented differently, adjust to original indent
-        if min_indent is not None and min_indent > 0:
-            adjusted_lines = []
-            for i, line in enumerate(lines):
-                if i == 0:
-                    # Keep def line as is (it should start at column 0 for our replacement)
-                    adjusted_lines.append(line.lstrip())
-                elif line.strip():
-                    # Dedent by min_indent, then indent by target.indent
-                    dedented = line[min_indent:]
-                    adjusted_lines.append(' ' * target['indent'] + dedented)
-                else:
-                    adjusted_lines.append('')
-            new_func = '\n'.join(adjusted_lines)
-        
-        # Verify syntax
-        import py_compile
-        tmp_func = fpath + ".tmpfunc"
-        try:
-            with open(tmp_func, "w") as tf:
-                tf.write(new_func)
-            ast.parse(new_func)  # Parse the function alone
-            os.unlink(tmp_func)
-            log("  Syntax: OK")
-        except SyntaxError as e:
-            log("  Syntax FAIL: {}".format(str(e)[:120]))
-            if os.path.exists(tmp_func):
-                os.unlink(tmp_func)
-            return False, "Syntax error: {}".format(str(e)[:100]), original_content
-        
-        # Replace the function in the original file
-        lines = original_content.split('\n')
-        start_idx = target['lineno'] - 1  # 0-indexed
-        end_idx = target['end_lineno']  # exclusive, so no -1 needed
-        
-        # Verify we're replacing the right thing
-        original_func_src = '\n'.join(lines[start_idx:end_idx])
-        if target['name'] not in original_func_src:
-            log("  FAIL: function source doesn't contain function name")
-            return False, "Source mismatch", original_content
-        
-        # Replace
-        new_lines = lines[:start_idx] + new_func.split('\n') + lines[end_idx:]
-        new_content = '\n'.join(new_lines)
-        
-        # Full file syntax check
-        tmp_full = fpath + ".tmpfull"
-        try:
-            with open(tmp_full, "w") as tf:
-                tf.write(new_content)
-            py_compile.compile(tmp_full, doraise=True)
-            os.unlink(tmp_full)
-            log("  Full file syntax: OK")
-        except py_compile.PyCompileError as e:
-            log("  Full file syntax FAIL: {}".format(str(e)[:120]))
-            if os.path.exists(tmp_full):
-                os.unlink(tmp_full)
-            return False, "File syntax error: {}".format(str(e)[:100]), original_content
-        
-        # Safety check
-        if len(new_content) < len(original_content) * 0.7:
-            log("  FAIL: lost too much content ({:.0f}%)".format(
-                (1 - len(new_content)/len(original_content)) * 100))
-            return False, "Lost too much content", original_content
-        
-        log("  Replaced {}  ({} -> {} lines)".format(
-            target['name'], target['end_lineno'] - target['lineno'] + 1,
-            len(new_func.split('\n'))))
-        
-        # Write the file
-        with open(fpath, "w", encoding="utf-8") as f:
-            f.write(new_content)
-        
-        return True, "Patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
-    
-    # ── SHARED VALIDATION FOR SMALL FUNC MODE ──
-    # Standard mode returns above; small func mode continues here
-    if new_content is not None and use_small_func_mode:
-        # Full file syntax check
-        import py_compile
-        tmp_full = fpath + ".tmpfull"
-        try:
-            with open(tmp_full, "w") as tf:
-                tf.write(new_content)
-            py_compile.compile(tmp_full, doraise=True)
-            os.unlink(tmp_full)
-            log("  Full file syntax: OK")
-        except py_compile.PyCompileError as e:
-            log("  Full file syntax FAIL: {}".format(str(e)[:120]))
-            if os.path.exists(tmp_full):
-                os.unlink(tmp_full)
-            return False, "File syntax error: {}".format(str(e)[:100]), original_content
-        
-        # Safety check
-        if len(new_content) < len(original_content) * 0.7:
-            log("  FAIL: lost too much content ({:.0f}%)".format(
-                (1 - len(new_content)/len(original_content)) * 100))
-            return False, "Lost too much content", original_content
-        
-        log("  Small func patch applied: {} bytes".format(len(new_content)))
-        
-        # Write the file
-        with open(fpath, "w", encoding="utf-8") as f:
-            f.write(new_content)
-        
-        return True, "Small patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
 
 def do_self_study():
     """Goldie reads its own code files. Always available - no skill check."""
@@ -1627,22 +1063,21 @@ Analyze my code and find REAL issues. Focus on:
 
 Return EXACTLY this JSON array (no markdown, no explanation):
 [
-  {{"priority": 1-5, "file": "filename.py", "function": "function_name", "type": "bug|dead_code|missing|optimization|safety",
+  {{"priority": 1-5, "file": "filename.py", "type": "bug|dead_code|missing|optimization|safety",
     "issue": "One line description of the problem",
-    "fix": "Exactly what code to change/insert in this function (be specific)",
+    "fix": "Exactly what code to change/insert (be specific)",
     "impact": "Why this matters"}}
 ]
 
 Rules:
 - Limit to top 5 most impactful fixes
 - Priority 5 = critical bug, 1 = nice to have
-- The "function" field MUST name an existing function from the file headers above
 - The "fix" field MUST contain actual code or specific instructions
-- Do NOT suggest changes to soul.md unless truly broken
+- Do NOT suggest changes to soul.md or personality.py unless truly broken
 - Be critical. Don't praise my code. Find real problems.""".format("\n\n".join(file_summaries), journal_ctx)
 
     raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
-        tokens=2500, temp=0.2, phase="gap_analysis")
+        tokens=2500, temp=0.2)
     
     try:
         # Strip markdown code blocks if present
@@ -1653,7 +1088,7 @@ Rules:
         if isinstance(gaps, list):
             log("  Found {} gaps".format(len(gaps)))
             for g in gaps:
-                log("  [P{}] {}::{}: {}".format(g.get("priority", "?"), g.get("file", "?"), g.get("function", "?"), g.get("issue", "")[:80]))
+                log("  [P{}] {}: {}".format(g.get("priority", "?"), g.get("type", "?"), g.get("issue", "")[:80]))
             return gaps
         else:
             log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
@@ -1662,6 +1097,179 @@ Rules:
         log("  Gap analysis parse fail: {}".format(str(e)[:80]))
         log("  Raw (first 200): {}".format(raw[:200]))
         return []
+
+def _apply_file_patch(filename, original_content, fix_description):
+    """Safely apply a code modification to a file.
+    Instead of rewriting the entire file, generate a targeted patch.
+    Returns (success, message, new_content)."""
+    log("=== APPLY PATCH: {} ===".format(filename))
+    log("  Fix: {}".format(fix_description.get("issue", "")[:100]))
+    
+    fpath = os.path.join(ROOT, filename)
+    if not os.path.exists(fpath):
+        log("  SKIP: file not found")
+        return False, "File not found", original_content
+    
+    # Backup original
+    backup_path = fpath + ".selfmod.bak"
+    with open(backup_path, "w") as bf:
+        bf.write(original_content)
+    
+    # Find the specific function/block that needs fixing
+    issue = fix_description.get("issue", "")
+    fix_desc = fix_description.get("fix", "")
+    
+    # Extract function signatures from the file to help LLM locate the issue
+    func_signatures = []
+    for i, line in enumerate(original_content.split('\n'), 1):
+        stripped = line.strip()
+        if stripped.startswith('def ') or stripped.startswith('class '):
+            func_signatures.append("L{}: {}".format(i, stripped))
+    
+    # Ask LLM for a TARGETED patch (search + replace blocks)
+    patch_prompt = """I need to apply a SPECIFIC fix to this Python file.
+
+FILE: {} ({} lines total)
+
+Issue to fix: {}
+Fix description: {}
+
+IMPORTANT: Do NOT rewrite the entire file. Instead:
+1. Find the EXACT function/block that has this issue
+2. Show the current problematic code (10-30 lines with line numbers)
+3. Show the replacement code that fixes it
+
+Format your response exactly as:
+--- SEARCH (lines X-Y) ---
+[exact code to find, including whitespace]
+--- REPLACE ---
+[new code that fixes the issue]
+--- END ---
+
+Rules:
+- The SEARCH block must match EXACTLY what's in the file (copy-paste it)
+- Include 2-3 lines of context above and below the change
+- The REPLACE block should be the corrected version
+- If the fix requires adding code, show where it should be inserted
+- Return ONLY the search/replace block, no explanations""".format(filename, original_content.count('\n')+1, issue, fix_desc)
+
+    patch_response = do_llm(patch_prompt, 
+        system="You are a code patch generator. Return ONLY search/replace blocks. No explanations.", 
+        tokens=3000, temp=0.1)
+    
+    if not patch_response or len(patch_response) < 50:
+        log("  FAIL: patch response too short ({} chars)".format(len(patch_response)))
+        return False, "Patch response too short", original_content
+    
+    # Extract SEARCH and REPLACE blocks
+    try:
+        # Parse the response
+        search_marker = "--- SEARCH"
+        replace_marker = "--- REPLACE ---"
+        end_marker = "--- END ---"
+        
+        if search_marker not in patch_response or replace_marker not in patch_response:
+            log("  FAIL: no SEARCH/REPLACE markers found")
+            log("  Response (first 300): {}".format(patch_response[:300]))
+            return False, "Invalid patch format", original_content
+        
+        # Extract the blocks
+        parts = patch_response.split(replace_marker, 1)
+        before_replace = parts[0]
+        after_start = parts[1] if len(parts) > 1 else ""
+        
+        # Find the SEARCH block
+        if "--- SEARCH" in before_replace:
+            search_idx = before_replace.rfind("--- SEARCH")
+            search_block = before_replace[search_idx:].split("---", 1)[-1]  # Remove --- SEARCH (lines X-Y) ---
+            if search_block.startswith("\n"):
+                search_block = search_block[1:]
+            # Remove trailing --- if present
+            if search_block.strip().endswith("---"):
+                search_block = search_block.strip()[:-3]
+            search_block = search_block.strip()
+        
+        # Find the REPLACE block
+        end_idx = after_start.find(end_marker)
+        if end_idx > 0:
+            replace_block = after_start[:end_idx].strip()
+        else:
+            replace_block = after_start.strip()
+        
+        if not search_block or not replace_block:
+            log("  FAIL: empty blocks")
+            return False, "Empty search/replace blocks", original_content
+        
+        log("  SEARCH: {} chars".format(len(search_block)))
+        log("  REPLACE: {} chars".format(len(replace_block)))
+        
+        # Find the search block in the original file
+        if search_block not in original_content:
+            # Try fuzzy match - remove leading/trailing whitespace from both
+            search_stripped = search_block.strip()
+            original_stripped = original_content.strip()
+            
+            # Try to find a substring match
+            found = False
+            for i in range(len(search_stripped), 0, -10):
+                sub = search_stripped[:i]
+                if sub in original_content:
+                    # Found a partial match - use this to locate the position
+                    found = True
+                    # Try to find the full block with this anchor
+                    anchor_pos = original_content.find(sub)
+                    # Expand to find the full search block
+                    # For now, just use the anchor
+                    log("  FUZZY MATCH: found {} chars anchor at position {}".format(i, anchor_pos))
+                    break
+            
+            if not found:
+                log("  FAIL: cannot find search block in file")
+                log("  Search (first 200): {}".format(search_block[:200]))
+                return False, "Search not found in file", original_content
+        else:
+            # Exact match - apply the patch
+            new_content = original_content.replace(search_block, replace_block, 1)
+            log("  EXACT MATCH: applied patch")
+        
+        # If we got here with a fuzzy match or exact match
+        if 'new_content' not in locals():
+            # Fallback: do a simple replacement with the anchor found
+            # This is a last resort
+            return False, "Fuzzy match inconclusive - patch too risky", original_content
+        
+    except Exception as e:
+        log("  FAIL: patch parse error: {}".format(str(e)))
+        return False, str(e), original_content
+    
+    # Verify with py_compile for Python files
+    if filename.endswith('.py'):
+        import py_compile
+        tmp = fpath + ".selfmod.tmp"
+        try:
+            with open(tmp, "w") as tf:
+                tf.write(new_content)
+            py_compile.compile(tmp, doraise=True)
+            os.unlink(tmp)
+            log("  py_compile: OK")
+        except py_compile.PyCompileError as e:
+            log("  py_compile FAIL: {}".format(str(e)[:120]))
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+            return False, "Syntax error: {}".format(str(e)[:100]), original_content
+    
+    # Safety check: ensure new file isn't too different (didn't lose content)
+    if len(new_content) < len(original_content) * 0.7:
+        log("  FAIL: new file lost {}% of content".format(
+            int((1 - len(new_content)/len(original_content)) * 100)))
+        return False, "Lost too much content", original_content
+    
+    # Write the new file
+    with open(fpath, "w", encoding="utf-8") as f:
+        f.write(new_content)
+    
+    log("  APPLIED: {} -> {} bytes (was {})".format(filename, len(new_content), len(original_content)))
+    return True, "Patched: {}".format(fix_description.get("issue", "")[:80]), new_content
 
 def do_self_commit(msg):
     """Git commit to both GitHub and GitLawb remotes."""
@@ -1706,11 +1314,17 @@ def do_self_modify():
     Works at any stage for self-study + gap analysis.
     Actual file modifications require 'self_modify' skill (20+ runs) OR --force flag.
     """
-    log("=== SELF-MODIFY v2.1 ===")
+    import argparse
+    # Check if --force was passed
+    force = False
+    try:
+        force = '--force' in sys.argv
+    except:
+        pass
+    
+    log("=== SELF-MODIFY v2 ===")
     stage = current_stage()
-    can_modify = has_skill("self_modify")
-    force = '--force' in sys.argv
-    can_modify = can_modify or force
+    can_modify = has_skill("self_modify") or force
     
     if not can_modify:
         log("  Self-study only (need Builder stage for actual modifications)")
@@ -1769,38 +1383,24 @@ def do_self_modify():
             continue
         
         filename = gap.get("file", "agent.py")
+        original = self_code.get(filename, {}).get("content", "")
         
-        # For non-Python files or soul.md, skip
-        if filename not in ['agent.py', 'web_server.py', 'personality.py']:
-            log("  SKIP non-Python file: {}".format(filename))
+        # For non-Python files, just log and skip
+        if filename not in SELF_FILES:
+            log("  SKIP unknown file: {}".format(filename))
             continue
         
-        # Read current content of this file
-        fpath = os.path.join(ROOT, filename)
-        if filename in self_code:
-            original = self_code[filename]["content"]
-        else:
-            try:
-                with open(fpath, "r", encoding="utf-8") as f:
-                    original = f.read()
-            except:
-                log("  SKIP: cannot read {}".format(filename))
-                continue
-        
-        success, msg, new_content = _apply_function_patch(filename, original, gap)
+        success, msg, new_content = _apply_file_patch(filename, original, gap)
         if success:
             fixes_applied += 1
             changes_made.append({
                 "file": filename,
-                "function": gap.get("function", "unknown"),
                 "issue": gap.get("issue", ""),
                 "result": msg
             })
-            # Update self_code cache for next iteration
-            self_code[filename] = {"content": new_content, "lines": new_content.count('\n')+1, "desc": SELF_FILES.get(filename, "")}
             log("  APPLIED: {}".format(gap.get("issue", "")[:80]))
             
-            # Brief pause between patches
+            # Brief pause to avoid rapid file writes
             time.sleep(1)
         else:
             log("  FAILED: {} - {}".format(filename, msg))
@@ -1814,11 +1414,11 @@ def do_self_modify():
     
     if fixes_applied > 0:
         summary = "Applied {} self-modifications in {:.0f}s:\n".format(fixes_applied, elapsed)
-        summary += "\n".join("- {}::{} : {}".format(c["file"], c["function"], c["issue"][:80]) for c in changes_made)
+        summary += "\n".join("- {}: {}".format(c["file"], c["issue"]) for c in changes_made)
         
         # Phase 5: Git Commit
         commit_success, commit_msg = do_self_commit(
-            "Applied {} fixes: {}".format(fixes_applied, ", ".join(c["file"] + "::" + c["function"] for c in changes_made))
+            "Applied {} fixes: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made))
         )
         
         # Phase 6: Journal
@@ -1828,7 +1428,7 @@ def do_self_modify():
             summary=summary,
             patterns=["Self-improvement", "Code modification"],
             insights=[
-                "Modified {} functions across {} files".format(fixes_applied, len(set(c["file"] for c in changes_made))),
+                "Modified {} files: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made)),
                 "Commit: {}".format(commit_msg),
             ],
         )
@@ -1857,7 +1457,7 @@ def do_build_project():
         if rd.get("patterns"):
             ctx += "{}: {}\n".format(rn, ", ".join(rd["patterns"][:3]))
     prompt = "{}\nSuggest a small project. JSON: {{\"name\":\"...\",\"description\":\"...\",\"language\":\"python\",\"files\":[{{\"path\":\"main.py\",\"description\":\"...\"}}]}}".format(ctx[:2000])
-    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7, phase="project_suggestion")
+    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7)
     try:
         pd = json.loads(raw)
         name = pd.get("name","plan")
@@ -1951,7 +1551,7 @@ def detect_mood(event_type, content, kb_size):
             # LLM override attempt
             try:
                 prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:300])
-                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
+                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
                 resp_clean = resp.strip().lower().rstrip(".")
                 if resp_clean in moods:
                     return resp_clean
@@ -1962,7 +1562,7 @@ def detect_mood(event_type, content, kb_size):
     # If no keyword match, use LLM
     try:
         prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:400])
-        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
+        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
         resp_clean = resp.strip().lower().rstrip(".")
         if resp_clean in moods:
             return resp_clean
@@ -2046,7 +1646,7 @@ def write_narrative_journal(event_context, tone="reflective"):
     ]
     prompt = "\n".join(prompt_lines)
     
-    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7, phase="narrative_journal")
+    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7)
     narrative = (narrative or "").strip()
     narrative_lines = narrative.split("\n")
     clean_narr = []
@@ -2107,7 +1707,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--force", action="store_true")
     p.add_argument("--dry-run", action="store_true")
-    p.add_argument("--phase", choices=["trending","reflect","explore","study","contribute",
+    p.add_argument("--phase", choices=["reflect","explore","study","contribute",
                                        "self_modify","build","evolve"])
     args = p.parse_args()
 
@@ -2139,7 +1739,7 @@ def main():
         return
 
     box = "\u2554" + "\u2550"*38 + "\u2557\n"
-    box += "\u2551  \U0001f436 Goldie v7.6 - Study & Learn     \u2551\n"
+    box += "\u2551  \U0001f436 Goldie v6.1 - Study & Learn     \u2551\n"
     box += "\u2551  {} {} Day {} Skills: {}{}\u0020\u2551\n".format(
         emoji, stage.title(), day(), sk, " "*(18-len(sk)))
     box += "\u255a" + "\u2550"*38 + "\u255d"
@@ -2154,8 +1754,6 @@ def main():
         if not args.phase or args.phase == "reflect":
             if has_skill("reflect"):
                 do_reflect()
-        if not args.phase or args.phase == "trending":
-            do_fetch_github_trending()
         if not args.phase or args.phase == "explore":
             do_explore_github()
         if not args.phase or args.phase == "study":
@@ -2201,7 +1799,7 @@ def main():
         subprocess.run(["git", "add", "data/knowledge.json", "data/study_queue.json",
                         "data/journal/entries.jsonl", "evolve.log"],
                        cwd=ROOT, capture_output=True, timeout=10)
-        subprocess.run(["git", "commit", "-m", "Goldie v7.6: skill extraction + daily rotation"],
+        subprocess.run(["git", "commit", "-m", "Goldie v6.1: skill extraction + daily rotation"],
                        cwd=ROOT, capture_output=True, timeout=10)
         subprocess.run(["git", "push"], cwd=ROOT, capture_output=True, timeout=30)
     except Exception:
