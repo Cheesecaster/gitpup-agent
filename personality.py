@@ -19,8 +19,10 @@ def load():
 
 def save(p):
     os.makedirs(os.path.dirname(PFILE), exist_ok=True)
-    with open(PFILE, 'w', encoding='utf-8') as f:
+    tmp = f'{PFILE}.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
         json.dump(p, f, indent=2, ensure_ascii=False)
+    os.replace(tmp, PFILE)
 
 def default():
     return {

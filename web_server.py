@@ -125,16 +125,12 @@ class H(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
 
     def _handle_chat(self):
-        n = int(self.headers.get('Content-Length', 0))
         try:
-            body = self.rfile.read(n)
-            data = json.loads(body)
-            msg = data['message']
-        except (json.JSONDecodeError, KeyError) as e:
-            _json_resp(self, {'error': str(e)}, 400)
-            return
+            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+        except (json.JSONDecodeError, ValueError):
+            return self._json_resp({'error': 'Invalid JSON'}, 400)
 
-        msg = msg.strip()
+        msg = body.get('message', '').strip()
         if not msg:
             _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
             return
@@ -158,7 +154,7 @@ class H(http.server.SimpleHTTPRequestHandler):
             lower = msg.lower()
             if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
                 # Check for pending proposal in conversation state
-                session_key = data.get('session', 'default')
+                session_key = body.get('session', 'default')
                 if session_key in _pending_proposals:
                     proposal = _pending_proposals.pop(session_key)
                     result = cp.handle_build_confirm(msg, proposal)
