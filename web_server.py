@@ -54,60 +54,104 @@ class H(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
-def do_GET(self):
-    p = urllib.parse.urlparse(self.path).path
-    if p == '/api/status':
-        _json_resp(self, load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle', 'day': 1}))
-    elif p == '/api/journal':
-        entries = load_jsonl(JF)
-        narrative = [e for e in entries if e.get('type') == 'narrative' and e.get('event',{}).get('phase') != 'deep_self_reflection' and len(e.get('body','')) > 50]
-        narrative = narrative[-50:]
-        _json_resp(self, {'entries': list(reversed(narrative)), 'total': len(narrative)})
-    elif p == '/api/reflections':
-        entries = load_jsonl(JF)
-        # Only self-reflection entries (deep_self_reflection phase)
-        reflections = [e for e in entries if e.get('event',{}).get('phase') == 'deep_self_reflection']
-        reflections = reflections[-20:]
-        _json_resp(self, {'entries': list(reversed(reflections)), 'total': len(reflections)})
-    elif p == '/api/activity':
-        entries = load_jsonl(JF)
-        activity = [e for e in entries if e.get('type') != 'narrative']
-        activity = activity[-50:]
-        _json_resp(self, {'entries': list(reversed(activity)), 'total': len(activity)})
-    elif p == '/api/personality':
-        try:
-            _json_resp(self, pers.get_radar())
-        except:
-            _json_resp(self, {'labels': [], 'data': [], 'colors': [], 'keys': []})
-    elif p == '/api/soul':
-        sc = ''
-        try:
-            with open('/opt/gitpup/data/soul.md', encoding='utf-8') as f:
-                sc = f.read()
-        except:
-            pass
-        _json_resp(self, {'content': sc})
-    elif p == '/api/story':
-        _json_resp(self, {'ok': True, 'url': '/story'})
-    elif p == '/story':
-        self.send_response(200)
-        self.send_header('Content-Type', 'text/html')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
-        try:
-            with open('/opt/gitpup/web_dist/story.html', 'rb') as f:
-                self.wfile.write(f.read())
-        except Exception:
-            self.wfile.write(b'<h1>Story not found</h1>')
-        return
-    elif p == '/api/kb':
-        _json_resp(self, cp.kb_stats() if hasattr(cp, 'kb_stats') else {'repos': 0})
-    elif p == '/api/repos':
-        kb = load_json(KB)
-        repos = kb.get('repos', {})
-        _json_resp(self, {'repos': [{'name': rn, 'level': rd.get('study_level',0), 'lang': rd.get('lang',''), 'stars': rd.get('stars',0)} for rn, rd in repos.items()], 'total': len(repos)})
-    else:
-        self.send_error(404)
+    def do_GET(self):
+        p = urllib.parse.urlparse(self.path).path
+        if p == '/api/status':
+            _json_resp(self, load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle', 'day': 1}))
+        elif p == '/api/journal':
+            entries = load_jsonl(JF)
+            narrative = [e for e in entries if e.get('type') == 'narrative' and e.get('event',{}).get('phase') != 'deep_self_reflection' and len(e.get('body','')) > 50]
+            narrative = narrative[-50:]
+            _json_resp(self, {'entries': list(reversed(narrative)), 'total': len(narrative)})
+        elif p == '/api/reflections':
+            entries = load_jsonl(JF)
+            # Only self-reflection entries (deep_self_reflection phase)
+            reflections = [e for e in entries if e.get('event',{}).get('phase') == 'deep_self_reflection']
+            reflections = reflections[-20:]
+            _json_resp(self, {'entries': list(reversed(reflections)), 'total': len(reflections)})
+        elif p == '/api/activity':
+            entries = load_jsonl(JF)
+            activity = [e for e in entries if e.get('type') != 'narrative']
+            activity = activity[-50:]
+            _json_resp(self, {'entries': list(reversed(activity)), 'total': len(activity)})
+        elif p == '/api/personality':
+            try:
+                _json_resp(self, pers.get_radar())
+            except:
+                _json_resp(self, {'labels': [], 'data': [], 'colors': [], 'keys': []})
+        elif p == '/api/soul':
+            sc = ''
+            try:
+                with open('/opt/gitpup/data/soul.md', encoding='utf-8') as f:
+                    sc = f.read()
+            except:
+                pass
+            _json_resp(self, {'content': sc})
+        elif p == '/api/story':
+            _json_resp(self, {'ok': True, 'url': '/story'})
+        elif p == '/story':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            try:
+                with open('/opt/gitpup/web_dist/story.html', 'rb') as f:
+                    self.wfile.write(f.read())
+            except Exception:
+                self.wfile.write(b'<h1>Story not found</h1>')
+            return
+        elif p == '/api/kb':
+            _json_resp(self, cp.kb_stats() if hasattr(cp, 'kb_stats') else {'repos': 0})
+        elif p == '/api/repos':
+            kb = load_json(KB)
+            repos = kb.get('repos', {})
+            _json_resp(self, {'repos': [{'name': rn, 'level': rd.get('study_level',0), 'lang': rd.get('lang',''), 'stars': rd.get('stars',0)} for rn, rd in repos.items()], 'total': len(repos)})
+        elif p == '/api/cost':
+            try:
+                from pathlib import Path
+                cost_file = Path('/opt/gitpup/data/journal/cost_tracking.jsonl')
+                entries = []
+                if cost_file.exists():
+                    with open(cost_file) as f:
+                        for line in f:
+                            line = line.strip()
+                            if line:
+                                try: entries.append(json.loads(line))
+                                except: pass
+                # Compute aggregates
+                total_in = sum(e.get('prompt_tokens',0) for e in entries)
+                total_out = sum(e.get('completion_tokens',0) for e in entries)
+                total_all = sum(e.get('total_tokens',0) for e in entries)
+                total_cost = sum(e.get('cost_usd',0) for e in entries)
+                # Today
+                import time
+                today = time.strftime('%Y-%m-%d')
+                today_entries = [e for e in entries if today in e.get('date','')]
+                today_cost = sum(e.get('cost_usd',0) for e in today_entries)
+                today_tokens = sum(e.get('total_tokens',0) for e in today_entries)
+                # Per run
+                runs = {}
+                for e in entries:
+                    phase = e.get('phase','unknown')
+                    if phase not in runs:
+                        runs[phase] = {'count':0, 'tokens':0, 'cost':0}
+                    runs[phase]['count'] += 1
+                    runs[phase]['tokens'] += e.get('total_tokens',0)
+                    runs[phase]['cost'] += e.get('cost_usd',0)
+                _json_resp(self, {
+                    'total_cost_usd': round(total_cost, 4),
+                    'total_tokens': total_all,
+                    'total_prompt_tokens': total_in,
+                    'total_completion_tokens': total_out,
+                    'today_cost': round(today_cost, 4),
+                    'today_tokens': today_tokens,
+                    'entries_count': len(entries),
+                    'per_phase': {k: {'count': v['count'], 'tokens': v['tokens'], 'cost_usd': round(v['cost'],4)} for k,v in runs.items()}
+                })
+            except Exception as e:
+                _json_resp(self, {'error': str(e)})
+        else:
+            self.send_error(404)
 
     def do_POST(self):
         p = urllib.parse.urlparse(self.path).path
@@ -127,60 +171,61 @@ def do_GET(self):
             self.send_response(404)
             self.end_headers()
 
-def _handle_chat(self):
-    import concurrent.futures
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-    try:
-        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-    except (json.JSONDecodeError, ValueError):
-        return self._json_resp({'error': 'Invalid JSON'}, 400)
+    def _handle_chat(self):
+        import concurrent.futures
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        try:
+            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+        except (json.JSONDecodeError, ValueError):
+            return self._json_resp({'error': 'Invalid JSON'}, 400)
 
-    msg = body.get('message', '').strip()
-    if not msg:
-        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-        return
+        msg = body.get('message', '').strip()
+        if not msg:
+            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+            return
 
-    # Stats/kb query
-    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-        s = cp.kb_stats()
-        reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
-            s['total_repos'], s['total_patterns'], s['total_insights'])
-        reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
-        if s['repos']:
-            for r in s['repos'][:5]:
-                reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
-        _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
-        return
+        # Stats/kb query
+        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+            s = cp.kb_stats()
+            reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
+                s['total_repos'], s['total_patterns'], s['total_insights'])
+            reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
+            if s['repos']:
+                for r in s['repos'][:5]:
+                    reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
+            _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
+            return
 
-    intent = executor.submit(cp.detect_intent, msg).result()
+        intent = executor.submit(cp.detect_intent, msg).result()
 
-    if intent == 'build_request':
-        lower = msg.lower()
-        if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
-            session_key = body.get('session', 'default')
-            if session_key in _pending_proposals:
-                proposal = _pending_proposals.pop(session_key)
-                result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
-                _json_resp(self, result)
-                return
+        if intent == 'build_request':
+            lower = msg.lower()
+            if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
+                session_key = body.get('session', 'default')
+                if session_key in _pending_proposals:
+                    proposal = _pending_proposals.pop(session_key)
+                    result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
+                    _json_resp(self, result)
+                    return
 
-        result = executor.submit(cp.handle_build_proposal, msg).result()
-        if result['status'] == 'proposal':
-            _pending_proposals[msg[:50]] = result['data']
-        _json_resp(self, result)
+            result = executor.submit(cp.handle_build_proposal, msg).result()
+            if result['status'] == 'proposal':
+                _pending_proposals[msg[:50]] = result['data']
+            _json_resp(self, result)
 
-    elif intent == 'question':
-        result = executor.submit(cp.handle_question, msg).result()
-        _json_resp(self, result)
+        elif intent == 'question':
+            result = executor.submit(cp.handle_question, msg).result()
+            _json_resp(self, result)
 
-    else:
-        _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+        else:
+            _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
 
     def log_message(self, fmt, *args):
         pass
 
-# Session storage for pending proposals (in-memory)
-_pending_proposals = {}
+    # Session storage for pending proposals (in-memory)
+    _pending_proposals = {}
+
 
 os.chdir('/opt/gitpup/web_dist')
 srv = http.server.ThreadingHTTPServer(('0.0.0.0', 5173), H)
@@ -188,3 +233,6 @@ srv.daemon_threads = True
 print("GitPup web v3.0 on :5173 with build pipeline")
 server_thread = threading.Thread(target=srv.serve_forever, daemon=True)
 server_thread.start()
+import time
+while True:
+    time.sleep(3600)

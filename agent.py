@@ -131,7 +131,29 @@ def has_skill(skill, st=None):
 # ════════════════════════════════════════════════
 # ── LLM ──
 # ════════════════════════════════════════════════
-def do_llm(msg, system="", tokens=3000, temp=0.5):
+_MODEL_COST = {"input": 0.01, "output": 0.03}
+
+def _record_cost(prompt_t, completion_t, total_t, phase=""):
+    """Append one line to data/journal/cost_tracking.jsonl."""
+    try:
+        inp_c = prompt_t * _MODEL_COST["input"] / 1e6
+        out_c = completion_t * _MODEL_COST["output"] / 1e6
+        entry = {
+            "ts": __import__("time").time(),
+            "date": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
+            "phase": phase,
+            "prompt_tokens": prompt_t,
+            "completion_tokens": completion_t,
+            "total_tokens": total_t,
+            "cost_usd": round(inp_c + out_c, 6)
+        }
+        path = DATA_DIR / "journal" / "cost_tracking.jsonl"
+        with open(path, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
+
+def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
     import time
     msgs = []
     if system:
@@ -150,6 +172,10 @@ def do_llm(msg, system="", tokens=3000, temp=0.5):
         try:
             with urllib.request.urlopen(req, timeout=120) as r:
                 resp = json.loads(r.read())
+                u = resp.get("usage", {})
+                if u and u.get("total_tokens"):
+                    _record_cost(u.get("prompt_tokens", 0), u.get("completion_tokens", 0),
+                                 u.get("total_tokens", 0), phase=phase)
                 return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
         except Exception as e:
             code = getattr(e, 'code', None)
@@ -698,7 +724,7 @@ def do_study_pass(repo_name, from_level=0):
             '{{"summary":"what it does","architecture":["key decisions"],'
             '"insights":["3-5 learnings"]}}').format(repo_name, content[:3000])
         raw = do_llm(prompt, system="Analyze README. Return ONLY valid JSON.",
-                     tokens=2000, temp=0.3)
+                     tokens=2000, temp=0.3, phase="study_readme")
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=2,
@@ -749,7 +775,7 @@ def do_study_pass(repo_name, from_level=0):
             '"patterns":["3-5 from layout"],"insights":["2-3"]}}').format(
             repo_name, dirs_str, lang_summary)
         raw = do_llm(prompt, system="Analyze project structure. Return ONLY JSON.",
-                     tokens=2000, temp=0.3)
+                     tokens=2000, temp=0.3, phase="study_structure")
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=3,
@@ -796,7 +822,7 @@ def do_study_pass(repo_name, from_level=0):
             '"best_practices":["..."],"insights":["..."]}}').format(
             repo_name, all_code[:4000])
         raw = do_llm(prompt, system="Extract coding patterns. Return ONLY JSON.",
-                     tokens=2500, temp=0.3)
+                     tokens=2500, temp=0.3, phase="study_patterns")
         try:
             rd = json.loads(raw)
             kb_add_to_repo(repo_name, study_level=4,
@@ -923,7 +949,7 @@ def do_reflect():
         "No 'I am grateful' filler. No generic optimism. "
         "Write like someone actually thinking about their own growth, "
         "not like an agent reporting metrics."
-    ), tokens=1200, temp=0.7)
+    ), tokens=1200, temp=0.7, phase="self_reflection")
     
     if refl and len(refl) > 40 and not refl.startswith("[LLM"):
         refl = refl.strip()
@@ -969,7 +995,7 @@ def do_reflect():
             "NOT ['be better at patterns']. Reflection summary:\n{}".format(refl[:500])
         )
         try:
-            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5)
+            insights = do_llm(prompt2, system="Return only a JSON array of strings.", tokens=300, temp=0.5, phase="self_reflection_insights")
             actions_list = json.loads(insights)
             if isinstance(actions_list, list) and len(actions_list) > 0:
                 kb["memory_summaries"].append({
@@ -1168,7 +1194,7 @@ def _apply_function_patch(filename, original_content, fix_description):
         
         new_func = do_llm(small_func_prompt,
             system="You fix Python functions. Return ONLY the complete fixed function, starting with 'def'. Must have a real body, not just 'pass'.",
-            tokens=2000, temp=0.2)
+            tokens=2000, temp=0.2, phase="self_modify")
         
         # Validate: LLM must return a function with a body
         attempts = 0
@@ -1180,7 +1206,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                 log("  Attempt {}: Response too short ({} chars), retrying".format(attempts, len(new_func or 0)))
                 new_func = do_llm("Rewrite this function with the fix. Return ONLY the function code starting with 'def':\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
                     system="Return ONLY the Python function code with a real body.",
-                    tokens=2000, temp=0.3)
+                    tokens=2000, temp=0.3, phase="self_modify")
                 continue
             
             # Check if the response has a body (not just def + pass)
@@ -1196,7 +1222,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                 log("  Attempt {}: No real body, retrying".format(attempts + 1))
                 new_func = do_llm("The function must have REAL code inside, not just 'pass'. Return the complete function:\n\n```\n%s\n```\n\nFix: %s" % (target['source'], fix_description.get("issue", "")),
                     system="Return ONLY the Python function with a REAL implementation.",
-                    tokens=2000, temp=0.4)
+                    tokens=2000, temp=0.4, phase="self_modify")
             else:
                 break  # Good response
         
@@ -1250,7 +1276,7 @@ def _apply_function_patch(filename, original_content, fix_description):
 
         new_func = do_llm(rewrite_prompt,
             system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
-            tokens=3000, temp=0.1)
+            tokens=3000, temp=0.1, phase="self_rewrite")
         
         # Validate response length
         if not new_func or len(new_func) < 50:
@@ -1289,7 +1315,7 @@ def _apply_function_patch(filename, original_content, fix_description):
                         target['source'], fix_description.get("issue", ""))
                 new_func = do_llm(retry_prompt,
                     system="Return ONLY the Python function code, starting with 'def' and including the full body.",
-                    tokens=3000, temp=0.2)
+                    tokens=3000, temp=0.2, phase="self_rewrite_retry")
                 if not new_func or len(new_func) < 50:
                     return False, "LLM retry failed", original_content
                 # Update lines for the next iteration check
@@ -1532,7 +1558,7 @@ Rules:
 - Be critical. Don't praise my code. Find real problems.""".format("\n\n".join(file_summaries), journal_ctx)
 
     raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
-        tokens=2500, temp=0.2)
+        tokens=2500, temp=0.2, phase="gap_analysis")
     
     try:
         # Strip markdown code blocks if present
@@ -1747,7 +1773,7 @@ def do_build_project():
         if rd.get("patterns"):
             ctx += "{}: {}\n".format(rn, ", ".join(rd["patterns"][:3]))
     prompt = "{}\nSuggest a small project. JSON: {{\"name\":\"...\",\"description\":\"...\",\"language\":\"python\",\"files\":[{{\"path\":\"main.py\",\"description\":\"...\"}}]}}".format(ctx[:2000])
-    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7)
+    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7, phase="project_suggestion")
     try:
         pd = json.loads(raw)
         name = pd.get("name","plan")
@@ -1841,7 +1867,7 @@ def detect_mood(event_type, content, kb_size):
             # LLM override attempt
             try:
                 prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:300])
-                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
+                resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
                 resp_clean = resp.strip().lower().rstrip(".")
                 if resp_clean in moods:
                     return resp_clean
@@ -1852,7 +1878,7 @@ def detect_mood(event_type, content, kb_size):
     # If no keyword match, use LLM
     try:
         prompt = "Read this journal entry and pick the BEST mood from: {}. Return ONLY the mood word.\n\nEntry: {}".format(", ".join(moods), content[:400])
-        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3)
+        resp = do_llm(prompt, system="You are a mood analyst. Return exactly one word.", tokens=20, temp=0.3, phase="mood_analysis")
         resp_clean = resp.strip().lower().rstrip(".")
         if resp_clean in moods:
             return resp_clean
@@ -1936,7 +1962,7 @@ def write_narrative_journal(event_context, tone="reflective"):
     ]
     prompt = "\n".join(prompt_lines)
     
-    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7)
+    narrative = do_llm(prompt, system=sys_msg, tokens=500, temp=0.7, phase="narrative_journal")
     narrative = (narrative or "").strip()
     narrative_lines = narrative.split("\n")
     clean_narr = []
