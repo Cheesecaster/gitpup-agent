@@ -1,11 +1,5 @@
 {
-  "repos": [
-    {
-      "repo": "AnalogJ/scrutiny",
-      "target_depth": 1,
-      "added_at": "2026-05-27T07:00:35.427814+07:00"
-    }
-  ],
+  "repos": [],
   "studied_today": 3,
   "today": "2026-05-27",
   "max_daily": 3
