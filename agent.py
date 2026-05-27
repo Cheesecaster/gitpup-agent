@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GitPup Agent v7.4 — Self-Evolving AI Agent with Long-Term Knowledge Base
+"""GitPup Agent v7.5.1 — Self-Evolving AI Agent with Long-Term Knowledge Base
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
 Chat-ready: knowledge queryable via topic search."""
 import os, sys, json, time, urllib.request, urllib.parse, subprocess, textwrap, hashlib
@@ -104,7 +104,10 @@ def journal(icon, title, body="", etype="evolve"):
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-def set_state(s, action=None):
+def set_state(s):
+    st = status()
+    st["state"] = s
+    save(st)
     st = status()
     st["state"] = s
     if action:
@@ -1105,18 +1108,102 @@ def _apply_function_patch(filename, original_content, fix_description):
     
     # Skip functions that are too short - LLM can't meaningfully "fix" them
     func_lines = target['end_lineno'] - target['lineno'] + 1
-    if func_lines < 8:
-        log("  SKIP: function too small for function-level patching ({} lines)".format(func_lines))
+    if func_lines < 5:
+        log("  SKIP: function too small for patching ({} lines)".format(func_lines))
         return False, "Function too small ({} lines)".format(func_lines), original_content
     
-    # Ask LLM to rewrite the function
-    # Use %s formatting to avoid issues with curly braces in Python code
-    func_sig = target['source'].split(':')[0] + ':'  # Just the def line
+    # For medium and small functions (<=25 lines), use context-aware insertion instead of full rewrite
+    # The LLM struggles with rewriting functions < 25 lines - it returns empty bodies
+    use_small_func_mode = func_lines <= 25
     
-    # Build context showing what the function currently does
-    body_preview = target['source'].split(':', 1)[-1].strip()[:200]
+    # Ask LLM to fix the function
+    new_content = None  # Set by either mode below
     
-    rewrite_prompt = (
+    if use_small_func_mode:
+        # Small function mode: ask for specific code to INSERT, not full rewrite
+        # Show the function in context of the surrounding file
+        all_lines = original_content.split('\n')
+        context_before = max(0, target['lineno'] - 6)
+        context_after = min(len(all_lines), target['end_lineno'] + 3)
+        
+        context_lines = all_lines[context_before:context_after]
+        
+        context_str = '\n'.join(['%3d: %s' % (context_before + i + 1, line) for i, line in enumerate(context_lines)])
+        
+        small_func_prompt = (
+            "The file has a small function that needs a fix. Here's the CONTEXT around it "
+            "(including the lines before and after):\n\n"
+            "```\n"
+            "%s\n"
+            "```\n\n"
+            "The function to fix is on lines %d to %d.\n\n"
+            "THE ISSUE: %s\n\n"
+            "I need you to return EXACTLY what code to INSERT and WHERE.\n"
+            "Return a JSON object like this (no markdown, no explanation):\n"
+            "{\"insert_after_line\": N, \"code_to_insert\": \"the code\", \"replace_line\": null or N}\n\n"
+            "Rules:\n"
+            "- If you want to ADD code after a specific line: set \"insert_after_line\" to the line NUMBER (not relative)\n"
+            "- If you want to REPLACE a specific line: set \"replace_line\" to that line number\n"
+            "- The \"code_to_insert\" should be properly indented for Python\n"
+            "- Line numbers must match the context shown above (left column numbers)" % (context_str, target['lineno'], target['end_lineno'], fix_description.get("issue", "")))
+        
+        new_func_json = do_llm(small_func_prompt,
+            system="You return ONLY a JSON object with insert_after_line, code_to_insert, and optionally replace_line.",
+            tokens=1500, temp=0.2)
+        
+        # Parse the JSON response
+        try:
+            json_str = new_func_json.strip()
+            if json_str.startswith("```"):
+                json_str = json_str.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+            instructions = json.loads(json_str)
+            
+            insert_line = instructions.get("insert_after_line")
+            replace_line = instructions.get("replace_line")
+            code = instructions.get("code_to_insert", "")
+            
+            if not code.strip():
+                log("  FAIL: empty code_to_insert")
+                return False, "Empty code", original_content
+            
+            log("  Small func mode: insert_after={} replace={}".format(insert_line, replace_line))
+            log("  Code to insert: {} chars".format(len(code)))
+            
+            # Apply the instruction
+            file_lines = original_content.split('\n')
+            
+            if replace_line is not None:
+                idx = replace_line - 1
+                if 0 <= idx < len(file_lines):
+                    file_lines[idx] = code
+                    log("  Replaced line {}".format(replace_line))
+                else:
+                    return False, "Line out of range", original_content
+            
+            elif insert_line is not None:
+                idx = insert_line
+                if 0 <= idx <= len(file_lines):
+                    file_lines.insert(idx, code)
+                    log("  Inserted after line {}".format(insert_line))
+                else:
+                    return False, "Line out of range", original_content
+            else:
+                return False, "No line specified", original_content
+            
+            new_content = '\n'.join(file_lines)
+            
+        except json.JSONDecodeError as e:
+            log("  FAIL: invalid JSON response: {}".format(str(e)[:80]))
+            return False, "Invalid JSON", original_content
+        except Exception as e:
+            log("  FAIL: small func patch error: {}".format(str(e)[:80]))
+            return False, str(e), original_content
+    
+    else:
+        # Standard mode: full function rewrite for larger functions
+        func_sig = target['source'].split(':')[0] + ':'
+
+        rewrite_prompt = (
         "You are fixing a Python function. The function currently looks like this:\n\n"
         "```python\n"
         "%s\n"
@@ -1134,172 +1221,204 @@ def _apply_function_patch(filename, original_content, fix_description):
             target['source'],
             fix_description.get("issue", "")))
 
-    new_func = do_llm(rewrite_prompt,
-        system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
-        tokens=3000, temp=0.1)
-    
-    # Validate response length
-    if not new_func or len(new_func) < 50:
-        log("  FAIL: LLM returned empty or too-short response ({} chars)".format(len(new_func or "")))
-        return False, "LLM response too short ({} chars)".format(len(new_func or "")), original_content
-    
-    # Second attempt if response seems bad
-    attempts = 0
-    max_attempts = 2
-    while attempts < max_attempts:
-        attempts += 1
+        new_func = do_llm(rewrite_prompt,
+            system="You are a code fixer. Return ONLY the corrected Python function. No markdown code blocks, no explanations. Just the raw Python code.",
+            tokens=3000, temp=0.1)
         
-        # Check if the response has a def statement AND a body
-        has_def = False
+        # Validate response length
+        if not new_func or len(new_func) < 50:
+            log("  FAIL: LLM returned empty or too-short response ({} chars)".format(len(new_func or "")))
+            return False, "LLM response too short ({} chars)".format(len(new_func or "")), original_content
+        
+        # Second attempt if response seems bad
+        attempts = 0
+        max_attempts = 2
+        while attempts < max_attempts:
+            attempts += 1
+            
+            # Check if the response has a def statement AND a body
+            has_def = False
+            has_body = False
+            lines = new_func.strip().split('\n')
+            for i, line in enumerate(lines):
+                stripped = line.strip()
+                if stripped.startswith('def ') or stripped.startswith('async def '):
+                    has_def = True
+                    # Check subsequent lines for body
+                    for l2 in lines[i+1:]:
+                        if l2.strip() and not l2.strip().startswith('#'):
+                            has_body = True
+                            break
+                    break
+            
+            if not has_def or not has_body:
+                # Try again with simpler prompt
+                log("  Attempt {}: Missing def({}) or body({}), retrying".format(attempts + 1, has_def, has_body))
+                if not has_def:
+                    retry_prompt = "Rewrite this Python function with the fix. Return ONLY the function code:\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
+                        target['source'], fix_description.get("issue", ""))
+                else:
+                    retry_prompt = "The function must have a body with actual code. Rewrite the ENTIRE function (def line + body):\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
+                        target['source'], fix_description.get("issue", ""))
+                new_func = do_llm(retry_prompt,
+                    system="Return ONLY the Python function code, starting with 'def' and including the full body.",
+                    tokens=3000, temp=0.2)
+                if not new_func or len(new_func) < 50:
+                    return False, "LLM retry failed", original_content
+                # Update lines for the next iteration check
+                lines = new_func.strip().split('\n')
+            else:
+                # Good response - ensure we have the latest lines
+                new_func = '\n'.join(lines)
+                break  # Good response
+        
+        # Clean up the response
+        new_func = new_func.strip()
+        # Remove markdown code blocks
+        for wrapper in ["```python\n", "```\n", "```"]:
+            if new_func.startswith(wrapper):
+                new_func = new_func[len(wrapper):]
+        if new_func.endswith("```"):
+            new_func = new_func[:-3].rstrip()
+        
+        # Normalize indentation to match original
+        lines = new_func.split('\n')
+        # Validate the response has actual code (not just a function def)
+        if len(lines) < 3:
+            log("  FAIL: LLM returned too few lines ({})".format(len(lines)))
+            return False, "LLM response too short ({} lines)".format(len(lines)), original_content
+        
+        # Check that it starts with 'def'
+        if not lines[0].strip().startswith('def '):
+            # Maybe the LLM didn't include the def line - prepend it
+            log("  WARN: LLM response doesn't start with 'def', prepending signature")
+            lines = ['def {}{}'.format(target['name'], target['source'].split('(')[1].split(':')[0] + ':')] + lines
+        
+        # Check that the function has a body (at least one non-empty line after def)
         has_body = False
-        lines = new_func.strip().split('\n')
-        for i, line in enumerate(lines):
-            stripped = line.strip()
-            if stripped.startswith('def ') or stripped.startswith('async def '):
-                has_def = True
-                # Check subsequent lines for body
-                for l2 in lines[i+1:]:
-                    if l2.strip() and not l2.strip().startswith('#'):
-                        has_body = True
-                        break
+        for line in lines[1:]:
+            if line.strip() and not line.strip().startswith('#'):
+                has_body = True
                 break
         
-        if not has_def or not has_body:
-            # Try again with simpler prompt
-            log("  Attempt {}: Missing def({}) or body({}), retrying".format(attempts + 1, has_def, has_body))
-            if not has_def:
-                retry_prompt = "Rewrite this Python function with the fix. Return ONLY the function code:\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
-                    target['source'], fix_description.get("issue", ""))
-            else:
-                retry_prompt = "The function must have a body with actual code. Rewrite the ENTIRE function (def line + body):\n\nCurrent:\n```\n%s\n```\n\nFix: %s" % (
-                    target['source'], fix_description.get("issue", ""))
-            new_func = do_llm(retry_prompt,
-                system="Return ONLY the Python function code, starting with 'def' and including the full body.",
-                tokens=3000, temp=0.2)
-            if not new_func or len(new_func) < 50:
-                return False, "LLM retry failed", original_content
-            # Update lines for the next iteration check
-            lines = new_func.strip().split('\n')
-        else:
-            # Good response - ensure we have the latest lines
-            new_func = '\n'.join(lines)
-            break  # Good response
-    
-    # Clean up the response
-    new_func = new_func.strip()
-    # Remove markdown code blocks
-    for wrapper in ["```python\n", "```\n", "```"]:
-        if new_func.startswith(wrapper):
-            new_func = new_func[len(wrapper):]
-    if new_func.endswith("```"):
-        new_func = new_func[:-3].rstrip()
-    
-    # Normalize indentation to match original
-    lines = new_func.split('\n')
-    # Validate the response has actual code (not just a function def)
-    if len(lines) < 3:
-        log("  FAIL: LLM returned too few lines ({})".format(len(lines)))
-        return False, "LLM response too short ({} lines)".format(len(lines)), original_content
-    
-    # Check that it starts with 'def'
-    if not lines[0].strip().startswith('def '):
-        # Maybe the LLM didn't include the def line - prepend it
-        log("  WARN: LLM response doesn't start with 'def', prepending signature")
-        lines = ['def {}{}'.format(target['name'], target['source'].split('(')[1].split(':')[0] + ':')] + lines
-    
-    # Check that the function has a body (at least one non-empty line after def)
-    has_body = False
-    for line in lines[1:]:
-        if line.strip() and not line.strip().startswith('#'):
-            has_body = True
-            break
-    
-    if not has_body:
-        log("  FAIL: LLM returned a function definition with no body")
-        return False, "Function has no body", original_content
-    
-    # Find the minimum indentation of non-empty lines (excluding the def line)
-    min_indent = None
-    for line in lines[1:]:
-        if line.strip():
-            curr_indent = len(line) - len(line.lstrip())
-            if min_indent is None or curr_indent < min_indent:
-                min_indent = curr_indent
-    
-    # If all lines are indented differently, adjust to original indent
-    if min_indent is not None and min_indent > 0:
-        adjusted_lines = []
-        for i, line in enumerate(lines):
-            if i == 0:
-                # Keep def line as is (it should start at column 0 for our replacement)
-                adjusted_lines.append(line.lstrip())
-            elif line.strip():
-                # Dedent by min_indent, then indent by target.indent
-                dedented = line[min_indent:]
-                adjusted_lines.append(' ' * target['indent'] + dedented)
-            else:
-                adjusted_lines.append('')
-        new_func = '\n'.join(adjusted_lines)
-    
-    # Verify syntax
-    import py_compile
-    tmp_func = fpath + ".tmpfunc"
-    try:
-        with open(tmp_func, "w") as tf:
-            tf.write(new_func)
-        ast.parse(new_func)  # Parse the function alone
-        os.unlink(tmp_func)
-        log("  Syntax: OK")
-    except SyntaxError as e:
-        log("  Syntax FAIL: {}".format(str(e)[:120]))
-        if os.path.exists(tmp_func):
+        if not has_body:
+            log("  FAIL: LLM returned a function definition with no body")
+            return False, "Function has no body", original_content
+        
+        # Find the minimum indentation of non-empty lines (excluding the def line)
+        min_indent = None
+        for line in lines[1:]:
+            if line.strip():
+                curr_indent = len(line) - len(line.lstrip())
+                if min_indent is None or curr_indent < min_indent:
+                    min_indent = curr_indent
+        
+        # If all lines are indented differently, adjust to original indent
+        if min_indent is not None and min_indent > 0:
+            adjusted_lines = []
+            for i, line in enumerate(lines):
+                if i == 0:
+                    # Keep def line as is (it should start at column 0 for our replacement)
+                    adjusted_lines.append(line.lstrip())
+                elif line.strip():
+                    # Dedent by min_indent, then indent by target.indent
+                    dedented = line[min_indent:]
+                    adjusted_lines.append(' ' * target['indent'] + dedented)
+                else:
+                    adjusted_lines.append('')
+            new_func = '\n'.join(adjusted_lines)
+        
+        # Verify syntax
+        import py_compile
+        tmp_func = fpath + ".tmpfunc"
+        try:
+            with open(tmp_func, "w") as tf:
+                tf.write(new_func)
+            ast.parse(new_func)  # Parse the function alone
             os.unlink(tmp_func)
-        return False, "Syntax error: {}".format(str(e)[:100]), original_content
-    
-    # Replace the function in the original file
-    lines = original_content.split('\n')
-    start_idx = target['lineno'] - 1  # 0-indexed
-    end_idx = target['end_lineno']  # exclusive, so no -1 needed
-    
-    # Verify we're replacing the right thing
-    original_func_src = '\n'.join(lines[start_idx:end_idx])
-    if target['name'] not in original_func_src:
-        log("  FAIL: function source doesn't contain function name")
-        return False, "Source mismatch", original_content
-    
-    # Replace
-    new_lines = lines[:start_idx] + new_func.split('\n') + lines[end_idx:]
-    new_content = '\n'.join(new_lines)
-    
-    # Full file syntax check
-    tmp_full = fpath + ".tmpfull"
-    try:
-        with open(tmp_full, "w") as tf:
-            tf.write(new_content)
-        py_compile.compile(tmp_full, doraise=True)
-        os.unlink(tmp_full)
-        log("  Full file syntax: OK")
-    except py_compile.PyCompileError as e:
-        log("  Full file syntax FAIL: {}".format(str(e)[:120]))
-        if os.path.exists(tmp_full):
+            log("  Syntax: OK")
+        except SyntaxError as e:
+            log("  Syntax FAIL: {}".format(str(e)[:120]))
+            if os.path.exists(tmp_func):
+                os.unlink(tmp_func)
+            return False, "Syntax error: {}".format(str(e)[:100]), original_content
+        
+        # Replace the function in the original file
+        lines = original_content.split('\n')
+        start_idx = target['lineno'] - 1  # 0-indexed
+        end_idx = target['end_lineno']  # exclusive, so no -1 needed
+        
+        # Verify we're replacing the right thing
+        original_func_src = '\n'.join(lines[start_idx:end_idx])
+        if target['name'] not in original_func_src:
+            log("  FAIL: function source doesn't contain function name")
+            return False, "Source mismatch", original_content
+        
+        # Replace
+        new_lines = lines[:start_idx] + new_func.split('\n') + lines[end_idx:]
+        new_content = '\n'.join(new_lines)
+        
+        # Full file syntax check
+        tmp_full = fpath + ".tmpfull"
+        try:
+            with open(tmp_full, "w") as tf:
+                tf.write(new_content)
+            py_compile.compile(tmp_full, doraise=True)
             os.unlink(tmp_full)
-        return False, "File syntax error: {}".format(str(e)[:100]), original_content
+            log("  Full file syntax: OK")
+        except py_compile.PyCompileError as e:
+            log("  Full file syntax FAIL: {}".format(str(e)[:120]))
+            if os.path.exists(tmp_full):
+                os.unlink(tmp_full)
+            return False, "File syntax error: {}".format(str(e)[:100]), original_content
+        
+        # Safety check
+        if len(new_content) < len(original_content) * 0.7:
+            log("  FAIL: lost too much content ({:.0f}%)".format(
+                (1 - len(new_content)/len(original_content)) * 100))
+            return False, "Lost too much content", original_content
+        
+        log("  Replaced {}  ({} -> {} lines)".format(
+            target['name'], target['end_lineno'] - target['lineno'] + 1,
+            len(new_func.split('\n'))))
+        
+        # Write the file
+        with open(fpath, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        
+        return True, "Patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
     
-    # Safety check
-    if len(new_content) < len(original_content) * 0.7:
-        log("  FAIL: lost too much content ({:.0f}%)".format(
-            (1 - len(new_content)/len(original_content)) * 100))
-        return False, "Lost too much content", original_content
-    
-    log("  Replaced {}  ({} -> {} lines)".format(
-        target['name'], target['end_lineno'] - target['lineno'] + 1,
-        len(new_func.split('\n'))))
-    
-    # Write the file
-    with open(fpath, "w", encoding="utf-8") as f:
-        f.write(new_content)
-    
-    return True, "Patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
+    # ── SHARED VALIDATION FOR SMALL FUNC MODE ──
+    # Standard mode returns above; small func mode continues here
+    if new_content is not None and use_small_func_mode:
+        # Full file syntax check
+        import py_compile
+        tmp_full = fpath + ".tmpfull"
+        try:
+            with open(tmp_full, "w") as tf:
+                tf.write(new_content)
+            py_compile.compile(tmp_full, doraise=True)
+            os.unlink(tmp_full)
+            log("  Full file syntax: OK")
+        except py_compile.PyCompileError as e:
+            log("  Full file syntax FAIL: {}".format(str(e)[:120]))
+            if os.path.exists(tmp_full):
+                os.unlink(tmp_full)
+            return False, "File syntax error: {}".format(str(e)[:100]), original_content
+        
+        # Safety check
+        if len(new_content) < len(original_content) * 0.7:
+            log("  FAIL: lost too much content ({:.0f}%)".format(
+                (1 - len(new_content)/len(original_content)) * 100))
+            return False, "Lost too much content", original_content
+        
+        log("  Small func patch applied: {} bytes".format(len(new_content)))
+        
+        # Write the file
+        with open(fpath, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        
+        return True, "Small patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
 
 def do_self_study():
     """Goldie reads its own code files. Always available - no skill check."""

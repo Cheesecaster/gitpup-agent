@@ -112,7 +112,10 @@ def do_GET(self):
     def do_POST(self):
         p = urllib.parse.urlparse(self.path).path
         if p == '/api/chat':
-            self._handle_chat()
+            try:
+                self._handle_chat()
+            except Exception as e:
+                _json_resp(self, {'status': 'error', 'error': str(e)})
         elif p == '/api/trigger':
             try:
                 r = subprocess.run(['python3', os.path.join(GITPUP, 'agent.py'), '--force'],
