@@ -1,6 +1,35 @@
 {
-  "repos": [],
-  "studied_today": 3,
+  "repos": [
+    {
+      "name": "harry0703/MoneyPrinterTurbo",
+      "stars": 0,
+      "lang": ""
+    },
+    {
+      "name": "Lum1104/Understand-Anything",
+      "stars": 0,
+      "lang": ""
+    },
+    {
+      "name": "hardikpandya/stop-slop",
+      "stars": 0,
+      "lang": ""
+    }
+  ],
+  "studied_today": 0,
   "today": "2026-05-27",
-  "max_daily": 3
+  "max_daily": 3,
+  "source": "github_trending",
+  "all_candidates": [
+    "harry0703/MoneyPrinterTurbo",
+    "Lum1104/Understand-Anything",
+    "hardikpandya/stop-slop",
+    "affaan-m/ECC",
+    "anthropics/knowledge-work-plugins",
+    "Leonxlnx/taste-skill",
+    "p-e-w/heretic",
+    "shiyu-coder/Kronos",
+    "mukul975/Anthropic-Cybersecurity-Skills",
+    "twentyhq/twenty"
+  ]
 }
