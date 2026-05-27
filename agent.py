@@ -975,15 +975,15 @@ def do_contribute(repo_info):
     journal("\U0001f527", "Contributing to " + repo_info.get("full_name",""), "")
 
 # ════════════════════════════════════════════════
-# ── SELF-MODIFICATION v2 — REAL CODE CHANGES ──
+# ── SELF-MODIFICATION v2.1 — FUNCTION-LEVEL PATCHING ──
 # ════════════════════════════════════════════════
-# Replaces the old stub (L976-996). Now Goldie actually:
-# 1. Reads own code (self-study)
-# 2. Finds real gaps via LLM analysis
-# 3. Applies patches (writes to files)
-# 4. Verifies with py_compile
-# 5. Commits to GitLawb
-# 6. Journals the changes
+# Key improvement: Instead of fragile SEARCH/REPLACE, we:
+# 1. Parse the AST to find exact function boundaries
+# 2. Have LLM rewrite just the target function
+# 3. Replace the entire function at known line numbers
+# This is 100x more reliable than text matching on 1800+ line files.
+
+import ast
 
 # Goldie's own files that can be modified
 SELF_FILES = {
@@ -992,6 +992,227 @@ SELF_FILES = {
     'personality.py': 'Personality tracking - dimensions, traits, stage evolution',
     'soul.md': 'Agent soul/personality definition',
 }
+
+def _extract_functions(content):
+    """Parse Python source and return list of function info dicts.
+    Each dict: {name, lineno, end_lineno, source, indent}"""
+    try:
+        tree = ast.parse(content)
+    except SyntaxError:
+        return []
+    
+    functions = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            start = node.lineno
+            end = getattr(node, 'end_lineno', start)
+            lines = content.split('\n')
+            # Get the source lines (0-indexed)
+            func_src = '\n'.join(lines[start-1:end])
+            # Calculate indentation of the def line
+            def_line = lines[start-1]
+            indent = len(def_line) - len(def_line.lstrip())
+            functions.append({
+                'name': node.name,
+                'lineno': start,
+                'end_lineno': end,
+                'source': func_src,
+                'indent': indent,
+            })
+    return functions
+
+def _find_target_function(functions, issue, fix_desc):
+    """Find the most likely function that needs fixing.
+    Returns the function dict or None."""
+    # Keywords from issue/fix to match function names
+    keywords = []
+    for text in [issue, fix_desc]:
+        text_lower = text.lower()
+        # Look for function name mentions (e.g., "do_llm", "gh_get", "_handle_chat")
+        for func in functions:
+            if func['name'].lower() in text_lower:
+                keywords.append(func['name'])
+    
+    # Score functions by relevance
+    scored = []
+    for func in functions:
+        score = 0
+        name = func['name'].lower()
+        func_src = func['source'].lower()
+        
+        # Direct name match
+        if name in [k.lower() for k in keywords]:
+            score += 10
+        
+        # Keywords in source
+        issue_words = issue.lower().split()
+        fix_words = fix_desc.lower().split()
+        for word in issue_words + fix_words:
+            if len(word) > 3 and word in func_src:
+                score += 1
+        
+        scored.append((score, func))
+    
+    # Return highest scoring function
+    scored.sort(key=lambda x: x[0], reverse=True)
+    if scored and scored[0][0] > 0:
+        return scored[0][1]
+    return None
+
+def _apply_function_patch(filename, original_content, fix_description):
+    """Apply a patch by having LLM rewrite just ONE function.
+    Returns (success, message, new_content)."""
+    log("=== FUNCTION PATCH: {} ===".format(filename))
+    log("  Fix: {}".format(fix_description.get("issue", "")[:100]))
+    
+    fpath = os.path.join(ROOT, filename)
+    if not os.path.exists(fpath):
+        log("  SKIP: file not found")
+        return False, "File not found", original_content
+    
+    # Backup original
+    backup_path = fpath + ".selfmod.bak"
+    with open(backup_path, "w") as bf:
+        bf.write(original_content)
+    
+    # Extract functions
+    functions = _extract_functions(original_content)
+    if not functions:
+        log("  FAIL: no functions parsed")
+        return False, "No functions found in file", original_content
+    
+    log("  Found {} functions".format(len(functions)))
+    
+    # Find target function
+    target = _find_target_function(functions, fix_description.get("issue", ""), fix_description.get("fix", ""))
+    if not target:
+        log("  FAIL: couldn't identify target function")
+        # Log available functions for debugging
+        func_names = [f['name'] for f in functions[:20]]
+        log("  Available: {}".format(', '.join(func_names)))
+        return False, "No target function identified", original_content
+    
+    log("  Target: {}  (lines {}-{})".format(target['name'], target['lineno'], target['end_lineno']))
+    
+    # Ask LLM to rewrite the function
+    # Use %s formatting to avoid issues with curly braces in Python code
+    rewrite_prompt = (
+        "I need to fix a bug in this Python function.\n\n"
+        "Current function (%d lines):\n```\n%s\n```\n\n"
+        "Issue: %s\n"
+        "Fix needed: %s\n\n"
+        "Rewrite this ENTIRE function with the fix applied.\n"
+        "Return ONLY the function code, nothing else.\n"
+        "Keep the same function signature (name and parameters).\n"
+        "Don't add extra functions or helper code.\n"
+        "Maintain the same indentation level (%d spaces)." % (
+            len(target['source'].split('\n')),
+            target['source'],
+            fix_description.get("issue", ""),
+            fix_description.get("fix", ""),
+            target['indent']))
+
+    new_func = do_llm(rewrite_prompt,
+        system="You are a code fixer. Return ONLY the corrected function. No markdown, no explanations.",
+        tokens=3000, temp=0.1)
+    
+    if not new_func or len(new_func) < 20:
+        log("  FAIL: LLM returned empty or too-short function")
+        return False, "LLM response too short", original_content
+    
+    # Clean up the response
+    new_func = new_func.strip()
+    # Remove markdown code blocks
+    for wrapper in ["```python\n", "```\n", "```"]:
+        if new_func.startswith(wrapper):
+            new_func = new_func[len(wrapper):]
+    if new_func.endswith("```"):
+        new_func = new_func[:-3].rstrip()
+    
+    # Normalize indentation to match original
+    lines = new_func.split('\n')
+    # Find the minimum indentation of non-empty lines (excluding the def line)
+    min_indent = None
+    for line in lines[1:]:
+        if line.strip():
+            curr_indent = len(line) - len(line.lstrip())
+            if min_indent is None or curr_indent < min_indent:
+                min_indent = curr_indent
+    
+    # If all lines are indented differently, adjust to original indent
+    if min_indent is not None and min_indent > 0:
+        adjusted_lines = []
+        for i, line in enumerate(lines):
+            if i == 0:
+                # Keep def line as is (it should start at column 0 for our replacement)
+                adjusted_lines.append(line.lstrip())
+            elif line.strip():
+                # Dedent by min_indent, then indent by target.indent
+                dedented = line[min_indent:]
+                adjusted_lines.append(' ' * target['indent'] + dedented)
+            else:
+                adjusted_lines.append('')
+        new_func = '\n'.join(adjusted_lines)
+    
+    # Verify syntax
+    import py_compile
+    tmp_func = fpath + ".tmpfunc"
+    try:
+        with open(tmp_func, "w") as tf:
+            tf.write(new_func)
+        ast.parse(new_func)  # Parse the function alone
+        os.unlink(tmp_func)
+        log("  Syntax: OK")
+    except SyntaxError as e:
+        log("  Syntax FAIL: {}".format(str(e)[:120]))
+        if os.path.exists(tmp_func):
+            os.unlink(tmp_func)
+        return False, "Syntax error: {}".format(str(e)[:100]), original_content
+    
+    # Replace the function in the original file
+    lines = original_content.split('\n')
+    start_idx = target['lineno'] - 1  # 0-indexed
+    end_idx = target['end_lineno']  # exclusive, so no -1 needed
+    
+    # Verify we're replacing the right thing
+    original_func_src = '\n'.join(lines[start_idx:end_idx])
+    if target['name'] not in original_func_src:
+        log("  FAIL: function source doesn't contain function name")
+        return False, "Source mismatch", original_content
+    
+    # Replace
+    new_lines = lines[:start_idx] + new_func.split('\n') + lines[end_idx:]
+    new_content = '\n'.join(new_lines)
+    
+    # Full file syntax check
+    tmp_full = fpath + ".tmpfull"
+    try:
+        with open(tmp_full, "w") as tf:
+            tf.write(new_content)
+        py_compile.compile(tmp_full, doraise=True)
+        os.unlink(tmp_full)
+        log("  Full file syntax: OK")
+    except py_compile.PyCompileError as e:
+        log("  Full file syntax FAIL: {}".format(str(e)[:120]))
+        if os.path.exists(tmp_full):
+            os.unlink(tmp_full)
+        return False, "File syntax error: {}".format(str(e)[:100]), original_content
+    
+    # Safety check
+    if len(new_content) < len(original_content) * 0.7:
+        log("  FAIL: lost too much content ({:.0f}%)".format(
+            (1 - len(new_content)/len(original_content)) * 100))
+        return False, "Lost too much content", original_content
+    
+    log("  Replaced {}  ({} -> {} lines)".format(
+        target['name'], target['end_lineno'] - target['lineno'] + 1,
+        len(new_func.split('\n'))))
+    
+    # Write the file
+    with open(fpath, "w", encoding="utf-8") as f:
+        f.write(new_content)
+    
+    return True, "Patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
 
 def do_self_study():
     """Goldie reads its own code files. Always available - no skill check."""
@@ -1063,113 +1284,38 @@ Analyze my code and find REAL issues. Focus on:
 
 Return EXACTLY this JSON array (no markdown, no explanation):
 [
-  {{"priority": 1-5, "file": "filename.py", "type": "bug|dead_code|missing|optimization|safety",
+  {{"priority": 1-5, "file": "filename.py", "function": "function_name", "type": "bug|dead_code|missing|optimization|safety",
     "issue": "One line description of the problem",
-    "fix": "Exactly what code to change/insert (be specific)",
+    "fix": "Exactly what code to change/insert in this function (be specific)",
     "impact": "Why this matters"}}
 ]
 
 Rules:
 - Limit to top 5 most impactful fixes
 - Priority 5 = critical bug, 1 = nice to have
+- The "function" field MUST name an existing function from the file headers above
 - The "fix" field MUST contain actual code or specific instructions
-- Do NOT suggest changes to soul.md or personality.py unless truly broken
+- Do NOT suggest changes to soul.md unless truly broken
 - Be critical. Don't praise my code. Find real problems.""".format("\n\n".join(file_summaries), journal_ctx)
 
     raw = do_llm(prompt, system="You analyze code for real issues. Return ONLY a JSON array of improvements. No markdown, no explanation.", 
         tokens=2500, temp=0.2)
     
-    try:
-        # Strip markdown code blocks if present
-        raw = raw.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
-        gaps = json.loads(raw)
-        if isinstance(gaps, list):
-            log("  Found {} gaps".format(len(gaps)))
-            for g in gaps:
-                log("  [P{}] {}: {}".format(g.get("priority", "?"), g.get("type", "?"), g.get("issue", "")[:80]))
-            return gaps
-        else:
-            log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
-            return []
-    except Exception as e:
-        log("  Gap analysis parse fail: {}".format(str(e)[:80]))
-        log("  Raw (first 200): {}".format(raw[:200]))
-        return []
-
-def _apply_file_patch(filename, original_content, fix_description):
-    """Safely apply a code modification to a file.
-    Returns (success, message, new_content)."""
-    log("=== APPLY PATCH: {} ===".format(filename))
-    log("  Fix: {}".format(fix_description.get("issue", "")[:100]))
-    
-    fpath = os.path.join(ROOT, filename)
-    if not os.path.exists(fpath):
-        log("  SKIP: file not found")
-        return False, "File not found", original_content
-    
-    # Backup original
-    backup_path = fpath + ".selfmod.bak"
-    with open(backup_path, "w") as bf:
-        bf.write(original_content)
-    
-    # Ask LLM to generate the actual modified code
-    fix_prompt = """Here's the current {} file:
-
----
-{}
----
-
-FIX TO APPLY:
-Issue: {}
-Description: {}
-
-Rewrite the ENTIRE file with the fix applied. Return ONLY the file content.
-DO NOT wrap in markdown code blocks.
-DO NOT add explanations before or after.
-Just output the complete file content.""".format(filename, original_content, fix_description.get("issue", ""), fix_description.get("fix", ""))
-
-    new_code = do_llm(fix_prompt, 
-        system="You are a code editor. Return ONLY the complete file content, nothing else.", 
-        tokens=8000, temp=0.1)
-    
-    if not new_code or len(new_code) < len(original_content) * 0.5:
-        log("  FAIL: new code too short or empty ({} vs {} chars)".format(len(new_code), len(original_content)))
-        return False, "New code too short", original_content
-    
-    # Strip any markdown code blocks the LLM might have added
-    new_code = new_code.strip()
-    for lang in ["python", "Python", "```"]:
-        if new_code.startswith(lang):
-            idx = new_code.find('\n')
-            if idx > 0:
-                new_code = new_code[idx+1:]
-    if new_code.endswith("```"):
-        new_code = new_code[:-3].rstrip()
-    
-    # Verify with py_compile for Python files
-    if filename.endswith('.py'):
-        import py_compile
-        tmp = fpath + ".selfmod.tmp"
+    for _ in range(3):
         try:
-            with open(tmp, "w") as tf:
-                tf.write(new_code)
-            py_compile.compile(tmp, doraise=True)
-            os.unlink(tmp)
-            log("  py_compile: OK")
-        except py_compile.PyCompileError as e:
-            log("  py_compile FAIL: {}".format(str(e)[:120]))
-            if os.path.exists(tmp):
-                os.unlink(tmp)
-            return False, "Syntax error: {}".format(str(e)[:100]), original_content
-    
-    # Write the new file
-    with open(fpath, "w", encoding="utf-8") as f:
-        f.write(new_code)
-    
-    log("  APPLIED: {} -> {} bytes (was {})".format(filename, len(new_code), len(original_content)))
-    return True, "Applied successfully", new_code
+            gaps = json.loads(raw)
+            if isinstance(gaps, list):
+                log("  Found {} gaps".format(len(gaps)))
+                for g in gaps:
+                    log("  [P{}] {}::{}: {}".format(g.get("priority", "?"), g.get("file", "?"), g.get("function", "?"), g.get("issue", "")[:80]))
+                return gaps
+            else:
+                log("  Gap analysis: expected list, got {}".format(type(gaps).__name__))
+                return []
+        except json.JSONDecodeError:
+            raw = re.sub(r'```json\s*|\s*```', '', raw)
+    log("  Gap analysis parse fail after retries")
+    return []
 
 def do_self_commit(msg):
     """Git commit to both GitHub and GitLawb remotes."""
@@ -1214,17 +1360,11 @@ def do_self_modify():
     Works at any stage for self-study + gap analysis.
     Actual file modifications require 'self_modify' skill (20+ runs) OR --force flag.
     """
-    import argparse
-    # Check if --force was passed
-    force = False
-    try:
-        force = '--force' in sys.argv
-    except:
-        pass
-    
-    log("=== SELF-MODIFY v2 ===")
+    log("=== SELF-MODIFY v2.1 ===")
     stage = current_stage()
-    can_modify = has_skill("self_modify") or force
+    can_modify = has_skill("self_modify")
+    force = '--force' in sys.argv
+    can_modify = can_modify or force
     
     if not can_modify:
         log("  Self-study only (need Builder stage for actual modifications)")
@@ -1283,24 +1423,38 @@ def do_self_modify():
             continue
         
         filename = gap.get("file", "agent.py")
-        original = self_code.get(filename, {}).get("content", "")
         
-        # For non-Python files, just log and skip
-        if filename not in SELF_FILES:
-            log("  SKIP unknown file: {}".format(filename))
+        # For non-Python files or soul.md, skip
+        if filename not in ['agent.py', 'web_server.py', 'personality.py']:
+            log("  SKIP non-Python file: {}".format(filename))
             continue
         
-        success, msg, new_content = _apply_file_patch(filename, original, gap)
+        # Read current content of this file
+        fpath = os.path.join(ROOT, filename)
+        if filename in self_code:
+            original = self_code[filename]["content"]
+        else:
+            try:
+                with open(fpath, "r", encoding="utf-8") as f:
+                    original = f.read()
+            except:
+                log("  SKIP: cannot read {}".format(filename))
+                continue
+        
+        success, msg, new_content = _apply_function_patch(filename, original, gap)
         if success:
             fixes_applied += 1
             changes_made.append({
                 "file": filename,
+                "function": gap.get("function", "unknown"),
                 "issue": gap.get("issue", ""),
                 "result": msg
             })
+            # Update self_code cache for next iteration
+            self_code[filename] = {"content": new_content, "lines": new_content.count('\n')+1, "desc": SELF_FILES.get(filename, "")}
             log("  APPLIED: {}".format(gap.get("issue", "")[:80]))
             
-            # Brief pause to avoid rapid file writes
+            # Brief pause between patches
             time.sleep(1)
         else:
             log("  FAILED: {} - {}".format(filename, msg))
@@ -1314,11 +1468,11 @@ def do_self_modify():
     
     if fixes_applied > 0:
         summary = "Applied {} self-modifications in {:.0f}s:\n".format(fixes_applied, elapsed)
-        summary += "\n".join("- {}: {}".format(c["file"], c["issue"]) for c in changes_made)
+        summary += "\n".join("- {}::{} : {}".format(c["file"], c["function"], c["issue"][:80]) for c in changes_made)
         
         # Phase 5: Git Commit
         commit_success, commit_msg = do_self_commit(
-            "Applied {} fixes: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made))
+            "Applied {} fixes: {}".format(fixes_applied, ", ".join(c["file"] + "::" + c["function"] for c in changes_made))
         )
         
         # Phase 6: Journal
@@ -1328,7 +1482,7 @@ def do_self_modify():
             summary=summary,
             patterns=["Self-improvement", "Code modification"],
             insights=[
-                "Modified {} files: {}".format(fixes_applied, ", ".join(c["file"] for c in changes_made)),
+                "Modified {} functions across {} files".format(fixes_applied, len(set(c["file"] for c in changes_made))),
                 "Commit: {}".format(commit_msg),
             ],
         )
