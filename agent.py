@@ -2319,6 +2319,14 @@ def _apply_function_patch(filename, original_content, fix_description):
         
         return True, "Small patched {}: {}".format(target['name'], fix_description.get("issue", "")[:80]), new_content
 
+# Goldie's own files that can be modified
+SELF_FILES = {
+    'agent.py': 'Main autonomous agent - study, reflection, evolution pipeline',
+    'web_server.py': 'HTTP API server - journal, reflections, KB, chat endpoints',
+    'personality.py': 'Personality tracking - dimensions, traits, stage evolution',
+    'soul.md': 'Agent soul/personality definition',
+}
+
 def do_self_study():
     """Goldie reads its own code files. Always available - no skill check."""
     log("=== SELF-STUDY ===")
