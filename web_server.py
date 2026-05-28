@@ -230,20 +230,24 @@ class H(http.server.SimpleHTTPRequestHandler):
     # Session storage for pending proposals (in-memory)
     _pending_proposals = {}
 
-    def do_POST(self):
+def do_POST(self):
         p = urllib.parse.urlparse(self.path).path
         if p == '/api/chat':
-            try:
-                self._handle_chat()
-            except Exception as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+            def handle_chat():
+                try:
+                    self._handle_chat()
+                except Exception as e:
+                    _json_resp(self, {'status': 'error', 'error': str(e)})
+            threading.Thread(target=handle_chat, daemon=True).start()
         elif p == '/api/trigger':
-            try:
-                r = subprocess.run(['python3', os.path.join(GITPUP, 'agent.py'), '--force'],
-                    cwd=GITPUP, capture_output=True, text=True, timeout=300)
-                _json_resp(self, {'status': 'done', 'stdout': r.stdout[:500], 'returncode': r.returncode})
-            except Exception as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+            def handle_trigger():
+                try:
+                    r = subprocess.run(['python3', os.path.join(GITPUP, 'agent.py'), '--force'],
+                        cwd=GITPUP, capture_output=True, text=True, timeout=300)
+                    _json_resp(self, {'status': 'done', 'stdout': r.stdout[:500], 'returncode': r.returncode})
+                except Exception as e:
+                    _json_resp(self, {'status': 'error', 'error': str(e)})
+            threading.Thread(target=handle_trigger, daemon=True).start()
         else:
             self.send_response(404)
             self.send_header('Content-Type', 'application/json')
