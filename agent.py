@@ -311,7 +311,7 @@ def load_kb():
                     kb["stats"] = default_kb()["stats"]
                 load_kb._cache = kb
                 return kb
-        except (json.JSONDecodeError, ValueError):
+        except (FileNotFoundError, json.JSONDecodeError, ValueError):
             pass
     kb = default_kb()
     save_kb(kb)
