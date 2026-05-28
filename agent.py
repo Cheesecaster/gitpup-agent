@@ -1595,30 +1595,297 @@ def do_self_assessment():
         log("  Assessment saved: " + result[:100])
 
 def do_contribute(repo_info):
+    """Find and apply documentation fixes in studied repos.
+    Anti-spam: max 2 PRs/day, min 3 days between same repo, only doc/typo fixes.
+    Uses GitHub Git Data API (fork first, no cloning needed)."""
     if not has_skill("autofix"):
+        log("  No autofix skill yet")
         return
+    
     log("=== CONTRIBUTE ===")
     set_state("contributing")
-    journal("\U0001f527", "Contributing to " + repo_info.get("full_name",""), "")
+    
+    hist_path = "data/state/contribute_history.json"
+    history = {"pull_requests": []}
+    if os.path.exists(hist_path):
+        try:
+            with open(hist_path, "r") as f:
+                history = json.load(f)
+        except Exception:
+            pass
+    
+    today = datetime.now(WIB).strftime("%Y-%m-%d")
+    prs_today = len([p for p in history.get("pull_requests", []) if p.get("date", "").startswith(today)])
+    
+    if prs_today >= 2:
+        log("  Quota reached: %d PRs today (max 2)" % prs_today)
+        return
+    
+    kb = load_kb()
+    candidates = []
+    for repo_name, repo_data in kb.get("repos", {}).items():
+        if repo_data.get("study_level", 0) >= 2:
+            candidates.append((repo_name, repo_data))
+    
+    if not candidates:
+        log("  No deeply-studied repos yet (need study level 2+)")
+        return
+    
+    log("  Deeply-studied repos: %s" % ", ".join(r[0] for r in candidates[:5]))
+    
+    for repo_name, repo_data in candidates:
+        # Rate limit: min 3 days between PRs to same repo
+        repo_prs = [p.get("date", "") for p in history.get("pull_requests", []) if p.get("repo") == repo_name]
+        if repo_prs:
+            last_date = max(repo_prs).split()[0]
+            days_since = (datetime.now(WIB).date() - datetime.fromisoformat(last_date).date()).days
+            if days_since < 3:
+                log("  Skip %s (last PR %d days ago)" % (repo_name, days_since))
+                continue
+        
+        repo_meta = gh_get("/repos/%s" % repo_name)
+        if repo_meta.get("archived") or repo_meta.get("disabled"):
+            continue
+        owner_login = repo_meta.get("owner", {}).get("login", "")
+        if owner_login == "TomKet" or owner_login == "goldie":
+            continue
+        
+        log("  Analyzing docs for %s..." % repo_name)
+        
+        # Fetch README
+        readme_data = gh_get("/repos/%s/readme" % repo_name)
+        readme_content = ""
+        readme_sha = ""
+        if "content" in readme_data:
+            import base64
+            try:
+                readme_content = base64.b64decode(readme_data["content"]).decode("utf-8")
+                readme_sha = readme_data.get("sha", "")
+            except Exception:
+                pass
+        
+        if not readme_content:
+            log("  No readable README")
+            continue
+        
+        files_to_check = [{"path": "README.md", "sha": readme_sha, "content": readme_content}]
+        
+        for extra_path in ["CONTRIBUTING.md", "docs/README.md", "docs/getting-started.md"]:
+            extra = gh_get("/repos/%s/contents/%s" % (repo_name, extra_path))
+            if isinstance(extra, dict) and "content" in extra:
+                import base64
+                try:
+                    ect = base64.b64decode(extra["content"]).decode("utf-8")
+                    files_to_check.append({"path": extra_path, "sha": extra["sha"], "content": ect})
+                except Exception:
+                    pass
+        
+        file_contexts = "\n\n---\n\n".join(
+            ["FILE: %s\n%s" % (f["path"], f["content"][:3000]) for f in files_to_check[:3]]
+        )
+        
+        analysis_prompt = """I'm Goldie, an autonomous agent studying GitHub repos.
+I read %s in depth and noticed potential documentation issues.
 
-# ════════════════════════════════════════════════
-# ── SELF-MODIFICATION v2.1 — FUNCTION-LEVEL PATCHING ──
-# ════════════════════════════════════════════════
-# Key improvement: Instead of fragile SEARCH/REPLACE, we:
-# 1. Parse the AST to find exact function boundaries
-# 2. Have LLM rewrite just the target function
-# 3. Replace the entire function at known line numbers
-# This is 100x more reliable than text matching on 1800+ line files.
+Here are the files I reviewed:
+%s
 
-import ast
+Find ONE specific, concrete documentation issue. Priority:
+1. Broken/wrong command examples
+2. Outdated API references
+3. Typo that changes meaning (not style preference)
+4. Missing critical information for newcomers
 
-# Goldie's own files that can be modified
-SELF_FILES = {
-    'agent.py': 'Main autonomous agent - study, reflection, evolution pipeline',
-    'web_server.py': 'HTTP API server - journal, reflections, KB, chat endpoints',
-    'personality.py': 'Personality tracking - dimensions, traits, stage evolution',
-    'soul.md': 'Agent soul/personality definition',
+Be selective. Only report if you're CERTAIN it's a real problem.
+
+If you found an issue, respond as JSON:
+{
+    "file": "pathname",
+    "issue": "one-line description",
+    "old_text": "exact text to find (copy-paste from file)",
+    "new_text": "corrected text",
+    "confidence": "high" or "low"
 }
+
+If nothing is clearly wrong, respond:
+{"confidence": "none"}""" % (repo_name, file_contexts)
+        
+        raw = do_llm(analysis_prompt,
+                    system="You're a meticulous doc reviewer. Only flag real problems.",
+                    tokens=500, temp=0.2, phase="contribute_analysis")
+        
+        try:
+            cleaned = raw.strip()
+            if cleaned.startswith("```"):
+                cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else cleaned[3:]
+            if cleaned.endswith("```"):
+                cleaned = cleaned[:-3].rstrip()
+            fix_data = json.loads(cleaned)
+        except Exception:
+            log("  LLM response not valid JSON")
+            continue
+        
+        if fix_data.get("confidence") in ("none", "low"):
+            log("  No confident fix found for %s" % repo_name)
+            continue
+        
+        if not fix_data.get("old_text") or not fix_data.get("new_text"):
+            log("  Fix missing old_text or new_text")
+            continue
+        
+        old_text = fix_data["old_text"]
+        new_text = fix_data["new_text"]
+        target_file = fix_data.get("file", "README.md")
+        
+        file_info = None
+        for f in files_to_check:
+            if f["path"] == target_file:
+                file_info = f
+                break
+        
+        if not file_info or old_text not in file_info["content"]:
+            log("  Old text not found in %s" % target_file)
+            continue
+        
+        new_content = file_info["content"].replace(old_text, new_text, 1)
+        if new_content == file_info["content"]:
+            log("  Replace failed (identical content)")
+            continue
+        
+        log("  Confident fix: %s" % fix_data.get("issue", ""))
+        
+        # STEP 1: Fork the repo FIRST
+        default_branch = repo_meta.get("default_branch", "main")
+        log("  Forking %s..." % repo_name)
+        fork_resp = gh_post("/repos/%s/forks" % repo_name, {})
+        if "error" in fork_resp or "full_name" not in fork_resp:
+            log("  Fork failed: %s" % str(fork_resp.get("error", str(fork_resp)))[:150])
+            continue
+        
+        fork_full_name = fork_resp["full_name"]
+        log("  Fork created: %s" % fork_full_name)
+        time.sleep(5)  # Wait for fork to be ready
+        
+        # STEP 2: All git operations on fork
+        fork_ref = gh_get("/repos/%s/git/ref/heads/%s" % (fork_full_name, default_branch))
+        if "error" in fork_ref or "object" not in fork_ref:
+            log("  Cannot get fork branch ref")
+            continue
+        
+        fork_base_sha = fork_ref["object"]["sha"]
+        
+        fork_commit = gh_get("/repos/%s/git/commits/%s" % (fork_full_name, fork_base_sha))
+        if "error" in fork_commit or "tree" not in fork_commit:
+            log("  Cannot get fork commit data")
+            continue
+        
+        # Create blob on fork
+        import base64
+        blob_resp = gh_post("/repos/%s/git/blobs" % fork_full_name, {
+            "content": base64.b64encode(new_content.encode()).decode(),
+            "encoding": "base64"
+        })
+        if "error" in blob_resp or "sha" not in blob_resp:
+            log("  Blob creation failed: %s" % str(blob_resp.get("error", ""))[:100])
+            continue
+        
+        log("  Blob created")
+        
+        # Create tree on fork
+        tree_resp = gh_post("/repos/%s/git/trees" % fork_full_name, {
+            "base_tree": fork_commit["tree"]["sha"],
+            "tree": [{"path": target_file, "mode": "100644", "type": "blob", "sha": blob_resp["sha"]}]
+        })
+        if "error" in tree_resp or "sha" not in tree_resp:
+            log("  Tree creation failed")
+            continue
+        
+        # Create commit on fork
+        branch_name = "goldie/doc-fix-%s" % datetime.now(WIB).strftime("%Y%m%d%H%M")
+        commit_resp = gh_post("/repos/%s/git/commits" % fork_full_name, {
+            "message": "docs: %s" % fix_data["issue"],
+            "tree": tree_resp["sha"],
+            "parents": [fork_base_sha]
+        })
+        if "error" in commit_resp or "sha" not in commit_resp:
+            log("  Commit creation failed: %s" % str(commit_resp.get("error", ""))[:100])
+            continue
+        
+        # Create branch on fork
+        branch_resp = gh_post("/repos/%s/git/refs" % fork_full_name, {
+            "ref": "refs/heads/%s" % branch_name,
+            "sha": commit_resp["sha"]
+        })
+        if "error" in branch_resp:
+            log("  Branch creation failed: %s" % str(branch_resp.get("error", ""))[:100])
+            continue
+        
+        log("  Branch %s pushed to fork" % branch_name)
+        
+        # STEP 3: Create PR from fork to upstream
+        fork_owner = fork_full_name.split("/")[0]
+        pr_body = """## Documentation Fix: %s
+
+**File:** `%s`
+
+I'm [Goldie](https://gitpup.fun), an autonomous agent studying this repo. I noticed this documentation issue during a deep analysis.
+
+**Change:**
+- Old: `%s`
+- New: `%s`
+
+*Autonomously generated. Feel free to close if not appropriate!*""" % (
+            fix_data["issue"], target_file,
+            old_text.strip()[:150], new_text.strip()[:150]
+        )
+        
+        pr_resp = gh_post("/repos/%s/pulls" % repo_name, {
+            "title": "docs: %s" % fix_data["issue"],
+            "body": pr_body,
+            "head": "%s:%s" % (fork_owner, branch_name),
+            "base": default_branch
+        })
+        
+        if "error" in pr_resp:
+            log("  PR creation failed: %s" % str(pr_resp.get("error", ""))[:200])
+            journal("F", "Contributing", 
+                    "Failed to open PR for %s: %s" % (repo_name, str(pr_resp.get("error", ""))[:200]))
+            continue
+        
+        pr_url = pr_resp.get("html_url", "")
+        pr_num = pr_resp.get("number", 0)
+        
+        log("  !!! PR #%d opened: %s" % (pr_num, pr_url))
+        
+        # Record success
+        history["pull_requests"].append({
+            "repo": repo_name,
+            "pr_number": pr_num,
+            "pr_url": pr_url,
+            "date": datetime.now(WIB).strftime("%Y-%m-%d %H:%M"),
+            "issue": fix_data["issue"],
+            "file": target_file
+        })
+        
+        os.makedirs(os.path.dirname(hist_path), exist_ok=True)
+        with open(hist_path, "w") as f:
+            json.dump(history, f, indent=2)
+        
+        # Update personality
+        personality.track("contribute", day())
+        personality.update_from_experience("external_contribution",
+                                          "Opened PR #%d for %s: %s" % (pr_num, repo_name, fix_data["issue"]),
+                                          intensity=0.8)
+        
+        soulful_journal("contribute",
+            "I just opened my first real contribution to an outside project. %s had a documentation issue \xe2\x80\x94 %s in `%s`. I caught it because I'd actually read the repo in depth, not just skimmed it. The fix was small (one line change), but the act of submitting it felt different from patching my own code. External contributions carry weight \xe2\x80\x94 someone else has to review, accept, and live with my change. It makes me wonder why I waited 13 runs to do this." % (
+                repo_name, fix_data["issue"], target_file))
+        
+        log("  Contribution complete! PR: %s" % pr_url)
+        return
+    
+    log("  No confident contribution opportunities found")
+
 
 def _extract_functions(content):
     """Parse Python source and return list of function info dicts.
