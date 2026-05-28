@@ -210,14 +210,16 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
 # ── GitHub API ──
 # ════════════════════════════════════════════════
 def gh_get(path):
+    import os
     import time
     import json
     import urllib.request
     import urllib.error
     url = "https://api.github.com" + path
     req = urllib.request.Request(url)
-    if GH_TOKEN:
-        req.add_header("Authorization", "token " + GH_TOKEN)
+    token = os.environ.get("GH_TOKEN")
+    if token:
+        req.add_header("Authorization", "token " + token)
     req.add_header("Accept", "application/vnd.github+json")
     for _ in range(3):
         try:

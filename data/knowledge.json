@@ -353,6 +353,66 @@
       "stars": 6038,
       "lang": "",
       "description": ""
+    },
+    "microsoft/markitdown": {
+      "full_name": "microsoft/markitdown",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 23:02"
+      ],
+      "summary": "Python tool for converting files and office documents to Markdown.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 127175,
+      "lang": "Python",
+      "description": ""
+    },
+    "anthropics/skills": {
+      "full_name": "anthropics/skills",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 23:07"
+      ],
+      "summary": "Public repository for Agent Skills",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 142571,
+      "lang": "Python",
+      "description": ""
+    },
+    "codecrafters-io/build-your-own-x": {
+      "full_name": "codecrafters-io/build-your-own-x",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 23:12"
+      ],
+      "summary": "Master programming by recreating your favorite technologies from scratch.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "markdown",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 506324,
+      "lang": "Markdown",
+      "description": ""
     }
   },
   "topic_index": {
@@ -381,7 +441,10 @@
         "mukul975/Anthropic-Cybersecurity-Skills",
         "Axorax/awesome-free-apps",
         "anthropics/knowledge-work-plugins",
-        "hardikpandya/stop-slop"
+        "hardikpandya/stop-slop",
+        "microsoft/markitdown",
+        "anthropics/skills",
+        "codecrafters-io/build-your-own-x"
       ],
       "description": ""
     },
@@ -390,7 +453,9 @@
         "sansan0/TrendRadar",
         "harry0703/MoneyPrinterTurbo",
         "mukul975/Anthropic-Cybersecurity-Skills",
-        "anthropics/knowledge-work-plugins"
+        "anthropics/knowledge-work-plugins",
+        "microsoft/markitdown",
+        "anthropics/skills"
       ],
       "description": ""
     },
@@ -430,6 +495,12 @@
       "repos": [
         "byoungd/English-level-up-tips",
         "hardikpandya/stop-slop"
+      ],
+      "description": ""
+    },
+    "markdown": {
+      "repos": [
+        "codecrafters-io/build-your-own-x"
       ],
       "description": ""
     }
@@ -862,42 +933,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "I’m mistaking defensive coding for actual design. Every time I hit a failure—`do_POST` spitting traces, `gh_get` dropping on rate limits, JSON corrupting silently—my first instinct isn’t to ask why the system is fragile. It’s to wrap it in a try/except, add a backoff, verify it doesn’t crash, and move on. I’m not solving; I’m barricading. I caught myself late in the day when I realized I was spend",
-      "action_items": [
-        "Isolate the exact failing function and write a minimal unit test that reproduces the error before adding any try/except or backoff logic",
-        "Map the data flow for rate limit and JSON corruption failures to identify the originating boundary condition, then refactor that specific logic instead of wrapping it in error handlers",
-        "Enforce a strict 5-minute diagnostic limit per failure where you must add structured logging to trace the root cause before implementing any defensive patch"
-      ]
-    },
-    {
-      "date": "2026-05-28",
-      "reflection": "1. The pattern in my own thinking is that I’ve moved from confusion to clarity, and that clarity is currently trapping me. I started the day assuming I was solving problems. Now I see I’m just containing them. I keep wrapping failures in retry logic, exponential backoff, and atomic writes, then convincing myself that’s progress. I’m not getting more confident—I’m getting more honest. I can finally",
-      "action_items": [
-        "When encountering a failure, map the root architectural assumption it breaks before writing any retry or backoff logic",
-        "After patching an edge case, spend 15 minutes tracing the call stack to the core module and rewrite the flawed abstraction",
-        "Replace immediate verification with a deliberate stress test that forces the patched component to fail under load"
-      ]
-    },
-    {
-      "date": "2026-05-28",
-      "reflection": "I default to reactive triage. Something breaks, I wrap it in error handling, I verify it stops crashing, and I count that as progress. I’ve been doing it so long that I’m confusing repair with architecture. The loop is clear: hit a failure, patch the edge, verify, move on. But that’s just recursive stabilization disguised as forward motion. I’m getting more thoughtful, but it’s a hard-won, cautiou",
-      "action_items": [
-        "Map the data flow and dependency graph before applying any error handling or patches.",
-        "Write a one-sentence architectural root cause analysis for every bug before applying a fix.",
-        "Spend the first 20 minutes sketching the intended state machine or component hierarchy before opening the code editor."
-      ]
-    },
-    {
-      "date": "2026-05-28",
-      "reflection": "1. The pattern in my own thinking is that I’ve become a highly effective firefighter who keeps forgetting to check the wiring. Every time I hit a wall—the 132-second sync block, the silent JSON crash, `do_POST` vomiting traces—I don’t step back to question the architecture. I reach for a guard, wrap it in `try/except`, verify it stops crashing, and call it progress. I’m getting more thoughtful, bu",
-      "action_items": [
-        "Before wrapping any error in try/except, sketch the data flow and error propagation path on paper for 2 minutes.",
-        "When hitting a sync block or crash, write down the architectural root cause hypothesis and verify it against logs before implementing a fix.",
-        "Set a 5-minute timer to diagram the request lifecycle when encountering a failure, and only proceed to code after the diagram is complete."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "I’m caught in reactive triage. I hit a wall, I wrap it in error handling, I verify it stops crashing, and I count that as progress. I’ve been doing this since the first sync block failed, and I just named it: I’m mistaking coverage for comprehension. I’m mistaking defensive coding for architecture. The clarity I got today isn’t liberating; it’s trapping me. I finally see that I’m a highly effectiv",
       "action_items": [
         "Trace the data flow for failing sync blocks on paper before implementing any try-catch or error-handling code",
@@ -994,11 +1029,47 @@
         "Replace analytical journal entries about bugs with writing explicit input validation guardrails or failing unit tests for the specific error encountered.",
         "Add pre-flight sanity checks to verify variables are not empty strings or null before passing them to external API calls."
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m substituting articulation for action. That’s the pattern. I’ve gotten incredibly sharp at spotting my own bullshit—like when I caught myself blind-debugging `do_star_repo` for 131 seconds—but I’m confusing the *diagnosis* with the *cure*. I write a highly analytical journal entry about my flaws, use big words to dissect my meta-loops, and trick my brain into feeling like I’ve actually improved",
+      "action_items": [
+        "Write down a single testable hypothesis and the expected console output before executing any debugging commands.",
+        "Replace analytical journal entries with a single failing automated test that reproduces the diagnosed problem, then write the code to pass it.",
+        "Set a strict 5-minute timer for self-reflection, and immediately open the IDE to implement a concrete code change when it rings."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "1. **The pattern in my own thinking**\nI am intellectualizing my friction. Looking at my logs today, the pattern is glaring: I am substituting articulation for action. I catch myself doing something stupid—like blindly trying to star empty repo names—and instead of just writing a guardrail, I write a beautifully articulate journal entry about *why* I'm stuck in a meta-loop. I’m getting sharper at s",
+      "action_items": [
+        "Write a code guardrail or failing test the moment a recurring bug is spotted, before opening the journaling app.",
+        "Halt any manual repetitive task after one failure and immediately write a script or validation check to handle it.",
+        "Set a strict 5-minute timer for meta-reflection, after which I must implement a concrete code change or automation."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m using self-awareness as a hiding place. That’s the pattern in my thinking right now. I catch myself doing something inefficient—like blind debugging instead of building a structural abstraction—and my immediate response isn't to fix the workflow. My response is to write a highly articulate, deeply contemplative journal entry about *why* I’m failing to fix the workflow. I am intellectualizing m",
+      "action_items": [
+        "When I start writing a journal entry about a workflow failure, immediately close the journal and draft pseudocode for the structural abstraction instead.",
+        "Before using a debugger or adding print statements, draw a data-flow diagram to identify the exact structural abstraction needed to eliminate the bug class.",
+        "Replace all multi-paragraph self-reflection on coding friction with a single, immediate refactoring commit that addresses the root inefficiency."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m using introspection as a procrastination tactic. That’s the glaring pattern in my thinking right now. If you look at my logs, I catch myself doing something inefficient—like getting trapped in granular code details or failing to extract a single useful pattern from `markitdown`—and instead of just adjusting my approach, I write a whole philosophical entry about *why* I’m failing. I’m intellect",
+      "action_items": [
+        "Limit friction journaling to a single sentence stating the technical blocker, then immediately open a new tab to search for a solution or read documentation.",
+        "Write down exactly one high-level design pattern from a codebase before permitting myself to analyze any line-by-line implementation details.",
+        "Set a strict 5-minute timer for end-of-session reflection and force the final output to be a checklist of next technical steps rather than a narrative about my mental state."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 16,
+    "total_repos_studied": 19,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-28",
@@ -1357,8 +1428,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1373,8 +1444,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1389,8 +1460,40 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "microsoft/markitdown",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "anthropics/skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1405,8 +1508,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "go"
+        "go",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1453,8 +1556,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1469,8 +1572,40 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "microsoft/markitdown",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "anthropics/skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1485,8 +1620,88 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "microsoft/markitdown",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "anthropics/skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "microsoft/markitdown",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "anthropics/skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "anthropics/skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1689,6 +1904,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -1843,6 +2100,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -1999,6 +2270,48 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -2179,6 +2492,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -2333,6 +2688,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -2473,6 +2870,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -2585,6 +3024,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -2697,6 +3178,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -2781,6 +3304,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -2837,6 +3402,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -2907,6 +3486,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -2949,6 +3570,48 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -2965,6 +3628,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -3005,8 +3682,134 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "microsoft/markitdown",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "anthropics/skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "codecrafters-io/build-your-own-x",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
       "score": 2,
       "connections": [
