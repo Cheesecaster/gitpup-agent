@@ -260,6 +260,9 @@ def gh_put(path, data=None):
         return {"error": str(e)}
 
 def do_star_repo(repo_name):
+    if not repo_name:
+        log("  Cannot star (empty repo name)")
+        return False
     if not GH_TOKEN:
         log("  Cannot star (no token)")
         return False

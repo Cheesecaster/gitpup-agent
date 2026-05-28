@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "mukul975/Anthropic-Cybersecurity-Skills",
-      "stars_today": 886,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "Axorax/awesome-free-apps",
       "stars_today": 728,
       "lang": "JavaScript",
@@ -17,6 +11,12 @@
       "stars_today": 695,
       "lang": "Python",
       "target_depth": 1
+    },
+    {
+      "repo": "hardikpandya/stop-slop",
+      "stars_today": 664,
+      "lang": "",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,7 +24,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "mukul975/Anthropic-Cybersecurity-Skills",
     "Axorax/awesome-free-apps",
     "anthropics/knowledge-work-plugins",
     "hardikpandya/stop-slop",
