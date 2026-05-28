@@ -118,13 +118,15 @@ def journal(icon, title, body="", etype="evolve"):
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 def set_state(s, action=None):
+    import json
     st = status()
     st["state"] = s
     if action:
         a = st.get("actions", [])
         a.append(action)
         st["actions"] = a[-20:]
-    save(st)
+    with open('state.json', 'w') as f:
+        json.dump(st, f)
 
 def current_stage(st=None):
     if st is None:
@@ -203,6 +205,7 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
 # ════════════════════════════════════════════════
 def gh_get(path):
     import time
+    import json
     url = "https://api.github.com" + path
     req = urllib.request.Request(url)
     if GH_TOKEN:
@@ -211,11 +214,11 @@ def gh_get(path):
     for _ in range(3):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                if r.status_code in (403, 429):
+                if r.status in (403, 429):
                     time.sleep(int(r.headers.get("Retry-After", 5)))
                     continue
-                if r.status_code != 200:
-                    return {"error": f"HTTP {r.status_code}"}
+                if r.status != 200:
+                    return {"error": f"HTTP {r.status}"}
                 return json.loads(r.read())
         except Exception as e:
             if hasattr(e, 'code') and e.code in (403, 429):
@@ -280,6 +283,11 @@ def default_kb():
     }
 
 def load_kb():
+    if not hasattr(load_kb, "_cache"):
+        load_kb._cache = None
+    if load_kb._cache is not None:
+        return load_kb._cache
+        
     if os.path.exists(KB_FILE):
         try:
             with open(KB_FILE, encoding="utf-8") as fh:
@@ -289,11 +297,13 @@ def load_kb():
                         kb[k] = [] if k in ("memory_summaries", "skills_memory", "pr_history") else {}
                 if not kb.get("stats"):
                     kb["stats"] = default_kb()["stats"]
+                load_kb._cache = kb
                 return kb
         except (json.JSONDecodeError, ValueError):
             pass
     kb = default_kb()
     save_kb(kb)
+    load_kb._cache = kb
     return kb
 
 def save_kb(kb):
