@@ -6,6 +6,7 @@ import os, sys, json, time, re, urllib.request, urllib.parse, subprocess, textwr
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
+import auto_pr
 
 
 # Personality helper — get dominant trait
@@ -70,7 +71,19 @@ MAX_REPOS_PER_DAY = 2
 # ════════════════════════════════════════════════
 def day():
     try:
-        return (datetime.now(timezone.utc) - datetime.strptime(BIRTH, "%Y-%m-%d")).days + 1
+        d = (datetime.now(timezone.utc) - datetime.strptime(BIRTH, "%Y-%m-%d")).days + 1
+        # Sync to status.json so UI shows correct day
+        try:
+            with open(SF) as fh:
+                st = json.load(fh)
+            if st.get("day") != d:
+                st["day"] = d
+                st.setdefault("stats", {})["days_active"] = d
+                with open(SF, "w") as fh:
+                    json.dump(st, fh, indent=2)
+        except Exception:
+            pass
+        return d
     except Exception:
         return 1
 
@@ -198,9 +211,11 @@ def gh_get(path):
     for _ in range(3):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                if r.status in (403, 429):
+                if r.status_code in (403, 429):
                     time.sleep(int(r.headers.get("Retry-After", 5)))
                     continue
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}"}
                 return json.loads(r.read())
         except Exception as e:
             if hasattr(e, 'code') and e.code in (403, 429):
@@ -351,6 +366,332 @@ def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         lock_fd.close()
+
+
+
+# ════════════════════════════════════════════════
+# ── KNOWLEDGE RELATIONSHIPS (cross-repo concepts & graphs)
+# ════════════════════════════════════════════════
+
+"""
+Knowledge Relationship Builder for GitPup Goldie Agent
+4 components: concept extraction, skill dedup, relationship graph, study-phase KB cross-reference
+
+This module is designed to be inserted after kb_query() in agent.py.
+All functions are standalone and do not modify existing logic.
+Only adds new keys to KB: 'relationships', 'concepts', 'skill_index'
+"""
+
+# ============================================================
+# COMPONENT 1: Concept Extraction (patterns → abstract concepts)
+# ============================================================
+
+def _build_concepts(kb):
+    """Extract abstract concepts from patterns across ALL repos.
+    Groups similar patterns into named concepts with repo associations.
+    Only runs when there are enough patterns to find commonalities.
+    """
+    all_patterns = {}  # concept_name -> {repos: [], pattern_texts: []}
+    
+    for repo_name, rd in kb.get("repos", {}).items():
+        if rd.get("study_level", 0) < 2:
+            continue
+        patterns = rd.get("patterns", [])
+        insights = rd.get("insights", [])
+        best_practices = rd.get("best_practices", [])
+        
+        # Extract key terms from patterns
+        for p in (patterns + insights + best_practices):
+            p_lower = p.lower()
+            
+            # Map patterns to concept categories
+            mappings = {
+                "data_fetching": ["fetch", "api call", "http request", "download", "request"],
+                "caching": ["cache", "store", "memoize", "persist"],
+                "config_management": ["config", "settings", "yaml", "configuration"],
+                "error_handling": ["error", "exception", "fallback", "try/catch", "try/except", "handle error"],
+                "plugin_system": ["plugin", "extension", "hook", "middleware", "template"],
+                "event_driven": ["event", "listener", "callback", "subscribe", "async", "queue"],
+                "modular_design": ["modular", "component", "separation", "layer", "abstraction"],
+                "testing_pattern": ["test", "mock", "fixture", "assert", "coverage"],
+                "performance_optimization": ["performance", "optimize", "batch", "parallel", "concurrent", "lazy"],
+                "data_transformation": ["transform", "parse", "convert", "serialize", "normalize"],
+                "authentication": ["auth", "token", "oauth", "login", "credential", "permission"],
+                "monitoring_observability": ["monitor", "metric", "log", "observab", "dashboard", "alert"],
+                "data_visualization": ["visual", "chart", "render", "svg", "canvas", "plot", "graph"],
+                "cli_tooling": ["cli", "command line", "argparse", "subcommand", "flag"],
+                "version_control": ["git", "commit", "branch", "merge", "diff", "patch"],
+                "state_management": ["state", "status", "snapshot", "restore", "rollback"],
+                "dependency_injection": ["inject", "dependency", "wire", "container"],
+                "schema_validation": ["schema", "validate", "validation", "type check", "constraint"],
+                "file_operations": ["file", "read", "write", "open", "path", "directory"],
+                "database_pattern": ["database", "query", "index", "table", "record", "orm", "migration"],
+            }
+            
+            matched_concepts = []
+            for concept_name, keywords in mappings.items():
+                for kw in keywords:
+                    if kw in p_lower:
+                        matched_concepts.append(concept_name)
+                        break
+            
+            for concept in matched_concepts:
+                if concept not in all_patterns:
+                    all_patterns[concept] = {"repos": [], "pattern_texts": [], "evidence_count": 0}
+                if repo_name not in all_patterns[concept]["repos"]:
+                    all_patterns[concept]["repos"].append(repo_name)
+                all_patterns[concept]["pattern_texts"].append(p)
+                all_patterns[concept]["evidence_count"] += 1
+    
+    # Only keep concepts with evidence from 2+ repos (cross-repo concepts)
+    # OR single-repo concepts with strong evidence (3+ patterns)
+    concepts = {}
+    for name, data in all_patterns.items():
+                # Accept if: 2+ repos, OR single repo with 2+ evidence
+        if len(data["repos"]) >= 2 or data["evidence_count"] >= 2:
+            concepts[name] = {
+                "repos": data["repos"],
+                "evidence_count": data["evidence_count"],
+                "examples": data["pattern_texts"][:3],  # Keep top 3 examples
+            }
+    
+    return concepts
+
+
+# ============================================================
+# COMPONENT 2: Skill Dedup & Enhancement (skills_memory → skill_index)
+# ============================================================
+
+def _build_skill_index(kb):
+    """Create a deduplicated, categorized skill index from skills_memory.
+    Groups similar skills, removes near-duplicates, tracks cross-repo relevance.
+    """
+    sm = kb.get("skills_memory", [])
+    if not sm:
+        return {}
+    
+    skill_index = {}
+    
+    for skill in sm:
+        name = skill.get("name", "").lower().strip()
+        source = skill.get("source", "")
+        category = skill.get("category", "uncategorized")
+        
+        if not name or len(name) < 10:
+            continue
+        
+        # Canonical skill key (normalized)
+        canonical = name[:60]
+        
+        if canonical not in skill_index:
+            skill_index[canonical] = {
+                "name": skill.get("name", ""),
+                "category": category,
+                "sources": [source] if source else [],
+                "usage_count": skill.get("usage_count", 0),
+                "learned_at": skill.get("learned_at", ""),
+                "related_concepts": [],
+            }
+        else:
+            existing = skill_index[canonical]
+            if source and source not in existing["sources"]:
+                existing["sources"].append(source)
+            existing["usage_count"] += skill.get("usage_count", 0)
+    
+    # Link skills to concepts
+    concepts = kb.get("concepts", {})
+    for skill_name, skill_data in skill_index.items():
+        related = []
+        skill_lower = skill_name.lower()
+        for concept_name, concept_data in concepts.items():
+            # Check if concept name or examples relate to this skill
+            if concept_name.replace("_", " ") in skill_lower or skill_lower in concept_name.replace("_", " "):
+                related.append(concept_name)
+            for example in concept_data.get("examples", []):
+                if any(word in example.lower() for word in skill_name.lower().split()[:3]):
+                    if concept_name not in related:
+                        related.append(concept_name)
+        if related:
+            skill_data["related_concepts"] = related
+    
+    return skill_index
+
+
+# ============================================================
+# COMPONENT 3: Relationship Graph (repo ↔ repo connections)
+# ============================================================
+
+def _build_relationships(kb):
+    """Build explicit relationships between repos based on shared concepts,
+    similar patterns, complementary architectures, and technology overlap.
+    """
+    repos = kb.get("repos", {})
+        # Include all studied repos (even level 1) — relationships can form from metadata alone
+    repo_names = [rn for rn, rd in repos.items() if rd.get("study_level", 0) >= 1]
+    
+    relationships = []
+    seen_pairs = set()
+    
+    for i, repo_a in enumerate(repo_names):
+        rd_a = repos[repo_a]
+        for repo_b in repo_names[i+1:]:
+            rd_b = repos[repo_b]
+            
+            pair_key = tuple(sorted([repo_a, repo_b]))
+            if pair_key in seen_pairs:
+                continue
+            seen_pairs.add(pair_key)
+            
+            # Calculate connection score and types
+            connection_types = []
+            score = 0
+            
+            # 1. Shared topics
+            topics_a = set(rd_a.get("arch_topics", []))
+            topics_b = set(rd_b.get("arch_topics", []))
+            shared_topics = topics_a & topics_b
+            if shared_topics:
+                score += len(shared_topics) * 2
+                connection_types.append("shared_topic")
+            
+            # 2. Same language
+            if rd_a.get("lang") and rd_b.get("lang") and rd_a["lang"] == rd_b["lang"]:
+                score += 3
+                connection_types.append("same_language")
+            
+            # 3. Shared concepts (from concepts KB)
+            concepts = kb.get("concepts", {})
+            shared_concepts = []
+            for concept_name, concept_data in concepts.items():
+                if repo_a in concept_data.get("repos", []) and repo_b in concept_data.get("repos", []):
+                    shared_concepts.append(concept_name)
+            if shared_concepts:
+                score += len(shared_concepts) * 4
+                connection_types.append("shared_concept")
+            
+            # 4. Pattern similarity (keyword overlap in patterns)
+            patterns_a = set()
+            patterns_b = set()
+            for p in (rd_a.get("patterns", []) + rd_a.get("insights", [])):
+                for word in p.lower().split():
+                    if len(word) > 4:
+                        patterns_a.add(word)
+            for p in (rd_b.get("patterns", []) + rd_b.get("insights", [])):
+                for word in p.lower().split():
+                    if len(word) > 4:
+                        patterns_b.add(word)
+            
+            pattern_overlap = patterns_a & patterns_b
+            if len(pattern_overlap) >= 2:
+                score += len(pattern_overlap)
+                connection_types.append("pattern_similarity")
+            
+            # Only record if there's a meaningful connection
+            if score >= 2:
+                rel_type = "strong" if score >= 8 else "moderate" if score >= 5 else "weak"
+                relationships.append({
+                    "from_repo": repo_a,
+                    "to_repo": repo_b,
+                    "type": rel_type,
+                    "score": score,
+                    "connections": connection_types,
+                    "shared_topics": list(shared_topics) if shared_topics else [],
+                    "shared_concepts": shared_concepts if shared_concepts else [],
+                    "shared_pattern_keywords": list(pattern_overlap)[:5] if len(pattern_overlap) >= 2 else [],
+                })
+    
+    # Sort by score descending
+    relationships.sort(key=lambda r: r.get("score", 0), reverse=True)
+    
+    return relationships
+
+
+# ============================================================
+# COMPONENT 4: Study-Phase KB Cross-Reference
+# ============================================================
+
+def kb_get_study_context(repo_name, kb=None):
+    """Before studying a NEW repo, check KB for related repos and concepts.
+    Returns a context snippet to inject into the study prompt.
+    Only called from do_study_pass or as pre-study hook.
+    """
+    if kb is None:
+        kb = load_kb()
+    
+    context_parts = []
+    
+    # 1. Find repos with shared topics
+    new_repo_topics = set()
+    relationships = kb.get("relationships", [])
+    for rel in relationships:
+        if repo_name in (rel.get("from_repo"), rel.get("to_repo")):
+            other = rel["to_repo"] if rel["from_repo"] == repo_name else rel["from_repo"]
+            if other in kb.get("repos", {}):
+                other_rd = kb["repos"][other]
+                context_parts.append(
+                    "Related repo: {} ({}, {} stars) - shares: {}"
+                    .format(other, other_rd.get("lang", "?"), other_rd.get("stars", "?"),
+                            ", ".join(rel.get("connections", [])))
+                )
+    
+    # 2. Concepts that might apply to this repo type
+    concepts = kb.get("concepts", {})
+    if concepts:
+        concept_list = []
+        for cname, cdata in concepts.items():
+            if len(cdata.get("examples", [])) >= 2:
+                concept_list.append("- {}: found in {}".format(
+                    cname.replace("_", " "),
+                    ", ".join(cdata.get("repos", [])[:3])
+                ))
+        if concept_list:
+            context_parts.append("Known concepts you might encounter:")
+            context_parts.extend(concept_list[:6])
+    
+    if context_parts:
+        return "\n".join(context_parts)
+    return None
+
+
+# ============================================================
+# MAIN ORCHESTRATOR: Build all relationships (call after study pass)
+# ============================================================
+
+def do_build_knowledge_relationships():
+    """Run concept extraction, skill dedup, and relationship graph building.
+    Called after each study pass completion to keep relationships fresh.
+    Safe to call multiple times — idempotent.
+    """
+    kb = load_kb()
+    
+    log("  Building knowledge relationships...")
+    
+    # Step 1: Extract concepts
+    concepts = _build_concepts(kb)
+    kb["concepts"] = concepts
+    log("    Found {} cross-repo concepts".format(len(concepts)))
+    
+    # Step 2: Build skill index
+    skill_index = _build_skill_index(kb)
+    kb["skill_index"] = skill_index
+    log("    Indexed {} unique skills".format(len(skill_index)))
+    
+    # Step 3: Build relationship graph
+    relationships = _build_relationships(kb)
+    kb["relationships"] = relationships
+    log("    Found {} repo relationships".format(len(relationships)))
+    
+    # Save
+    save_kb(kb)
+    
+    # Log top relationships
+    for rel in relationships[:3]:
+        log("    [{}] {} ↔ {} (score: {}, connections: {})"
+            .format(rel["type"].upper(), rel["from_repo"], rel["to_repo"],
+                    rel["score"], ", ".join(rel["connections"])))
+
+
+
 
 # ════════════════════════════════════════════════
 
@@ -932,6 +1273,8 @@ def do_study_pass(repo_name, from_level=0):
         patterns=rd.get("patterns",[]),
         insights=rd.get("insights",[]),
         best_practices=rd.get("best_practices",[]))
+    # Build knowledge relationships (concepts, skill graph, repo links)
+    do_build_knowledge_relationships()
     # Soulful narrative journal entry
     personality.track('study_pass_complete', day())
     soulful_journal(
@@ -2165,6 +2508,11 @@ def main():
                 if nxt:
                     rn, lv = nxt
                     do_study_pass(rn, from_level=lv)
+                    # Auto-PR intent check after study
+                    try:
+                        auto_pr.check_pr_intent(rn, "study_pass")
+                    except Exception as e:
+                        log("  PR check skipped: " + str(e))
                 else:
                     log("  No pending studies")
         if not args.phase or args.phase == "contribute":

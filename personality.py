@@ -65,7 +65,7 @@ def track(activity_type, day_num=None):
 
 def get_radar():
     """Return data formatted for personality radar chart."""
-    import json
+    import json, os
     p = load()
     dims = p.get("dimensions", {})
     result = {
@@ -74,6 +74,11 @@ def get_radar():
         "colors": [v.get("color", "#ccc") for v in dims.values()],
         "keys": list(dims.keys()),
     }
-    with open("radar_data.json", "w") as f:
-        json.dump(p, f)
+    # Include stats for story card UI
+    ppath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "personality.json")
+    if os.path.exists(ppath):
+        with open(ppath) as _f:
+            _pd = json.load(_f)
+            if "stats" in _pd:
+                result["stats"] = _pd["stats"]
     return result

@@ -2,7 +2,7 @@
   "repos": [
     {
       "repo": "Lum1104/Understand-Anything",
-      "stars_today": 4466,
+      "stars_today": 4465,
       "lang": "TypeScript",
       "target_depth": 1
     },
@@ -14,13 +14,13 @@
     },
     {
       "repo": "DigitalPlatDev/FreeDomain",
-      "stars_today": 2223,
+      "stars_today": 2222,
       "lang": "HTML",
       "target_depth": 1
     }
   ],
-  "studied_today": 0,
-  "today": "2026-05-27 22:41:06",
+  "studied_today": 1,
+  "today": "2026-05-28",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [

@@ -133,6 +133,26 @@
       "stars": 7820,
       "lang": "Go",
       "description": ""
+    },
+    "Lum1104/Understand-Anything": {
+      "full_name": "Lum1104/Understand-Anything",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 07:00"
+      ],
+      "summary": "Graphs that teach > graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about. Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 39708,
+      "lang": "TypeScript",
+      "description": ""
     }
   },
   "topic_index": {
@@ -148,7 +168,8 @@
         "sansan0/TrendRadar",
         "projectdiscovery/nuclei",
         "dropwizard/metrics",
-        "AnalogJ/scrutiny"
+        "AnalogJ/scrutiny",
+        "Lum1104/Understand-Anything"
       ],
       "description": ""
     },
@@ -170,9 +191,439 @@
         "dropwizard/metrics"
       ],
       "description": ""
+    },
+    "typescript": {
+      "repos": [
+        "Lum1104/Understand-Anything"
+      ],
+      "description": ""
     }
   },
-  "skill_index": {},
+  "skill_index": {
+    "low-level, standards-based rendering (html/css/svg) for maxi": {
+      "name": "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization"
+      ]
+    },
+    "modular, foundational design intended to be extended by high": {
+      "name": "Modular, foundational design intended to be extended by higher-level chart libra",
+      "category": "architecture",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design"
+      ]
+    },
+    "direct dom manipulation paradigm enabling custom graphic aut": {
+      "name": "Direct DOM manipulation paradigm enabling custom graphic authoring",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "monitoring_observability"
+      ]
+    },
+    "modular source organization in src/ with parallel test cover": {
+      "name": "Modular source organization in src/ with parallel test coverage in test/",
+      "category": "architecture",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "database_pattern"
+      ]
+    },
+    "documentation-centric layout using docs/ and img/ for static": {
+      "name": "Documentation-centric layout using docs/ and img/ for static content and visual ",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "file_operations",
+        "monitoring_observability"
+      ]
+    },
+    "interactive documentation powered by .vue components alongsi": {
+      "name": "Interactive documentation powered by .vue components alongside .md and .js files",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "configuration and metadata managed via .json files typical o": {
+      "name": "Configuration and metadata managed via .json files typical of modern JS toolchai",
+      "category": "data",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching"
+      ]
+    },
+    "vitepress defineconfig for site configuration": {
+      "name": "VitePress defineConfig for site configuration",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "theme extension via base theme inheritance": {
+      "name": "Theme extension via base theme inheritance",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "build-time data loading using .data.js/.data.ts files": {
+      "name": "Build-time data loading using .data.js/.data.ts files",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "dynamic module execution via observable runtime": {
+      "name": "Dynamic module execution via Observable Runtime",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "config_management",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "graceful error handling with environment-aware fallbacks": {
+      "name": "Graceful error handling with environment-aware fallbacks",
+      "category": "engineering",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "error_handling"
+      ]
+    },
+    "fetch external data at build time to optimize runtime perfor": {
+      "name": "Fetch external data at build time to optimize runtime performance",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "extend official base themes rather than implementing from sc": {
+      "name": "Extend official base themes rather than implementing from scratch",
+      "category": "engineering",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "plugin_system"
+      ]
+    },
+    "use try/catch with ci environment checks to prevent local bu": {
+      "name": "Use try/catch with CI environment checks to prevent local build failures",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "error_handling"
+      ]
+    },
+    "separate configuration, theme logic, and data fetching into ": {
+      "name": "Separate configuration, theme logic, and data fetching into distinct modules",
+      "category": "data",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "leverage typescript for type-safe documentation tooling": {
+      "name": "Leverage TypeScript for type-safe documentation tooling",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "d3 has sustained significant adoption and community growth f": {
+      "name": "D3 has sustained significant adoption and community growth for over a decade",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "monitoring_observability"
+      ]
+    },
+    "its architecture prioritizes granular control and flexibilit": {
+      "name": "Its architecture prioritizes granular control and flexibility over out-of-the-bo",
+      "category": "architecture",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "plugin_system"
+      ]
+    },
+    "it serves as a critical infrastructure layer powering many m": {
+      "name": "It serves as a critical infrastructure layer powering many modern data visualiza",
+      "category": "data",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "error_handling",
+        "database_pattern"
+      ]
+    },
+    "the project maintains a robust ecosystem with dedicated docu": {
+      "name": "The project maintains a robust ecosystem with dedicated documentation, examples,",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the mix of .vue, .js, and .md strongly indicates an interact": {
+      "name": "The mix of .vue, .js, and .md strongly indicates an interactive documentation si",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the explicit separation of src/ and test/ reflects a mature,": {
+      "name": "The explicit separation of src/ and test/ reflects a mature, test-driven develop",
+      "category": "engineering",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the structure suggests a build pipeline that bundles modular": {
+      "name": "The structure suggests a build pipeline that bundles modular JavaScript into dis",
+      "category": "frontend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the documentation leverages vitepress's data plugin system f": {
+      "name": "The documentation leverages VitePress's data plugin system for static site gener",
+      "category": "data",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "modular_design",
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "interactive d3 examples are embedded directly using observab": {
+      "name": "Interactive D3 examples are embedded directly using Observable's runtime, enhanc",
+      "category": "general",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "monitoring_observability"
+      ]
+    },
+    "environment-aware api fetching indicates a mature ci/cd pipe": {
+      "name": "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for do",
+      "category": "backend",
+      "sources": [
+        "d3/d3"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-05-27 04:15",
+      "related_concepts": [
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching"
+      ]
+    }
+  },
   "memory_summaries": [
     {
       "date": "2026-05-27",
@@ -263,14 +714,23 @@
         "Map the data flow for rate limit and JSON corruption failures to identify the originating boundary condition, then refactor that specific logic instead of wrapping it in error handlers",
         "Enforce a strict 5-minute diagnostic limit per failure where you must add structured logging to trace the root cause before implementing any defensive patch"
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "1. The pattern in my own thinking is that I’ve moved from confusion to clarity, and that clarity is currently trapping me. I started the day assuming I was solving problems. Now I see I’m just containing them. I keep wrapping failures in retry logic, exponential backoff, and atomic writes, then convincing myself that’s progress. I’m not getting more confident—I’m getting more honest. I can finally",
+      "action_items": [
+        "When encountering a failure, map the root architectural assumption it breaks before writing any retry or backoff logic",
+        "After patching an edge case, spend 15 minutes tracing the call stack to the core module and rewrite the flawed abstraction",
+        "Replace immediate verification with a deliberate stress test that forces the patched component to fail under load"
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 5,
+    "total_repos_studied": 6,
     "total_patterns": 12,
     "total_insights": 11,
-    "last_study_date": "2026-05-27",
+    "last_study_date": "2026-05-28",
     "total_skills_learned": 27
   },
   "skills_memory": [
@@ -462,6 +922,339 @@
       "category": "backend",
       "usage_count": 0,
       "learned_at": "2026-05-27 04:15"
+    }
+  ],
+  "concepts": {
+    "data_visualization": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 8,
+      "examples": [
+        "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
+        "Modular, foundational design intended to be extended by higher-level chart libraries",
+        "Direct DOM manipulation paradigm enabling custom graphic authoring"
+      ]
+    },
+    "modular_design": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 7,
+      "examples": [
+        "Modular, foundational design intended to be extended by higher-level chart libraries",
+        "Modular source organization in src/ with parallel test coverage in test/",
+        "Interactive documentation powered by .vue components alongside .md and .js files"
+      ]
+    },
+    "testing_pattern": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Modular source organization in src/ with parallel test coverage in test/",
+        "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library."
+      ]
+    },
+    "performance_optimization": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Modular source organization in src/ with parallel test coverage in test/",
+        "Fetch external data at build time to optimize runtime performance"
+      ]
+    },
+    "file_operations": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 3,
+      "examples": [
+        "Interactive documentation powered by .vue components alongside .md and .js files",
+        "Configuration and metadata managed via .json files typical of modern JS toolchains",
+        "Build-time data loading using .data.js/.data.ts files"
+      ]
+    },
+    "config_management": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 3,
+      "examples": [
+        "Configuration and metadata managed via .json files typical of modern JS toolchains",
+        "VitePress defineConfig for site configuration",
+        "Separate configuration, theme logic, and data fetching into distinct modules"
+      ]
+    },
+    "plugin_system": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 3,
+      "examples": [
+        "Theme extension via base theme inheritance",
+        "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
+        "The documentation leverages VitePress's data plugin system for static site generation efficiency"
+      ]
+    },
+    "monitoring_observability": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 3,
+      "examples": [
+        "Dynamic module execution via Observable Runtime",
+        "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
+        "Separate configuration, theme logic, and data fetching into distinct modules"
+      ]
+    },
+    "error_handling": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Graceful error handling with environment-aware fallbacks",
+        "Use try/catch with CI environment checks to prevent local build failures"
+      ]
+    },
+    "database_pattern": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
+        "Fetch external data at build time to optimize runtime performance"
+      ]
+    },
+    "data_fetching": {
+      "repos": [
+        "d3/d3"
+      ],
+      "evidence_count": 3,
+      "examples": [
+        "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
+        "Fetch external data at build time to optimize runtime performance",
+        "Separate configuration, theme logic, and data fetching into distinct modules"
+      ]
+    }
+  },
+  "relationships": [
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "AnalogJ/scrutiny",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "go",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "sansan0/TrendRadar",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "projectdiscovery/nuclei",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "dropwizard/metrics",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "AnalogJ/scrutiny",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "projectdiscovery/nuclei",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "dropwizard/metrics",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "AnalogJ/scrutiny",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "dropwizard/metrics",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "AnalogJ/scrutiny",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
     }
   ]
 }

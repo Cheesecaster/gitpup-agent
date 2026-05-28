@@ -150,10 +150,36 @@ class H(http.server.SimpleHTTPRequestHandler):
                 })
             except Exception as e:
                 _json_resp(self, {'error': str(e)})
+        elif p == '/api/relationships':
+            kb = load_json(KB)
+            rels = kb.get('relationships', [])
+            concepts = kb.get('concepts', {})
+            skills = kb.get('skill_index', {})
+            _json_resp(self, {
+                'relationships': rels,
+                'concepts': {k: {'repos': v['repos'], 'evidence': v['evidence_count']}
+                             for k, v in concepts.items()},
+                'skill_count': len(skills),
+                'total_concepts': len(concepts),
+            })
+        elif p == '/api/mood_arc':
+            entries = load_jsonl(JF)
+            timeline = []
+            for e in entries:
+                m = e.get('mood')
+                if m:
+                    timeline.append({
+                        'ts': e.get('ts', ''),
+                        'day': e.get('day', 1),
+                        'label': e.get('mood_label', m),
+                        'color': e.get('mood_color', '#888'),
+                        'title': (e.get('x', '') or '')[:60],
+                    })
+            _json_resp(self, {'timeline': timeline[-50:], 'total': len(timeline)})
         else:
             self.send_error(404)
 
-    def do_POST(self):
+def do_POST(self):
         p = urllib.parse.urlparse(self.path).path
         if p == '/api/chat':
             try:
@@ -169,33 +195,37 @@ class H(http.server.SimpleHTTPRequestHandler):
                 _json_resp(self, {'status': 'error', 'error': str(e)})
         else:
             self.send_response(404)
+            self.send_header('Content-Type', 'application/json')
             self.end_headers()
 
-    def _handle_chat(self):
-        import concurrent.futures
-        executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-        try:
-            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-        except (json.JSONDecodeError, ValueError):
-            return self._json_resp({'error': 'Invalid JSON'}, 400)
+def _handle_chat(self):
+    import concurrent.futures
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+    try:
+        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+    except (json.JSONDecodeError, ValueError):
+        return self._json_resp({'error': 'Invalid JSON'}, 400)
+    except Exception:
+        return self._json_resp({'error': 'Internal Server Error'}, 500)
 
-        msg = body.get('message', '').strip()
-        if not msg:
-            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-            return
+    msg = body.get('message', '').strip()
+    if not msg:
+        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+        return
 
-        # Stats/kb query
-        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-            s = cp.kb_stats()
-            reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
-                s['total_repos'], s['total_patterns'], s['total_insights'])
-            reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
-            if s['repos']:
-                for r in s['repos'][:5]:
-                    reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
-            _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
-            return
+    # Stats/kb query
+    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+        s = cp.kb_stats()
+        reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
+            s['total_repos'], s['total_patterns'], s['total_insights'])
+        reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
+        if s['repos']:
+            for r in s['repos'][:5]:
+                reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
+        _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
+        return
 
+    try:
         intent = executor.submit(cp.detect_intent, msg).result()
 
         if intent == 'build_request':
@@ -219,6 +249,8 @@ class H(http.server.SimpleHTTPRequestHandler):
 
         else:
             _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+    except Exception:
+        return self._json_resp({'error': 'Internal Server Error'}, 500)
 
     def log_message(self, fmt, *args):
         pass
