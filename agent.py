@@ -312,7 +312,7 @@ def load_kb():
                 load_kb._cache = kb
                 return kb
         except (FileNotFoundError, json.JSONDecodeError, ValueError):
-            pass
+            return default_kb()
     kb = default_kb()
     save_kb(kb)
     load_kb._cache = kb

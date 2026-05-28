@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "codecrafters-io/build-your-own-x",
-      "stars_today": 739,
-      "lang": "Markdown",
-      "target_depth": 1
-    },
-    {
       "repo": "twentyhq/twenty",
       "stars_today": 495,
       "lang": "TypeScript",
@@ -17,6 +11,12 @@
       "stars_today": 253,
       "lang": "Python",
       "target_depth": 1
+    },
+    {
+      "repo": "EveryInc/compound-engineering-plugin",
+      "stars_today": 180,
+      "lang": "TypeScript",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,7 +24,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "codecrafters-io/build-your-own-x",
     "twentyhq/twenty",
     "unclecode/crawl4ai",
     "EveryInc/compound-engineering-plugin",
