@@ -269,6 +269,9 @@ def do_star_repo(repo_name):
     if not GH_TOKEN:
         log("  Cannot star (no token)")
         return False
+    if gh_get("/user/starred/" + repo_name).get("ok"):
+        log("  Already starred: " + repo_name)
+        return True
     log("STAR: " + repo_name)
     result = gh_put("/user/starred/" + repo_name)
     if result.get("ok"):
