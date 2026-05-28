@@ -47,6 +47,9 @@ _load_dot_env()
 LLM_KEY = os.environ.get("LLM_API_KEY", "") or os.environ.get("OPENROUTER_API_KEY", "")
 GH_TOKEN = os.environ.get("GH_TOKEN", "") or os.environ.get("GITHUB_TOKEN", "")
 LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-flash")
+LLM_MODEL_QUALITY = os.environ.get("LLM_MODEL_QUALITY", "qwen/qwen3.7-max")
+LLM_MODEL_SPEED = os.environ.get("LLM_MODEL_SPEED", "qwen/qwen3.6-flash")
+_SPEED_PHASES = {"gap_analysis", "self_modify", "self_rewrite", "self_rewrite_retry"}
 BIRTH = "2026-05-25"
 
 STAGES_DEF = {
@@ -168,15 +171,17 @@ def _record_cost(prompt_t, completion_t, total_t, phase=""):
     except Exception:
         pass
 
-def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
+def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
     import time
+    if model is None:
+        model = LLM_MODEL_SPEED if phase in _SPEED_PHASES else (LLM_MODEL_QUALITY or LLM_MODEL)
     msgs = []
     if system:
         msgs.append({"role": "system", "content": system})
     msgs.append({"role": "user", "content": msg})
     req = urllib.request.Request(
         "https://openrouter.ai/api/v1/chat/completions",
-        json.dumps({"model": LLM_MODEL, "messages": msgs,
+        json.dumps({"model": model, "messages": msgs,
                     "max_tokens": tokens, "temperature": temp}).encode())
     req.add_header("Content-Type", "application/json")
     if LLM_KEY:
@@ -2244,7 +2249,13 @@ def do_self_modify():
     
     # Apply high-priority fixes (priority >= 3)
     fixes_applied = 0
+    patch_attempts = 0
+    MAX_FIXES_PER_RUN = 1
+    MAX_PATCH_ATTEMPTS = 2
     for gap in sorted(gaps, key=lambda x: x.get("priority", 0), reverse=True):
+        if fixes_applied >= MAX_FIXES_PER_RUN:
+            log("  Hit max fixes per run (2) - stopping")
+            break
         if gap.get("priority", 0) < 3:
             log("  SKIP low priority fix: {}".format(gap.get("issue", "")[:80]))
             continue
@@ -2679,6 +2690,16 @@ def main():
     if not args.phase or args.phase == "evolve":
         do_evolve()
         personality.track('evolve', day())
+        # Check for cross-pollination opportunities
+        try:
+            personality.cross_pollinate_check()
+            # Apply personality decay for inactive dimensions
+            try:
+                personality.apply_decay()
+            except Exception:
+                pass
+        except Exception:
+            pass
 
     elapsed = time.time() - t0
     print("\nDone in {:.1f}s".format(elapsed))

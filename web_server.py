@@ -249,53 +249,54 @@ class H(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
 
-    def _handle_chat(self):
-        import concurrent.futures
-        executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-        try:
-            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-        except (json.JSONDecodeError, ValueError):
-            return _json_resp(self, {'error': 'Invalid JSON'}, 400)
-        except Exception:
-            return _json_resp(self, {'error': 'Internal Server Error'}, 500)
+def _handle_chat(self):
+    import concurrent.futures
+    import json
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+    try:
+        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+    except (json.JSONDecodeError, ValueError):
+        return _json_resp(self, {'error': 'Invalid JSON'}, 400)
+    except Exception:
+        return _json_resp(self, {'error': 'Internal Server Error'}, 500)
 
-        msg = body.get('message', '').strip()
-        if not msg:
-            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-            return
+    msg = body.get('message', '').strip()
+    if not msg:
+        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+        return
 
-        # Stats/kb query - use kb_summary instead of non-existent kb_stats
-        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-            summary = cp.kb_summary()
-            _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
-            return
+    # Stats/kb query - use kb_summary instead of non-existent kb_stats
+    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+        summary = cp.kb_summary()
+        _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
+        return
 
-        try:
-            intent = executor.submit(cp.detect_intent, msg).result()
+    try:
+        intent = executor.submit(cp.detect_intent, msg).result()
 
-            if intent == 'build_request':
-                lower = msg.lower()
-                if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
-                    session_key = body.get('session', 'default')
-                    if session_key in self._pending_proposals:
-                        proposal = self._pending_proposals.pop(session_key)
-                        result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
-                        _json_resp(self, result)
-                        return
+        if intent == 'build_request':
+            lower = msg.lower()
+            if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
+                session_key = body.get('session', 'default')
+                if session_key in self._pending_proposals:
+                    proposal = self._pending_proposals.pop(session_key)
+                    result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
+                    _json_resp(self, result)
+                    return
 
-                result = executor.submit(cp.handle_build_proposal, msg).result()
-                if result['status'] == 'proposal':
-                    self._pending_proposals[msg[:50]] = result['data']
-                _json_resp(self, result)
+            result = executor.submit(cp.handle_build_proposal, msg).result()
+            if result['status'] == 'proposal':
+                self._pending_proposals[msg[:50]] = result['data']
+            _json_resp(self, result)
 
-            elif intent == 'question':
-                result = executor.submit(cp.handle_question, msg).result()
-                _json_resp(self, result)
+        elif intent == 'question':
+            result = executor.submit(cp.handle_question, msg).result()
+            _json_resp(self, result)
 
-            else:
-                _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
-        except Exception:
-            return _json_resp(self, {'error': 'Internal Server Error'}, 500)
+        else:
+            _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+    except Exception:
+        return _json_resp(self, {'error': 'Internal Server Error'}, 500)
 
     def log_message(self, fmt, *args):
         pass

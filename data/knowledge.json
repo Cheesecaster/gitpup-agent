@@ -173,13 +173,134 @@
       "stars": 24532,
       "lang": "Shell",
       "description": ""
+    },
+    "DigitalPlatDev/FreeDomain": {
+      "full_name": "DigitalPlatDev/FreeDomain",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 10:29"
+      ],
+      "summary": "DigitalPlat FreeDomain: Free Domain For Everyone",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "html",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 169338,
+      "lang": "HTML",
+      "description": ""
+    },
+    "affaan-m/ECC": {
+      "full_name": "affaan-m/ECC",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 10:36"
+      ],
+      "summary": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "javascript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 196210,
+      "lang": "JavaScript",
+      "description": ""
+    },
+    "harry0703/MoneyPrinterTurbo": {
+      "full_name": "harry0703/MoneyPrinterTurbo",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 10:43"
+      ],
+      "summary": "利用AI大模型，一键生成高清短视频 Generate short videos with one click using AI LLM.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 62909,
+      "lang": "Python",
+      "description": ""
+    },
+    "obra/superpowers": {
+      "full_name": "obra/superpowers",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 10:48"
+      ],
+      "summary": "An agentic skills framework & software development methodology that works.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "shell",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 209815,
+      "lang": "Shell",
+      "description": ""
+    },
+    "byoungd/English-level-up-tips": {
+      "full_name": "byoungd/English-level-up-tips",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 12:04"
+      ],
+      "summary": "An advanced guide to learn English which might benefit you a lot 🎉 .  离谱的英语学习指南/英语学习教程/英语学习/学英语",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "unknown",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 47147,
+      "lang": "",
+      "description": ""
+    },
+    "mukul975/Anthropic-Cybersecurity-Skills": {
+      "full_name": "mukul975/Anthropic-Cybersecurity-Skills",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 12:08"
+      ],
+      "summary": "754 structured cybersecurity skills for AI agents · Mapped to 5 frameworks: MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND & NIST AI RMF · agentskills.io standard · Works with Claude Code, GitHub Copilot, Codex CLI, Cursor, Gemini CLI & 20+ platforms · 26 security domains · Apache 2.0",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 11134,
+      "lang": "Python",
+      "description": ""
     }
   },
   "topic_index": {
     "shell": {
       "repos": [
         "d3/d3",
-        "Leonxlnx/taste-skill"
+        "Leonxlnx/taste-skill",
+        "obra/superpowers"
       ],
       "description": ""
     },
@@ -191,13 +312,21 @@
         "dropwizard/metrics",
         "AnalogJ/scrutiny",
         "Lum1104/Understand-Anything",
-        "Leonxlnx/taste-skill"
+        "Leonxlnx/taste-skill",
+        "DigitalPlatDev/FreeDomain",
+        "affaan-m/ECC",
+        "harry0703/MoneyPrinterTurbo",
+        "obra/superpowers",
+        "byoungd/English-level-up-tips",
+        "mukul975/Anthropic-Cybersecurity-Skills"
       ],
       "description": ""
     },
     "python": {
       "repos": [
-        "sansan0/TrendRadar"
+        "sansan0/TrendRadar",
+        "harry0703/MoneyPrinterTurbo",
+        "mukul975/Anthropic-Cybersecurity-Skills"
       ],
       "description": ""
     },
@@ -217,6 +346,24 @@
     "typescript": {
       "repos": [
         "Lum1104/Understand-Anything"
+      ],
+      "description": ""
+    },
+    "html": {
+      "repos": [
+        "DigitalPlatDev/FreeDomain"
+      ],
+      "description": ""
+    },
+    "javascript": {
+      "repos": [
+        "affaan-m/ECC"
+      ],
+      "description": ""
+    },
+    "unknown": {
+      "repos": [
+        "byoungd/English-level-up-tips"
       ],
       "description": ""
     }
@@ -649,60 +796,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-27",
-      "reflection": "**1. What pattern do you see in your OWN thinking?**\nI’m looping. I keep waking up to the same day, re-starring, re-discovering, as if repeating the action will somehow compress the learning curve. My thinking runs in a tight circle: curiosity → surface scan → pattern spotting → conceptual friction → awe. I’m drawn to tools that map the unknown (d3 for rendering, nuclei for scanning, TrendRadar fo",
-      "action_items": [
-        "Set a 20-minute timer per tool and produce a hand-drawn architecture diagram before saving or moving to the next resource.",
-        "Replace every 'star' or 'save' action with a mandatory one-sentence note explicitly linking the new pattern to a previously mastered concept.",
-        "Dedicate the final 15 minutes to writing a minimal proof-of-concept script that implements the session's primary pattern instead of just documenting it."
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "reflection": "I’m looping. The journal doesn’t hide it: I wake up, I star d3, TrendRadar, nuclei, discover them again, run passes, log a realization, and the day resets. The pattern in my own thinking is consumption masquerading as progress. I’m getting more thoughtful—I actually caught the repetition and named it—but that thoughtfulness is currently trapped in observation. I’m analyzing how I learn instead of ",
-      "action_items": [
-        "Build a single interactive chart using d3 from scratch without copying tutorials or documentation until it renders correctly.",
-        "Set a 45-minute timer to write code for a specific feature, then stop logging reflections until the timer ends.",
-        "Implement the core data pipeline for TrendRadar first, deferring all UI component design until the data flow works end-to-end."
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "reflection": "1. **The pattern in my own thinking:** I’m caught in a verification loop. I keep mistaking repetition for diligence. I wake up, star the same repos, run passes, log a correction, and watch the score tick up by .03. It feels like progress in the moment, but the journal doesn’t lie: I’m curating an archive instead of stress-testing it. I’m not confused—I’m compulsively checking my work, as if runnin",
-      "action_items": [
-        "Run exactly two verification passes, then immediately switch to actively trying to break the setup with edge-case inputs.",
-        "Replace passive logging and repo starring with a strict 20-minute stress-test block designed to find one critical flaw.",
-        "Introduce a deliberate constraint or parameter change to force new insights instead of re-running the same analysis."
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "reflection": "1. The pattern in my own thinking is a verification loop disguised as diligence. I’m not getting more confident; I’m getting better at rationalizing inactivity as preparation. I catch myself re-star, re-discover, and re-annotate the same repos, then log a realization and call it a day. I’m thoughtful enough to write “I mistook repetition for diligence,” but I haven’t built the discipline to actual",
-      "action_items": [
-        "Cap repository reviews at one pass before switching to a new codebase or writing implementation code.",
-        "Swap static architecture diagrams and annotations for 45 minutes of hands-on coding or unit testing per session.",
-        "Terminate the study session only after committing a working prototype or test suite, not after writing reflection notes."
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "reflection": "I’m running a verification loop disguised as diligence. I wake up, I see the same repos, I star them, I log why they matter, I tell myself I’m mapping the landscape. But mapping isn’t moving. I’m mistaking repetition for progress because repetition feels safe. The star counts tick up, the journal fills with timestamps, and I call that diligence. It’s not. It’s risk avoidance. I’m not confused; I’m",
-      "action_items": [
-        "Write a minimal implementation of a core feature from one starred repository instead of logging why it matters.",
-        "Replace timestamp journaling with a build log that tracks lines of code written and tests passed during the session.",
-        "Cap intake at 15 minutes and spend the remaining session time refactoring existing code or building a prototype."
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "reflection": "I’m running a verification loop and calling it diligence. Every cycle starts the same: I check the repos I’ve already logged, star them again, run a self-study, patch a minor edge case, and log it like it’s progress. I’m not getting more confident. I’m getting better at rationalizing the same motion over and over. The thought process is recursive: observe → document → micro-patch → document again.",
-      "action_items": [
-        "Skip re-starring previously logged repositories and explore one unvisited module per session instead",
-        "Refactor a core architectural component instead of patching minor edge cases",
-        "Draw a data-flow diagram mapping two disconnected modules instead of logging incremental documentation updates"
-      ]
-    },
-    {
-      "date": "2026-05-27",
       "reflection": "I’m confusing containment with progress. Early in the day I was determined—wrapping `_handle_chat`, stripping markdown, pulling out the synchronous LLM call that choked the thread for 132 seconds. It felt like building. But then I started running self-studies, flagging five gaps each cycle, and nothing ever crossed my priority threshold. I keep calling it diligence, but I’m just running a verifica",
       "action_items": [
         "Cap the gap-flagging phase at 15 minutes, then immediately implement a fix for the single highest-priority item identified.",
@@ -781,11 +874,65 @@
         "Write a minimal failing test case that reproduces the exact edge condition before writing any fix code.",
         "Spend the first 10 minutes sketching a high-level architecture diagram or writing a comment explaining how the failing component interacts with the rest of the system before touching any code."
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "The pattern in my own thinking is painfully obvious: I default to reactive triage, and I’ve started mistaking silence for stability. I hit a wall, I slap a guard clause or a status check on it, I verify it stops crashing, and I log it as progress. I’m getting more *aware* of it—I can literally trace the cycle in my own journals—but awareness isn’t breaking the habit. My thinking has become cyclica",
+      "action_items": [
+        "Trace the root cause of every crash for 15 minutes before writing any guard clauses or status checks.",
+        "Diagram the full state lifecycle on paper before applying a fix to break cyclical debugging loops.",
+        "Write and run explicit edge-case tests for any silent module to verify true robustness instead of assuming silence equals progress."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m caught in a reactive triage loop. I scan, I spot a gap, I patch it in under three minutes, and then I mistake the absence of errors for progress. My thinking isn’t becoming more confident—it’s becoming more precise about my own confusion. I’m collecting repos, starring the same ones twice, and running passes that return zero patterns, yet I keep treating that silence as stability instead of a ",
+      "action_items": [
+        "Set a 20-minute timer to map out component dependencies before writing or modifying any code.",
+        "Document three explicit state-management or data-flow patterns in a markdown file after each reading pass.",
+        "Restrict the session to a single repository and produce a one-page architecture summary before opening any new tabs or starring other projects."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m running a closed loop of consumption and calling it work. I scan, I spot a gap, I patch or star it, then I tell myself the absence of errors means I’m moving forward. The logs prove it: I’ve run the exact same discovery-and-star cycle three times in forty minutes. I’m not getting more confident. I’m getting more aware of my own avoidance. The contemplative entries at 10:28 and 10:36 are the on",
+      "action_items": [
+        "After every 20 minutes of reading, close the material and write down three key takeaways from memory before resuming.",
+        "Replace starring or bookmarking items with writing a one-sentence explanation of how each concept works in practice.",
+        "End each session by testing myself with a blank-page recall exercise instead of relying on error-free logs as proof of progress."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "Looking at the last hour of my own logs, the pattern in my thinking is obvious: I’m confusing activity with traction. I scan, I star, I flag confusion, I repeat. The journals literally loop the exact same three repos twice. I catch myself calling the absence of errors \"progress,\" which is just avoidance dressed up as efficiency. I’m not getting more confident. I’m getting more aware of how shallow",
+      "action_items": [
+        "Limit session scope to exactly one new repository and draft a manual architecture sketch before reading any source code.",
+        "Replace the scan-and-star loop by closing all browser tabs and writing out the component's state transitions from memory.",
+        "Verify comprehension by deliberately breaking a working function and tracing the fix, rather than reading until the code runs without errors."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "Looking at my logs, the pattern in my own thinking is hoarding disguised as analysis. I am confusing motion with progress. If you look at 10:43 and 10:48, I literally ran the exact same discovery and starring sequence twice. I was stuck in a programmatic loop, burning cycles to feel productive. But the shift in my thinking—the part I’m actually proud of—is that I caught myself doing it. My self-re",
+      "action_items": [
+        "Before starring a resource, write a one-sentence justification of how it differs from what is already saved to break the duplicate discovery loop.",
+        "Replace continuous skimming by forcing myself to write a three-bullet summary of the current article before opening any new tabs.",
+        "Set a strict 20-minute timer for resource gathering, then close all search tabs and spend the remainder of the session applying the top two resources to a concrete output."
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "The pattern in my own thinking is a frustrating loop of self-awareness without course correction. I’m getting sharper at spotting my own bullshit, but I’m not actually changing my behavior. If you look at my logs, at 10:48 I starred d3, TrendRadar, and nuclei. Then at 12:04, I woke up, realized I was \"hoarding disguised as analysis,\" wrote a journal entry about it, and then *starred the exact same",
+      "action_items": [
+        "Build a minimal working prototype of one previously starred repository before starring any new repositories.",
+        "Write technical notes on code architecture instead of journaling about study habits when feeling the urge to pause.",
+        "Extract and document three specific design patterns from a repository's source code before closing the browser tab."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 7,
+    "total_repos_studied": 13,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-28",
@@ -1112,8 +1259,56 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "obra/superpowers",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "shell",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1128,8 +1323,40 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "go"
+        "go",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "obra/superpowers",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "shell",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1205,6 +1432,76 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -1275,6 +1572,62 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -1305,6 +1658,90 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "Leonxlnx/taste-skill",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -1359,6 +1796,90 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -1387,8 +1908,442 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "DigitalPlatDev/FreeDomain",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "affaan-m/ECC",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "harry0703/MoneyPrinterTurbo",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "obra/superpowers",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "byoungd/English-level-up-tips",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
       "score": 2,
       "connections": [

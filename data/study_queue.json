@@ -1,21 +1,21 @@
 {
   "repos": [
     {
-      "repo": "Leonxlnx/taste-skill",
-      "stars_today": 2715,
-      "lang": "Shell",
+      "repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "stars_today": 886,
+      "lang": "Python",
       "target_depth": 1
     },
     {
-      "repo": "DigitalPlatDev/FreeDomain",
-      "stars_today": 2222,
-      "lang": "HTML",
-      "target_depth": 1
-    },
-    {
-      "repo": "affaan-m/ECC",
-      "stars_today": 2062,
+      "repo": "Axorax/awesome-free-apps",
+      "stars_today": 728,
       "lang": "JavaScript",
+      "target_depth": 1
+    },
+    {
+      "repo": "anthropics/knowledge-work-plugins",
+      "stars_today": 695,
+      "lang": "Python",
       "target_depth": 1
     }
   ],
@@ -24,15 +24,15 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "Leonxlnx/taste-skill",
-    "DigitalPlatDev/FreeDomain",
-    "affaan-m/ECC",
-    "harry0703/MoneyPrinterTurbo",
-    "obra/superpowers",
-    "byoungd/English-level-up-tips",
     "mukul975/Anthropic-Cybersecurity-Skills",
     "Axorax/awesome-free-apps",
     "anthropics/knowledge-work-plugins",
-    "hardikpandya/stop-slop"
+    "hardikpandya/stop-slop",
+    "twentyhq/twenty",
+    "shiyu-coder/Kronos",
+    "iii-hq/iii",
+    "p-e-w/heretic",
+    "Chachamaru127/claude-code-harness",
+    "moeru-ai/airi"
   ]
 }
