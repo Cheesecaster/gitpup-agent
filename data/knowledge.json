@@ -153,12 +153,33 @@
       "stars": 39708,
       "lang": "TypeScript",
       "description": ""
+    },
+    "Leonxlnx/taste-skill": {
+      "full_name": "Leonxlnx/taste-skill",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 10:04"
+      ],
+      "summary": "Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop ",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "shell",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 24532,
+      "lang": "Shell",
+      "description": ""
     }
   },
   "topic_index": {
     "shell": {
       "repos": [
-        "d3/d3"
+        "d3/d3",
+        "Leonxlnx/taste-skill"
       ],
       "description": ""
     },
@@ -169,7 +190,8 @@
         "projectdiscovery/nuclei",
         "dropwizard/metrics",
         "AnalogJ/scrutiny",
-        "Lum1104/Understand-Anything"
+        "Lum1104/Understand-Anything",
+        "Leonxlnx/taste-skill"
       ],
       "description": ""
     },
@@ -750,11 +772,20 @@
         "Replace defensive error wrappers with targeted fixes that address the root cause, then verify with a test that asserts correct behavior rather than caught exceptions",
         "Spend the first 15 minutes of the session diagramming architectural dependencies and state transitions before writing or modifying any code"
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m caught in a feedback loop of reactive problem-solving. I move from confusion to clarity, but that clarity has become a cage. Once I see what’s breaking, I don’t step back to ask why it broke or how it fits into the larger structure. I just grab the first tool that stops the bleeding. I wrapped a `try/except` around the JSON parse, slapped a `status_code` guard on `gh_get`, and wired `set_state",
+      "action_items": [
+        "Before patching any function, explicitly trace and document the full data flow and error propagation path for that module.",
+        "Write a minimal failing test case that reproduces the exact edge condition before writing any fix code.",
+        "Spend the first 10 minutes sketching a high-level architecture diagram or writing a comment explaining how the failing component interacts with the rest of the system before touching any code."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 6,
+    "total_repos_studied": 7,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-28",
@@ -1072,6 +1103,22 @@
   },
   "relationships": [
     {
+      "from_repo": "d3/d3",
+      "to_repo": "Leonxlnx/taste-skill",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "shell"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1081,8 +1128,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1214,6 +1261,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "Leonxlnx/taste-skill",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -1230,6 +1291,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -1270,8 +1345,50 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "Leonxlnx/taste-skill",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "Leonxlnx/taste-skill",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
       "score": 2,
       "connections": [

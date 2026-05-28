@@ -176,10 +176,61 @@ class H(http.server.SimpleHTTPRequestHandler):
                         'title': (e.get('x', '') or '')[:60],
                     })
             _json_resp(self, {'timeline': timeline[-50:], 'total': len(timeline)})
+        elif p == '/auth/callback':
+            qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            code = qs.get('code', [''])[0]
+            if not code:
+                self.send_response(400)
+                self.send_header('Content-Type', 'text/html')
+                self.end_headers()
+                return
+            import urllib.request as _ur
+            import json as _json
+            _body = _json.dumps({
+                'client_id': 'Ov23liLMEsHCQUzsfIKX',
+                'client_secret': '940bda0ab55878ad38e10de477df653f85ff3f8'.encode('utf-8'),
+                'code': code,
+                'redirect_uri': 'https://gitpup.fun/auth/callback',
+            }).encode('utf-8')
+            _req = _ur.Request('https://github.com/login/oauth/access_token',
+                data=_body, headers={'Accept': 'application/json'}, method='POST')
+            try:
+                with _ur.urlopen(_req, timeout=10) as _r:
+                    _resp = _json.loads(_r.read())
+                    _token = _resp.get('access_token', '')
+                    if _token:
+                        _ur2 = _ur.Request('https://api.github.com/user',
+                            headers={'Authorization': 'token ' + _token})
+                        with _ur.urlopen(_ur2, timeout=10) as _r2:
+                            _user = _json.loads(_r2.read())
+                        _name = _user.get('login', 'user')
+                        _html = ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+                            '<script>try{localStorage.setItem("gp_gh_token","' + _token
+                            + '");localStorage.setItem("gp_gh_user",JSON.stringify('
+                            + '{login:"' + _name + '",token:"' + _token + '"}))}'
+                            + 'catch(e){}window.location.href="/";</script></head>'
+                            + '<body>Logged in ' + _name + '! Redirecting...</body></html>')
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'text/html')
+                        self.end_headers()
+                        self.wfile.write(_html.encode())
+                    else:
+                        self.send_response(400)
+                        self.send_header('Content-Type', 'text/html')
+                        self.end_headers()
+                        self.wfile.write(b'Login failed')
+            except Exception:
+                self.send_response(500)
+                self.send_header('Content-Type', 'text/html')
+                self.end_headers()
+                self.wfile.write(b'OAuth error')
         else:
             self.send_error(404)
 
-def do_POST(self):
+    # Session storage for pending proposals (in-memory)
+    _pending_proposals = {}
+
+    def do_POST(self):
         p = urllib.parse.urlparse(self.path).path
         if p == '/api/chat':
             try:
@@ -198,65 +249,56 @@ def do_POST(self):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
 
-def _handle_chat(self):
-    import concurrent.futures
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-    try:
-        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-    except (json.JSONDecodeError, ValueError):
-        return self._json_resp({'error': 'Invalid JSON'}, 400)
-    except Exception:
-        return self._json_resp({'error': 'Internal Server Error'}, 500)
+    def _handle_chat(self):
+        import concurrent.futures
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        try:
+            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+        except (json.JSONDecodeError, ValueError):
+            return _json_resp(self, {'error': 'Invalid JSON'}, 400)
+        except Exception:
+            return _json_resp(self, {'error': 'Internal Server Error'}, 500)
 
-    msg = body.get('message', '').strip()
-    if not msg:
-        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-        return
+        msg = body.get('message', '').strip()
+        if not msg:
+            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+            return
 
-    # Stats/kb query
-    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-        s = cp.kb_stats()
-        reply = "Knowledge base gw:\n* {} repos | {} patterns | {} insights\n".format(
-            s['total_repos'], s['total_patterns'], s['total_insights'])
-        reply += "* Topics: {}\n".format(', '.join(s['topics'][:8]))
-        if s['repos']:
-            for r in s['repos'][:5]:
-                reply += "- {} (level {}/4, {})\n".format(r['name'], r['level'], r['stars'])
-        _json_resp(self, {'reply': reply, 'cited': [], 'stats': s})
-        return
+        # Stats/kb query - use kb_summary instead of non-existent kb_stats
+        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+            summary = cp.kb_summary()
+            _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
+            return
 
-    try:
-        intent = executor.submit(cp.detect_intent, msg).result()
+        try:
+            intent = executor.submit(cp.detect_intent, msg).result()
 
-        if intent == 'build_request':
-            lower = msg.lower()
-            if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
-                session_key = body.get('session', 'default')
-                if session_key in _pending_proposals:
-                    proposal = _pending_proposals.pop(session_key)
-                    result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
-                    _json_resp(self, result)
-                    return
+            if intent == 'build_request':
+                lower = msg.lower()
+                if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
+                    session_key = body.get('session', 'default')
+                    if session_key in self._pending_proposals:
+                        proposal = self._pending_proposals.pop(session_key)
+                        result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
+                        _json_resp(self, result)
+                        return
 
-            result = executor.submit(cp.handle_build_proposal, msg).result()
-            if result['status'] == 'proposal':
-                _pending_proposals[msg[:50]] = result['data']
-            _json_resp(self, result)
+                result = executor.submit(cp.handle_build_proposal, msg).result()
+                if result['status'] == 'proposal':
+                    self._pending_proposals[msg[:50]] = result['data']
+                _json_resp(self, result)
 
-        elif intent == 'question':
-            result = executor.submit(cp.handle_question, msg).result()
-            _json_resp(self, result)
+            elif intent == 'question':
+                result = executor.submit(cp.handle_question, msg).result()
+                _json_resp(self, result)
 
-        else:
-            _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
-    except Exception:
-        return self._json_resp({'error': 'Internal Server Error'}, 500)
+            else:
+                _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+        except Exception:
+            return _json_resp(self, {'error': 'Internal Server Error'}, 500)
 
     def log_message(self, fmt, *args):
         pass
-
-    # Session storage for pending proposals (in-memory)
-    _pending_proposals = {}
 
 
 os.chdir('/opt/gitpup/web_dist')

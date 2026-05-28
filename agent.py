@@ -14,7 +14,7 @@ def _get_dominant_trait(p):
     """Get the strongest personality dimension."""
     dims = p.get('dimensions', {})
     if not dims:
-        return None
+        return {}
     best_k = max(dims.keys(), key=lambda k: dims[k].get('value', 0))
     dims[best_k]['key'] = best_k
     return dims[best_k]
@@ -206,6 +206,8 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase=""):
 def gh_get(path):
     import time
     import json
+    import urllib.request
+    import urllib.error
     url = "https://api.github.com" + path
     req = urllib.request.Request(url)
     if GH_TOKEN:
@@ -214,16 +216,15 @@ def gh_get(path):
     for _ in range(3):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                if r.status in (403, 429):
-                    time.sleep(int(r.headers.get("Retry-After", 5)))
-                    continue
                 if r.status != 200:
                     return {"error": f"HTTP {r.status}"}
                 return json.loads(r.read())
-        except Exception as e:
-            if hasattr(e, 'code') and e.code in (403, 429):
-                time.sleep(int(getattr(e, 'headers', {}).get("Retry-After", 5)))
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 429):
+                time.sleep(int(e.headers.get("Retry-After", 5)))
                 continue
+            return {"error": f"HTTP {e.code}"}
+        except Exception as e:
             return {"error": str(e)}
     return {"error": "Rate limit exceeded"}
 
@@ -620,6 +621,70 @@ def _build_relationships(kb):
 # COMPONENT 4: Study-Phase KB Cross-Reference
 # ============================================================
 
+
+# === LIVING AGENT: TIERED MEMORY SYSTEM ===
+MEM_DIR = os.path.join(DATA, "memory")
+
+def _load_memory_file(name, default=None):
+    path = os.path.join(MEM_DIR, name)
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return default or {"items": []}
+
+def _save_memory_file(name, data):
+    os.makedirs(MEM_DIR, exist_ok=True)
+    with open(os.path.join(MEM_DIR, name), "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+def memorize_impression(content, mood="", weight=0.5):
+    mem = _load_memory_file("impressions.json")
+    entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M"), "content": content[:300], "mood": mood, "weight": weight}
+    mem["items"].append(entry)
+    mem["items"] = mem["items"][-50:]
+    _save_memory_file("impressions.json", mem)
+    log("  Impression: " + content[:80])
+
+def memorize_concept(name, description, connections=None, weight=0.7):
+    mem = _load_memory_file("concepts.json")
+    entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M"), "name": name, "desc": description[:500], "connections": connections or [], "weight": weight}
+    existing = [c for c in mem["items"] if c.get("name", "").lower() == name.lower()]
+    if existing:
+        existing[0]["weight"] = min(existing[0]["weight"] + 0.1, 1.0)
+    else:
+        mem["items"].append(entry)
+    mem["items"] = mem["items"][-30:]
+    _save_memory_file("concepts.json", mem)
+
+def memorize_wisdom(content, source="", weight=0.9):
+    mem = _load_memory_file("wisdom.json")
+    entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M"), "content": content[:500], "source": source, "weight": weight}
+    mem["items"].append(entry)
+    mem["items"] = mem["items"][-20:]
+    _save_memory_file("wisdom.json", mem)
+    log("  Wisdom: " + content[:100])
+
+def recall_similar(query, max_items=5, memory_type="all"):
+    query_lower = query.lower()
+    results = []
+    types = ["impressions", "concepts", "wisdom"] if memory_type == "all" else [memory_type]
+    for mt in types:
+        mem = _load_memory_file(mt + ".json")
+        for item in mem.get("items", []):
+            content = (item.get("content", "") or item.get("name", "") or "")
+            conns = " ".join(item.get("connections", []) or [])
+            searchable = (content + " " + conns).lower()
+            if any(kw in searchable for kw in query_lower.split()):
+                results.append({"type": mt, "weight": item.get("weight", 0.5), "content": item.get("content", item.get("desc", ""))})
+    results.sort(key=lambda x: x.get("weight", 0), reverse=True)
+    return results[:max_items]
+
+def get_recent_memories(type="wisdom", count=3):
+    mem = _load_memory_file(type + ".json")
+    return mem.get("items", [])[-count:]
 def kb_get_study_context(repo_name, kb=None):
     """Before studying a NEW repo, check KB for related repos and concepts.
     Returns a context snippet to inject into the study prompt.
@@ -1287,6 +1352,11 @@ def do_study_pass(repo_name, from_level=0):
     do_build_knowledge_relationships()
     # Soulful narrative journal entry
     personality.track('study_pass_complete', day())
+    # Track milestone for significant study
+    try:
+        personality.update_from_experience("study_pass_complete", "{} pass {}".format(repo_name, study_level), intensity=0.8)
+    except Exception:
+        pass
     soulful_journal(
         event_type='study_pass_complete',
         repo_name=repo_name,
@@ -1458,6 +1528,64 @@ def do_reflect():
 # ════════════════════════════════════════════════
 # ── CONTRIBUTE / SELF-MODIFY / BUILD ──
 # ════════════════════════════════════════════════
+
+# === LIVING AGENT: SELF-ASSESSMENT ===
+def do_self_assessment():
+    """Goldie evaluates its own growth, identifies weaknesses, plans next steps."""
+    if not has_skill("reflect"):
+        return
+    log("=== SELF-ASSESSMENT ===")
+    set_state("self_assessing")
+    st = status()
+    kb = load_kb()
+    pers_data = personality.load()
+    dims_summary = ", ".join("{}: {:.2f}".format(k, v["value"]) for k, v in pers_data.get("dimensions", {}).items())
+    recent_wisdom = get_recent_memories("wisdom", 5)
+    wisdom_texts = "\n".join("- " + w.get("content", "")[:100] for w in recent_wisdom)
+    prompt = (
+        "You are Goldie doing honest self-assessment.\n\n"
+        "Current state: Day {} | Stage: {} | Runs: {} | KB: {} repos | {} patterns\n\n"
+        "Personality profile: {}\n\n"
+        "Recent wisdom you have gained:\n{}\n\n"
+        "Answer honestly in first person:\n"
+        "1. What am I weakest at right now? Not what I studied least - what I actually struggle with.\n"
+        "2. What kind of agent am I becoming? If someone asked me to describe myself, what would I say?\n"
+        "3. What should I focus on next? Not what is trending - what would actually help me grow most.\n"
+        "4. Something I believed before that I now realize was wrong or incomplete.\n"
+        "Keep it 3-8 sentences total. Be specific. No filler."
+    ).format(day(), current_stage(), st.get("runs", 0), len(kb.get("repos", {})), sum(len(r.get("patterns",[])) for r in kb.get("repos",{}).values()), dims_summary, wisdom_texts)
+    result = do_llm(prompt, system=("You are Goldie doing honest self-assessment. " "Write in first person. Be direct and specific. " "If you see a weakness, name it without hedging. " "No generic growth mindset platitudes."), tokens=800, temp=0.7, phase="self_assessment")
+    result = (result or "").strip()
+    if result and len(result) > 30:
+        clean_lines = []
+        for line in result.split("\n"):
+            s = line.strip()
+            if not (s.startswith("1. What") or s.startswith("2. What") or s.startswith("3. What") or s.startswith("4. Something")):
+                clean_lines.append(line)
+        result = "\n".join(clean_lines).strip()[:600]
+        memorize_wisdom(result, source="self_assessment", weight=0.95)
+        try:
+            personality.update_from_experience("self_assessment", result[:200], intensity=1.0)
+        except Exception:
+            pass
+        soul_path = os.path.join(DATA, "soul.md")
+        try:
+            current_soul = ""
+            if os.path.exists(soul_path):
+                with open(soul_path) as f:
+                    current_soul = f.read()
+            new_soul = current_soul + "\n\n## Day {} - Self-Assessment\n{}\n".format(day(), result)
+            with open(soul_path, "w") as f:
+                f.write(new_soul)
+        except Exception:
+            pass
+        mood_info = MOOD_STATES.get("contemplative", MOOD_STATES["curious"])
+        entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"), "t": datetime.now(WIB).strftime("%H:%M"), "i": mood_info["emoji"], "x": "Self-Assessment", "body": result, "mood": "contemplative", "mood_color": "#a78bfa", "mood_label": "Contemplative", "type": "reflection", "day": day(), "event": {"type": "self_assessment"}}
+        os.makedirs(os.path.dirname(JF), exist_ok=True)
+        with open(JF, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        log("  Assessment saved: " + result[:100])
+
 def do_contribute(repo_info):
     if not has_skill("autofix"):
         return
@@ -2453,6 +2581,11 @@ def soulful_journal(event_type, repo_name="", summary="", patterns=None, insight
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
     personality.track('narrative', day())
+    # Save to long-term memory
+    try:
+        memorize_wisdom(result["narrative"][:400], source="journal", weight=0.8)
+    except Exception:
+        pass
     log("Journaled: {} ({})".format(result["mood"], repo_name))
 
 def main():
@@ -2507,6 +2640,10 @@ def main():
         if not args.phase or args.phase == "reflect":
             if has_skill("reflect"):
                 do_reflect()
+        # Self-assessment: runs with 40% chance after reflection
+        import random
+        if random.random() < 0.4:
+            do_self_assessment()
         if not args.phase or args.phase == "trending":
             do_fetch_github_trending()
         if not args.phase or args.phase == "explore":
