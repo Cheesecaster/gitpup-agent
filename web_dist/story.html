@@ -56,7 +56,10 @@ canvas{width:300px;height:300px;display:block;margin:0 auto}
 <div class="chart-box"><canvas id="rc"></canvas></div></div>
 
 <div class="section"><h2>&#128533; Mood Timeline</h2>
-<div id="moodList"><div class="msg">Loading...</div></div></div>
+<div id="mood-chart-wrap">
+    <svg id="mood-svg" style="display:block;width:100%;height:200px;"></svg>
+    <div id="mood-points" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px;"></div>
+  </div></div>
 
 <div class="section"><h2>&#129727; Self Reflections</h2>
 <div id="refList"><div class="msg">Loading...</div></div></div>
@@ -68,7 +71,14 @@ canvas{width:300px;height:300px;display:block;margin:0 auto}
 <div id="soulBox"><div class="msg">Loading...</div></div></div>
 
 <div class="section"><h2>&#128176; LLM Cost</h2>
-<div id="costBox"><div class="msg">Loading...</div></div></div>
+<div id="costBox"><div class="msg">Loading...</div></div>
+    <!-- Knowledge Relationships Section -->
+    <div class="section" id="kb-section" style="margin-top:1.5em;">
+      <h2>&#128303; Knowledge Graph</h2>
+      <div id="kb-summary" class="msg" style="font-size:13px;"></div>
+      <div id="kb-concepts" style="margin:8px 0;"></div>
+      <div id="kb-edges" style="margin-top:8px;"></div>
+    </div></div>
 </div>
 
 <script id="chartJS">
@@ -244,5 +254,226 @@ fetchJSON('/api/cost',function(d){
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 })();
 </script>
+<script>
+// ── Mood Arc ──
+(function(){
+  var svg=document.getElementById('mood-svg');
+  if(!svg)return;
+  var section=document.getElementById('mood-section');
+  var tooltip=document.getElementById('mood-tooltip');
+  function draw(data){
+    if(!data||!data.length){section.style.display='none';return;}
+    section.style.display='block';
+    var W=800,H=180,pad=30;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.innerHTML='';
+    // defs for glow
+    var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+    var filter=document.createElementNS('http://www.w3.org/2000/svg','filter');
+    filter.setAttribute('id','mood-glow');
+    var feGaussian=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
+    feGaussian.setAttribute('stdDeviation','3');
+    feGaussian.setAttribute('result','coloredBlur');
+    filter.appendChild(feGaussian);
+    var feMerge=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+    var mn1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
+    mn1.setAttribute('in','coloredBlur');
+    feMerge.appendChild(mn1);
+    var mn2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
+    mn2.setAttribute('in','SourceGraphic');
+    feMerge.appendChild(mn2);
+    filter.appendChild(feMerge);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+
+    var n=data.length;
+    var xScale=function(i){return pad+(i/(n-1||1))*(W-2*pad);};
+    var moodValues={'Curious':0.7,'Contemplative':0.8,'Skeptical':0.5,'Humbled':0.9,'Confused':0.3,'Determined':0.85,'Excited':0.9,'Anxious':0.4,'Inspired':1.0};
+
+    // Draw area fill
+    var areaPath='M'+xScale(0)+' '+H;
+    var dotPositions=[];
+    for(var i=0;i<n;i++){
+      var v=moodValues[data[i].label]||0.5;
+      var y=H-pad-v*(H-2*pad);
+      dotPositions.push({x:xScale(i),y:y,i:i});
+      areaPath+=' L'+xScale(i)+' '+y;
+    }
+    areaPath+=' L'+xScale(n-1)+' '+H+' Z';
+    var area=document.createElementNS('http://www.w3.org/2000/svg','path');
+    area.setAttribute('d',areaPath);
+    area.setAttribute('fill','rgba(128,90,213,0.08)');
+    svg.appendChild(area);
+
+    // Draw line path
+    var linePath='M'+xScale(0)+' '+(pad+(1-(moodValues[data[0].label]||0.5))*(H-2*pad));
+    for(var i=1;i<n;i++){
+      var v=moodValues[data[i].label]||0.5;
+      var y=H-pad-v*(H-2*pad);
+      linePath+=' L'+xScale(i)+' '+y;
+    }
+    var line=document.createElementNS('http://www.w3.org/2000/svg','path');
+    line.setAttribute('d',linePath);
+    line.setAttribute('fill','none');
+    line.setAttribute('stroke','#6366f1');
+    line.setAttribute('stroke-width','2');
+    line.setAttribute('stroke-linecap','round');
+    line.setAttribute('stroke-linejoin','round');
+    line.setAttribute('filter','url(#mood-glow)');
+    svg.appendChild(line);
+
+    // Draw dots
+    for(var i=0;i<n;i++){
+      var pos=dotPositions[i];
+      var d=data[i];
+      var circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circle.setAttribute('cx',pos.x);
+      circle.setAttribute('cy',pos.y);
+      circle.setAttribute('r','4');
+      circle.setAttribute('fill',d.color||'#8b5cf6');
+      circle.setAttribute('stroke','rgba(0,0,0,0.3)');
+      circle.setAttribute('stroke-width','1');
+      circle.style.cursor='pointer';
+      circle.addEventListener('mouseenter',function(e){showTip(e,d,pos);});
+      circle.addEventListener('mouseleave',function(){tooltip.style.display='none';});
+      svg.appendChild(circle);
+    }
+
+    // X-axis labels (show day markers)
+    for(var i=0;i<n;i+=Math.max(1,Math.floor(n/6))){
+      var d=data[i];
+      var txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',xScale(i));
+      txt.setAttribute('y',H-5);
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('fill','#666');
+      txt.setAttribute('font-size','10');
+      txt.textContent='Day '+d.day;
+      svg.appendChild(txt);
+    }
+  }
+
+  function showTip(e,d,pos){
+    tooltip.style.display='block';
+    tooltip.innerHTML='<div style="color:'+d.color+';font-weight:bold;">'+d.label+'</div><div style="margin-top:4px;color:#999;">'+d.ts+'</div><div style="margin-top:4px;">'+(d.title||'')+'</div>';
+    var rect=svg.getBoundingClientRect();
+    tooltip.style.left=(rect.left+pos.x/800*rect.width)+'px';
+    tooltip.style.top=(rect.top+pos.y/180*rect.height-60)+'px';
+  }
+
+  // Fetch mood data
+  function load(){
+    fetch('/api/mood_arc').then(function(r){return r.json();}).then(function(data){
+      draw(data.timeline);
+    }).catch(function(){draw([]);});
+  }
+  load();
+  setInterval(load,30000);
+})();</script>
+<script>
+// ── Mood Arc Chart ──
+(function(){
+  var svg=document.getElementById('mood-svg');
+  var pointsDiv=document.getElementById('mood-points');
+  if(!svg||!pointsDiv)return;
+  var MOOD_VALS={'Awed':0.95,'Excited':0.9,'Inspired':1.0,'Curious':0.75,'Contemplative':0.8,
+    'Skeptical':0.5,'Humbled':0.85,'Confused':0.3,'Determined':0.85,'Focused':0.7,
+    'Proud':0.9,'Satisfied':0.8,'Anxious':0.4,'Overwhelmed':0.2,'Neutral':0.5};
+
+  function draw(timeline){
+    if(!timeline||!timeline.length){svg.innerHTML='<text x=\'50%\' y=\'50%\' text-anchor=\'middle\' fill=\'#666\'>No mood data yet</text>';return;}
+    var W=800,H=180,pad=30;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.innerHTML='';
+    // Defs
+    var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+    var gl=document.createElementNS('http://www.w3.org/2000/svg','filter');
+    gl.setAttribute('id','mg');
+    var gb=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
+    gb.setAttribute('stdDeviation','2');gb.setAttribute('result','b');
+    gl.appendChild(gb);
+    var fm=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+    var m1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m1.setAttribute('in','b');fm.appendChild(m1);
+    var m2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m2.setAttribute('in','SourceGraphic');fm.appendChild(m2);
+    gl.appendChild(fm);defs.appendChild(gl);svg.appendChild(defs);
+    // Grid lines
+    for(var r=0;r<=1;r+=0.25){
+      var gy=H-pad-r*(H-2*pad);
+      var gl2=document.createElementNS('http://www.w3.org/2000/svg','line');
+      gl2.setAttribute('x1',pad);gl2.setAttribute('x2',W-pad);gl2.setAttribute('y1',gy);gl2.setAttribute('y2',gy);
+      gl2.setAttribute('stroke','rgba(255,255,255,0.05)');gl2.setAttribute('stroke-width','1');
+      svg.appendChild(gl2);
+    }
+    var n=timeline.length;
+    var getX=function(i){return pad+(n>1?(i/(n-1))*(W-2*pad):W/2);};
+    var dots=[];
+    var pathD='';
+    for(var i=0;i<n;i++){
+      var v=MOOD_VALS[timeline[i].label]||0.5;
+      var x=getX(i),y=H-pad-v*(H-2*pad);
+      dots.push({x:x,y:y,i:i,d:timeline[i]});
+      pathD+=(i===0?'M':'L')+x+' '+y;
+    }
+    // Area fill
+    var areaD=pathD+' L'+getX(n-1)+' '+(H-pad)+' L'+getX(0)+' '+(H-pad)+' Z';
+    var area=document.createElementNS('http://www.w3.org/2000/svg','path');
+    area.setAttribute('d',areaD);area.setAttribute('fill','rgba(99,102,241,0.10)');
+    svg.appendChild(area);
+    // Line
+    var line=document.createElementNS('http://www.w3.org/2000/svg','path');
+    line.setAttribute('d',pathD);line.setAttribute('fill','none');
+    line.setAttribute('stroke','#6366f1');line.setAttribute('stroke-width','2.5');
+    line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');
+    line.setAttribute('filter','url(#mg)');
+    svg.appendChild(line);
+    // Dots with hover
+    for(var i=0;i<dots.length;i++){
+      var dot=dots[i],dd=dot.d;
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',dot.x);c.setAttribute('cy',dot.y);c.setAttribute('r','5');
+      c.setAttribute('fill',dd.color||'#8b5cf6');c.setAttribute('stroke','rgba(0,0,0,0.4)');
+      c.setAttribute('stroke-width','1.5');c.style.cursor='pointer';
+      c.addEventListener('mouseenter',function(ev){showTip(ev,dd);});
+      c.addEventListener('mouseleave',function(){hideTip();});
+      svg.appendChild(c);
+    }
+    // X labels
+    var step=Math.max(1,Math.floor(n/8));
+    for(var i=0;i<n;i+=step){
+      var dd=timeline[i];
+      var txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',getX(i));txt.setAttribute('y',H-4);
+      txt.setAttribute('text-anchor','middle');txt.setAttribute('fill','#555');
+      txt.setAttribute('font-size','9');txt.textContent='Day '+dd.day;
+      svg.appendChild(txt);
+    }
+    // Points bar below
+    if(pointsDiv){
+      pointsDiv.innerHTML='';
+      for(var i=0;i<timeline.length;i++){
+        var dd=timeline[i];
+        var span=document.createElement('span');
+        span.style.cssText='display:inline-block;width:8px;height:8px;border-radius:50%;background:'+dd.color+';';
+        span.title=dd.label+'\n'+dd.ts+'\n'+dd.title;
+        pointsDiv.appendChild(span);
+      }
+    }
+  }
+
+  var tip=document.createElement('div');
+  tip.style.cssText='position:absolute;background:#1a1a2e;color:#e0e0e0;padding:8px 12px;border-radius:8px;font-size:12px;pointer-events:none;z-index:100;max-width:250px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.15s;';
+  document.body.appendChild(tip);
+  function showTip(e,d){
+    var r=e.target.getBoundingClientRect();
+    tip.innerHTML='<span style="color:'+d.color+';font-weight:600;font-size:14px;">'+d.label+'</span><br><span style="color:#888;font-size:11px;">'+d.ts+'</span><br><span style="font-size:12px;margin-top:4px;display:block;">'+d.title+'</span>';
+    tip.style.left=(r.left+r.width/2-125)+'px';
+    tip.style.top=(r.bottom+8)+'px';
+    tip.style.opacity='1';
+  }
+  function hideTip(){tip.style.opacity='0';}
+
+  function load(){fetch('/api/mood_arc').then(function(r){return r.json();}).then(function(d){draw(d.timeline||[]);}).catch(function(){draw([]);});}
+  load();setInterval(load,30000);
+})();</script>
 </body>
 </html>

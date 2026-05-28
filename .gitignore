@@ -1,39 +1,20 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-.eggs/
-*.egg
-.venv/
-venv/
-
-# Config secrets
-config.yaml
+# Secrets
 .env
+.git-credentials
+*.bak
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
 
 # Data
-data/*.tmp
-data/state/
+data/
 
-# Node
-web/node_modules/
-web/dist/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Understand-Anything
-.understand-anything/
-
-# Agent runtime
+# Logs
 *.log
-data/runs/
+
+# Scripts
+auto_pr.py
+

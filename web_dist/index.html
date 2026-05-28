@@ -51,6 +51,16 @@ body{display:flex;flex-direction:column}
 @keyframes tw4{0%{transform:rotate(-25deg)}100%{transform:rotate(20deg)}}
 #gs.sleeping .d-eye{border-radius:0 0 50% 50%;width:11px;height:5px;top:10px;animation:none!important;border-bottom:2.2px solid #281835}
 #gs.sleeping .d-eye::before,#gs.sleeping .d-eye::after,#gs.sleeping .d-mouth::after{display:none}
+
+.walking .d-leg{animation:lg 0.35s ease-in-out infinite alternate}
+.walking .d-leg.fl{animation-delay:0s}
+.walking .d-leg.br{animation-delay:0.175s}
+.walking .d-leg.fr{animation-delay:0.175s}
+.walking .d-leg.bl{animation-delay:0s}
+.walking .d-body{animation:wb 0.35s ease-in-out infinite alternate}
+.facing-left .dog{transform:scaleX(-1)!important}
+@keyframes lg{0%{transform:translateY(0)}100%{transform:translateY(-4px)}}
+@keyframes wb{0%{transform:translateY(0)}100%{transform:translateY(-2px)}}
 #aind{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:14px;pointer-events:none;animation:fl 2s ease-in-out infinite;opacity:.75}
 @keyframes fl{0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}50%{transform:translateX(-50%) translateY(-5px);opacity:1}}
 #jr{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -126,7 +136,7 @@ body{display:flex;flex-direction:column}
     </div>
   </div>
   <div id="tb"><span class="sb1" id="stg">Loading...</span><span class="sb2" id="sts">...</span></div>
-  <div class="dogh" style="position:absolute;bottom:28px;left:8px;width:36px;height:28px;z-index:2"><div style="position:absolute;bottom:0;left:0;width:36px;height:20px;background:linear-gradient(180deg,#8B6914,#6B4E12);border-radius:2px"></div><div style="position:absolute;top:0;left:-2px;width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-bottom:12px solid #8B2500"></div><div style="position:absolute;top:8px;left:12px;width:12px;height:12px;background:#1a0a05;border-radius:50%"></div></div>
+  <div class="dogh" style="position:absolute;bottom:28px;left:0;width:90px;height:70px;z-index:2"><div style="position:absolute;bottom:0;left:0;width:90px;height:52px;background:linear-gradient(180deg,#8B6914,#6B4E12);border-radius:3px"></div><div style="position:absolute;bottom:48px;left:-5px;width:0;height:0;border-left:50px solid transparent;border-right:50px solid transparent;border-bottom:30px solid #8B2500"></div><div style="position:absolute;bottom:4px;left:30px;width:30px;height:26px;background:#1a0a05;border-radius:50%"></div></div>
   <div class="slide" style="position:absolute;bottom:28px;right:24px;width:85px;height:32px;z-index:2"><svg width="85" height="32" viewBox="0 0 85 32"><rect x="0" y="0" width="4" height="32" fill="#6B4E12" rx="1"/><rect x="80" y="0" width="4" height="32" fill="#6B4E12" rx="1"/><rect x="0" y="0" width="84" height="3" fill="#8B2500" rx="1"/><line x1="4" y1="3" x2="80" y2="30" stroke="#4A90D9" stroke-width="4" stroke-linecap="round"/><rect x="74" y="28" width="10" height="4" fill="#4A90D9" rx="1"/></svg></div>
   <div class="grb"></div>
   <div class="gt2" style="left:8px"></div><div class="gt2" style="left:42px"></div><div class="gt2" style="left:90px"></div><div class="gt2" style="left:165px"></div><div class="gt2" style="left:260px"></div><div class="gt2" style="left:325px"></div><div class="gt2" style="left:390px"></div>
@@ -277,8 +287,27 @@ body{display:flex;flex-direction:column}
       if(a==='jr')viewJournal();else if(a==='activity')viewActivity();else if(a==='stats')viewStats();
     };
   });
-  var ss=['idle','learning','coding','thinking','running'],si=0;
-  setInterval(function(){si=(si+1)%ss.length;var c=ss[si];GS.className=c;AIND.textContent={'idle':'🐾','learning':'📚','coding':'⌨️','thinking':'💡','running':'🏃'}[c]||''},7000);
+  /* Goldie position + walk system */
+  var GC=document.getElementById('gc');
+  var pos=[
+    {left:'90px',label:'home',state:'sleeping',emoji:'😴',cls:'facing-left'},
+    {left:'50%',tx:'translate(-50%)',label:'center',state:'idle',emoji:'🐾',cls:''},
+    {left:'calc(100% - 160px)',label:'slide',state:'thinking',emoji:'💡',cls:'facing-left'}
+  ];
+  var pi=1; // start at center
+  function walkTo(idx){
+    var p=pos[idx];
+    GS.className='walking'+(p.cls?' '+p.cls:'');
+    GC.style.left=p.left;
+    GC.style.bottom='24px';
+    GC.style.transform=p.tx?p.tx:'none';
+    GS.className=p.state+(p.cls?' '+p.cls:'');
+    AIND.textContent=p.emoji;
+  }
+  setInterval(function(){
+    pi=(pi+1)%pos.length;
+    walkTo(pi);
+  },8000);
   LD.classList.add('hide');setTimeout(function(){LD.style.display='none'},400);
   loadJournal();loadStatus();
 })();
