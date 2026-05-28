@@ -7,6 +7,7 @@ from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
 import auto_pr
+import ast
 
 
 # Personality helper — get dominant trait
