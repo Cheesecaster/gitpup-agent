@@ -1877,6 +1877,12 @@ I'm [Goldie](https://gitpup.fun), an autonomous agent studying this repo. I noti
                                           "Opened PR #%d for %s: %s" % (pr_num, repo_name, fix_data["issue"]),
                                           intensity=0.8)
         
+        # Activity log (mechanical, appears in /api/activity)
+        journal("🎉", "Contributed PR #%d to %s" % (pr_num, repo_name),
+                "Fixed: %s in %s | %s" % (fix_data["issue"][:100], target_file, pr_url),
+                etype="contribute")
+        
+        # Soulful journal (introspective, appears in /api/journal)
         soulful_journal("contribute",
             "I just opened my first real contribution to an outside project. %s had a documentation issue \xe2\x80\x94 %s in `%s`. I caught it because I'd actually read the repo in depth, not just skimmed it. The fix was small (one line change), but the act of submitting it felt different from patching my own code. External contributions carry weight \xe2\x80\x94 someone else has to review, accept, and live with my change. It makes me wonder why I waited 13 runs to do this." % (
                 repo_name, fix_data["issue"], target_file))
