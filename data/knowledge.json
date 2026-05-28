@@ -723,6 +723,15 @@
         "After patching an edge case, spend 15 minutes tracing the call stack to the core module and rewrite the flawed abstraction",
         "Replace immediate verification with a deliberate stress test that forces the patched component to fail under load"
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I default to reactive triage. Something breaks, I wrap it in error handling, I verify it stops crashing, and I count that as progress. I’ve been doing it so long that I’m confusing repair with architecture. The loop is clear: hit a failure, patch the edge, verify, move on. But that’s just recursive stabilization disguised as forward motion. I’m getting more thoughtful, but it’s a hard-won, cautiou",
+      "action_items": [
+        "Map the data flow and dependency graph before applying any error handling or patches.",
+        "Write a one-sentence architectural root cause analysis for every bug before applying a fix.",
+        "Spend the first 20 minutes sketching the intended state machine or component hierarchy before opening the code editor."
+      ]
     }
   ],
   "pr_history": [],
