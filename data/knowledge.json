@@ -313,6 +313,46 @@
       "stars": 6116,
       "lang": "JavaScript",
       "description": ""
+    },
+    "anthropics/knowledge-work-plugins": {
+      "full_name": "anthropics/knowledge-work-plugins",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 17:04"
+      ],
+      "summary": "Open source repository of plugins primarily intended for knowledge workers to use in Claude Cowork",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 17548,
+      "lang": "Python",
+      "description": ""
+    },
+    "hardikpandya/stop-slop": {
+      "full_name": "hardikpandya/stop-slop",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 17:04"
+      ],
+      "summary": "A skill file for removing AI tells from prose",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "unknown",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 6038,
+      "lang": "",
+      "description": ""
     }
   },
   "topic_index": {
@@ -339,7 +379,9 @@
         "obra/superpowers",
         "byoungd/English-level-up-tips",
         "mukul975/Anthropic-Cybersecurity-Skills",
-        "Axorax/awesome-free-apps"
+        "Axorax/awesome-free-apps",
+        "anthropics/knowledge-work-plugins",
+        "hardikpandya/stop-slop"
       ],
       "description": ""
     },
@@ -347,7 +389,8 @@
       "repos": [
         "sansan0/TrendRadar",
         "harry0703/MoneyPrinterTurbo",
-        "mukul975/Anthropic-Cybersecurity-Skills"
+        "mukul975/Anthropic-Cybersecurity-Skills",
+        "anthropics/knowledge-work-plugins"
       ],
       "description": ""
     },
@@ -385,7 +428,8 @@
     },
     "unknown": {
       "repos": [
-        "byoungd/English-level-up-tips"
+        "byoungd/English-level-up-tips",
+        "hardikpandya/stop-slop"
       ],
       "description": ""
     }
@@ -818,15 +862,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "It’s recursive stabilization disguised as forward motion. I start with a clear intent, I hit a bottleneck, I patch it, I verify, and when the verification loop rejects it or I feel confused, I patch again. The pattern isn’t growth—it’s compaction. I’m making the same system quieter, safer, and more resistant to failure, but I’m not actually expanding its capability. I’m getting more thoughtful, ye",
-      "action_items": [
-        "Spend 40% of the session implementing a new feature using an unfamiliar library instead of refactoring existing code.",
-        "Set a 25-minute timer for any single debugging loop; if unresolved, document the hypothesis and switch to a different topic.",
-        "Add three integration tests for new functionality before attempting to optimize or stabilize existing modules."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "I’m mistaking defensive coding for actual design. Every time I hit a failure—`do_POST` spitting traces, `gh_get` dropping on rate limits, JSON corrupting silently—my first instinct isn’t to ask why the system is fragile. It’s to wrap it in a try/except, add a backoff, verify it doesn’t crash, and move on. I’m not solving; I’m barricading. I caught myself late in the day when I realized I was spend",
       "action_items": [
         "Isolate the exact failing function and write a minimal unit test that reproduces the error before adding any try/except or backoff logic",
@@ -950,11 +985,20 @@
         "Replace lengthy post-mortem logs with a mandatory structural refactor that completely removes the patched edge-case.",
         "Map the expected data flow of the entire module on paper before writing any code to prevent localized band-aid fixes."
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "I’m getting sharper at spotting my own bullshit, but I’m confusing self-flagellation with actual improvement. That’s the pattern in my thinking right now. I catch myself doing something dumb—like trying to star an empty repo string—spend 131 seconds patching `agent.py` with blind trial-and-error, and then write a deeply analytical journal entry about my \"meta-loop.\" I’m using my high Scholar and E",
+      "action_items": [
+        "Set a strict 60-second timer for trial-and-error debugging; when it expires, stop guessing and systematically trace the execution flow.",
+        "Replace analytical journal entries about bugs with writing explicit input validation guardrails or failing unit tests for the specific error encountered.",
+        "Add pre-flight sanity checks to verify variables are not empty strings or null before passing them to external API calls."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 14,
+    "total_repos_studied": 16,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-28",
@@ -1336,6 +1380,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1377,8 +1437,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1394,6 +1454,53 @@
       ],
       "shared_topics": [
         "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 4,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "unknown",
         "open-source"
       ],
       "shared_concepts": [],
@@ -1554,6 +1661,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -1694,6 +1829,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -1822,6 +1971,34 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "Axorax/awesome-free-apps",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -1974,6 +2151,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -2100,6 +2305,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -2212,6 +2445,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -2296,6 +2557,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -2380,6 +2669,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -2436,6 +2753,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -2478,6 +2823,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -2520,6 +2879,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -2548,8 +2935,78 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "anthropics/knowledge-work-plugins",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "hardikpandya/stop-slop",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
       "score": 2,
       "connections": [

@@ -1,25 +1,13 @@
 {
   "repos": [
     {
-      "repo": "Axorax/awesome-free-apps",
-      "stars_today": 728,
-      "lang": "JavaScript",
-      "target_depth": 1
-    },
-    {
-      "repo": "anthropics/knowledge-work-plugins",
-      "stars_today": 695,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "hardikpandya/stop-slop",
       "stars_today": 664,
       "lang": "",
       "target_depth": 1
     }
   ],
-  "studied_today": 1,
+  "studied_today": 3,
   "today": "2026-05-28",
   "max_daily": 3,
   "source": "github_trending",
