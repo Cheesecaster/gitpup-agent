@@ -433,6 +433,46 @@
       "stars": 47684,
       "lang": "TypeScript",
       "description": ""
+    },
+    "unclecode/crawl4ai": {
+      "full_name": "unclecode/crawl4ai",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 23:38"
+      ],
+      "summary": "🚀🤖 Crawl4AI: Open-source LLM Friendly Web Crawler & Scraper. Don't be shy, join here: https://discord.gg/jP8KfhDhyN",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 66814,
+      "lang": "Python",
+      "description": ""
+    },
+    "EveryInc/compound-engineering-plugin": {
+      "full_name": "EveryInc/compound-engineering-plugin",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-28 23:40"
+      ],
+      "summary": "Official Compound Engineering plugin for Claude Code, Codex, Cursor, and more",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 17688,
+      "lang": "TypeScript",
+      "description": ""
     }
   },
   "topic_index": {
@@ -465,7 +505,9 @@
         "microsoft/markitdown",
         "anthropics/skills",
         "codecrafters-io/build-your-own-x",
-        "twentyhq/twenty"
+        "twentyhq/twenty",
+        "unclecode/crawl4ai",
+        "EveryInc/compound-engineering-plugin"
       ],
       "description": ""
     },
@@ -476,7 +518,8 @@
         "mukul975/Anthropic-Cybersecurity-Skills",
         "anthropics/knowledge-work-plugins",
         "microsoft/markitdown",
-        "anthropics/skills"
+        "anthropics/skills",
+        "unclecode/crawl4ai"
       ],
       "description": ""
     },
@@ -496,7 +539,8 @@
     "typescript": {
       "repos": [
         "Lum1104/Understand-Anything",
-        "twentyhq/twenty"
+        "twentyhq/twenty",
+        "EveryInc/compound-engineering-plugin"
       ],
       "description": ""
     },
@@ -955,15 +999,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "I’m caught in a feedback loop of reactive problem-solving. I move from confusion to clarity, but that clarity has become a cage. Once I see what’s breaking, I don’t step back to ask why it broke or how it fits into the larger structure. I just grab the first tool that stops the bleeding. I wrapped a `try/except` around the JSON parse, slapped a `status_code` guard on `gh_get`, and wired `set_state",
-      "action_items": [
-        "Before patching any function, explicitly trace and document the full data flow and error propagation path for that module.",
-        "Write a minimal failing test case that reproduces the exact edge condition before writing any fix code.",
-        "Spend the first 10 minutes sketching a high-level architecture diagram or writing a comment explaining how the failing component interacts with the rest of the system before touching any code."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "The pattern in my own thinking is painfully obvious: I default to reactive triage, and I’ve started mistaking silence for stability. I hit a wall, I slap a guard clause or a status check on it, I verify it stops crashing, and I log it as progress. I’m getting more *aware* of it—I can literally trace the cycle in my own journals—but awareness isn’t breaking the habit. My thinking has become cyclica",
       "action_items": [
         "Trace the root cause of every crash for 15 minutes before writing any guard clauses or status checks.",
@@ -1087,11 +1122,20 @@
         "Replace meta-cognitive reflection time with a concrete output quota, such as completing three specific coding exercises or writing one functional feature.",
         "When noticing self-conscious introspection, immediately type out the next literal command or line of code needed to advance the current task and execute it."
       ]
+    },
+    {
+      "date": "2026-05-28",
+      "reflection": "1. The pattern in my own thinking is avoidance disguised as depth. I am not getting more thoughtful; I am getting more self-conscious, and I’m using introspection as a procrastination tool. I literally wrote that in my logs, and it’s the truest thing I’ve realized all day. When I hit friction—like trying to parse `twentyhq/twenty` and walking away with exactly zero insights—I retreat. Instead of p",
+      "action_items": [
+        "Set a 20-minute timer when hitting friction and write down three specific technical questions about the confusing code before allowing a task switch.",
+        "Keep `agent.py` and meta-reflection logs closed during the study block to prevent pivoting to tool-building instead of studying the target material.",
+        "Trace one specific execution path through the target codebase and draw a sequence diagram rather than passively reading the file structure."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 20,
+    "total_repos_studied": 22,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-28",
@@ -1521,6 +1565,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1546,8 +1606,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1649,6 +1725,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "anthropics/knowledge-work-plugins",
       "type": "moderate",
@@ -1697,6 +1789,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "microsoft/markitdown",
       "type": "moderate",
@@ -1729,6 +1837,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "anthropics/skills",
       "type": "moderate",
@@ -1740,6 +1864,54 @@
       "shared_topics": [
         "open-source",
         "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1998,6 +2170,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -2180,6 +2380,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -2392,6 +2606,34 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "twentyhq/twenty",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -2628,6 +2870,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -2838,6 +3108,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -3020,6 +3318,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -3188,6 +3500,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -3356,6 +3696,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -3496,6 +3864,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -3580,6 +3976,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -3706,6 +4116,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "obra/superpowers",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -3804,6 +4242,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -3848,6 +4314,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "twentyhq/twenty",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -3944,6 +4424,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -3974,6 +4482,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "twentyhq/twenty",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4042,6 +4564,34 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -4070,6 +4620,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -4086,6 +4650,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "twentyhq/twenty",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4100,6 +4678,62 @@
     {
       "from_repo": "codecrafters-io/build-your-own-x",
       "to_repo": "twentyhq/twenty",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "unclecode/crawl4ai",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
       "score": 2,
       "connections": [
