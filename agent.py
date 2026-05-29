@@ -75,7 +75,7 @@ MAX_REPOS_PER_DAY = 2
 # ════════════════════════════════════════════════
 def day():
     try:
-        d = (datetime.now(timezone.utc) - datetime.strptime(BIRTH, "%Y-%m-%d")).days + 1
+        d = (datetime.now(timezone.utc) - datetime.strptime(BIRTH, "%Y-%m-%d").replace(tzinfo=timezone.utc)).days + 1
         # Sync to status.json so UI shows correct day
         try:
             with open(SF) as fh:
@@ -114,12 +114,15 @@ def log(msg):
         fh.write("[{}] {}\n".format(ts, msg))
 
 def journal(icon, title, body="", etype="evolve"):
-    os.makedirs(os.path.dirname(JF), exist_ok=True)
-    entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
-             "t": datetime.now(WIB).strftime("%H:%M"),
-             "i": icon, "x": title, "body": body, "type": etype, "day": day()}
-    with open(JF, "a", encoding="utf-8") as fh:
-        fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    try:
+        os.makedirs(os.path.dirname(JF), exist_ok=True)
+        entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
+                 "t": datetime.now(WIB).strftime("%H:%M"),
+                 "i": icon, "x": title, "body": body, "type": etype, "day": day()}
+        with open(JF, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
 
 def set_state(s, action=None):
     import json
@@ -153,10 +156,11 @@ def has_skill(skill, st=None):
 _MODEL_COST = {"input": 0.01, "output": 0.03}
 
 def _record_cost(prompt_t, completion_t, total_t, phase=""):
-    """Append one line to data/journal/cost_tracking.jsonl."""
+    """Append one line to data/journal/cost_tracking.jsonl + increment cumulative in status.json."""
     try:
         inp_c = prompt_t * _MODEL_COST["input"] / 1e6
         out_c = completion_t * _MODEL_COST["output"] / 1e6
+        run_cost = round(inp_c + out_c, 6)
         entry = {
             "ts": __import__("time").time(),
             "date": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
@@ -164,11 +168,20 @@ def _record_cost(prompt_t, completion_t, total_t, phase=""):
             "prompt_tokens": prompt_t,
             "completion_tokens": completion_t,
             "total_tokens": total_t,
-            "cost_usd": round(inp_c + out_c, 6)
+            "cost_usd": run_cost
         }
         path = DATA_DIR / "journal" / "cost_tracking.jsonl"
         with open(path, "a") as f:
             f.write(json.dumps(entry) + "\n")
+        # Persist cumulative cost in status.json so it survives jsonl resets
+        try:
+            with open(SF) as fh:
+                st = json.load(fh)
+            st["cumulative_cost_usd"] = round(st.get("cumulative_cost_usd", 0) + run_cost, 4)
+            with open(SF, "w") as fh:
+                json.dump(st, fh, indent=2)
+        except Exception:
+            pass
     except Exception:
         pass
 

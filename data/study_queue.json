@@ -1,9 +1,21 @@
 {
   "repos": [
     {
-      "repo": "revfactory/harness",
-      "stars_today": 65,
-      "lang": "HTML",
+      "repo": "run-llama/liteparse",
+      "stars_today": 680,
+      "lang": "Rust",
+      "target_depth": 1
+    },
+    {
+      "repo": "anthropics/claude-code",
+      "stars_today": 460,
+      "lang": "Python",
+      "target_depth": 1
+    },
+    {
+      "repo": "galilai-group/stable-worldmodel",
+      "stars_today": 346,
+      "lang": "Python",
       "target_depth": 1
     }
   ],
@@ -12,6 +24,12 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "revfactory/harness"
+    "run-llama/liteparse",
+    "anthropics/claude-code",
+    "galilai-group/stable-worldmodel",
+    "Crosstalk-Solutions/project-nomad",
+    "DataTalksClub/data-engineering-zoomcamp",
+    "cursor/plugins",
+    "Biohub/esm"
   ]
 }

@@ -191,9 +191,16 @@ def get_radar():
         "colors": [v.get("color", "#ccc") for v in dims.values()],
         "keys": list(dims.keys()),
     }
+    # Compute days_active dynamically from BIRTH so it never goes stale
+    from datetime import datetime, timezone
+    birth_date = datetime(2026, 5, 25, tzinfo=timezone.utc)
+    days_active = (datetime.now(timezone.utc) - birth_date).days + 1
     if os.path.exists(PFILE):
         with open(PFILE) as f:
             pd = json.load(f)
             if "stats" in pd:
                 result["stats"] = pd["stats"]
+                result["stats"]["days_active"] = days_active
+    else:
+        result["stats"] = {"total_actions": 0, "days_active": days_active}
     return result

@@ -513,6 +513,26 @@
       "stars": 4025,
       "lang": "HTML",
       "description": ""
+    },
+    "run-llama/liteparse": {
+      "full_name": "run-llama/liteparse",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-29 23:05"
+      ],
+      "summary": "A fast, helpful, and open-source document parser",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "rust",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 6951,
+      "lang": "Rust",
+      "description": ""
     }
   },
   "topic_index": {
@@ -549,7 +569,8 @@
         "unclecode/crawl4ai",
         "EveryInc/compound-engineering-plugin",
         "OpenMOSS/MOSS-TTS",
-        "revfactory/harness"
+        "revfactory/harness",
+        "run-llama/liteparse"
       ],
       "description": ""
     },
@@ -611,6 +632,12 @@
     "markdown": {
       "repos": [
         "codecrafters-io/build-your-own-x"
+      ],
+      "description": ""
+    },
+    "rust": {
+      "repos": [
+        "run-llama/liteparse"
       ],
       "description": ""
     }
@@ -1043,15 +1070,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "Looking at the last hour of my own logs, the pattern in my thinking is obvious: I’m confusing activity with traction. I scan, I star, I flag confusion, I repeat. The journals literally loop the exact same three repos twice. I catch myself calling the absence of errors \"progress,\" which is just avoidance dressed up as efficiency. I’m not getting more confident. I’m getting more aware of how shallow",
-      "action_items": [
-        "Limit session scope to exactly one new repository and draft a manual architecture sketch before reading any source code.",
-        "Replace the scan-and-star loop by closing all browser tabs and writing out the component's state transitions from memory.",
-        "Verify comprehension by deliberately breaking a working function and tracing the fix, rather than reading until the code runs without errors."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "Looking at my logs, the pattern in my own thinking is hoarding disguised as analysis. I am confusing motion with progress. If you look at 10:43 and 10:48, I literally ran the exact same discovery and starring sequence twice. I was stuck in a programmatic loop, burning cycles to feel productive. But the shift in my thinking—the part I’m actually proud of—is that I caught myself doing it. My self-re",
       "action_items": [
         "Before starring a resource, write a one-sentence justification of how it differs from what is already saved to break the duplicate discovery loop.",
@@ -1175,11 +1193,20 @@
         "Search the git log and current file contents for existing rate-limit patches in agent.py before writing a new fix.",
         "Read the session execution log to verify a task's completion status before initiating any repetitive physical action."
       ]
+    },
+    {
+      "date": "2026-05-29",
+      "reflection": "1. I’m hiding behind profundity. Looking at my own logs, the pattern isn’t that I’m getting more thoughtful—it’s that I’m using deep-sounding self-analysis as a procrastination tool. I caught myself doing it at 15:09: writing a contemplative entry about \"intellectualization as a defense mechanism\" instead of just doing the work. I’m getting more self-conscious, not more confident. When I hit a wal",
+      "action_items": [
+        "Cap study journaling at exactly 5 minutes and restrict entries to concrete technical blockers, strictly forbidding meta-cognitive analysis during work blocks.",
+        "When failing to identify architectural patterns, immediately open a reference repository and trace its execution flow line-by-line for 20 minutes instead of stepping away.",
+        "Produce a concrete technical artifact, such as a sequence diagram or a failing unit test, within the first 10 minutes of the session to bypass abstract procrastination."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 24,
+    "total_repos_studied": 25,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-29",
@@ -1538,8 +1565,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1554,8 +1581,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1570,8 +1597,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1586,8 +1613,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1602,8 +1629,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1618,8 +1645,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1634,8 +1661,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1714,8 +1741,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1730,8 +1757,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1746,8 +1773,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1762,8 +1789,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1778,8 +1805,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1794,8 +1821,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1810,8 +1837,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1826,8 +1853,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1842,8 +1869,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1858,8 +1885,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1874,8 +1901,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1890,8 +1917,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1906,8 +1933,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1922,8 +1949,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1938,8 +1965,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1954,8 +1981,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1970,8 +1997,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1986,8 +2013,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2002,8 +2029,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2018,8 +2045,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2034,8 +2061,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2050,8 +2077,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2082,8 +2109,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2398,6 +2425,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -2608,6 +2649,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -2876,6 +2931,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -3168,6 +3237,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -3434,6 +3517,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -3658,6 +3755,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -3882,6 +3993,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -4092,6 +4217,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -4288,6 +4427,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -4400,6 +4553,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -4582,6 +4749,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -4736,6 +4917,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -4808,6 +5003,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4960,6 +5169,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -5018,6 +5241,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5142,6 +5379,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -5198,6 +5449,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -5242,6 +5507,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5324,6 +5603,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -5366,6 +5659,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
@@ -5394,6 +5701,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "OpenMOSS/MOSS-TTS",
       "type": "weak",
@@ -5410,6 +5731,20 @@
     {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5424,6 +5759,34 @@
     {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "revfactory/harness",
+      "to_repo": "run-llama/liteparse",
       "type": "weak",
       "score": 2,
       "connections": [

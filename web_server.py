@@ -7,6 +7,15 @@ DATA = os.path.join(GITPUP, 'data')
 SF = os.path.join(DATA, 'state', 'status.json')
 JF = os.path.join(DATA, 'journal', 'entries.jsonl')
 KB = os.path.join(DATA, 'knowledge.json')
+BIRTH = '2026-05-25'
+
+def _compute_day():
+    from datetime import datetime, timezone
+    try:
+        birth = datetime.strptime(BIRTH, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - birth).days + 1
+    except Exception:
+        return 1
 
 # Load .env
 _ep = os.path.join(GITPUP, '.env')
@@ -62,7 +71,9 @@ class H(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         p = urllib.parse.urlparse(self.path).path
         if p == '/api/status':
-            _json_resp(self, load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle', 'day': 1}))
+            st = load_json(SF, {'stage': 'puppy', 'score': 0, 'runs': 0, 'state': 'idle'})
+            st['day'] = _compute_day()
+            _json_resp(self, st)
         elif p == '/api/journal':
             entries = load_jsonl(JF)
             narrative = [e for e in entries if e.get('type') == 'narrative' and e.get('event',{}).get('phase') != 'deep_self_reflection' and len(e.get('body','')) > 50]
@@ -193,7 +204,7 @@ class H(http.server.SimpleHTTPRequestHandler):
             import json as _json
             _body = _json.dumps({
                 'client_id': 'Ov23liLMEsHCQUzsfIKX',
-                'client_secret': '940bda0ab55878ad38e10de477df653f85ff3f8'.encode('utf-8'),
+                'client_secret': '940bda0ab55878ad38e10de477df653f85ff3f8',
                 'code': code,
                 'redirect_uri': 'https://gitpup.fun/auth/callback',
             }).encode('utf-8')
