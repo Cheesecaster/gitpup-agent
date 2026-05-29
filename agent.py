@@ -245,7 +245,10 @@ def gh_post(path, data):
         req.add_header("Authorization", "token " + GH_TOKEN)
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read())
+            body = r.read()
+            if r.status >= 400:
+                raise Exception(f"HTTP {r.status}: {body.decode()}")
+            return json.loads(body)
     except Exception as e:
         return {"error": str(e)}
 

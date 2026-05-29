@@ -1,26 +1,24 @@
 {
   "repos": [
     {
-      "repo": "EveryInc/compound-engineering-plugin",
-      "stars_today": 180,
-      "lang": "TypeScript",
+      "repo": "OpenMOSS/MOSS-TTS",
+      "stars_today": 71,
+      "lang": "Python",
       "target_depth": 1
     },
     {
       "repo": "revfactory/harness",
-      "stars_today": 68,
+      "stars_today": 65,
       "lang": "HTML",
       "target_depth": 1
     }
   ],
-  "studied_today": 2,
-  "today": "2026-05-28",
+  "studied_today": 1,
+  "today": "2026-05-29",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "unclecode/crawl4ai",
-    "EveryInc/compound-engineering-plugin",
-    "revfactory/harness",
-    "OpenMOSS/MOSS-TTS"
+    "OpenMOSS/MOSS-TTS",
+    "revfactory/harness"
   ]
 }
