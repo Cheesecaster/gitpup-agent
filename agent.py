@@ -237,20 +237,31 @@ def gh_get(path):
     return {"error": "Rate limit exceeded"}
 
 def gh_post(path, data):
-    req = urllib.request.Request("https://api.github.com" + path,
-        data=json.dumps(data).encode(),
-        headers={"Content-Type": "application/json",
-                 "Accept": "application/vnd.github+json"})
-    if GH_TOKEN:
-        req.add_header("Authorization", "token " + GH_TOKEN)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            body = r.read()
-            if r.status >= 400:
-                raise Exception(f"HTTP {r.status}: {body.decode()}")
-            return json.loads(body)
-    except Exception as e:
-        return {"error": str(e)}
+    import time
+    import urllib.error
+    max_retries = 3
+    for attempt in range(max_retries):
+        req = urllib.request.Request("https://api.github.com" + path,
+            data=json.dumps(data).encode(),
+            headers={"Content-Type": "application/json",
+                     "Accept": "application/vnd.github+json"})
+        if GH_TOKEN:
+            req.add_header("Authorization", "token " + GH_TOKEN)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                body = r.read()
+                if r.status >= 400:
+                    raise Exception(f"HTTP {r.status}: {body.decode()}")
+                return json.loads(body)
+        except urllib.error.HTTPError as e:
+            body = e.read()
+            if e.code in (403, 429) and attempt < max_retries - 1:
+                time.sleep(float(e.headers.get('Retry-After', 1)))
+                continue
+            raise Exception(f"HTTP {e.code}: {body.decode()}")
+        except Exception as e:
+            return {"error": str(e)}
+    return {"error": "Max retries exceeded"}
 
 def gh_put(path, data=None):
     body = json.dumps(data or {}).encode() if data else b""
