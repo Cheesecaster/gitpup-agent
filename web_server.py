@@ -36,8 +36,12 @@ def load_jsonl(path):
             for line in f:
                 if line.strip():
                     entries.append(json.loads(line))
-    except Exception:
-        pass
+    except FileNotFoundError:
+        raise FileNotFoundError(f"JSONL file not found: {path}")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Malformed JSON in file {path}: {e}")
+    except Exception as e:
+        raise RuntimeError(f"Failed to load JSONL file {path}: {e}")
     return entries
 
 def _json_resp(handler, data, status=200):
