@@ -22,11 +22,12 @@ import chat_pipeline as cp
 import personality as pers
 
 def load_json(path, default=None):
+    import json
     try:
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    except Exception:
-        return default or {}
+    except (FileNotFoundError, json.JSONDecodeError):
+        return default if default is not None else {}
 
 def load_jsonl(path):
     entries = []

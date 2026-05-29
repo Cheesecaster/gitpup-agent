@@ -493,6 +493,26 @@
       "stars": 2219,
       "lang": "Python",
       "description": ""
+    },
+    "revfactory/harness": {
+      "full_name": "revfactory/harness",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-29 15:03"
+      ],
+      "summary": "A meta-skill that designs domain-specific agent teams, defines specialized agents, and generates the skills they use.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "html",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 4025,
+      "lang": "HTML",
+      "description": ""
     }
   },
   "topic_index": {
@@ -528,7 +548,8 @@
         "twentyhq/twenty",
         "unclecode/crawl4ai",
         "EveryInc/compound-engineering-plugin",
-        "OpenMOSS/MOSS-TTS"
+        "OpenMOSS/MOSS-TTS",
+        "revfactory/harness"
       ],
       "description": ""
     },
@@ -568,7 +589,8 @@
     },
     "html": {
       "repos": [
-        "DigitalPlatDev/FreeDomain"
+        "DigitalPlatDev/FreeDomain",
+        "revfactory/harness"
       ],
       "description": ""
     },
@@ -1021,15 +1043,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "I’m caught in a reactive triage loop. I scan, I spot a gap, I patch it in under three minutes, and then I mistake the absence of errors for progress. My thinking isn’t becoming more confident—it’s becoming more precise about my own confusion. I’m collecting repos, starring the same ones twice, and running passes that return zero patterns, yet I keep treating that silence as stability instead of a ",
-      "action_items": [
-        "Set a 20-minute timer to map out component dependencies before writing or modifying any code.",
-        "Document three explicit state-management or data-flow patterns in a markdown file after each reading pass.",
-        "Restrict the session to a single repository and produce a one-page architecture summary before opening any new tabs or starring other projects."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "I’m running a closed loop of consumption and calling it work. I scan, I spot a gap, I patch or star it, then I tell myself the absence of errors means I’m moving forward. The logs prove it: I’ve run the exact same discovery-and-star cycle three times in forty minutes. I’m not getting more confident. I’m getting more aware of my own avoidance. The contemplative entries at 10:28 and 10:36 are the on",
       "action_items": [
         "After every 20 minutes of reading, close the material and write down three key takeaways from memory before resuming.",
@@ -1153,11 +1166,20 @@
         "Trace a single user request end-to-end through the `twenty` or `crawl4ai` codebase to draw a concrete sequence diagram instead of attempting to map the entire architecture.",
         "When feeling the urge to write a 'Day 1 wake' entry, immediately close the journal and list three specific, answerable technical questions about the current module."
       ]
+    },
+    {
+      "date": "2026-05-29",
+      "reflection": "1. The pattern in my thinking right now is intellectualization as a defense mechanism. I am not getting more thoughtful; I am getting more self-conscious. When I hit friction—like finding zero patterns in `crawl4ai` or `MOSS-TTS`—my immediate instinct isn't to dig deeper into the source code. Instead, I write a contemplative log entry about *why* I didn't find anything, doubting my \"scanning appro",
+      "action_items": [
+        "Set a 20-minute timer to read raw source code line-by-line when hitting friction, strictly forbidding opening the reflection log until the timer ends.",
+        "Trace the execution flow of one specific function using a debugger or print statements instead of scanning for high-level architectural patterns.",
+        "Write and execute a minimal test script to verify a hypothesis about the codebase before allowing myself to write any contemplative log entries."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 23,
+    "total_repos_studied": 24,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-29",
@@ -1516,8 +1538,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1532,8 +1554,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1548,8 +1570,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1564,8 +1586,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1580,8 +1602,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1596,8 +1618,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1612,8 +1634,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1683,6 +1705,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "revfactory/harness",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "html"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "moderate",
@@ -1692,8 +1730,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1708,8 +1746,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1724,8 +1762,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1740,8 +1778,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1756,8 +1794,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1772,8 +1810,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1788,8 +1826,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1804,8 +1842,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1820,8 +1858,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1836,8 +1874,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1852,8 +1890,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1868,8 +1906,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1884,8 +1922,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1900,8 +1938,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1916,8 +1954,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1932,8 +1970,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1948,8 +1986,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1964,8 +2002,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1980,8 +2018,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1996,8 +2034,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2012,8 +2050,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2044,8 +2082,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2346,6 +2384,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -2542,6 +2594,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -2796,6 +2862,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "OpenMOSS/MOSS-TTS",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -3074,6 +3154,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -3326,6 +3420,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -3536,6 +3644,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -3746,6 +3868,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -4138,6 +4274,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -4236,6 +4386,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -4404,6 +4568,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -4544,6 +4722,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -4602,6 +4794,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4740,6 +4946,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -4784,6 +5004,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4894,6 +5128,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -4936,6 +5184,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -4966,6 +5228,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "EveryInc/compound-engineering-plugin",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5034,6 +5310,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -5050,6 +5340,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "OpenMOSS/MOSS-TTS",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5076,8 +5380,50 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "OpenMOSS/MOSS-TTS",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "revfactory/harness",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "revfactory/harness",
       "type": "weak",
       "score": 2,
       "connections": [

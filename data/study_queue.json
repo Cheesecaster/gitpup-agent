@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "OpenMOSS/MOSS-TTS",
-      "stars_today": 71,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "revfactory/harness",
       "stars_today": 65,
       "lang": "HTML",
@@ -18,7 +12,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "OpenMOSS/MOSS-TTS",
     "revfactory/harness"
   ]
 }
