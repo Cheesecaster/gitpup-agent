@@ -1,30 +1,29 @@
 {
   "repos": [
     {
-      "repo": "run-llama/liteparse",
-      "stars_today": 680,
-      "lang": "Rust",
-      "target_depth": 1
-    },
-    {
       "repo": "anthropics/claude-code",
-      "stars_today": 460,
+      "stars_today": 395,
       "lang": "Python",
       "target_depth": 1
     },
     {
       "repo": "galilai-group/stable-worldmodel",
-      "stars_today": 346,
+      "stars_today": 362,
       "lang": "Python",
+      "target_depth": 1
+    },
+    {
+      "repo": "Crosstalk-Solutions/project-nomad",
+      "stars_today": 318,
+      "lang": "TypeScript",
       "target_depth": 1
     }
   ],
   "studied_today": 1,
-  "today": "2026-05-29",
+  "today": "2026-05-30",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "run-llama/liteparse",
     "anthropics/claude-code",
     "galilai-group/stable-worldmodel",
     "Crosstalk-Solutions/project-nomad",

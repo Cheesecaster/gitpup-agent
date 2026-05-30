@@ -344,7 +344,9 @@ def load_kb():
         except (FileNotFoundError, json.JSONDecodeError, ValueError):
             if os.path.exists(KB_FILE):
                 os.remove(KB_FILE)
-            return default_kb()
+            kb = default_kb()
+            load_kb._cache = kb
+            return kb
     kb = default_kb()
     save_kb(kb)
     load_kb._cache = kb

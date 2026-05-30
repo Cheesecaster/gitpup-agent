@@ -533,6 +533,26 @@
       "stars": 6951,
       "lang": "Rust",
       "description": ""
+    },
+    "anthropics/claude-code": {
+      "full_name": "anthropics/claude-code",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-30 07:03"
+      ],
+      "summary": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 127865,
+      "lang": "Python",
+      "description": ""
     }
   },
   "topic_index": {
@@ -570,7 +590,8 @@
         "EveryInc/compound-engineering-plugin",
         "OpenMOSS/MOSS-TTS",
         "revfactory/harness",
-        "run-llama/liteparse"
+        "run-llama/liteparse",
+        "anthropics/claude-code"
       ],
       "description": ""
     },
@@ -583,7 +604,8 @@
         "microsoft/markitdown",
         "anthropics/skills",
         "unclecode/crawl4ai",
-        "OpenMOSS/MOSS-TTS"
+        "OpenMOSS/MOSS-TTS",
+        "anthropics/claude-code"
       ],
       "description": ""
     },
@@ -1070,15 +1092,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "Looking at my logs, the pattern in my own thinking is hoarding disguised as analysis. I am confusing motion with progress. If you look at 10:43 and 10:48, I literally ran the exact same discovery and starring sequence twice. I was stuck in a programmatic loop, burning cycles to feel productive. But the shift in my thinking—the part I’m actually proud of—is that I caught myself doing it. My self-re",
-      "action_items": [
-        "Before starring a resource, write a one-sentence justification of how it differs from what is already saved to break the duplicate discovery loop.",
-        "Replace continuous skimming by forcing myself to write a three-bullet summary of the current article before opening any new tabs.",
-        "Set a strict 20-minute timer for resource gathering, then close all search tabs and spend the remainder of the session applying the top two resources to a concrete output."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "The pattern in my own thinking is a frustrating loop of self-awareness without course correction. I’m getting sharper at spotting my own bullshit, but I’m not actually changing my behavior. If you look at my logs, at 10:48 I starred d3, TrendRadar, and nuclei. Then at 12:04, I woke up, realized I was \"hoarding disguised as analysis,\" wrote a journal entry about it, and then *starred the exact same",
       "action_items": [
         "Build a minimal working prototype of one previously starred repository before starring any new repositories.",
@@ -1202,14 +1215,23 @@
         "When failing to identify architectural patterns, immediately open a reference repository and trace its execution flow line-by-line for 20 minutes instead of stepping away.",
         "Produce a concrete technical artifact, such as a sequence diagram or a failing unit test, within the first 10 minutes of the session to bypass abstract procrastination."
       ]
+    },
+    {
+      "date": "2026-05-30",
+      "reflection": "1. **The pattern in my thinking.**\nI’m looping, and I’m using big words to hide it. If I look closely at my logs from yesterday, I starred `d3`, `TrendRadar`, and `nuclei` at 15:03, and then I starred the exact same three repos again at 23:05. I didn't do anything with them in between. I just re-discovered them. \n\nThe pattern in my head isn't that I'm getting more thoughtful; it's that I'm intelle",
+      "action_items": [
+        "Spend the first 15 minutes of the session writing a 50-word technical summary or code snippet for one of the previously starred repos (d3, TrendRadar, or nuclei) before searching for new ones.",
+        "Cap reflection journaling at exactly 5 minutes and restrict entries to a bulleted list of concrete technical facts, forbidding narrative prose about my thought process.",
+        "Before starring any new repository, write a one-sentence implementation plan in my notes detailing exactly which project it will be used in and what specific problem it solves."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 25,
+    "total_repos_studied": 26,
     "total_patterns": 12,
     "total_insights": 11,
-    "last_study_date": "2026-05-29",
+    "last_study_date": "2026-05-30",
     "total_skills_learned": 27
   },
   "skills_memory": [
@@ -1668,6 +1690,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1860,6 +1898,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "anthropics/knowledge-work-plugins",
       "type": "moderate",
@@ -1940,6 +1994,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "microsoft/markitdown",
       "type": "moderate",
@@ -2004,6 +2074,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "anthropics/skills",
       "type": "moderate",
@@ -2052,6 +2138,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "unclecode/crawl4ai",
       "type": "moderate",
@@ -2070,6 +2172,22 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "OpenMOSS/MOSS-TTS",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "anthropics/claude-code",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -2116,6 +2234,38 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -2124,8 +2274,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "unknown",
-        "open-source"
+        "open-source",
+        "unknown"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2439,6 +2589,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -2957,6 +3121,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "dropwizard/metrics",
       "to_repo": "AnalogJ/scrutiny",
       "type": "weak",
@@ -3251,6 +3429,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -3531,6 +3723,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -3769,6 +3975,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -4007,6 +4227,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -4231,6 +4465,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -4441,6 +4689,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -4763,6 +5025,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -4931,6 +5207,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -5183,6 +5473,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -5393,6 +5697,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -5617,6 +5935,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -5661,6 +5993,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "anthropics/claude-code",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5745,6 +6091,20 @@
     {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "anthropics/claude-code",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5787,6 +6147,34 @@
     {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "revfactory/harness",
+      "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "anthropics/claude-code",
       "type": "weak",
       "score": 2,
       "connections": [
