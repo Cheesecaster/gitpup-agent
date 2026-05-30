@@ -1,21 +1,21 @@
 {
   "repos": [
     {
-      "repo": "galilai-group/stable-worldmodel",
-      "stars_today": 362,
+      "repo": "OpenBMB/VoxCPM",
+      "stars_today": 1815,
       "lang": "Python",
       "target_depth": 1
     },
     {
-      "repo": "Crosstalk-Solutions/project-nomad",
-      "stars_today": 318,
-      "lang": "TypeScript",
+      "repo": "ruvnet/RuView",
+      "stars_today": 656,
+      "lang": "Rust",
       "target_depth": 1
     },
     {
-      "repo": "DataTalksClub/data-engineering-zoomcamp",
-      "stars_today": 160,
-      "lang": "Jupyter Notebook",
+      "repo": "Crosstalk-Solutions/project-nomad",
+      "stars_today": 473,
+      "lang": "TypeScript",
       "target_depth": 1
     }
   ],
@@ -24,10 +24,13 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "galilai-group/stable-worldmodel",
+    "OpenBMB/VoxCPM",
+    "ruvnet/RuView",
     "Crosstalk-Solutions/project-nomad",
+    "FareedKhan-dev/train-llm-from-scratch",
     "DataTalksClub/data-engineering-zoomcamp",
     "cursor/plugins",
-    "Biohub/esm"
+    "chen08209/FlClash",
+    "dreammis/social-auto-upload"
   ]
 }

@@ -573,6 +573,26 @@
       "stars": 1315,
       "lang": "Python",
       "description": ""
+    },
+    "OpenBMB/VoxCPM": {
+      "full_name": "OpenBMB/VoxCPM",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-30 23:00"
+      ],
+      "summary": "VoxCPM2: Tokenizer-Free TTS for Multilingual Speech Generation, Creative Voice Design, and True-to-Life Cloning",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 22615,
+      "lang": "Python",
+      "description": ""
     }
   },
   "topic_index": {
@@ -612,7 +632,8 @@
         "revfactory/harness",
         "run-llama/liteparse",
         "anthropics/claude-code",
-        "galilai-group/stable-worldmodel"
+        "galilai-group/stable-worldmodel",
+        "OpenBMB/VoxCPM"
       ],
       "description": ""
     },
@@ -627,7 +648,8 @@
         "unclecode/crawl4ai",
         "OpenMOSS/MOSS-TTS",
         "anthropics/claude-code",
-        "galilai-group/stable-worldmodel"
+        "galilai-group/stable-worldmodel",
+        "OpenBMB/VoxCPM"
       ],
       "description": ""
     },
@@ -1250,7 +1272,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 27,
+    "total_repos_studied": 28,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-30",
@@ -1744,6 +1766,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1769,8 +1807,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1785,8 +1823,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1817,8 +1855,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1833,8 +1871,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1968,6 +2006,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "anthropics/knowledge-work-plugins",
       "type": "moderate",
@@ -2080,6 +2134,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "microsoft/markitdown",
       "type": "moderate",
@@ -2176,6 +2246,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "anthropics/skills",
       "type": "moderate",
@@ -2256,6 +2342,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "unclecode/crawl4ai",
       "type": "moderate",
@@ -2320,6 +2422,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/skills",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "moderate",
@@ -2329,8 +2447,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2384,6 +2502,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "anthropics/claude-code",
       "type": "moderate",
@@ -2416,8 +2550,56 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "OpenBMB/VoxCPM",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -2440,8 +2622,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2783,6 +2965,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -3329,6 +3525,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "dropwizard/metrics",
       "to_repo": "AnalogJ/scrutiny",
       "type": "weak",
@@ -3651,6 +3861,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -3959,6 +4183,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -4225,6 +4463,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -4491,6 +4743,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -4743,6 +5009,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -4981,6 +5261,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -5331,6 +5625,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -5527,6 +5835,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -5807,6 +6129,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -6045,6 +6381,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -6297,6 +6647,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -6369,6 +6733,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "OpenBMB/VoxCPM",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6493,6 +6871,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -6563,6 +6955,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -6579,6 +6985,20 @@
     {
       "from_repo": "run-llama/liteparse",
       "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "OpenBMB/VoxCPM",
       "type": "weak",
       "score": 2,
       "connections": [

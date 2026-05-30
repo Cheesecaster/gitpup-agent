@@ -8,6 +8,11 @@ from datetime import datetime, timezone, timedelta
 import personality
 import auto_pr
 import ast
+try:
+    from prunemem import Mind
+    HAS_PRUNE = True
+except ImportError:
+    HAS_PRUNE = False
 
 
 # Personality helper — get dominant trait
@@ -730,6 +735,18 @@ def recall_similar(query, max_items=5, memory_type="all"):
 def get_recent_memories(type="wisdom", count=3):
     mem = _load_memory_file(type + ".json")
     return mem.get("items", [])[-count:]
+def get_mind():
+    """Lazy-init prunemem Mind for cognitive pruning."""
+    if not HAS_PRUNE:
+        return None
+    if not hasattr(get_mind, "_instance"):
+        try:
+            get_mind._instance = Mind(
+                storage_path="/opt/gitpup/data/prunemem",
+                llm_model="qwen3.6-flash")
+        except Exception:
+            get_mind._instance = None
+    return get_mind._instance
 def kb_get_study_context(repo_name, kb=None):
     """Before studying a NEW repo, check KB for related repos and concepts.
     Returns a context snippet to inject into the study prompt.
@@ -1388,6 +1405,17 @@ def do_study_pass(repo_name, from_level=0):
     rd = kb["repos"].get(repo_name, {})
     log("  STUDY DONE: level {}, {} patterns, {} insights".format(
         rd.get("study_level",0), len(rd.get("patterns",[])), len(rd.get("insights",[]))))
+    # Remember study in prune-mem
+    mind = get_mind()
+    if mind:
+        p_list = rd.get("patterns", [])
+        i_list = rd.get("insights", [])
+        summary_text = " | ".join(p_list[:5] + i_list[:3])[:300]
+        mind.remember(
+            "Studied {}: {}".format(repo_name, summary_text),
+            category="study", importance=0.8,
+            tags=[repo_name] if isinstance(repo_name, str) else [])
+        mind.distill(category="study")
     # Extract permanent skills from study results
     kb_extract_skills(repo_name,
         patterns=rd.get("patterns",[]),
@@ -1451,6 +1479,15 @@ def do_reflect():
     
     if not entries:
         journal("\U0001f4ad", "No memories yet", "First run — nothing to reflect on. But I know that will change.")
+
+    # -- Cognitive Pruning (prune-mem) --
+    mind = get_mind()
+    if mind:
+        mind.run_decay()
+        mind.distill(category="study")
+        pstats = mind.stats
+        log("Pruning: {} active, {} instincts, {}x compression".format(
+            pstats["active"], pstats["instincts"], pstats["compression_ratio"]))
         personality.track("reflect", day())
         return
     

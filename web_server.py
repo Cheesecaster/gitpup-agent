@@ -276,9 +276,10 @@ def do_POST(self):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
-def _handle_chat(self):
+async def _handle_chat(self):
     import concurrent.futures
     import json
+    import asyncio
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
     try:
         body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
@@ -292,14 +293,13 @@ def _handle_chat(self):
         _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
         return
 
-    # Stats/kb query - use kb_summary instead of non-existent kb_stats
     if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
         summary = cp.kb_summary()
         _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
         return
 
     try:
-        intent = executor.submit(cp.detect_intent, msg).result()
+        intent = await asyncio.wrap_future(executor.submit(cp.detect_intent, msg))
 
         if intent == 'build_request':
             lower = msg.lower()
@@ -307,17 +307,17 @@ def _handle_chat(self):
                 session_key = body.get('session', 'default')
                 if session_key in self._pending_proposals:
                     proposal = self._pending_proposals.pop(session_key)
-                    result = executor.submit(cp.handle_build_confirm, msg, proposal).result()
+                    result = await asyncio.wrap_future(executor.submit(cp.handle_build_confirm, msg, proposal))
                     _json_resp(self, result)
                     return
 
-            result = executor.submit(cp.handle_build_proposal, msg).result()
+            result = await asyncio.wrap_future(executor.submit(cp.handle_build_proposal, msg))
             if result['status'] == 'proposal':
                 self._pending_proposals[msg[:50]] = result['data']
             _json_resp(self, result)
 
         elif intent == 'question':
-            result = executor.submit(cp.handle_question, msg).result()
+            result = await asyncio.wrap_future(executor.submit(cp.handle_question, msg))
             _json_resp(self, result)
 
         else:
