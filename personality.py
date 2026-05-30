@@ -159,6 +159,8 @@ def apply_decay():
     if any_change:
         p["stats"]["last_decay"] = datetime.now().isoformat()
         save(p)
+    import threading
+    threading.Timer(86400, apply_decay).start()
     return any_change
 
 def cross_pollinate_check():

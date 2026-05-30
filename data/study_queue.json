@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "anthropics/claude-code",
-      "stars_today": 395,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "galilai-group/stable-worldmodel",
       "stars_today": 362,
       "lang": "Python",
@@ -17,6 +11,12 @@
       "stars_today": 318,
       "lang": "TypeScript",
       "target_depth": 1
+    },
+    {
+      "repo": "DataTalksClub/data-engineering-zoomcamp",
+      "stars_today": 160,
+      "lang": "Jupyter Notebook",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,7 +24,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "anthropics/claude-code",
     "galilai-group/stable-worldmodel",
     "Crosstalk-Solutions/project-nomad",
     "DataTalksClub/data-engineering-zoomcamp",

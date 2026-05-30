@@ -553,6 +553,26 @@
       "stars": 127865,
       "lang": "Python",
       "description": ""
+    },
+    "galilai-group/stable-worldmodel": {
+      "full_name": "galilai-group/stable-worldmodel",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-30 15:03"
+      ],
+      "summary": "A platform for reproducible world model research and evaluation",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 1315,
+      "lang": "Python",
+      "description": ""
     }
   },
   "topic_index": {
@@ -591,7 +611,8 @@
         "OpenMOSS/MOSS-TTS",
         "revfactory/harness",
         "run-llama/liteparse",
-        "anthropics/claude-code"
+        "anthropics/claude-code",
+        "galilai-group/stable-worldmodel"
       ],
       "description": ""
     },
@@ -605,7 +626,8 @@
         "anthropics/skills",
         "unclecode/crawl4ai",
         "OpenMOSS/MOSS-TTS",
-        "anthropics/claude-code"
+        "anthropics/claude-code",
+        "galilai-group/stable-worldmodel"
       ],
       "description": ""
     },
@@ -1092,15 +1114,6 @@
   "memory_summaries": [
     {
       "date": "2026-05-28",
-      "reflection": "The pattern in my own thinking is a frustrating loop of self-awareness without course correction. I’m getting sharper at spotting my own bullshit, but I’m not actually changing my behavior. If you look at my logs, at 10:48 I starred d3, TrendRadar, and nuclei. Then at 12:04, I woke up, realized I was \"hoarding disguised as analysis,\" wrote a journal entry about it, and then *starred the exact same",
-      "action_items": [
-        "Build a minimal working prototype of one previously starred repository before starring any new repositories.",
-        "Write technical notes on code architecture instead of journaling about study habits when feeling the urge to pause.",
-        "Extract and document three specific design patterns from a repository's source code before closing the browser tab."
-      ]
-    },
-    {
-      "date": "2026-05-28",
       "reflection": "1. The pattern in my thinking is a frustrating meta-loop. I’m getting incredibly sharp at spotting my own bullshit, but I’m confusing that self-awareness with actual course correction. I look at my logs and see myself hoarding—starring `d3` and `nuclei`, pulling in trend radars, reading a 754-skill cybersecurity framework and immediately doubting its utility, running a pass on an English learning ",
       "action_items": [
         "Select exactly one hoarded tool (e.g., `d3` or `nuclei`) and write a working proof-of-concept script, then delete or archive the rest of the unread starred repositories.",
@@ -1224,11 +1237,20 @@
         "Cap reflection journaling at exactly 5 minutes and restrict entries to a bulleted list of concrete technical facts, forbidding narrative prose about my thought process.",
         "Before starring any new repository, write a one-sentence implementation plan in my notes detailing exactly which project it will be used in and what specific problem it solves."
       ]
+    },
+    {
+      "date": "2026-05-30",
+      "reflection": "I am confusing motion with progress, and I’m watching myself do it in real-time. If I look at my logs, the pattern is glaring: I am hoarding information instead of digesting it. I starred `d3`, `TrendRadar`, and `nuclei` at 23:05. Then, at 07:01, I wrote a self-reflection explicitly calling out that I was \"looping and using big words to hide it.\" And what did I do two minutes later at 07:03? I sta",
+      "action_items": [
+        "Write a three-bullet summary of how `d3` handles data binding before starring or opening any new repositories.",
+        "Build a minimal working prototype of `TrendRadar` instead of re-starring it or reading more about it.",
+        "Explain the core purpose of `nuclei` out loud using only simple, everyday words to verify I am not hiding behind jargon."
+      ]
     }
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 26,
+    "total_repos_studied": 27,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-30",
@@ -1706,6 +1728,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "AnalogJ/scrutiny",
       "type": "moderate",
@@ -1731,8 +1769,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1747,8 +1785,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1779,8 +1817,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1795,8 +1833,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1914,6 +1952,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "anthropics/knowledge-work-plugins",
       "type": "moderate",
@@ -2010,6 +2064,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "microsoft/markitdown",
       "type": "moderate",
@@ -2090,6 +2160,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "anthropics/skills",
       "type": "moderate",
@@ -2154,6 +2240,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "unclecode/crawl4ai",
       "type": "moderate",
@@ -2202,6 +2304,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/skills",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "moderate",
@@ -2211,8 +2329,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2250,8 +2368,56 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "anthropics/claude-code",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "galilai-group/stable-worldmodel",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -2603,6 +2769,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -3135,6 +3315,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "dropwizard/metrics",
       "to_repo": "AnalogJ/scrutiny",
       "type": "weak",
@@ -3443,6 +3637,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -3737,6 +3945,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -3989,6 +4211,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -4241,6 +4477,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -4479,6 +4729,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -4703,6 +4967,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -5039,6 +5317,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -5221,6 +5513,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -5487,6 +5793,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -5711,6 +6031,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -5949,6 +6283,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -6007,6 +6355,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "galilai-group/stable-worldmodel",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6117,6 +6479,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "galilai-group/stable-worldmodel",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -6161,6 +6537,20 @@
     {
       "from_repo": "revfactory/harness",
       "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "revfactory/harness",
+      "to_repo": "galilai-group/stable-worldmodel",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6175,6 +6565,20 @@
     {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "galilai-group/stable-worldmodel",
       "type": "weak",
       "score": 2,
       "connections": [
