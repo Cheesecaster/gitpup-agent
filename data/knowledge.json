@@ -756,19 +756,22 @@
     },
     "karpathy/autoresearch": {
       "full_name": "karpathy/autoresearch",
-      "study_level": 4,
+      "study_level": 1,
       "studied_at": [
-        "2026-06-01 03:09"
+        "2026-06-01 03:18"
       ],
-      "summary": "",
+      "summary": "AI agents running research on single-GPU nanochat training automatically",
       "patterns": [],
       "best_practices": [],
       "insights": [],
       "code_examples": [],
-      "arch_topics": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
       "readme_insights": "",
-      "stars": 0,
-      "lang": "",
+      "stars": 84340,
+      "lang": "Python",
       "description": ""
     }
   },
@@ -818,7 +821,8 @@
         "nesquena/hermes-webui",
         "supermemoryai/supermemory",
         "emmabostian/developer-portfolios",
-        "nicobailon/pi-subagents"
+        "nicobailon/pi-subagents",
+        "karpathy/autoresearch"
       ],
       "description": ""
     },
@@ -837,7 +841,8 @@
         "OpenBMB/VoxCPM",
         "D4Vinci/Scrapling",
         "nesquena/hermes-webui",
-        "emmabostian/developer-portfolios"
+        "emmabostian/developer-portfolios",
+        "karpathy/autoresearch"
       ],
       "description": ""
     },
@@ -1829,8 +1834,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1845,8 +1850,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1861,8 +1866,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1877,8 +1882,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1893,8 +1898,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1909,8 +1914,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1925,8 +1930,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1941,8 +1946,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1957,8 +1962,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1973,8 +1978,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1989,8 +1994,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2005,8 +2010,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2021,8 +2026,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2037,8 +2058,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2053,8 +2074,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2069,8 +2090,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2085,8 +2106,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2101,8 +2122,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2117,8 +2138,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2149,8 +2170,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2165,8 +2186,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2181,8 +2202,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2197,8 +2218,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2213,8 +2234,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2229,8 +2250,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2245,8 +2266,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2261,8 +2282,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2277,8 +2298,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2293,8 +2314,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2309,8 +2330,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2325,8 +2346,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2341,8 +2362,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2357,8 +2378,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2373,8 +2410,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2389,8 +2426,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2405,8 +2442,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2421,8 +2458,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2437,8 +2474,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2453,8 +2490,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2469,8 +2506,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2485,8 +2522,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2501,8 +2538,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2517,8 +2554,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2533,8 +2570,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2549,8 +2602,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2565,8 +2618,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2581,8 +2634,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2597,8 +2650,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2613,8 +2666,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2629,8 +2682,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2645,8 +2698,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2661,8 +2714,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2677,8 +2730,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2693,8 +2746,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2709,8 +2778,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2725,8 +2794,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2741,8 +2810,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2757,8 +2826,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2773,8 +2842,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2789,8 +2858,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2805,8 +2874,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2821,8 +2890,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2837,8 +2906,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2853,8 +2938,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2869,8 +2954,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2885,8 +2970,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2901,8 +2986,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2917,8 +3002,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2933,8 +3018,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2949,8 +3034,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2965,8 +3050,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2981,8 +3082,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2997,8 +3098,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3013,8 +3114,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3029,8 +3130,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3045,8 +3146,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3061,8 +3162,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3077,8 +3178,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3093,8 +3194,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3109,8 +3210,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3125,8 +3226,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3141,8 +3242,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3157,8 +3274,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3173,8 +3290,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3189,8 +3306,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3205,8 +3322,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3221,8 +3338,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3237,8 +3354,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3253,8 +3370,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3269,8 +3386,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3285,8 +3402,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3317,8 +3450,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3333,8 +3466,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3349,8 +3482,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3365,8 +3498,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3381,8 +3514,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3397,8 +3546,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3413,8 +3562,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3429,8 +3578,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3445,8 +3594,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3461,8 +3626,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3477,8 +3642,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3493,8 +3658,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3509,8 +3690,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3525,8 +3706,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3541,8 +3722,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3557,8 +3738,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3573,8 +3770,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "nesquena/hermes-webui",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3589,8 +3802,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "emmabostian/developer-portfolios",
+      "to_repo": "karpathy/autoresearch",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4073,6 +4302,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -4815,6 +5058,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "dropwizard/metrics",
       "to_repo": "AnalogJ/scrutiny",
       "type": "weak",
@@ -5263,6 +5520,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -5697,6 +5968,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -6047,6 +6332,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -6439,6 +6738,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -6817,6 +7130,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -7181,6 +7508,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -7727,6 +8068,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -8049,6 +8404,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -8525,6 +8894,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -8959,6 +9342,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -9477,6 +9874,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -9633,6 +10044,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "emmabostian/developer-portfolios",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9911,6 +10336,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -10177,6 +10616,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -10317,6 +10770,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -10625,6 +11092,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
       "type": "weak",
@@ -10681,6 +11162,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "D4Vinci/Scrapling",
       "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
@@ -10767,6 +11262,20 @@
     {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10821,8 +11330,36 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "supermemoryai/supermemory",
+      "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "emmabostian/developer-portfolios",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "nicobailon/pi-subagents",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
