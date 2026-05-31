@@ -83,6 +83,7 @@ def push_project_to_github(project_name, project_dir, description="", language="
         return {"success": False, "repo_url": "", "message": result.get("error", "create failed"), "reason": "create_failed"}
 
     repo_url = result["html_url"]
+    actual_owner = result.get("owner", {}).get("login", USER)
     _log("Created: {} -> {}".format(sname, repo_url))
 
     # Create README if missing
@@ -106,7 +107,7 @@ def push_project_to_github(project_name, project_dir, description="", language="
 
     # Git init + push
     os.makedirs(os.path.dirname(PUSH_HISTORY), exist_ok=True)
-    auth_url = "https://{}:{}@github.com/{}/{}.git".format(USER, TOKEN, USER, sname)
+    auth_url = "https://{}:{}@github.com/{}/{}.git".format(actual_owner, TOKEN, actual_owner, sname)
 
     cmds = [
         (["git", "init"], "git init"),
@@ -126,14 +127,14 @@ def push_project_to_github(project_name, project_dir, description="", language="
         return {"success": False, "repo_url": repo_url, "message": "commit: " + r.stderr[:200], "reason": "commit_fail"}
 
     # Push main then master as fallback
-    for branch in ["main", "master"]:
+    for branch in ["master", "main"]:
         r = subprocess.run(["git", "push", "-u", "origin", branch], cwd=project_dir, capture_output=True, text=True, timeout=120)
         if r.returncode == 0:
             # Record success
             hist.append({"repo": sname, "url": repo_url, "description": description, "timestamp": datetime.utcnow().timestamp(), "date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")})
             with open(PUSH_HISTORY, "w") as f:
                 json.dump(hist, f, indent=2)
-            msg = "{}/{} (branch: {})".format(USER, sname, branch)
+            msg = "{}/{} (branch: {})".format(actual_owner, sname, branch)
             _log("SUCCESS: " + msg)
             return {"success": True, "repo_url": repo_url, "message": msg, "reason": "ok"}
 
