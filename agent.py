@@ -8,6 +8,8 @@ from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
 import auto_pr
+import project_pusher
+import x_poster
 import ast
 try:
     from prunemem import Mind
@@ -2706,30 +2708,45 @@ def do_build_project():
     for rn, rd in list(kb.get("repos",{}).items())[:10]:
         if rd.get("patterns"):
             ctx += "{}: {}\n".format(rn, ", ".join(rd["patterns"][:3]))
-    prompt = "{}\nSuggest a small project. JSON: {{\"name\":\"...\",\"description\":\"...\",\"language\":\"python\",\"files\":[{{\"path\":\"main.py\",\"description\":\"...\"}}]}}".format(ctx[:2000])
-    raw = do_llm(prompt, system="Suggest a project. JSON only.", tokens=1500, temp=0.7, phase="project_suggestion")
+    sys_p = "You are a software engineer. Build a complete, functional project with actual code."
+    prompt = "%s\nReturn ONLY JSON: {name, description, language, files[path, content(actual code)]}" % ctx[:2000]
+    raw = do_llm(prompt, system=sys_p, tokens=4000, temp=0.7, phase="project_suggestion")
     try:
         pd = json.loads(raw)
         name = pd.get("name","plan")
+        desc = pd.get("description","")
+        lang = pd.get("language","python")
         log("  Build: " + name)
-        journal("\U0001f3d7", "Project: " + name, pd.get("description","")[:300])
+        journal("\U0001f3d7", "Project: " + name, desc[:300])
         proj_dir = os.path.join(PROJ, name)
         os.makedirs(proj_dir, exist_ok=True)
         for f in pd.get("files", []):
             fp = os.path.join(proj_dir, f.get("path",""))
-            os.makedirs(os.path.dirname(fp) if os.path.dirname(fp) else proj_dir, exist_ok=True)
-            if not os.path.exists(fp):
-                with open(fp, "w", encoding="utf-8") as fh:
-                    fh.write("# {}\n# {}\n".format(name, f.get("description","")))
+            d = os.path.dirname(fp)
+            if d:
+                os.makedirs(d, exist_ok=True)
+            fc = f.get("content", "# " + name)
+            with open(fp, "w", encoding="utf-8") as fh:
+                fh.write(fc)
+            log("  Wrote: " + f.get("path",""))
+        log("  Pushing {} to GitHub...".format(name))
+        try:
+            result = project_pusher.push_project_to_github(name, proj_dir, desc, lang)
+            if result["success"]:
+                log("  GitHub: " + result["message"])
+                journal("\U0001f680", "Project pushed to GitHub: " + name, result["message"])
+            else:
+                log("  Push skipped: " + result.get("reason","") + " - " + result.get("message",""))
+                journal("\U0001f3d7", "Project created (local): " + name, desc[:200])
+        except Exception as e:
+            log("  Push error: " + str(e)[:200])
+            journal("\U0001f3d7", "Project created (local): " + name, desc[:200])
         st = status()
         st["repos_created"] = st.get("repos_created", 0) + 1
         save(st)
-    except Exception:
-        log("  Build parse fail")
+    except Exception as e:
+        log("  Build fail: " + str(e)[:100])
 
-# ════════════════════════════════════════════════
-# ── EVOLVE ──
-# ════════════════════════════════════════════════
 def do_evolve():
     log("=== EVOLVE ===")
     set_state("evolving")
@@ -3040,6 +3057,12 @@ def main():
         if not args.phase or args.phase == "build":
             do_build_project()
             personality.track('build_project', day())
+            # Process X post queue
+            try:
+                for p in x_poster.process_x_queue():
+                    log('  X: ' + p['text'][:80])
+            except Exception:
+                pass
     except Exception as e:
         log("ERROR: " + str(e)[:100])
         s2 = status(); s2["state"] = "error: " + str(e)[:80]; save(s2)
