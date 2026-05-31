@@ -147,15 +147,31 @@ def apply_decay():
     p = load()
     now = time.time()
     any_change = False
+    min_trait = 0.05
+    max_trait = 1.0
+
     for dim_key, dim in p["dimensions"].items():
+        try:
+            current_val = float(dim.get("value", min_trait))
+        except (TypeError, ValueError):
+            current_val = min_trait
+
+        clamped_val = min(max(current_val, min_trait), max_trait)
+        if dim.get("value", min_trait) != clamped_val:
+            dim["value"] = clamped_val
+            any_change = True
+
         last = dim.get("last_activity", 0)
         days_since = (now - last) / 86400 if last else 999
-        if days_since > 3 and dim["value"] > 0.05:
+        if days_since > 3 and dim["value"] > min_trait:
             decay_rate = 0.02 * (days_since - 3)
             old_val = dim["value"]
-            dim["value"] = max(old_val - decay_rate, 0.05)
+            dim["value"] = max(old_val - decay_rate, min_trait)
+            if dim["value"] > max_trait:
+                dim["value"] = max_trait
             if abs(dim["value"] - old_val) > 0.001:
                 any_change = True
+
     if any_change:
         p["stats"]["last_decay"] = datetime.now().isoformat()
         save(p)
