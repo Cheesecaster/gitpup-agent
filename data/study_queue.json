@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "nesquena/hermes-webui",
-      "stars_today": 320,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "supermemoryai/supermemory",
       "stars_today": 236,
       "lang": "TypeScript",
@@ -17,14 +11,19 @@
       "stars_today": 67,
       "lang": "Python",
       "target_depth": 1
+    },
+    {
+      "repo": "nicobailon/pi-subagents",
+      "stars_today": 59,
+      "lang": "TypeScript",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
-  "today": "2026-05-31",
+  "today": "2026-06-01",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "nesquena/hermes-webui",
     "supermemoryai/supermemory",
     "emmabostian/developer-portfolios",
     "nicobailon/pi-subagents",
