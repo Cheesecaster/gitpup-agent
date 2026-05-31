@@ -3,6 +3,7 @@
 Progressive Study: max 3 repos/day, 4-pass deepening, permanent memory.
 Chat-ready: knowledge queryable via topic search."""
 import os, sys, json, time, re, urllib.request, urllib.parse, subprocess, textwrap, hashlib
+from pathlib import Path
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 import personality
@@ -29,6 +30,7 @@ WIB = timezone(timedelta(hours=7))
 # ── Paths ──
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, "data")
+DATA_DIR = Path(DATA)
 KB_FILE = os.path.join(DATA, "knowledge.json")
 STUDY_Q = os.path.join(DATA, "study_queue.json")
 JF = os.path.join(DATA, "journal", "entries.jsonl")
