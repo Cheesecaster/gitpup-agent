@@ -78,7 +78,7 @@ STAGES_DEF = {
         "skills": ["explore", "analyze", "star", "memory", "reflect", "autofix", "create_pr", "self_modify", "enhance_ui", "build_project", "deploy"]},
 }
 
-MAX_REPOS_PER_DAY = 4
+MAX_REPOS_PER_DAY = 20
 
 # ════════════════════════════════════════════════
 # ── Helpers ──
@@ -217,6 +217,7 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
         json.dumps({"model": model, "messages": msgs,
                     "max_tokens": tokens, "temperature": temp}).encode())
     req.add_header("Content-Type", "application/json")
+    req.add_header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
     if LLM_KEY:
         req.add_header("Authorization", "Bearer " + LLM_KEY)
         
@@ -2785,6 +2786,40 @@ def do_evolve():
                 "Day {} | Stage: {} | Score: {}".format(day(), new, score))
     return st
 
+
+def _run_study():
+    """Run study phase with per-repo error isolation."""
+    queue_pop_done()
+    import random
+    if random.random() < 0.4:
+        try:
+            do_self_assessment()
+        except Exception as e:
+            log("  Self-assessment error: " + str(e)[:80])
+    if queue_can_study():
+        nxt = queue_get_next()
+        if nxt:
+            rn, lv = nxt
+            do_study_pass(rn, from_level=lv)
+            try:
+                import auto_pr
+                auto_pr.check_pr_intent(rn, "study_pass")
+            except Exception as e:
+                log("  PR check skipped: " + str(e)[:80])
+        else:
+            log("  No pending studies")
+
+def _run_build():
+    """Run build phase with error isolation."""
+    do_build_project()
+    personality.track('build_project', day())
+    try:
+        from x_poster import process_x_queue
+        for p in process_x_queue():
+            log('  X: ' + p['text'][:80])
+    except Exception:
+        pass
+
 # ════════════════════════════════════════════════
 # ── MAIN ──
 # ════════════════════════════════════════════════
@@ -3032,51 +3067,21 @@ def main():
         "Stage: {} | Runs: {} | Skills: {}".format(stage, st.get("runs",0), sk))
 
     t0 = time.time()
-    try:
-        if not args.phase or args.phase == "reflect":
-            if has_skill("reflect"):
-                do_reflect()
-        # Self-assessment: runs with 40% chance after reflection
-        import random
-        if random.random() < 0.4:
-            do_self_assessment()
-        if not args.phase or args.phase == "trending":
-            do_fetch_github_trending()
-        if not args.phase or args.phase == "explore":
-            do_explore_github()
-        if not args.phase or args.phase == "study":
-            queue_pop_done()  # clean finished items
-            if queue_can_study():
-                nxt = queue_get_next()
-                if nxt:
-                    rn, lv = nxt
-                    do_study_pass(rn, from_level=lv)
-                    # Auto-PR intent check after study
-                    try:
-                        auto_pr.check_pr_intent(rn, "study_pass")
-                    except Exception as e:
-                        log("  PR check skipped: " + str(e))
-                else:
-                    log("  No pending studies")
-        if not args.phase or args.phase == "contribute":
-            if has_skill("autofix"):
-                do_contribute({})
-        if not args.phase or args.phase == "self_modify":
-            do_self_modify()
-            personality.track('self_modify', day())
-        if not args.phase or args.phase == "build":
-            do_build_project()
-            personality.track('build_project', day())
-            # Process X post queue
-            try:
-                for p in x_poster.process_x_queue():
-                    log('  X: ' + p['text'][:80])
-            except Exception:
-                pass
-    except Exception as e:
-        log("ERROR: " + str(e)[:100])
-        s2 = status(); s2["state"] = "error: " + str(e)[:80]; save(s2)
-        return
+    for phase_name, phase_fn in [
+        ("reflect", lambda: do_reflect() if has_skill("reflect") else None),
+        ("trending", do_fetch_github_trending),
+        ("explore", do_explore_github),
+        ("study", _run_study),
+        ("contribute", lambda: do_contribute({}) if has_skill("autofix") else None),
+        ("self_modify", lambda: (do_self_modify(), personality.track('self_modify', day()))),
+        ("build", _run_build),
+    ]:
+        if args.phase and args.phase != phase_name:
+            continue
+        try:
+            phase_fn()
+        except Exception as e:
+            log("  [{phase_name}] ERROR: " + str(e)[:80])
 
     if not args.phase or args.phase == "evolve":
         do_evolve()
