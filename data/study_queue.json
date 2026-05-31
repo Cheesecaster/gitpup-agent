@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "supermemoryai/supermemory",
-      "stars_today": 236,
-      "lang": "TypeScript",
-      "target_depth": 1
-    },
-    {
       "repo": "emmabostian/developer-portfolios",
       "stars_today": 67,
       "lang": "Python",
@@ -17,6 +11,12 @@
       "stars_today": 59,
       "lang": "TypeScript",
       "target_depth": 1
+    },
+    {
+      "repo": "github/docs",
+      "stars_today": 20,
+      "lang": "TypeScript",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,7 +24,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "supermemoryai/supermemory",
     "emmabostian/developer-portfolios",
     "nicobailon/pi-subagents",
     "github/docs"
