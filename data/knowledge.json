@@ -753,6 +753,23 @@
       "stars": 1804,
       "lang": "TypeScript",
       "description": ""
+    },
+    "karpathy/autoresearch": {
+      "full_name": "karpathy/autoresearch",
+      "study_level": 4,
+      "studied_at": [
+        "2026-06-01 03:09"
+      ],
+      "summary": "",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [],
+      "readme_insights": "",
+      "stars": 0,
+      "lang": "",
+      "description": ""
     }
   },
   "topic_index": {
@@ -1453,7 +1470,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 36,
+    "total_repos_studied": 37,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-06-01",

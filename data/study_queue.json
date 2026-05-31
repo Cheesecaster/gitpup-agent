@@ -1,31 +1,7 @@
 {
-  "repos": [
-    {
-      "repo": "karpathy/autoresearch",
-      "stars_today": 0,
-      "lang": "Python",
-      "target_depth": 4
-    },
-    {
-      "repo": "nicobailon/pi-subagents",
-      "stars_today": 59,
-      "lang": "TypeScript",
-      "target_depth": 1
-    },
-    {
-      "repo": "github/docs",
-      "stars_today": 20,
-      "lang": "TypeScript",
-      "target_depth": 1
-    }
-  ],
-  "studied_today": 1,
+  "repos": [],
+  "studied_today": 0,
   "today": "2026-06-01",
-  "max_daily": 3,
-  "source": "github_trending",
-  "all_candidates": [
-    "emmabostian/developer-portfolios",
-    "nicobailon/pi-subagents",
-    "github/docs"
-  ]
+  "max_daily": 4,
+  "source": "manual"
 }
