@@ -1,14 +1,68 @@
 {
   "repos": [
     {
-      "repo": "karpathy/autoresearch",
+      "repo": "karpathy/llama2.c",
+      "stars_today": 0,
+      "lang": "C",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/nanoGPT",
       "stars_today": 0,
       "lang": "Python",
       "target_depth": 4
+    },
+    {
+      "repo": "karpathy/tiny-llm",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/makemore",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/llm-awq",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/nn-zero-to-hero",
+      "stars_today": 0,
+      "lang": "Notebook",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/minbpe",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 4
+    },
+    {
+      "repo": "karpathy/tiktoken_experiments",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 3
+    },
+    {
+      "repo": "karpathy/build-nanochat",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 3
+    },
+    {
+      "repo": "karpathy/tinystories",
+      "stars_today": 0,
+      "lang": "Python",
+      "target_depth": 3
     }
   ],
-  "max_daily": 1,
-  "studied_today": 1,
+  "max_daily": 20,
+  "studied_today": 0,
   "today": "2026-06-01",
-  "source": "manual"
+  "source": "karpathy_priority_queue"
 }
