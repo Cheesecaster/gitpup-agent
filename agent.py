@@ -58,6 +58,7 @@ LLM_KEY = os.environ.get("LLM_API_KEY", "") or os.environ.get("OPENROUTER_API_KE
 GH_TOKEN = os.environ.get("GH_TOKEN", "") or os.environ.get("GITHUB_TOKEN", "")
 LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-flash")
 LLM_MODEL_QUALITY = os.environ.get("LLM_MODEL_QUALITY", "qwen/qwen3.7-max")
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "")
 LLM_MODEL_SPEED = os.environ.get("LLM_MODEL_SPEED", "qwen/qwen3.6-flash")
 _SPEED_PHASES = {"gap_analysis", "self_modify", "self_rewrite", "self_rewrite_retry"}
 BIRTH = "2026-05-25"
@@ -136,14 +137,22 @@ def journal(icon, title, body="", etype="evolve"):
 
 def set_state(s, action=None):
     import json
+    import os
     st = status()
     st["state"] = s
     if action:
         a = st.get("actions", [])
         a.append(action)
         st["actions"] = a[-20:]
-    with open('state.json', 'w') as f:
-        json.dump(st, f)
+    tmp_path = 'state.json.tmp'
+    try:
+        with open(tmp_path, 'w') as f:
+            json.dump(st, f)
+        os.replace(tmp_path, 'state.json')
+    except:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
 
 def current_stage(st=None):
     if st is None:
@@ -204,7 +213,7 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
         msgs.append({"role": "system", "content": system})
     msgs.append({"role": "user", "content": msg})
     req = urllib.request.Request(
-        "https://openrouter.ai/api/v1/chat/completions",
+        (LLM_BASE_URL or "https://openrouter.ai/api/v1") + "/chat/completions",
         json.dumps({"model": model, "messages": msgs,
                     "max_tokens": tokens, "temperature": temp}).encode())
     req.add_header("Content-Type", "application/json")
@@ -1046,7 +1055,8 @@ def queue_get_next():
         return None
     scored.sort(key=lambda x: (-x[2], x[1]))
     rn, target, kb_level = scored[0]
-    return (rn, max(kb_level, target))
+    from_level = kb_level + 1 if kb_level > 0 else 1
+    return (rn, min(from_level, target))
 def queue_remove(repo_name):
     q = load_queue()
     q["repos"] = [r for r in q.get("repos", []) if r["repo"] != repo_name]
