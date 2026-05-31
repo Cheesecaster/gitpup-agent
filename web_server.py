@@ -28,6 +28,30 @@ if os.path.exists(_ep):
                 os.environ.setdefault(_k.strip(), _v.strip())
 
 import chat_pipeline as cp
+
+# === IN-MEMORY CACHE for journal/API data (30s TTL) ===
+_CACHE = {}
+_CACHE_TTL = 30  # seconds
+def _cached_jsonl(key, path):
+    """Cache JSONL reads in memory for 30s to avoid repeated disk I/O."""
+    import time, json
+    now = time.time()
+    mtime = __import__('os').path.getmtime(path) if __import__('os').path.exists(path) else 0
+    if key in _CACHE:
+        data, cached_mtime, cached_at = _CACHE[key]
+        if (now - cached_at) < _CACHE_TTL and mtime == cached_mtime:
+            return data
+    entries = []
+    try:
+        with open(path, encoding='utf-8') as f:
+            for line in f:
+                if line.strip():
+                    entries.append(json.loads(line))
+    except (FileNotFoundError, Exception):
+        pass
+    _CACHE[key] = (entries, mtime, now)
+    return entries
+
 import personality as pers
 
 def load_json(path, default=None):
@@ -75,18 +99,18 @@ def do_GET(self):
         st['day'] = _compute_day()
         _json_resp(self, st)
     elif p == '/api/journal':
-        entries = load_jsonl(JF)
+        entries = _cached_jsonl('journal', JF)
         narrative = [e for e in entries if e.get('type') == 'narrative' and e.get('event',{}).get('phase') != 'deep_self_reflection' and len(e.get('body','')) > 50]
         narrative = narrative[-50:]
         _json_resp(self, {'entries': list(reversed(narrative)), 'total': len(narrative)})
     elif p == '/api/reflections':
-        entries = load_jsonl(JF)
+        entries = _cached_jsonl('reflections', JF)
         # Only self-reflection entries (deep_self_reflection phase)
         reflections = [e for e in entries if e.get('event',{}).get('phase') == 'deep_self_reflection']
         reflections = reflections[-20:]
         _json_resp(self, {'entries': list(reversed(reflections)), 'total': len(reflections)})
     elif p == '/api/activity':
-        entries = load_jsonl(JF)
+        entries = _cached_jsonl('activity', JF)
         activity = [e for e in entries if e.get('type') != 'narrative']
         activity = activity[-50:]
         _json_resp(self, {'entries': list(reversed(activity)), 'total': len(activity)})
@@ -179,7 +203,7 @@ def do_GET(self):
             'total_concepts': len(concepts),
         })
     elif p == '/api/mood_arc':
-        entries = load_jsonl(JF)
+        entries = _cached_jsonl('mood_arc', JF)
         timeline = []
         for e in entries:
             m = e.get('mood')
