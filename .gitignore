@@ -18,3 +18,14 @@ data/
 # Scripts
 auto_pr.py
 
+
+# Junk/backup files
+*.bak
+*.bak.*
+*.backup
+*.bak.*
+state.json
+story.html.bak*
+fix_ast.py
+start_bot.sh
+personality.py.selfmod.bak
