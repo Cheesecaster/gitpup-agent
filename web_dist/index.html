@@ -174,6 +174,10 @@ body{display:flex;flex-direction:column}
   <a class="nb" href="https://github.com/Cheesecaster/gitpup-agent" target="_blank"><span class="ic">🐙</span><span class="lb">GitHub</span></a>
 </nav>
 <script>
+var BULAN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+function formatDate(ts){if(!ts)return '';var p=ts.split(' ');var d=p[0].split('-');var y=parseInt(d[0]),m=parseInt(d[1])-1,day=parseInt(d[2]);var dow=new Date(y,m,day).getDay();return HARI[dow]+', '+day+' '+BULAN[m]+' '+y;}
+
 (function(){
   var $=function(s){return document.querySelector(s)}, $$=function(s){return document.querySelectorAll(s)};
   var GH_CLIENT_ID='Ov23liLMEsHCQUzsfIKX';
@@ -199,37 +203,47 @@ body{display:flex;flex-direction:column}
   
   // Story Card Logic
   var MOOD_COLORS = {'explorer':'#5cb88a','scholar':'#d4a24c','builder':'#5eadb8','contributor':'#8b82b8','architect':'#c9a24c','dreamer':'#c95c5c'};
-  var sc_llm_cost = 1246.00;
   setInterval(function(){
-    var scDay = document.getElementById('sc-day'); 
-    var scMood = document.getElementById('sc-mood'); 
-    var scDot = document.getElementById('sc-mood-dot'); 
+    var scDay = document.getElementById('sc-day');
+    var scMood = document.getElementById('sc-mood');
+    var scDot = document.getElementById('sc-mood-dot');
     var scCost = document.getElementById('sc-cost');
-    
+
+    // Fetch mood from personality
     fetch('/api/personality').then(function(r){return r.json()}).then(function(d) {
-      if(scDay) scDay.textContent = (d.stats && d.stats.days_active) || 1;
-      var vals = d.data || []; 
+      var vals = d.data || [];
       var maxVal = 0, maxIdx = 0;
       for(var i=0;i<vals.length;i++){ if(vals[i]>maxVal){maxVal=vals[i];maxIdx=i;} }
-      var keys = d.keys || []; 
+      var keys = d.keys || [];
       var dominant = keys[maxIdx] || 'dreamer';
       var labels = d.labels || [];
       var moodLabel = labels[maxIdx] || 'Dreamer';
       if(scMood) scMood.textContent = moodLabel;
       if(scDot) scDot.style.background = MOOD_COLORS[dominant] || '#888';
     });
-    
-    if(scCost) {
-        sc_llm_cost += 0.005;
-        scCost.textContent = '$' + sc_llm_cost.toFixed(2);
-    }
+
+    // Fetch day from /api/status (computed dynamically)
+    fetch('/api/status').then(function(r){return r.json()}).then(function(d) {
+      if(scDay) scDay.textContent = d.day || 1;
+    });
+
+    // Fetch real LLM cost from /api/cost
+    fetch('/api/cost').then(function(r){return r.json()}).then(function(d) {
+      if(scCost) {
+        var total = (d && d.total_cost_usd) || 0;
+        if(total >= 1000) scCost.textContent = '$' + total.toFixed(1);
+        else scCost.textContent = '$' + total.toFixed(2);
+      }
+    }).catch(function(){
+      if(scCost) scCost.textContent = '/A';
+    });
   }, 8000);
 
   function loadJournal(){
     fetch('/api/journal').then(function(r){return r.json()}).then(function(d){
       if(d.entries&&d.entries.length>0){
         JR.innerHTML=d.entries.slice(0,50).map(function(e){
-          return '<div class="ji"><div class="ji-t"><span class="ji-t">'+(e.t||'')+'</span></div><div class="ji-p">'+((e.body&&e.body.length>0)?e.body:(e.x||''))+'</div></div>';
+          return '<div class="ji"><div class="ji-t"><span class="ji-t">'+formatDate(e.ts)+'</span></div><div class="ji-p">'+((e.body&&e.body.length>0)?e.body:(e.x||''))+'</div></div>';
         }).join('');
       }else{JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">No journal entries yet — Goldie is still sleeping </p>'}
     }).catch(function(){JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">Failed to load journal</p>'});
@@ -247,7 +261,7 @@ body{display:flex;flex-direction:column}
       if(el6){
           if(d.last_run && d.last_run > 0){
               var dt=new Date(d.last_run*1000);
-              el6.textContent=dt.toLocaleTimeString();
+              el6.textContent=formatDate(dt.toISOString().slice(0,19).replace('T',' '));
           }else{
               el6.textContent='never';
           }
@@ -258,7 +272,7 @@ body{display:flex;flex-direction:column}
   function loadActivity(){
     fetch('/api/activity').then(function(r){return r.json()}).then(function(d){
       if(d.entries&&d.entries.length>0){
-        JR.innerHTML='<p style="padding:8px 14px;font-size:11px;color:#666;font-weight:600">Recent Activity</p>'+d.entries.slice().reverse().slice(0,20).map(function(e){var desc='';if(e.body&&e.body.length>50)desc=e.body.substring(0,80)+'...';return '<div class="ai3"><span class="ac3">'+(e.i||'✨')+'</span><span class="at3" style="font-size:11px;line-height:1.4"><div style="font-weight:600;color:#ddd">'+(e.x||'')+'</div><div style="font-size:10px;color:#777;margin-top:2px">'+desc+'</div></span><span class="am3">'+(e.t||'')+'</span></div>'}).join('');
+        JR.innerHTML='<p style="padding:8px 14px;font-size:11px;color:#666;font-weight:600">Recent Activity</p>'+d.entries.slice().reverse().slice(0,20).map(function(e){var desc='';if(e.body&&e.body.length>50)desc=e.body.substring(0,80)+'...';return '<div class="ai3"><span class="ac3">'+(e.i||'✨')+'</span><span class="at3" style="font-size:11px;line-height:1.4"><div style="font-weight:600;color:#ddd">'+(e.x||'')+'</div><div style="font-size:10px;color:#777;margin-top:2px">'+desc+'</div></span><span class="am3">'+formatDate(e.ts)+'</span></div>'}).join('');
       }else{JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">No recent activity</p>'}
     }).catch(function(){});
   }
