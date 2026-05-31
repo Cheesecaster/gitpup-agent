@@ -773,6 +773,26 @@
       "stars": 84344,
       "lang": "Python",
       "description": ""
+    },
+    "github/docs": {
+      "full_name": "github/docs",
+      "study_level": 1,
+      "studied_at": [
+        "2026-06-01 05:00"
+      ],
+      "summary": "The open-source repo for docs.github.com",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 19701,
+      "lang": "TypeScript",
+      "description": ""
     }
   },
   "topic_index": {
@@ -822,7 +842,8 @@
         "supermemoryai/supermemory",
         "emmabostian/developer-portfolios",
         "nicobailon/pi-subagents",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "github/docs"
       ],
       "description": ""
     },
@@ -866,7 +887,8 @@
         "EveryInc/compound-engineering-plugin",
         "Crosstalk-Solutions/project-nomad",
         "supermemoryai/supermemory",
-        "nicobailon/pi-subagents"
+        "nicobailon/pi-subagents",
+        "github/docs"
       ],
       "description": ""
     },
@@ -1699,7 +1721,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 37,
+    "total_repos_studied": 38,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-06-01",
@@ -2467,6 +2489,22 @@
     {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "github/docs",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -3473,6 +3511,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "github/docs",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "OpenMOSS/MOSS-TTS",
       "type": "moderate",
@@ -3635,6 +3689,22 @@
     {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "github/docs",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -4049,6 +4119,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "github/docs",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "D4Vinci/Scrapling",
       "to_repo": "nesquena/hermes-webui",
       "type": "moderate",
@@ -4145,6 +4231,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "supermemoryai/supermemory",
+      "to_repo": "github/docs",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "emmabostian/developer-portfolios",
       "to_repo": "karpathy/autoresearch",
       "type": "moderate",
@@ -4161,6 +4263,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "nicobailon/pi-subagents",
+      "to_repo": "github/docs",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -4169,8 +4287,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4652,6 +4770,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -4946,6 +5078,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -5396,6 +5542,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5870,6 +6030,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -6318,6 +6492,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -7088,6 +7276,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -7480,6 +7682,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -7858,6 +8074,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -8054,6 +8284,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -8418,6 +8662,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -8754,6 +9012,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -8910,6 +9182,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9244,6 +9530,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -9386,6 +9686,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9692,6 +10006,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -9832,6 +10160,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -9960,6 +10302,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10224,6 +10580,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -10518,6 +10888,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "OpenMOSS/MOSS-TTS",
       "type": "weak",
@@ -10784,6 +11168,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
       "type": "weak",
@@ -10966,6 +11364,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -11120,6 +11532,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -11190,6 +11616,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "galilai-group/stable-worldmodel",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -11260,6 +11700,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -11318,6 +11772,20 @@
     {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11442,6 +11910,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
       "type": "weak",
@@ -11554,6 +12036,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
       "to_repo": "nesquena/hermes-webui",
       "type": "weak",
@@ -11624,6 +12120,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "nesquena/hermes-webui",
       "to_repo": "supermemoryai/supermemory",
       "type": "weak",
@@ -11640,6 +12150,20 @@
     {
       "from_repo": "nesquena/hermes-webui",
       "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "nesquena/hermes-webui",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11694,8 +12218,36 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "emmabostian/developer-portfolios",
+      "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "nicobailon/pi-subagents",
       "to_repo": "karpathy/autoresearch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
