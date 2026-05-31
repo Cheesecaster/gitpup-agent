@@ -37,8 +37,8 @@ canvas{display:block}
 @keyframes skelPulse{from{background-position:200% 0}to{background-position:-200% 0}}
 .fade-in{animation:fadeIn .3s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.mood-graph-wrap{width:100%;height:110px;margin-bottom:4px;position:relative}
-#moodGraph{width:100%;height:110px;border-radius:8px}
+.mood-graph-wrap{width:100%;height:140px;margin-bottom:4px;position:relative}
+#moodGraph{width:100%;height:140px;border-radius:8px}
 </style>
 </head>
 <body>
@@ -74,12 +74,12 @@ var jb=document.getElementById('jrnList'),jc=document.getElementById('jrnCount')
 fetch1('/api/soul',function(d){var box=document.getElementById('soulBox'),sk=document.getElementById('soulSkel');if(box){if(sk)sk.style.display='none';box.style.display='';render(box,'<div style="white-space:pre-wrap;font-size:12px;color:#aaa;line-height:1.65">'+esc(d.content||'Empty')+'</div>');}},function(){var b=document.getElementById('soulBox');if(b){b.innerHTML='<div class="msg">Failed</div>';b.style.display='';}});
 function drawMoodGraph(entries){
 var cvs=document.getElementById('moodGraph');if(!cvs||entries.length<2)return;
-var ctx=cvs.getContext('2d'),dpr=Math.min(window.devicePixelRatio||1,2);cvs.width=800*dpr;cvs.height=110*dpr;cvs.style.width='100%';cvs.style.height='110px';ctx.scale(dpr,dpr);
+var ctx=cvs.getContext('2d'),dpr=Math.min(window.devicePixelRatio||1,2);cvs.width=800*dpr;cvs.height=140*dpr;cvs.style.width='100%';cvs.style.height="140px";ctx.scale(dpr,dpr);
 var W=800,H=110,pad=25,pts=[],seen={};
 for(var i=entries.length-1;i>=0;i--){var dt=new Date(entries[i].ts);if(isNaN(dt.getTime()))continue;var t=dt.getTime(),k=t.toString();var off=seen[k]||0;seen[k]=off+1;pts.push({t:t,color:entries[i].mood_color||'#666',label:entries[i].mood_label||entries[i].mood||'?',offset:off*8});}
 if(pts.length<2)return;var minT=pts[0].t,maxT=pts[pts.length-1].t,rng=maxT-minT||86400000;ctx.beginPath();ctx.lineWidth=2;
 for(var i=0;i<pts.length;i++){var x=pad+((pts[i].t-minT)/rng)*(W-2*pad)+pts[i].offset,y=H/2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle='rgba(212,160,23,0.25)';ctx.stroke();
-for(var i=0;i<pts.length;i++){var x=pad+((pts[i].t-minT)/rng)*(W-2*pad)+pts[i].offset,y=H/2;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fillStyle=pts[i].color;ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#ccc';ctx.font='bold 9px system-ui';ctx.textAlign='center';ctx.fillText(pts[i].label,x,y+20);ctx.fillStyle='#777';ctx.font='8px system-ui';ctx.fillText(fmt(pts[i].t).substring(5,11),x,y+31);}}
+for(var i=0;i<pts.length;i++){var x=pad+((pts[i].t-minT)/rng)*(W-2*pad)+pts[i].offset,y=H/2;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fillStyle=pts[i].color;ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#ccc';ctx.font='bold 9px system-ui';ctx.textAlign='center';ctx.fillText(pts[i].label,x,y+24);ctx.fillStyle='#777';ctx.font='8px system-ui';ctx.fillText(fmt(pts[i].t).substring(5,11),x,y+36);}}
 </script>
 </body>
 </html>
