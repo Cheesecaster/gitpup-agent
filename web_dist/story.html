@@ -75,7 +75,7 @@ fetch1('/api/soul',function(d){var box=document.getElementById('soulBox'),sk=doc
 function drawMoodGraph(entries){
 var cvs=document.getElementById('moodGraph');if(!cvs||entries.length<2)return;
 var ctx=cvs.getContext('2d'),dpr=Math.min(window.devicePixelRatio||1,2);cvs.width=800*dpr;cvs.height=110*dpr;cvs.style.width='100%';cvs.style.height='110px';ctx.scale(dpr,dpr);
-var W=800,H=110,pad=25,var pts=[],seen={};
+var W=800,H=110,pad=25,pts=[],seen={};
 for(var i=entries.length-1;i>=0;i--){var dt=new Date(entries[i].ts);if(isNaN(dt.getTime()))continue;var t=dt.getTime(),k=t.toString();var off=seen[k]||0;seen[k]=off+1;pts.push({t:t,color:entries[i].mood_color||'#666',label:entries[i].mood_label||entries[i].mood||'?',offset:off*8});}
 if(pts.length<2)return;var minT=pts[0].t,maxT=pts[pts.length-1].t,rng=maxT-minT||86400000;ctx.beginPath();ctx.lineWidth=2;
 for(var i=0;i<pts.length;i++){var x=pad+((pts[i].t-minT)/rng)*(W-2*pad)+pts[i].offset,y=H/2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle='rgba(212,160,23,0.25)';ctx.stroke();
