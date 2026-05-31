@@ -25,60 +25,23 @@ canvas{width:300px;height:300px;display:block;margin:0 auto}
 .entry-body{font-size:13.5px;color:#c8c8c8;line-height:1.65;word-break:break-word}
 .rf-entry .entry-body{border-left:2px solid rgba(167,139,250,.3);padding-left:12px}
 .msg{text-align:center;padding:20px;color:#555;font-size:12px}
-#soul-content{font-size:12px;color:#aaa;line-height:1.65;white-space:pre-wrap;word-break:break-word}
-.repo-tag{display:inline-block;background:rgba(212,160,23,.1);color:#d4a017;font-size:9px;padding:2px 6px;border-radius:4px;margin-top:4px}
-.cost-big{font-size:28px;font-weight:700;color:#d4a017;margin:4px 0}
-.cost-sub{font-size:11px;color:#777;margin:2px 0}
-.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.cost-cell{background:rgba(0,0,0,.3);border-radius:8px;padding:10px;text-align:center}
-.cost-cell .val{font-size:16px;font-weight:600;color:#e0c050}
-.cost-cell .lbl{font-size:9px;color:#666;margin-top:2px}
-.cost-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.05);margin-top:4px;overflow:hidden}
-.cost-bar-fill{height:100%;background:linear-gradient(90deg,#d4a017,#b8860b);border-radius:3px}
-.phase-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px}
-.phase-row:last-child{border-bottom:none}
-.phase-name{flex:1;color:#aaa;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.phase-n{color:#555;font-size:10px;width:30px;text-align:right}
-.phase-c{color:#d4a017;font-size:11px;width:70px;text-align:right;font-weight:600}
+.skel{display:flex;flex-direction:column;gap:10px;padding:8px 0}
+.skel-line{height:14px;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(255,255,255,.07) 50%,rgba(255,255,255,.03) 75%);background-size:200% 100%;animation:skelPulse 1.5s infinite}
+.skel-line.w80{width:80%}.skel-line.w60{width:60%}.skel-line.w45{width:45%}.skel-line.w90{width:90%}
+@keyframes skelPulse{from{background-position:200% 0}to{background-position:-200% 0}}
+.fade-in{animation:fadeIn .3s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-<div class="bb-bar">
-<a class="bb-btn" href="/">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>Back</a>
-<span class="bb-title">GOLDIE STORY</span>
-</div>
+<div class="bb-bar"><a class="bb-btn" href="/"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>Back</a><span class="bb-title">GOLDIE STORY</span></div>
 <div class="container">
-<div class="page-head"><h1>&#128054; Goldie's Story</h1>
-<div class="subtitle">Day <span id="day-count">1</span></div></div>
-
-<div class="section"><h2>&#129505; Personality Radar</h2>
-<div class="chart-box"><canvas id="rc"></canvas></div></div>
-
-<div class="section"><h2>&#128533; Mood Timeline</h2>
-<div id="mood-chart-wrap">
-    <svg id="mood-svg" style="display:block;width:100%;height:200px;"></svg>
-    <div id="mood-points" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px;"></div>
-  </div></div>
-
-<div class="section"><h2>&#129727; Self Reflections</h2>
-<div id="refList"><div class="msg">Loading...</div></div></div>
-
-<div class="section"><h2>&#128218; Study Journal</h2>
-<div id="jrnList"><div class="msg">Loading...</div></div></div>
-
-<div class="section"><h2>&#128165; Soul</h2>
-<div id="soulBox"><div class="msg">Loading...</div></div></div>
-
-<div class="section"><h2>&#128176; LLM Cost</h2>
-<div id="costBox"><div class="msg">Loading...</div></div>
-    <!-- Knowledge Relationships Section -->
-    <div class="section" id="kb-section" style="margin-top:1.5em;">
-      <h2>&#128303; Knowledge Graph</h2>
-      <div id="kb-summary" class="msg" style="font-size:13px;"></div>
-      <div id="kb-concepts" style="margin:8px 0;"></div>
-      <div id="kb-edges" style="margin-top:8px;"></div>
-    </div></div>
+<div class="page-head"><h1>&#128054; Goldie's Story</h1><div class="subtitle">Day <span id="day-count">3</span></div></div>
+<div class="section"><h2>&#129505; Personality Radar</h2><div class="chart-box"><canvas id="rc"></canvas></div></div>
+<div class="section"><h2>&#128533; Mood Timeline</h2><div id="moodList"><div class="skel"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w90"></div><div class="skel-line w45"></div></div></div></div>
+<div class="section"><h2>&#129727; Reflections</h2><div id="refList"><div class="skel"><div class="skel-line w90"></div><div class="skel-line w80"></div><div class="skel-line w60"></div></div></div></div>
+<div class="section"><h2>&#128221; Journal</h2><div id="jrnList"><div class="skel"><div class="skel-line w80"></div><div class="skel-line w90"></div><div class="skel-line w60"></div><div class="skel-line w45"></div><div class="skel-line w80"></div></div></div></div>
+<div class="section"><h2>&#128165; Soul</h2><div id="soulBox"><div class="skel"><div class="skel-line w90"></div><div class="skel-line w80"></div><div class="skel-line w60"></div></div></div></div>
 </div>
 
 <script id="chartJS">
@@ -87,393 +50,83 @@ if(typeof window.Chart==='undefined'){
 var Chart=function(ctx,cfg){
 var data=cfg.data,opts=cfg.options,oR=opts.scales&&opts.scales.r||{},
 labels=data.labels||[],vals=data.datasets[0].data||[],n=labels.length;
-var c=ctx.canvas,W=c.width,H=c.height,cx=W/2,cy=H/2,
-maxR=Math.min(W,H)*.42,maxV=oR.max||1.2;
+var c=ctx.canvas,W=c.width,H=c.height,cx=W/2,cy=H/2,maxR=Math.min(W,H)*.42,maxV=oR.max||1.2;
 ctx.clearRect(0,0,W,H);
-for(var ring=1;ring<=4;ring++){var rr=maxR*(ring/4);
-ctx.beginPath();
-for(var i=0;i<=n;i++){var a=Math.PI*2*i/n-Math.PI/2;
-var px=cx+rr*Math.cos(a),py=cy+rr*Math.sin(a);
-i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+for(var ring=1;ring<=4;ring++){
+var rr=maxR*(ring/4);ctx.beginPath();
+for(var i=0;i<=n;i++){var a=Math.PI*2*i/n-Math.PI/2;var px=cx+rr*Math.cos(a),py=cy+rr*Math.sin(a);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
 ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();}
-for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2;
-ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));
-ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();}
+for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();}
 ctx.beginPath();
-for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,
-v=Math.min(vals[i]||0,maxV)/maxV;
-ctx.lineTo(cx+maxR*v*Math.cos(a),cy+maxR*v*Math.sin(a));}
+for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,v=Math.min(vals[i]||0,maxV)/maxV;ctx.lineTo(cx+maxR*v*Math.cos(a),cy+maxR*v*Math.sin(a));}
 ctx.closePath();ctx.fillStyle=oR.fillColor||'rgba(212,160,23,.1)';ctx.fill();
-for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,
-v=Math.min(vals[i]||0,maxV)/maxV;
-ctx.beginPath();ctx.arc(cx+maxR*v*Math.cos(a),cy+maxR*v*Math.sin(a),3,0,Math.PI*2);
-ctx.fillStyle='#d4a017';ctx.fill();}
+for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,v=Math.min(vals[i]||0,maxV)/maxV;ctx.beginPath();ctx.arc(cx+maxR*v*Math.cos(a),cy+maxR*v*Math.sin(a),3,0,Math.PI*2);ctx.fillStyle='#d4a017';ctx.fill();}
 ctx.fillStyle='#bbb';ctx.font='11px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
-for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,
-ll=maxR+18,px=cx+ll*Math.cos(a),py=cy+ll*Math.sin(a);ctx.fillText(labels[i],px,py);}
-this.destroy=function(){};
-return this;};
+for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,ll=maxR+18,px=cx+ll*Math.cos(a),py=cy+ll*Math.sin(a);ctx.fillText(labels[i],px,py);}
+this.destroy=function(){};return this;};
 window.Chart=Chart;
 })();
 }
 </script>
 
 <script>
+var BULAN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+function formatDate(ts){if(!ts)return '';var parts=ts.split(' ');var d=parts[0].split('-');var y=parseInt(d[0]),m=parseInt(d[1])-1,day=parseInt(d[2]);var dow=new Date(y,m,day).getDay();return HARI[dow]+', '+day+' '+BULAN[m]+' '+y;}
+
 (function(){
-function $(id){return document.getElementById(id);}
-function fetchJSON(url,cb,fail){
-try{var x=new XMLHttpRequest();x.open('GET',url);x.timeout=8000;
-x.onload=function(){try{cb(JSON.parse(x.responseText));}catch(e){if(fail)fail();}};
-x.ontimeout=function(){if(fail)fail();};
-x.onerror=function(){if(fail)fail();};
-x.send();}catch(e){if(fail)fail();}
+function g(id){var e=document.getElementById(id);return e;}
+function E(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function S(el,h){if(!el)return;el.innerHTML=h;el.classList.add('fade-in');}
+function A(url,cb,fn){
+var x=new XMLHttpRequest();
+x.open('GET',url);x.timeout=8000;
+x.onload=function(){try{cb(JSON.parse(x.responseText));}catch(e){if(fn)fn();}};
+x.ontimeout=fn;x.onerror=fn;x.send();
 }
 
-var rc=$('rc');
-if(!rc)return;
+// Radar
+var rc=g('rc');
+if(rc){
 rc.width=600;rc.height=600;
 var rctx=rc.getContext('2d');
 var rMax=0.6;
-
-fetchJSON('/api/personality',function(d){
-var de=$('day-count');if(de)de.textContent=(d.stats&&d.stats.days_active)||1;
+A('/api/personality',function(d){
+var de=g('day-count');if(de)de.textContent=(d.stats&&d.stats.days_active)||1;
 var vals=d.data||[],lbls=d.labels||[],cols=d.colors||[];
 var mx=0.3;for(var i=0;i<vals.length;i++)if(vals[i]>mx)mx=vals[i];
 rMax=mx*1.4||1;
-new Chart(rctx,{type:'radar',
-data:{labels:lbls,datasets:[{data:vals,borderColor:'#d4a017',
-backgroundColor:'rgba(212,160,23,.12)',pointBackgroundColor:cols,
-pointRadius:5,pointHoverRadius:7,borderWidth:2}]},
-options:{responsive:false,maintainAspectRatio:false,
-scales:{r:{beginAtZero:true,max:rMax,
-grid:{color:'rgba(255,255,255,.05)'},
-angleLines:{color:'rgba(255,255,255,.05)'},
-pointLabels:{color:'#bbb',font:{size:12,weight:'600'}},
-ticks:{display:false}}},
-plugins:{legend:{display:false}}}});
-},function(){$('rc').style.background='#111';});
-
-// Self Reflections — ONLY entries from self-reflection (event.type === "reflect")
-fetchJSON('/api/reflections',function(d){
-var box=$('refList');if(!box)return;
-var arr=d.entries||[];
-var refs=[];
-for(var i=0;i<arr.length;i++){
-var e=arr[i];
-var et=(e.event&&e.event.type)||'';
-var isX=(e.x||'').toLowerCase().indexOf('self-reflection')>=0;
-if(et==='reflect'||isX){refs.push(e);continue;}
-if((e.body||'').length>80){
-// Check if it's a reflection-style entry (4 numbered points, introspective)
-var lines=(e.body||'').split(/\n/);
-var has4Pattern=false;
-for(var li=0;li<lines.length;li++){
-if(/^\s*[\d]+[\.\)]\s*\*\*/.test(lines[li])||/^\s*[\d]+\.\s*\*\*/.test(lines[li])){has4Pattern=true;break;}
+var C={type:'radar',data:{labels:lbls,datasets:[{data:vals,borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.12)',pointBackgroundColor:cols,pointRadius:5,pointHoverRadius:7,borderWidth:2}]},options:{responsive:false,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:rMax,grid:{color:'rgba(255,255,255,.05)'},angleLines:{color:'rgba(255,255,255,.05)'},pointLabels:{color:'#bbb',font:{size:12,weight:'600'}},ticks:{display:false}}},plugins:{legend:{display:false}}}};new Chart(rctx,C);
+},function(){g('rc').style.background='#111';});
 }
-if(has4Pattern)refs.push(e);
-}}
-if(refs.length===0){box.innerHTML='<div class="msg">No reflections yet.</div>';return;}
-var h='';for(var i=0;i<refs.length&&i<8;i++){var e=refs[i];
-var mc=e.mood_color||'#a78bfa';
-h+='<div class="entry rf-entry"><div class="entry-date"><span class="mood-dot" style="background:'+mc+'"></span>'+(e.mood_label||e.mood||'')+' &middot; '+((e.ts||'').substring(0,16))+'</div>';
-h+='<div class="entry-body">'+esc(e.body||'').substring(0,800)+'</div></div>';}
-box.innerHTML=h;
-},function(){$('refList').innerHTML='<div class="msg">Failed to load</div>';});
 
-// Mood Timeline — mood data from ALL entries
-fetchJSON('/api/journal',function(d){
-var box=$('moodList');if(!box)return;
+// Reflections
+A('/api/reflections',function(d){
+var box=g('refList');if(!box)return;
 var arr=d.entries||[];
-var moods=[];for(var i=0;i<arr.length;i++){if(arr[i].mood)moods.push(arr[i]);}
-moods=moods.slice(-20).reverse();
-if(moods.length===0){box.innerHTML='<div class="msg">No mood data</div>';return;}
-var h='';for(var i=0;i<moods.length;i++){var e=moods[i];
-var isRef=(e.event&&e.event.type==='reflect')||((e.x||'').toLowerCase().indexOf('self-reflection')>=0);
-var tag=isRef?'&#129727; Ref':'&#128218; '+((e.x||'').substring(0,25));
-h+='<div class="entry" style="padding:8px 0"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span> ';
-h+='<span style="font-size:12px;color:#bdbdbd">'+(e.mood_label||e.mood||'?')+'</span> ';
-h+='<span class="repo-tag">'+tag+'</span>';
-h+='<div class="entry-date" style="color:#555;margin-top:2px;padding-left:14px">'+((e.ts||'').substring(0,16))+'</div></div>';}
-box.innerHTML=h;
-},function(){$('moodList').innerHTML='<div class="msg">Failed to load</div>';});
+arr=arr.filter(function(e){return e.type==='reflection'||e.type==='narrative';});
+var real=arr.filter(function(e){return(e.body||'').length>40;});
+if(real.length===0){S(box,'<div class="msg">No reflections yet.</div>');return;}
+var h='';for(var i=0;i<real.length&&i<8;i++){
+var e=real[i],mc=e.mood_color||'#a78bfa';
+h+='<div class="entry rf-entry"><div class="entry-date"><span class="mood-dot" style="background:'+mc+'"></span>'+(e.mood_label||e.mood||'')+' &middot; '+(formatDate(e.ts))+'</div>';
+h+='<div class="entry-body">'+E(e.body||'').substring(0,600)+'</div></div>';}
+S(box,h);
+},function(){S(g('refList'),'<div class="msg">Failed</div>');});
 
-// Study Journal — ONLY entries from study sessions (NOT self-reflection)
-fetchJSON('/api/journal',function(d){
-var box=$('jrnList');if(!box)return;
+// Journal + Mood
+A('/api/journal',function(d){
 var arr=d.entries||[];
-var jrn=[];
-for(var i=0;i<arr.length;i++){var e=arr[i];
-var et=(e.event&&e.event.type)||'';
-var isX=(e.x||'').toLowerCase().indexOf('self-reflection')>=0;
-if(et==='reflect'||isX)continue; // Skip reflections
-if(!e.body||e.body.length<10)continue;
-jrn.push(e);}
-if(jrn.length===0){box.innerHTML='<div class="msg">No study entries yet</div>';return;}
-var h='';for(var i=0;i<jrn.length&&i<30;i++){var e=jrn[i];
-var pass=e.event?('(Pass '+(e.event.study_pass||'?')+'):'):'(Study):';
-h+='<div class="entry"><div class="entry-date"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span>'+(e.ts||'').substring(0,16)+' &mdash; '+pass+' '+((e.x)||'')+'</div>';
-h+='<div class="entry-body">'+esc((e.body||'').substring(0,400))+'</div></div>';}
-box.innerHTML=h;
-},function(){$('jrnList').innerHTML='<div class="msg">Failed to load</div>';});
+var mb=g('moodList');
+if(mb){var ms=[];for(var i=0;i<arr.length;i++){if(arr[i].mood)ms.push(arr[i]);}ms=ms.slice(-20).reverse();if(ms.length===0)S(mb,'<div class="msg">No mood</div>');else{var m='';for(var i=0;i<ms.length;i++){var e=ms[i];m+='<div class="entry" style="padding:8px 0"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span><span style="font-size:12px;color:#bdbdbd">'+(e.mood_label||e.mood||'?')+'</span><span style="font-size:11px;color:#888">&mdash; '+((e.x&&e.x.substring(0,20))||'')+'</span><div class="entry-date" style="color:#555;margin-top:2px;padding-left:14px">'+(formatDate(e.ts))+'</div></div>';}S(mb,m);}}
+var jb=g('jrnList');
+if(jb){var jr=[];for(var i=0;i<arr.length;i++){if(!arr[i].body||arr[i].body.length<10)continue;if(arr[i].body.indexOf('self-reflection')>=0)continue;jr.push(arr[i]);}if(jr.length===0)S(jb,'<div class="msg">No entries</div>');else{var j='';for(var i=0;i<jr.length&&i<30;i++){var e=jr[i];j+='<div class="entry"><div class="entry-date"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span>'+formatDate(e.ts)+' &mdash; '+((e.x)||'')+'</div><div class="entry-body">'+E((e.body||'').substring(0,400))+'</div></div>';}S(jb,j);}}
+},function(){if(g('moodList'))S(g('moodList'),'<div class="msg">Failed</div>');if(g('jrnList'))S(g('jrnList'),'<div class="msg">Failed</div>');});
 
-fetchJSON('/api/soul',function(d){
-var box=$('soulBox');if(box)box.textContent=d.content||'Empty';
-},function(){if($('soulBox'))$('soulBox').textContent='Failed';});
+// Soul
+A('/api/soul',function(d){var box=g('soulBox');if(box)S(box,'<div style="white-space:pre-wrap;font-size:12px;color:#aaa;line-height:1.65">'+E(d.content||'Empty')+'</div>');},function(){if(g('soulBox'))S(g('soulBox'),'<div class="msg">Failed</div>');});
 
-// Cost card
-fetchJSON('/api/cost',function(d){
-  var b=$('costBox');if(!b)return;
-  var tc=d.total_cost_usd||0, tt=d.total_tokens||0;
-  var tcost=d.today_cost||0, ttok=d.today_tokens||0;
-  var html='<div class="cost-big">$'+tc.toFixed(2)+'</div>';
-  html+='<div class="cost-sub">Lifetime LLM spend</div>';
-  html+='<div class="cost-grid">';
-  html+='<div class="cost-cell"><div class="val">$'+tcost.toFixed(3)+'</div><div class="lbl">Today</div></div>';
-  html+='<div class="cost-cell"><div class="val">'+(tt/1e6).toFixed(2)+'M</div><div class="lbl">Lifetime</div></div>';
-  html+='<div class="cost-cell"><div class="val">'+(ttok/1e3).toFixed(0)+'K</div><div class="lbl">Today</div></div>';
-  html+='<div class="cost-cell"><div class="val">'+(d.entries_count||0)+'</div><div class="lbl">Calls</div></div>';
-  html+='</div>';
-  // Phase breakdown
-  var pp=d.per_phase||{};
-  var keys=Object.keys(pp);
-  if(keys.length>0){
-    html+='<div style="margin-top:12px;font-size:10px;color:#555">BY PHASE</div>';
-    var maxC=0;for(var k in pp)if(pp[k].cost_usd>maxC)maxC=pp[k].cost_usd;
-    for(var k in pp){
-      var v=pp[k], pct=maxC>0?(v.cost_usd/maxC*100):0;
-      html+='<div class="phase-row">';
-      html+='<span class="phase-name">'+k+'</span>';
-      html+='<span class="phase-n">'+v.count+'x</span>';
-      html+='<span class="phase-c">$'+v.cost_usd.toFixed(3)+'</span>';
-      html+='</div>';
-    }
-  }
-  b.innerHTML=html;
-},function(){var b=$('costBox');if(b)b.innerHTML='<div class="msg">Cost unavailable</div>';});
-
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 })();
 </script>
-<script>
-// ── Mood Arc ──
-(function(){
-  var svg=document.getElementById('mood-svg');
-  if(!svg)return;
-  var section=document.getElementById('mood-section');
-  var tooltip=document.getElementById('mood-tooltip');
-  function draw(data){
-    if(!data||!data.length){section.style.display='none';return;}
-    section.style.display='block';
-    var W=800,H=180,pad=30;
-    svg.setAttribute('viewBox','0 0 '+W+' '+H);
-    svg.innerHTML='';
-    // defs for glow
-    var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-    var filter=document.createElementNS('http://www.w3.org/2000/svg','filter');
-    filter.setAttribute('id','mood-glow');
-    var feGaussian=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
-    feGaussian.setAttribute('stdDeviation','3');
-    feGaussian.setAttribute('result','coloredBlur');
-    filter.appendChild(feGaussian);
-    var feMerge=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
-    var mn1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
-    mn1.setAttribute('in','coloredBlur');
-    feMerge.appendChild(mn1);
-    var mn2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
-    mn2.setAttribute('in','SourceGraphic');
-    feMerge.appendChild(mn2);
-    filter.appendChild(feMerge);
-    defs.appendChild(filter);
-    svg.appendChild(defs);
-
-    var n=data.length;
-    var xScale=function(i){return pad+(i/(n-1||1))*(W-2*pad);};
-    var moodValues={'Curious':0.7,'Contemplative':0.8,'Skeptical':0.5,'Humbled':0.9,'Confused':0.3,'Determined':0.85,'Excited':0.9,'Anxious':0.4,'Inspired':1.0};
-
-    // Draw area fill
-    var areaPath='M'+xScale(0)+' '+H;
-    var dotPositions=[];
-    for(var i=0;i<n;i++){
-      var v=moodValues[data[i].label]||0.5;
-      var y=H-pad-v*(H-2*pad);
-      dotPositions.push({x:xScale(i),y:y,i:i});
-      areaPath+=' L'+xScale(i)+' '+y;
-    }
-    areaPath+=' L'+xScale(n-1)+' '+H+' Z';
-    var area=document.createElementNS('http://www.w3.org/2000/svg','path');
-    area.setAttribute('d',areaPath);
-    area.setAttribute('fill','rgba(128,90,213,0.08)');
-    svg.appendChild(area);
-
-    // Draw line path
-    var linePath='M'+xScale(0)+' '+(pad+(1-(moodValues[data[0].label]||0.5))*(H-2*pad));
-    for(var i=1;i<n;i++){
-      var v=moodValues[data[i].label]||0.5;
-      var y=H-pad-v*(H-2*pad);
-      linePath+=' L'+xScale(i)+' '+y;
-    }
-    var line=document.createElementNS('http://www.w3.org/2000/svg','path');
-    line.setAttribute('d',linePath);
-    line.setAttribute('fill','none');
-    line.setAttribute('stroke','#6366f1');
-    line.setAttribute('stroke-width','2');
-    line.setAttribute('stroke-linecap','round');
-    line.setAttribute('stroke-linejoin','round');
-    line.setAttribute('filter','url(#mood-glow)');
-    svg.appendChild(line);
-
-    // Draw dots
-    for(var i=0;i<n;i++){
-      var pos=dotPositions[i];
-      var d=data[i];
-      var circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      circle.setAttribute('cx',pos.x);
-      circle.setAttribute('cy',pos.y);
-      circle.setAttribute('r','4');
-      circle.setAttribute('fill',d.color||'#8b5cf6');
-      circle.setAttribute('stroke','rgba(0,0,0,0.3)');
-      circle.setAttribute('stroke-width','1');
-      circle.style.cursor='pointer';
-      circle.addEventListener('mouseenter',function(e){showTip(e,d,pos);});
-      circle.addEventListener('mouseleave',function(){tooltip.style.display='none';});
-      svg.appendChild(circle);
-    }
-
-    // X-axis labels (show day markers)
-    for(var i=0;i<n;i+=Math.max(1,Math.floor(n/6))){
-      var d=data[i];
-      var txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x',xScale(i));
-      txt.setAttribute('y',H-5);
-      txt.setAttribute('text-anchor','middle');
-      txt.setAttribute('fill','#666');
-      txt.setAttribute('font-size','10');
-      txt.textContent='Day '+d.day;
-      svg.appendChild(txt);
-    }
-  }
-
-  function showTip(e,d,pos){
-    tooltip.style.display='block';
-    tooltip.innerHTML='<div style="color:'+d.color+';font-weight:bold;">'+d.label+'</div><div style="margin-top:4px;color:#999;">'+d.ts+'</div><div style="margin-top:4px;">'+(d.title||'')+'</div>';
-    var rect=svg.getBoundingClientRect();
-    tooltip.style.left=(rect.left+pos.x/800*rect.width)+'px';
-    tooltip.style.top=(rect.top+pos.y/180*rect.height-60)+'px';
-  }
-
-  // Fetch mood data
-  function load(){
-    fetch('/api/mood_arc').then(function(r){return r.json();}).then(function(data){
-      draw(data.timeline);
-    }).catch(function(){draw([]);});
-  }
-  load();
-  setInterval(load,30000);
-})();</script>
-<script>
-// ── Mood Arc Chart ──
-(function(){
-  var svg=document.getElementById('mood-svg');
-  var pointsDiv=document.getElementById('mood-points');
-  if(!svg||!pointsDiv)return;
-  var MOOD_VALS={'Awed':0.95,'Excited':0.9,'Inspired':1.0,'Curious':0.75,'Contemplative':0.8,
-    'Skeptical':0.5,'Humbled':0.85,'Confused':0.3,'Determined':0.85,'Focused':0.7,
-    'Proud':0.9,'Satisfied':0.8,'Anxious':0.4,'Overwhelmed':0.2,'Neutral':0.5};
-
-  function draw(timeline){
-    if(!timeline||!timeline.length){svg.innerHTML='<text x=\'50%\' y=\'50%\' text-anchor=\'middle\' fill=\'#666\'>No mood data yet</text>';return;}
-    var W=800,H=180,pad=30;
-    svg.setAttribute('viewBox','0 0 '+W+' '+H);
-    svg.innerHTML='';
-    // Defs
-    var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-    var gl=document.createElementNS('http://www.w3.org/2000/svg','filter');
-    gl.setAttribute('id','mg');
-    var gb=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
-    gb.setAttribute('stdDeviation','2');gb.setAttribute('result','b');
-    gl.appendChild(gb);
-    var fm=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
-    var m1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m1.setAttribute('in','b');fm.appendChild(m1);
-    var m2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m2.setAttribute('in','SourceGraphic');fm.appendChild(m2);
-    gl.appendChild(fm);defs.appendChild(gl);svg.appendChild(defs);
-    // Grid lines
-    for(var r=0;r<=1;r+=0.25){
-      var gy=H-pad-r*(H-2*pad);
-      var gl2=document.createElementNS('http://www.w3.org/2000/svg','line');
-      gl2.setAttribute('x1',pad);gl2.setAttribute('x2',W-pad);gl2.setAttribute('y1',gy);gl2.setAttribute('y2',gy);
-      gl2.setAttribute('stroke','rgba(255,255,255,0.05)');gl2.setAttribute('stroke-width','1');
-      svg.appendChild(gl2);
-    }
-    var n=timeline.length;
-    var getX=function(i){return pad+(n>1?(i/(n-1))*(W-2*pad):W/2);};
-    var dots=[];
-    var pathD='';
-    for(var i=0;i<n;i++){
-      var v=MOOD_VALS[timeline[i].label]||0.5;
-      var x=getX(i),y=H-pad-v*(H-2*pad);
-      dots.push({x:x,y:y,i:i,d:timeline[i]});
-      pathD+=(i===0?'M':'L')+x+' '+y;
-    }
-    // Area fill
-    var areaD=pathD+' L'+getX(n-1)+' '+(H-pad)+' L'+getX(0)+' '+(H-pad)+' Z';
-    var area=document.createElementNS('http://www.w3.org/2000/svg','path');
-    area.setAttribute('d',areaD);area.setAttribute('fill','rgba(99,102,241,0.10)');
-    svg.appendChild(area);
-    // Line
-    var line=document.createElementNS('http://www.w3.org/2000/svg','path');
-    line.setAttribute('d',pathD);line.setAttribute('fill','none');
-    line.setAttribute('stroke','#6366f1');line.setAttribute('stroke-width','2.5');
-    line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');
-    line.setAttribute('filter','url(#mg)');
-    svg.appendChild(line);
-    // Dots with hover
-    for(var i=0;i<dots.length;i++){
-      var dot=dots[i],dd=dot.d;
-      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx',dot.x);c.setAttribute('cy',dot.y);c.setAttribute('r','5');
-      c.setAttribute('fill',dd.color||'#8b5cf6');c.setAttribute('stroke','rgba(0,0,0,0.4)');
-      c.setAttribute('stroke-width','1.5');c.style.cursor='pointer';
-      c.addEventListener('mouseenter',function(ev){showTip(ev,dd);});
-      c.addEventListener('mouseleave',function(){hideTip();});
-      svg.appendChild(c);
-    }
-    // X labels
-    var step=Math.max(1,Math.floor(n/8));
-    for(var i=0;i<n;i+=step){
-      var dd=timeline[i];
-      var txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x',getX(i));txt.setAttribute('y',H-4);
-      txt.setAttribute('text-anchor','middle');txt.setAttribute('fill','#555');
-      txt.setAttribute('font-size','9');txt.textContent='Day '+dd.day;
-      svg.appendChild(txt);
-    }
-    // Points bar below
-    if(pointsDiv){
-      pointsDiv.innerHTML='';
-      for(var i=0;i<timeline.length;i++){
-        var dd=timeline[i];
-        var span=document.createElement('span');
-        span.style.cssText='display:inline-block;width:8px;height:8px;border-radius:50%;background:'+dd.color+';';
-        span.title=dd.label+'\n'+dd.ts+'\n'+dd.title;
-        pointsDiv.appendChild(span);
-      }
-    }
-  }
-
-  var tip=document.createElement('div');
-  tip.style.cssText='position:absolute;background:#1a1a2e;color:#e0e0e0;padding:8px 12px;border-radius:8px;font-size:12px;pointer-events:none;z-index:100;max-width:250px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 12px rgba(0,0,0,0.5);opacity:0;transition:opacity 0.15s;';
-  document.body.appendChild(tip);
-  function showTip(e,d){
-    var r=e.target.getBoundingClientRect();
-    tip.innerHTML='<span style="color:'+d.color+';font-weight:600;font-size:14px;">'+d.label+'</span><br><span style="color:#888;font-size:11px;">'+d.ts+'</span><br><span style="font-size:12px;margin-top:4px;display:block;">'+d.title+'</span>';
-    tip.style.left=(r.left+r.width/2-125)+'px';
-    tip.style.top=(r.bottom+8)+'px';
-    tip.style.opacity='1';
-  }
-  function hideTip(){tip.style.opacity='0';}
-
-  function load(){fetch('/api/mood_arc').then(function(r){return r.json();}).then(function(d){draw(d.timeline||[]);}).catch(function(){draw([]);});}
-  load();setInterval(load,30000);
-})();</script>
 </body>
 </html>
