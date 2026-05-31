@@ -653,6 +653,26 @@
       "stars": 56049,
       "lang": "Python",
       "description": ""
+    },
+    "FareedKhan-dev/train-llm-from-scratch": {
+      "full_name": "FareedKhan-dev/train-llm-from-scratch",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-31 21:00"
+      ],
+      "summary": "A straightforward method for training your LLM, from downloading data to generating text.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "jupyter notebook",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 2624,
+      "lang": "Jupyter Notebook",
+      "description": ""
     }
   },
   "topic_index": {
@@ -696,7 +716,8 @@
         "OpenBMB/VoxCPM",
         "ruvnet/RuView",
         "Crosstalk-Solutions/project-nomad",
-        "D4Vinci/Scrapling"
+        "D4Vinci/Scrapling",
+        "FareedKhan-dev/train-llm-from-scratch"
       ],
       "description": ""
     },
@@ -770,6 +791,12 @@
       "repos": [
         "run-llama/liteparse",
         "ruvnet/RuView"
+      ],
+      "description": ""
+    },
+    "jupyter notebook": {
+      "repos": [
+        "FareedKhan-dev/train-llm-from-scratch"
       ],
       "description": ""
     }
@@ -1338,7 +1365,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 31,
+    "total_repos_studied": 32,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-31",
@@ -1665,8 +1692,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1681,8 +1708,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1873,8 +1900,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "go"
+        "go",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1889,8 +1916,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1905,8 +1932,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1921,8 +1948,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1937,8 +1964,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1953,8 +1980,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1969,8 +1996,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2625,8 +2652,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2641,8 +2668,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2737,8 +2764,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2817,8 +2844,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "rust"
+        "rust",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2928,8 +2955,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3327,6 +3354,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -3579,6 +3620,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -3945,6 +4000,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "D4Vinci/Scrapling",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4335,6 +4404,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -4699,6 +4782,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -5007,6 +5104,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -5329,6 +5440,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -5637,6 +5762,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -5931,6 +6070,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -6085,6 +6238,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -6365,6 +6532,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -6617,6 +6798,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -6731,6 +6926,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6981,6 +7190,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -7081,6 +7304,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7303,6 +7540,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -7401,6 +7652,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -7487,6 +7752,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7667,6 +7946,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -7793,6 +8086,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
@@ -7851,6 +8158,20 @@
     {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7975,6 +8296,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -8031,6 +8366,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
       "type": "weak",
@@ -8129,6 +8478,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -8199,6 +8562,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -8215,6 +8592,20 @@
     {
       "from_repo": "anthropics/claude-code",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8255,6 +8646,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -8271,6 +8676,20 @@
     {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8299,6 +8718,20 @@
     {
       "from_repo": "ruvnet/RuView",
       "to_repo": "D4Vinci/Scrapling",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8313,6 +8746,34 @@
     {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
       "score": 2,
       "connections": [

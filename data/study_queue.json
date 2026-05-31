@@ -1,14 +1,8 @@
 {
   "repos": [
     {
-      "repo": "D4Vinci/Scrapling",
-      "stars_today": 639,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "FareedKhan-dev/train-llm-from-scratch",
-      "stars_today": 327,
+      "stars_today": 627,
       "lang": "Jupyter Notebook",
       "target_depth": 1
     },
@@ -17,6 +11,12 @@
       "stars_today": 320,
       "lang": "Python",
       "target_depth": 1
+    },
+    {
+      "repo": "supermemoryai/supermemory",
+      "stars_today": 236,
+      "lang": "TypeScript",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,12 +24,11 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "D4Vinci/Scrapling",
     "FareedKhan-dev/train-llm-from-scratch",
     "nesquena/hermes-webui",
     "supermemoryai/supermemory",
-    "nicobailon/pi-subagents",
     "emmabostian/developer-portfolios",
+    "nicobailon/pi-subagents",
     "github/docs"
   ]
 }
