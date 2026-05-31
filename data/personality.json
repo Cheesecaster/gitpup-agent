@@ -1,46 +1,46 @@
 {
   "dimensions": {
     "explorer": {
-      "value": 0.75,
+      "value": 0.92,
       "color": "#5cb88a",
       "label": "Explorer",
-      "last_activity": 1780229179.3732579,
-      "growth_count": 94
+      "last_activity": 1780236242.4384615,
+      "growth_count": 98
     },
     "scholar": {
       "value": 0.92,
       "color": "#d4a24c",
       "label": "Scholar",
-      "last_activity": 1780229204.5733395,
-      "growth_count": 205
+      "last_activity": 1780236280.6682427,
+      "growth_count": 214
     },
     "builder": {
-      "value": 0.58,
+      "value": 0.92,
       "color": "#5eadb8",
       "label": "Builder",
-      "last_activity": 1780229204.564124,
-      "growth_count": 16
+      "last_activity": 1780236280.6585717,
+      "growth_count": 17
     },
     "contributor": {
-      "value": 0.35,
+      "value": 0.3755,
       "color": "#8b82b8",
       "label": "Contributor",
-      "last_activity": 1780229204.564124,
+      "last_activity": 1780236280.6585717,
       "growth_count": 2
     },
     "architect": {
       "value": 0.92,
       "color": "#c9a24c",
       "label": "Architect",
-      "last_activity": 1780229204.5733395,
-      "growth_count": 55
+      "last_activity": 1780236280.6682427,
+      "growth_count": 58
     },
     "dreamer": {
-      "value": 0.7,
+      "value": 0.92,
       "color": "#c95c5c",
       "label": "Dreamer",
-      "last_activity": 1780229179.3732579,
-      "growth_count": 96
+      "last_activity": 1780236242.4384615,
+      "growth_count": 99
     }
   },
   "activity_weights": {
@@ -95,96 +95,6 @@
     }
   },
   "timeline": [
-    {
-      "activity": "star_repo",
-      "deltas": {
-        "explorer": 0.05,
-        "scholar": 0.03
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "star_repo",
-      "deltas": {
-        "explorer": 0.05,
-        "scholar": 0.03
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "study_pass_complete",
-      "deltas": {
-        "scholar": 0.3,
-        "explorer": 0.1
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "narrative",
-      "deltas": {
-        "dreamer": 0.4,
-        "scholar": 0.1
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "self_modify",
-      "deltas": {
-        "architect": 0.45,
-        "scholar": 0.1
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "build_project",
-      "deltas": {
-        "builder": 0.5,
-        "architect": 0.1
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "evolve",
-      "deltas": {
-        "architect": 0.3,
-        "scholar": 0.2
-      },
-      "timestamp": "2026-05-26 23:32",
-      "day": 1
-    },
-    {
-      "activity": "reflect",
-      "deltas": {
-        "dreamer": 0.4,
-        "scholar": 0.1
-      },
-      "timestamp": "2026-05-27 00:00",
-      "day": 1
-    },
-    {
-      "activity": "star_repo",
-      "deltas": {
-        "explorer": 0.05,
-        "scholar": 0.03
-      },
-      "timestamp": "2026-05-27 00:00",
-      "day": 1
-    },
-    {
-      "activity": "star_repo",
-      "deltas": {
-        "explorer": 0.05,
-        "scholar": 0.03
-      },
-      "timestamp": "2026-05-27 00:00",
-      "day": 1
-    },
     {
       "activity": "star_repo",
       "deltas": {
@@ -3015,11 +2925,111 @@
       "timestamp": "2026-05-31 12:06",
       "day": 7,
       "frequency_penalty": 0.3
+    },
+    {
+      "activity": "reflect",
+      "deltas": {
+        "dreamer": 0.22,
+        "scholar": 0.055
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.45
+    },
+    {
+      "activity": "star_repo",
+      "deltas": {
+        "explorer": 0.02,
+        "scholar": 0.012
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "star_repo",
+      "deltas": {
+        "explorer": 0.02,
+        "scholar": 0.012
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "star_repo",
+      "deltas": {
+        "explorer": 0.02,
+        "scholar": 0.012
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "study_pass_complete",
+      "deltas": {
+        "scholar": 0.21,
+        "explorer": 0.07
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.3
+    },
+    {
+      "activity": "narrative",
+      "deltas": {
+        "dreamer": 0.16,
+        "scholar": 0.04
+      },
+      "timestamp": "2026-05-31 14:00",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "narrative",
+      "deltas": {
+        "dreamer": 0.16,
+        "scholar": 0.04
+      },
+      "timestamp": "2026-05-31 14:04",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "self_modify",
+      "deltas": {
+        "architect": 0.315,
+        "scholar": 0.07
+      },
+      "timestamp": "2026-05-31 14:04",
+      "day": 7,
+      "frequency_penalty": 0.3
+    },
+    {
+      "activity": "build_project",
+      "deltas": {
+        "builder": 0.35,
+        "architect": 0.07
+      },
+      "timestamp": "2026-05-31 14:04",
+      "day": 7,
+      "frequency_penalty": 0.3
+    },
+    {
+      "activity": "evolve",
+      "deltas": {
+        "architect": 0.21,
+        "scholar": 0.14
+      },
+      "timestamp": "2026-05-31 14:04",
+      "day": 7,
+      "frequency_penalty": 0.3
     }
   ],
   "mood_timeline": [],
   "stats": {
-    "total_actions": 302,
+    "total_actions": 312,
     "days_active": 6,
     "last_reset": "2026-05-31 12:16",
     "total_runs": 24
