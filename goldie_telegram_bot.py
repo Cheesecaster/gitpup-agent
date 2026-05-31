@@ -9,6 +9,16 @@ import urllib.request
 import os
 from datetime import datetime
 
+# Load .env
+_e = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(_e):
+    with open(_e) as _f:
+        for _l in _f:
+            _l = _l.strip()
+            if _l and not _l.startswith("#") and "=" in _l:
+                _k, _v = _l.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
+
 BOT_TOKEN = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("GOLDIE_TG_TOKEN", "")
 if not BOT_TOKEN:
     print("ERROR: no token provided"); sys.exit(1)

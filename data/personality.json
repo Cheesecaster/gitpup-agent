@@ -1,7 +1,7 @@
 {
   "dimensions": {
     "explorer": {
-      "value": 0.92,
+      "value": 0.75,
       "color": "#5cb88a",
       "label": "Explorer",
       "last_activity": 1780229179.3732579,
@@ -15,14 +15,14 @@
       "growth_count": 205
     },
     "builder": {
-      "value": 0.92,
+      "value": 0.58,
       "color": "#5eadb8",
       "label": "Builder",
       "last_activity": 1780229204.564124,
       "growth_count": 16
     },
     "contributor": {
-      "value": 0.92,
+      "value": 0.35,
       "color": "#8b82b8",
       "label": "Contributor",
       "last_activity": 1780229204.564124,
@@ -36,7 +36,7 @@
       "growth_count": 55
     },
     "dreamer": {
-      "value": 0.92,
+      "value": 0.7,
       "color": "#c95c5c",
       "label": "Dreamer",
       "last_activity": 1780229179.3732579,
@@ -3020,8 +3020,9 @@
   "mood_timeline": [],
   "stats": {
     "total_actions": 302,
-    "days_active": 5,
-    "last_reset": "2026-05-29T13:52:50"
+    "days_active": 6,
+    "last_reset": "2026-05-31 12:16",
+    "total_runs": 24
   },
   "history": [
     {
