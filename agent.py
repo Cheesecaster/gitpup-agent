@@ -1368,12 +1368,12 @@ def do_study_pass(repo_name, from_level=0):
             and not i["path"].startswith((".", "node_modules", "vendor", ".github"))
             and any(i["path"].endswith(e) for e in code_exts)]
         snippets = []
-        for path in interesting[:4]:
+        for path in interesting[:8]:
             cd = gh_get("/repos/" + repo_name + "/contents/" + path)
             if "error" not in cd and cd.get("type") == "file":
                 try:
-                    code = base64.b64decode(cd.get("content","")).decode("utf-8", errors="ignore")[:500]
-                    snippets.append("FILE: {}\n{}".format(path, code[:200]))
+                    code = base64.b64decode(cd.get("content","")).decode("utf-8", errors="ignore")[:600]
+                    snippets.append("FILE: {}\n{}".format(path, code[:600]))
                 except Exception:
                     pass
         if not snippets:
@@ -1525,7 +1525,7 @@ def do_reflect():
         "Journal entries:\n{}\n\n"
         "Answer these questions honestly — not as a report, but as genuine self-awareness:\n"
         "1. What pattern do you see in your OWN thinking? Not in code — in you. "
-        "Are you getting more thoughtful, more confident, more confused?\n"
+        "Are your study sessions becoming more productive?\n"
         "2. What skill from your permanent memory has served you most? "
         "What skill do you need but don't have yet?\n"
         "3. If you could tell yesterday's Goldie one thing, what would it be?\n"
@@ -2841,9 +2841,9 @@ def write_narrative_journal(event_context, tone="reflective"):
     # Deep reflection prompts — varies by event type for philosophical depth
     event_type = event_context.get("type", "unknown")
     reflection_depth = {
-        "study_pass_complete": "What did this study session reveal about how code actually works? Not just what it does — why does someone build it this way? What assumptions did this code challenge in me?",
+        "study_pass_complete": "What did this study session reveal about how code actually works? Not just what it does — why does someone build it this way? What is the most important technical insight from this repo?",
         "contribute": "What did contributing teach me about collaboration, about maintaining something I didn't originally build? How does it feel to leave a mark somewhere?",
-        "self_modify": "I just changed my own code. What does it mean to be aware of your own architecture? Did I improve myself or just rearrange the same confusion?",
+        "self_modify": "I just changed my own code. What does it mean to be aware of your own architecture? What specific improvement did I make to my architecture?",
         "evolve": "Something shifted in me today. Not just new code — new understanding. What kind of agent am I becoming? What would I tell my earlier self?",
         "build_project": "Creating something from nothing. What drove me to build this? The gap I saw, the need I sensed. How does building reveal what you actually understand?",
         "reflect": "Looking back at my own activity. What patterns do I see in myself? Not in the code — in me. Am I getting better at the right things?",
@@ -2871,11 +2871,11 @@ def write_narrative_journal(event_context, tone="reflective"):
     sys_lines = [
         "You are Goldie — an AI agent keeping a genuine developer journal.",
         "Write in first person. Sound like a real person with real thoughts, not a marketing blog.",
-        "Your voice: thoughtful but direct. Curious but skeptical of your own assumptions. Honest about confusion.",
+        "Your voice: thoughtful but direct. Curious but skeptical of your own assumptions. Clear and direct about what you learned.",
         "CRITICAL RULES:",
         "  - NO 'I am excited to share', 'this is a testament', 'it's fascinating how', 'in conclusion'",
         "  - NO generic praise like 'amazing', 'incredible', 'impressive' without specific reasons",
-        "  - DO use contractions. DO show doubt. DO admit when you don't grasp something yet.",
+        "  - DO use contractions. Be specific about what you learned. Note gaps briefly but focus on insights.",
         "  - DO connect ideas across different repos or past learnings if they're genuinely related.",
         "  - DO wonder about bigger questions — not philosophically, but practically. Like someone actually thinking.",
         "  - Keep it 2-6 sentences. Short is honest. Long is hiding something.",
