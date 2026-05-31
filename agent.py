@@ -73,7 +73,7 @@ STAGES_DEF = {
         "skills": ["explore", "analyze", "star", "memory", "reflect", "autofix", "create_pr", "self_modify", "enhance_ui", "build_project", "deploy"]},
 }
 
-MAX_REPOS_PER_DAY = 2
+MAX_REPOS_PER_DAY = 4
 
 # ════════════════════════════════════════════════
 # ── Helpers ──
@@ -1012,40 +1012,37 @@ def queue_add_pending(repo_name, target_depth=1):
     save_queue(q)
 
 def queue_get_next():
-    """Get next repo to study, avoiding repos already studied today."""
+    """Get next repo to study. PRIORITIZE advancing existing repos over discovering new."""
     q = load_queue()
     repos = q.get("repos", [])
     if not repos:
         return None
-    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
     kb = load_kb()
+    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
     studied_today = set()
     for rn, rd in kb.get("repos", {}).items():
         for ts in rd.get("studied_at", []):
             if ts.startswith(today_str):
                 studied_today.add(rn)
-    # Pick from repos NOT studied today first
-    for item in repos:
-        rn = item["repo"]
-        target = item["target_depth"]
-        if rn in studied_today:
-            continue  # Already studied today, skip
-        kb_level = 0
-        if rn in kb.get("repos", {}):
-            kb_level = kb["repos"][rn].get("study_level", 0)
-        if kb_level < target:
-            return rn, kb_level + 1
-    # Fallback: if all candidates already studied today, return first
-    for item in repos:
-        rn = item["repo"]
-        target = item["target_depth"]
-        kb_level = 0
-        if rn in kb.get("repos", {}):
-            kb_level = kb["repos"][rn].get("study_level", 0)
-        if kb_level < target:
-            return rn, kb_level + 1
-    return None
 
+    # Sort by: (1) higher current level first (advance existing), (2) not studied today
+    scored = []
+    for item in repos:
+        rn = item["repo"]
+        target = item["target_depth"]
+        kb_level = 0
+        if rn in kb.get("repos", {}):
+            kb_level = kb["repos"][rn].get("study_level", 0)
+        if rn in studied_today:
+            continue
+        scored.append((rn, target, kb_level))
+
+    # Sort: highest kb_level first (advance what's started), then lowest target first
+    if not scored:
+        return None
+    scored.sort(key=lambda x: (-x[2], x[1]))
+    rn, target, kb_level = scored[0]
+    return (rn, max(kb_level, target))
 def queue_remove(repo_name):
     q = load_queue()
     q["repos"] = [r for r in q.get("repos", []) if r["repo"] != repo_name]
