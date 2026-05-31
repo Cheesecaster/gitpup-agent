@@ -754,26 +754,6 @@
       "lang": "TypeScript",
       "description": ""
     },
-    "karpathy/autoresearch": {
-      "full_name": "karpathy/autoresearch",
-      "study_level": 1,
-      "studied_at": [
-        "2026-06-01 04:56"
-      ],
-      "summary": "AI agents running research on single-GPU nanochat training automatically",
-      "patterns": [],
-      "best_practices": [],
-      "insights": [],
-      "code_examples": [],
-      "arch_topics": [
-        "python",
-        "open-source"
-      ],
-      "readme_insights": "",
-      "stars": 84344,
-      "lang": "Python",
-      "description": ""
-    },
     "github/docs": {
       "full_name": "github/docs",
       "study_level": 1,
@@ -792,6 +772,26 @@
       "readme_insights": "",
       "stars": 19701,
       "lang": "TypeScript",
+      "description": ""
+    },
+    "karpathy/autoresearch": {
+      "full_name": "karpathy/autoresearch",
+      "study_level": 1,
+      "studied_at": [
+        "2026-06-01 05:10"
+      ],
+      "summary": "AI agents running research on single-GPU nanochat training automatically",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 84347,
+      "lang": "Python",
       "description": ""
     }
   },
@@ -1580,6 +1580,206 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 04:46",
       "related_concepts": []
+    },
+    "three-file design: fixed prepare.py for data/utils, agent-ed": {
+      "name": "Three-file design: fixed prepare.py for data/utils, agent-edited train.py for th",
+      "category": "data",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": []
+    },
+    "uses val_bpb (validation bits per byte) as a vocab-size-inde": {
+      "name": "Uses val_bpb (validation bits per byte) as a vocab-size-independent metric for f",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": []
+    },
+    "built on a simplified single-gpu nanochat implementation to ": {
+      "name": "Built on a simplified single-GPU nanochat implementation to minimize infrastruct",
+      "category": "frontend",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "shifts the researcher's role from direct code editing to met": {
+      "name": "Shifts the researcher's role from direct code editing to meta-programming via Ma",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "standardized short runs and consistent metrics create reliab": {
+      "name": "Standardized short runs and consistent metrics create reliable, closed-loop auto",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": []
+    },
+    "the system is intentionally minimal to scale from a single b": {
+      "name": "The system is intentionally minimal to scale from a single baseline agent to a m",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "overnight autonomous iteration accelerates research velocity": {
+      "name": "Overnight autonomous iteration accelerates research velocity by decoupling human",
+      "category": "engineering",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03",
+      "related_concepts": []
+    },
+    "separation of core automation logic (python) from explorator": {
+      "name": "Separation of core automation logic (Python) from exploratory analysis and proto",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system"
+      ]
+    },
+    "configuration-driven architecture using .toml for dependency": {
+      "name": "Configuration-driven architecture using .toml for dependency management and pipe",
+      "category": "architecture",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "file_operations",
+        "plugin_system",
+        "monitoring_observability"
+      ]
+    },
+    "visual result tracking and documentation through embedded .p": {
+      "name": "Visual result tracking and documentation through embedded .png assets and Markdo",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "testing_pattern"
+      ]
+    },
+    "pipeline-oriented directory layout grouping data ingestion, ": {
+      "name": "Pipeline-oriented directory layout grouping data ingestion, LLM prompting, and e",
+      "category": "data",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": []
+    },
+    "the prominence of .ipynb and .png files indicates an iterati": {
+      "name": "The prominence of .ipynb and .png files indicates an iterative, experimental dev",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "adoption of .toml reflects modern python packaging standards": {
+      "name": "Adoption of .toml reflects modern Python packaging standards, emphasizing reprod",
+      "category": "general",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system"
+      ]
+    },
+    "the modular structure suggests a design optimized for chaini": {
+      "name": "The modular structure suggests a design optimized for chaining LLM-driven tasks,",
+      "category": "architecture",
+      "sources": [
+        "karpathy/autoresearch"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
     }
   },
   "memory_summaries": [
@@ -1725,7 +1925,7 @@
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 43
+    "total_skills_learned": 58
   },
   "skills_memory": [
     {
@@ -2028,6 +2228,111 @@
       "category": "general",
       "usage_count": 0,
       "learned_at": "2026-06-01 04:46"
+    },
+    {
+      "name": "Three-file design: fixed prepare.py for data/utils, agent-edited train.py for th",
+      "source": "karpathy/autoresearch",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Fixed 5-minute wall-clock training budget per experiment to standardize rapid it",
+      "source": "karpathy/autoresearch",
+      "category": "backend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Uses val_bpb (validation bits per byte) as a vocab-size-independent metric for f",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Built on a simplified single-GPU nanochat implementation to minimize infrastruct",
+      "source": "karpathy/autoresearch",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Shifts the researcher's role from direct code editing to meta-programming via Ma",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Standardized short runs and consistent metrics create reliable, closed-loop auto",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "The system is intentionally minimal to scale from a single baseline agent to a m",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Overnight autonomous iteration accelerates research velocity by decoupling human",
+      "source": "karpathy/autoresearch",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:03"
+    },
+    {
+      "name": "Separation of core automation logic (Python) from exploratory analysis and proto",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "Configuration-driven architecture using .toml for dependency management and pipe",
+      "source": "karpathy/autoresearch",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "Visual result tracking and documentation through embedded .png assets and Markdo",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "Pipeline-oriented directory layout grouping data ingestion, LLM prompting, and e",
+      "source": "karpathy/autoresearch",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "The prominence of .ipynb and .png files indicates an iterative, experimental dev",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "Adoption of .toml reflects modern Python packaging standards, emphasizing reprod",
+      "source": "karpathy/autoresearch",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
+    },
+    {
+      "name": "The modular structure suggests a design optimized for chaining LLM-driven tasks,",
+      "source": "karpathy/autoresearch",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 05:04"
     }
   ],
   "concepts": {
@@ -2160,8 +2465,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2176,8 +2481,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2432,8 +2737,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2448,8 +2753,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2464,8 +2769,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2480,8 +2785,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2496,8 +2801,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2512,8 +2817,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2528,8 +2833,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3456,8 +3761,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3472,8 +3777,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3488,8 +3793,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3504,8 +3809,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3520,8 +3825,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3664,8 +3969,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3680,8 +3985,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3696,8 +4001,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3712,8 +4017,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3840,8 +4145,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "rust",
-        "open-source"
+        "open-source",
+        "rust"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4096,8 +4401,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4112,8 +4417,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4128,8 +4433,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4224,8 +4529,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4240,8 +4545,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4272,8 +4577,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4757,7 +5062,7 @@
     },
     {
       "from_repo": "d3/d3",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -4771,7 +5076,7 @@
     },
     {
       "from_repo": "d3/d3",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5541,7 +5846,7 @@
     },
     {
       "from_repo": "projectdiscovery/nuclei",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5555,7 +5860,7 @@
     },
     {
       "from_repo": "projectdiscovery/nuclei",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6017,7 +6322,7 @@
     },
     {
       "from_repo": "dropwizard/metrics",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6031,7 +6336,7 @@
     },
     {
       "from_repo": "dropwizard/metrics",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6479,7 +6784,7 @@
     },
     {
       "from_repo": "AnalogJ/scrutiny",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6493,7 +6798,7 @@
     },
     {
       "from_repo": "AnalogJ/scrutiny",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7263,7 +7568,7 @@
     },
     {
       "from_repo": "Leonxlnx/taste-skill",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7277,7 +7582,7 @@
     },
     {
       "from_repo": "Leonxlnx/taste-skill",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7669,7 +7974,7 @@
     },
     {
       "from_repo": "DigitalPlatDev/FreeDomain",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7683,7 +7988,7 @@
     },
     {
       "from_repo": "DigitalPlatDev/FreeDomain",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8061,7 +8366,7 @@
     },
     {
       "from_repo": "affaan-m/ECC",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8075,7 +8380,7 @@
     },
     {
       "from_repo": "affaan-m/ECC",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8649,7 +8954,7 @@
     },
     {
       "from_repo": "obra/superpowers",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8663,7 +8968,7 @@
     },
     {
       "from_repo": "obra/superpowers",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8999,7 +9304,7 @@
     },
     {
       "from_repo": "byoungd/English-level-up-tips",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9013,7 +9318,7 @@
     },
     {
       "from_repo": "byoungd/English-level-up-tips",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9517,7 +9822,7 @@
     },
     {
       "from_repo": "Axorax/awesome-free-apps",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9531,7 +9836,7 @@
     },
     {
       "from_repo": "Axorax/awesome-free-apps",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9993,7 +10298,7 @@
     },
     {
       "from_repo": "hardikpandya/stop-slop",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10007,7 +10312,7 @@
     },
     {
       "from_repo": "hardikpandya/stop-slop",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10567,7 +10872,7 @@
     },
     {
       "from_repo": "codecrafters-io/build-your-own-x",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10581,7 +10886,7 @@
     },
     {
       "from_repo": "codecrafters-io/build-your-own-x",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11351,7 +11656,7 @@
     },
     {
       "from_repo": "revfactory/harness",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11365,7 +11670,7 @@
     },
     {
       "from_repo": "revfactory/harness",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11519,7 +11824,7 @@
     },
     {
       "from_repo": "run-llama/liteparse",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11533,7 +11838,7 @@
     },
     {
       "from_repo": "run-llama/liteparse",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11897,7 +12202,7 @@
     },
     {
       "from_repo": "ruvnet/RuView",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -11911,7 +12216,7 @@
     },
     {
       "from_repo": "ruvnet/RuView",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -12107,7 +12412,7 @@
     },
     {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
-      "to_repo": "karpathy/autoresearch",
+      "to_repo": "github/docs",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -12121,7 +12426,7 @@
     },
     {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
-      "to_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -12246,8 +12551,8 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "github/docs",
+      "from_repo": "github/docs",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
