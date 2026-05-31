@@ -776,40 +776,20 @@
     },
     "karpathy/autoresearch": {
       "full_name": "karpathy/autoresearch",
-      "study_level": 4,
+      "study_level": 1,
       "studied_at": [
-        "2026-06-01 05:12",
-        "2026-06-01 05:13",
-        "2026-06-01 05:15",
-        "2026-06-01 05:16"
+        "2026-06-01 05:31"
       ],
-      "summary": "A framework for autonomous AI research where an AI agent iteratively modifies a single training script, runs short 5-minute experiments, evaluates performance using val_bpb, and autonomously optimizes a small LLM overnight without human code intervention.",
-      "patterns": [
-        "Three-file structure: fixed prepare.py, agent-edited train.py, and human-edited program.md",
-        "Fixed 5-minute wall-clock training budget per experiment for rapid iteration",
-        "Uses val_bpb (validation bits per byte) as a vocab-size-independent metric for fair architectural comparison",
-        "Single-GPU simplified GPT training loop based on nanochat with Muon + AdamW optimizer",
-        "Config-driven architecture using pyproject.toml for dependency and build management",
-        "Separation of core library logic from interactive Jupyter notebook experiments",
-        "Visual-first documentation with embedded PNG diagrams and Markdown guides",
-        "Modular Python package structure with clear entry points and utility modules"
-      ],
+      "summary": "AI agents running research on single-GPU nanochat training automatically",
+      "patterns": [],
       "best_practices": [],
-      "insights": [
-        "Shifts the researcher's role from direct coding to meta-programming via instructional markdown files",
-        "Standardized short runtimes and consistent evaluation metrics enable rapid, automated hypothesis testing",
-        "Autonomous iterative loops can replace manual experimentation for early-stage model optimization",
-        "The system is designed to scale from single-agent baselines to complex multi-agent research organizations",
-        "Constraining the editable surface to one file reduces complexity and prevents agent-induced codebase bloat",
-        "The project prioritizes iterative research and rapid prototyping, leveraging notebooks for hypothesis testing alongside a stable Python core.",
-        "Heavy reliance on TOML and Markdown indicates a modern, lightweight toolchain focused on reproducibility and clear developer onboarding."
-      ],
+      "insights": [],
       "code_examples": [],
       "arch_topics": [
         "python",
         "open-source"
       ],
-      "readme_insights": "A Python-centric research automation toolkit organized around a core package, configuration files, and exploratory notebooks. The layout separates production-ready code from experimental workflows, with TOML handling project metadata and dependencies, while Markdown and PNG assets provide documentation and visual references.",
+      "readme_insights": "",
       "stars": 84347,
       "lang": "Python",
       "description": ""
@@ -1054,9 +1034,7 @@
         "plugin_system",
         "monitoring_observability",
         "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "vitepress defineconfig for site configuration": {
@@ -1168,10 +1146,7 @@
       "related_concepts": [
         "data_visualization",
         "modular_design",
-        "performance_optimization",
-        "plugin_system",
-        "database_pattern",
-        "event_driven"
+        "plugin_system"
       ]
     },
     "use try/catch with ci environment checks to prevent local bu": {
@@ -1186,8 +1161,7 @@
         "modular_design",
         "testing_pattern",
         "performance_optimization",
-        "error_handling",
-        "event_driven"
+        "error_handling"
       ]
     },
     "separate configuration, theme logic, and data fetching into ": {
@@ -1263,8 +1237,7 @@
         "config_management",
         "plugin_system",
         "error_handling",
-        "database_pattern",
-        "event_driven"
+        "database_pattern"
       ]
     },
     "the project maintains a robust ecosystem with dedicated docu": {
@@ -1281,8 +1254,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the mix of .vue, .js, and .md strongly indicates an interact": {
@@ -1300,8 +1272,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the explicit separation of src/ and test/ reflects a mature,": {
@@ -1318,8 +1289,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the structure suggests a build pipeline that bundles modular": {
@@ -1336,8 +1306,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the documentation leverages vitepress's data plugin system f": {
@@ -1356,8 +1325,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "interactive d3 examples are embedded directly using observab": {
@@ -1383,7 +1351,6 @@
       "usage_count": 0,
       "learned_at": "2026-05-27 04:15",
       "related_concepts": [
-        "testing_pattern",
         "config_management",
         "monitoring_observability",
         "error_handling",
@@ -1428,9 +1395,7 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 03:28",
-      "related_concepts": [
-        "performance_optimization"
-      ]
+      "related_concepts": []
     },
     "shifts the human researcher's role from writing python code ": {
       "name": "Shifts the human researcher's role from writing Python code to engineering Markd",
@@ -1446,8 +1411,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "enforcing strict time budgets and robust, scale-invariant me": {
@@ -1459,7 +1423,6 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 03:28",
       "related_concepts": [
-        "testing_pattern",
         "performance_optimization",
         "file_operations",
         "monitoring_observability",
@@ -1481,8 +1444,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the project serves as a proof-of-concept for a future where ": {
@@ -1499,8 +1461,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "notebook-driven exploration (.ipynb) paired with modular pyt": {
@@ -1543,9 +1504,7 @@
         "plugin_system",
         "monitoring_observability",
         "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "literate programming approach combining markdown narratives ": {
@@ -1573,8 +1532,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the use of .toml suggests adoption of modern python tooling ": {
@@ -1593,8 +1551,7 @@
         "monitoring_observability",
         "error_handling",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "the structure prioritizes readable experimentation and resea": {
@@ -1611,8 +1568,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "readme parse failed": {
@@ -1664,8 +1620,7 @@
         "monitoring_observability",
         "error_handling",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "shifts the researcher's role from direct code editing to met": {
@@ -1682,8 +1637,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "standardized short runs and consistent metrics create reliab": {
@@ -1694,9 +1648,7 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 05:03",
-      "related_concepts": [
-        "testing_pattern"
-      ]
+      "related_concepts": []
     },
     "the system is intentionally minimal to scale from a single b": {
       "name": "The system is intentionally minimal to scale from a single baseline agent to a m",
@@ -1712,8 +1664,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "overnight autonomous iteration accelerates research velocity": {
@@ -1792,8 +1743,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "adoption of .toml reflects modern python packaging standards": {
@@ -1828,8 +1778,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "three-file structure: fixed prepare.py, agent-edited train.p": {
@@ -1860,9 +1809,7 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 05:13",
-      "related_concepts": [
-        "performance_optimization"
-      ]
+      "related_concepts": []
     },
     "shifts the researcher's role from direct coding to meta-prog": {
       "name": "Shifts the researcher's role from direct coding to meta-programming via instruct",
@@ -1878,8 +1825,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "standardized short runtimes and consistent evaluation metric": {
@@ -1890,9 +1836,7 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 05:13",
-      "related_concepts": [
-        "testing_pattern"
-      ]
+      "related_concepts": []
     },
     "autonomous iterative loops can replace manual experimentatio": {
       "name": "Autonomous iterative loops can replace manual experimentation for early-stage mo",
@@ -1918,8 +1862,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "constraining the editable surface to one file reduces comple": {
@@ -1936,8 +1879,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "config-driven architecture using pyproject.toml for dependen": {
@@ -1984,8 +1926,7 @@
         "file_operations",
         "plugin_system",
         "error_handling",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "modular python package structure with clear entry points and": {
@@ -2018,8 +1959,7 @@
         "plugin_system",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     },
     "heavy reliance on toml and markdown indicates a modern, ligh": {
@@ -2041,8 +1981,7 @@
         "monitoring_observability",
         "error_handling",
         "database_pattern",
-        "data_fetching",
-        "event_driven"
+        "data_fetching"
       ]
     }
   },
@@ -2186,8 +2125,8 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 38,
-    "total_patterns": 20,
-    "total_insights": 18,
+    "total_patterns": 12,
+    "total_insights": 11,
     "last_study_date": "2026-06-01",
     "total_skills_learned": 72
   },
@@ -2700,10 +2639,9 @@
   "concepts": {
     "data_visualization": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 9,
+      "evidence_count": 8,
       "examples": [
         "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
         "Modular, foundational design intended to be extended by higher-level chart libraries",
@@ -2712,10 +2650,9 @@
     },
     "modular_design": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 9,
+      "evidence_count": 7,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -2724,34 +2661,29 @@
     },
     "testing_pattern": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 4,
+      "evidence_count": 2,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
-        "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library.",
-        "Standardized short runtimes and consistent evaluation metrics enable rapid, automated hypothesis testing"
+        "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library."
       ]
     },
     "performance_optimization": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 3,
+      "evidence_count": 2,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
-        "Fetch external data at build time to optimize runtime performance",
-        "Single-GPU simplified GPT training loop based on nanochat with Muon + AdamW optimizer"
+        "Fetch external data at build time to optimize runtime performance"
       ]
     },
     "file_operations": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 6,
+      "evidence_count": 3,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -2760,10 +2692,9 @@
     },
     "config_management": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 4,
+      "evidence_count": 3,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -2783,10 +2714,9 @@
     },
     "monitoring_observability": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 6,
+      "evidence_count": 3,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -2805,14 +2735,12 @@
     },
     "database_pattern": {
       "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
+        "d3/d3"
       ],
-      "evidence_count": 4,
+      "evidence_count": 2,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
-        "Fetch external data at build time to optimize runtime performance",
-        "Constraining the editable surface to one file reduces complexity and prevents agent-induced codebase bloat"
+        "Fetch external data at build time to optimize runtime performance"
       ]
     },
     "data_fetching": {
@@ -2825,52 +2753,9 @@
         "Fetch external data at build time to optimize runtime performance",
         "Separate configuration, theme logic, and data fetching into distinct modules"
       ]
-    },
-    "event_driven": {
-      "repos": [
-        "d3/d3",
-        "karpathy/autoresearch"
-      ],
-      "evidence_count": 2,
-      "examples": [
-        "Use try/catch with CI environment checks to prevent local build failures",
-        "Constraining the editable surface to one file reduces complexity and prevents agent-induced codebase bloat"
-      ]
     }
   },
   "relationships": [
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "karpathy/autoresearch",
-      "type": "strong",
-      "score": 55,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "event_driven"
-      ],
-      "shared_pattern_keywords": [
-        "direct",
-        "interactive",
-        "prioritizes",
-        "modular",
-        "structure"
-      ]
-    },
     {
       "from_repo": "d3/d3",
       "to_repo": "Leonxlnx/taste-skill",
@@ -3265,8 +3150,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5008,8 +4893,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5479,6 +5364,20 @@
     {
       "from_repo": "d3/d3",
       "to_repo": "github/docs",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/autoresearch",
       "type": "weak",
       "score": 2,
       "connections": [
