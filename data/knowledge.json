@@ -613,6 +613,26 @@
       "stars": 68880,
       "lang": "Rust",
       "description": ""
+    },
+    "Crosstalk-Solutions/project-nomad": {
+      "full_name": "Crosstalk-Solutions/project-nomad",
+      "study_level": 1,
+      "studied_at": [
+        "2026-05-31 15:00"
+      ],
+      "summary": "Project N.O.M.A.D, is a self-contained, offline survival computer packed with critical tools, knowledge, and AI to keep you informed and empowered—anytime, anywhere.",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 27442,
+      "lang": "TypeScript",
+      "description": ""
     }
   },
   "topic_index": {
@@ -654,7 +674,8 @@
         "anthropics/claude-code",
         "galilai-group/stable-worldmodel",
         "OpenBMB/VoxCPM",
-        "ruvnet/RuView"
+        "ruvnet/RuView",
+        "Crosstalk-Solutions/project-nomad"
       ],
       "description": ""
     },
@@ -691,7 +712,8 @@
       "repos": [
         "Lum1104/Understand-Anything",
         "twentyhq/twenty",
-        "EveryInc/compound-engineering-plugin"
+        "EveryInc/compound-engineering-plugin",
+        "Crosstalk-Solutions/project-nomad"
       ],
       "description": ""
     },
@@ -1294,7 +1316,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 29,
+    "total_repos_studied": 30,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-05-31",
@@ -1621,8 +1643,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1637,8 +1659,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1653,8 +1675,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1669,8 +1691,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1685,8 +1707,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1701,8 +1723,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1717,8 +1739,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1733,8 +1755,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1749,8 +1771,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1765,8 +1787,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1781,8 +1803,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1797,8 +1819,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1829,8 +1851,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1845,8 +1867,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1861,8 +1899,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1877,8 +1915,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1909,8 +1947,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1925,8 +1963,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1941,8 +1979,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1957,8 +1995,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1973,8 +2011,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1989,8 +2027,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2005,8 +2043,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2021,8 +2059,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2037,8 +2075,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2053,8 +2091,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2069,8 +2107,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2085,8 +2123,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2101,8 +2139,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2117,8 +2155,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2133,8 +2171,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2149,8 +2187,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2165,8 +2203,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2181,8 +2219,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2197,8 +2235,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2213,8 +2251,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2229,8 +2267,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2245,8 +2283,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2261,8 +2299,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2277,8 +2315,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2293,8 +2331,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2309,8 +2347,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2325,8 +2363,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2341,8 +2379,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2357,8 +2395,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2373,8 +2411,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2389,8 +2427,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2405,8 +2443,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2421,8 +2459,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2437,8 +2475,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2453,8 +2491,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2469,8 +2507,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2485,8 +2539,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2501,8 +2555,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2517,8 +2571,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2533,8 +2587,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2549,8 +2619,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2565,8 +2635,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2581,8 +2651,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2597,8 +2667,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "rust",
-        "open-source"
+        "open-source",
+        "rust"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2613,8 +2683,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2629,8 +2699,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2645,8 +2715,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2660,8 +2730,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3031,6 +3101,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -3269,6 +3353,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -3607,6 +3705,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "ruvnet/RuView",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -3969,6 +4081,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -4305,6 +4431,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -4893,6 +5033,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -5173,6 +5327,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -5439,6 +5607,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -5579,6 +5761,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -5831,6 +6027,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -6055,6 +6265,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -6155,6 +6379,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "ruvnet/RuView",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6377,6 +6615,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -6463,6 +6715,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "ruvnet/RuView",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6657,6 +6923,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -6741,6 +7021,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -6813,6 +7107,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "ruvnet/RuView",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -6965,6 +7273,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -7133,6 +7455,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "OpenMOSS/MOSS-TTS",
       "type": "weak",
@@ -7273,6 +7609,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
       "type": "weak",
@@ -7343,6 +7693,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -7373,6 +7737,20 @@
     {
       "from_repo": "run-llama/liteparse",
       "to_repo": "OpenBMB/VoxCPM",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -7399,6 +7777,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "galilai-group/stable-worldmodel",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -7413,8 +7805,50 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "ruvnet/RuView",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "Crosstalk-Solutions/project-nomad",
       "type": "weak",
       "score": 2,
       "connections": [

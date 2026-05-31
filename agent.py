@@ -126,6 +126,7 @@ def journal(icon, title, body="", etype="evolve"):
                  "i": icon, "x": title, "body": body, "type": etype, "day": day()}
         with open(JF, "a", encoding="utf-8") as fh:
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        save()
     except Exception:
         pass
 
