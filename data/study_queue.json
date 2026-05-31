@@ -1,10 +1,10 @@
 {
   "repos": [
     {
-      "repo": "emmabostian/developer-portfolios",
-      "stars_today": 67,
+      "repo": "karpathy/autoresearch",
+      "stars_today": 0,
       "lang": "Python",
-      "target_depth": 1
+      "target_depth": 4
     },
     {
       "repo": "nicobailon/pi-subagents",

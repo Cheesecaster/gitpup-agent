@@ -733,6 +733,26 @@
       "stars": 23292,
       "lang": "Python",
       "description": ""
+    },
+    "nicobailon/pi-subagents": {
+      "full_name": "nicobailon/pi-subagents",
+      "study_level": 1,
+      "studied_at": [
+        "2026-06-01 03:08"
+      ],
+      "summary": "Pi extension for async subagent delegation with truncation, artifacts, and session sharing",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 1804,
+      "lang": "TypeScript",
+      "description": ""
     }
   },
   "topic_index": {
@@ -780,7 +800,8 @@
         "FareedKhan-dev/train-llm-from-scratch",
         "nesquena/hermes-webui",
         "supermemoryai/supermemory",
-        "emmabostian/developer-portfolios"
+        "emmabostian/developer-portfolios",
+        "nicobailon/pi-subagents"
       ],
       "description": ""
     },
@@ -822,7 +843,8 @@
         "twentyhq/twenty",
         "EveryInc/compound-engineering-plugin",
         "Crosstalk-Solutions/project-nomad",
-        "supermemoryai/supermemory"
+        "supermemoryai/supermemory",
+        "nicobailon/pi-subagents"
       ],
       "description": ""
     },
@@ -1431,7 +1453,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 35,
+    "total_repos_studied": 36,
     "total_patterns": 12,
     "total_insights": 11,
     "last_study_date": "2026-06-01",
@@ -1758,8 +1780,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1774,8 +1796,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -1998,8 +2020,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "go"
+        "go",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2014,8 +2036,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2030,8 +2052,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2046,8 +2068,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2062,8 +2084,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2078,8 +2116,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2110,8 +2148,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2926,8 +2964,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2942,8 +2980,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -2958,8 +2996,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3086,8 +3140,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3102,8 +3156,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3422,8 +3492,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3477,6 +3563,22 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "supermemoryai/supermemory",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "typescript",
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -3485,8 +3587,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3940,6 +4042,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -4220,6 +4336,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -4642,6 +4772,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "emmabostian/developer-portfolios",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -5088,6 +5232,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -5508,6 +5666,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -6236,6 +6408,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -6600,6 +6786,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -6950,6 +7150,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -7132,6 +7346,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -7468,6 +7696,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -7776,6 +8018,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -7918,6 +8174,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "supermemoryai/supermemory",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8224,6 +8494,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -8352,6 +8636,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "supermemoryai/supermemory",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8630,6 +8928,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -8756,6 +9068,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -8870,6 +9196,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "supermemoryai/supermemory",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -9106,6 +9446,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -9372,6 +9726,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "EveryInc/compound-engineering-plugin",
       "to_repo": "OpenMOSS/MOSS-TTS",
       "type": "weak",
@@ -9610,6 +9978,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
       "type": "weak",
@@ -9764,6 +10146,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -9890,6 +10286,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -9946,6 +10356,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "galilai-group/stable-worldmodel",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -10002,6 +10426,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -10046,6 +10484,20 @@
     {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "supermemoryai/supermemory",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10142,6 +10594,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
       "type": "weak",
@@ -10226,6 +10692,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
       "to_repo": "nesquena/hermes-webui",
       "type": "weak",
@@ -10256,6 +10736,20 @@
     {
       "from_repo": "FareedKhan-dev/train-llm-from-scratch",
       "to_repo": "emmabostian/developer-portfolios",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -10282,8 +10776,36 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "nesquena/hermes-webui",
+      "to_repo": "nicobailon/pi-subagents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "supermemoryai/supermemory",
       "to_repo": "emmabostian/developer-portfolios",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "emmabostian/developer-portfolios",
+      "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
       "score": 2,
       "connections": [
