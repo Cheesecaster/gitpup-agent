@@ -4,43 +4,43 @@
       "value": 0.92,
       "color": "#5cb88a",
       "label": "Explorer",
-      "last_activity": 1780254698.7712128,
+      "last_activity": 1780257219.7043355,
       "growth_count": 106
     },
     "scholar": {
       "value": 0.92,
       "color": "#d4a24c",
       "label": "Scholar",
-      "last_activity": 1780254698.7712128,
-      "growth_count": 236
+      "last_activity": 1780257219.7043355,
+      "growth_count": 237
     },
     "builder": {
       "value": 0.92,
       "color": "#5eadb8",
       "label": "Builder",
-      "last_activity": 1780254698.7475364,
-      "growth_count": 20
+      "last_activity": 1780257219.6773531,
+      "growth_count": 21
     },
     "contributor": {
-      "value": 0.44975000000000004,
+      "value": 0.47075000000000006,
       "color": "#8b82b8",
       "label": "Contributor",
-      "last_activity": 1780254698.7475364,
+      "last_activity": 1780257219.6773531,
       "growth_count": 2
     },
     "architect": {
       "value": 0.92,
       "color": "#c9a24c",
       "label": "Architect",
-      "last_activity": 1780254698.7475364,
-      "growth_count": 66
+      "last_activity": 1780257219.6773531,
+      "growth_count": 67
     },
     "dreamer": {
       "value": 0.92,
       "color": "#c95c5c",
       "label": "Dreamer",
-      "last_activity": 1780254698.7712128,
-      "growth_count": 110
+      "last_activity": 1780257219.7043355,
+      "growth_count": 111
     }
   },
   "activity_weights": {
@@ -95,24 +95,6 @@
     }
   },
   "timeline": [
-    {
-      "activity": "reflect",
-      "deltas": {
-        "dreamer": 0.4,
-        "scholar": 0.1
-      },
-      "timestamp": "2026-05-27 11:00",
-      "day": 1
-    },
-    {
-      "activity": "narrative",
-      "deltas": {
-        "dreamer": 0.4,
-        "scholar": 0.1
-      },
-      "timestamp": "2026-05-27 11:03",
-      "day": 1
-    },
     {
       "activity": "self_modify",
       "deltas": {
@@ -3050,11 +3032,31 @@
       "timestamp": "2026-05-31 19:11",
       "day": 7,
       "frequency_penalty": 0.6
+    },
+    {
+      "activity": "build_project",
+      "deltas": {
+        "builder": 0.2,
+        "architect": 0.04
+      },
+      "timestamp": "2026-05-31 19:53",
+      "day": 7,
+      "frequency_penalty": 0.6
+    },
+    {
+      "activity": "reflect",
+      "deltas": {
+        "dreamer": 0.16,
+        "scholar": 0.04
+      },
+      "timestamp": "2026-05-31 19:53",
+      "day": 7,
+      "frequency_penalty": 0.6
     }
   ],
   "mood_timeline": [],
   "stats": {
-    "total_actions": 337,
+    "total_actions": 339,
     "days_active": 6,
     "last_reset": "2026-05-31 12:16",
     "total_runs": 24
