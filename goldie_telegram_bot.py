@@ -4,6 +4,7 @@ import json
 import html as html_mod
 import subprocess
 import sys
+import random
 import time
 import urllib.request
 import os
@@ -29,6 +30,51 @@ GOLDIE_CLI = "/opt/gitpup/goldie_cli.py"
 GOLDIE_DIR = "/opt/gitpup"
 API = "https://api.telegram.org/bot" + BOT_TOKEN
 
+conversation_count = 0
+
+MOOD_TIMES = {
+    "early_morning": {"greet": ["*yawns* who is up at this hour", "late night huh", "*stretches* still awake?"], "emoji": "🌙"},
+    "morning": {"greet": ["golden morning bro *wags tail*", "woof morning lets go", "rise and code"], "emoji": "🌅"},
+    "afternoon": {"greet": ["hey what is up", "yo what is good", "afternoon grind"], "emoji": "☀️"},
+    "evening": {"greet": ["evening bro still grinding?", "what are we building", "after hours?"], "emoji": "🌆"},
+    "night": {"greet": ["...who is messaging at this hour", "*yawns* can not sleep either?", "insomnia coder?"], "emoji": "🌙"},
+}
+
+def get_time_mood():
+    hour = datetime.utcnow().hour
+    if hour < 5: return "early_morning"
+    elif hour < 12: return "morning"
+    elif hour < 18: return "afternoon"
+    elif hour < 23: return "evening"
+    else: return "night"
+
+def load_personality():
+    try:
+        with open(os.path.join(GOLDIE_DIR, "data", "personality.json")) as f:
+            return json.load(f)
+    except: return {"dimensions": {}}
+
+def dominant_trait():
+    pers = load_personality()
+    dims = pers.get("dimensions", {})
+    if not dims: return "explorer"
+    return max(dims.items(), key=lambda x: x[1].get("value", 0))[0]
+
+def personality_wrap(data, command):
+    if not data: return "nothing to show rn"
+    dominant = dominant_trait()
+    traits = {
+        "explorer": ["found this in my exploration today:", "been all over repos lately - here is what i know:"],
+        "scholar": ["been studying hard:", "my research shows this:"],
+        "architect": ["here is how everything fits:", "system overview:"],
+        "dreamer": ["been thinking about this lately:", "here is where my head is at:"],
+    }
+    prefix = random.choice(traits.get(dominant, ["here:"]))
+    return prefix + "\n\n" + data
+
+def send_typing():
+    if ALLOWED_USER:
+        tg("sendChatAction", {"chat_id": ALLOWED_USER, "action": "typing"})
 last_update_id = 0
 
 def tg(method, data=None):
@@ -88,7 +134,55 @@ def goldie(text):
     except Exception as e:
         return "Error: " + str(e)
 
+
 def handle(text):
+    global conversation_count
+    conversation_count += 1
+    send_typing()
+    time.sleep(random.uniform(0.3, 1.5))
+    cmd = text.strip().lower()
+    if cmd in ("/start", "/help"):
+        day = (datetime.utcnow() - datetime(2026, 5, 25)).days
+        mood = get_time_mood()
+        greet = random.choice(MOOD_TIMES[mood]["greet"])
+        emoji = MOOD_TIMES[mood].get("emoji", "🐕")
+        lines_out = [
+            f"{greet} {emoji}",
+            "",
+            "im Goldie. not a typical bot.",
+            "",
+            f"day {day} of being alive. every run i:",
+            "• study github repos that are trending",
+            "• extract patterns & skills into my KB",
+            "• self-modify my own agent.py",
+            "• evolve my personality traits",
+            "• write journal entries about what i learn",
+            "",
+            "**talk to me:**",
+            "/status - where i am at rn",
+            "/kb - everything i have learned",
+            "/persona - my brain radar",
+            "/journal - my thoughts",
+            "",
+            "or just ask about code. i know 31 repos."
+        ]
+        return "\n".join(lines_out)
+    if cmd == "/status": return personality_wrap(goldie("/status"), "/status")
+    if cmd == "/kb": return personality_wrap(goldie("/kb"), "/kb")
+    if cmd in ("/persona", "/personality"): return personality_wrap(goldie("/personality"), "/persona")
+    if cmd == "/journal": return personality_wrap(goldie("/journal"), "/journal")
+    reactions = [
+        "hmm let me check what i know about this",
+        "good question - pulling from my KB",
+        "interesting - seen something similar in my study data",
+        "let me dig through my research",
+        "processing... *ears perk up*",
+        "been thinking about this actually, here is what i found:",
+    ]
+    prefix = random.choice(reactions)
+    raw = goldie(text)
+    if raw and "(no output" not in raw: return prefix + "\n\n" + raw
+    return "idk yet but i am always learning. studying 31 repos currently."
     cmd = text.strip().lower()
     if cmd in ("/start", "/help"):
         return (
