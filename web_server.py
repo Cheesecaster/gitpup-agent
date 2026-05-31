@@ -36,7 +36,7 @@ def load_json(path, default=None):
         with open(path, encoding='utf-8') as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return default if default is not None else {}
+        return default
 
 def load_jsonl(path):
     entries = []

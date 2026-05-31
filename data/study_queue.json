@@ -1,30 +1,29 @@
 {
   "repos": [
     {
-      "repo": "OpenBMB/VoxCPM",
-      "stars_today": 1815,
-      "lang": "Python",
-      "target_depth": 1
-    },
-    {
       "repo": "ruvnet/RuView",
-      "stars_today": 656,
+      "stars_today": 655,
       "lang": "Rust",
       "target_depth": 1
     },
     {
       "repo": "Crosstalk-Solutions/project-nomad",
-      "stars_today": 473,
+      "stars_today": 469,
       "lang": "TypeScript",
+      "target_depth": 1
+    },
+    {
+      "repo": "FareedKhan-dev/train-llm-from-scratch",
+      "stars_today": 327,
+      "lang": "Jupyter Notebook",
       "target_depth": 1
     }
   ],
   "studied_today": 1,
-  "today": "2026-05-30",
+  "today": "2026-05-31",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "OpenBMB/VoxCPM",
     "ruvnet/RuView",
     "Crosstalk-Solutions/project-nomad",
     "FareedKhan-dev/train-llm-from-scratch",
