@@ -1,9 +1,9 @@
 {
   "repos": [
     {
-      "repo": "Crosstalk-Solutions/project-nomad",
-      "stars_today": 469,
-      "lang": "TypeScript",
+      "repo": "D4Vinci/Scrapling",
+      "stars_today": 639,
+      "lang": "Python",
       "target_depth": 1
     },
     {
@@ -13,9 +13,9 @@
       "target_depth": 1
     },
     {
-      "repo": "DataTalksClub/data-engineering-zoomcamp",
-      "stars_today": 274,
-      "lang": "Jupyter Notebook",
+      "repo": "nesquena/hermes-webui",
+      "stars_today": 320,
+      "lang": "Python",
       "target_depth": 1
     }
   ],
@@ -24,11 +24,12 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "Crosstalk-Solutions/project-nomad",
+    "D4Vinci/Scrapling",
     "FareedKhan-dev/train-llm-from-scratch",
-    "DataTalksClub/data-engineering-zoomcamp",
-    "cursor/plugins",
-    "chen08209/FlClash",
-    "dreammis/social-auto-upload"
+    "nesquena/hermes-webui",
+    "supermemoryai/supermemory",
+    "nicobailon/pi-subagents",
+    "emmabostian/developer-portfolios",
+    "github/docs"
   ]
 }
