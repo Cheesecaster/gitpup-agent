@@ -191,6 +191,23 @@ class H(http.server.SimpleHTTPRequestHandler):
                 })
             except Exception as e:
                 _json_resp(self, {'error': str(e)})
+        elif p == '/api/x_queue':
+            qf = os.path.join(DATA, 'x_queue.jsonl')
+            posts = []
+            if os.path.exists(qf):
+                with open(qf) as f:
+                    for ln in f:
+                        ln = ln.strip()
+                        if ln:
+                            try: posts.append(json.loads(ln))
+                            except: pass
+            _json_resp(self, {'posts': posts, 'count': len(posts)})
+        elif p == '/api/x_queue/clear':
+            qf = os.path.join(DATA, 'x_queue.jsonl')
+            if os.path.exists(qf):
+                open(qf, 'w').close()
+            _json_resp(self, {'cleared': True})
+
         elif p == '/api/relationships':
             kb = load_json(KB)
             rels = kb.get('relationships', [])
