@@ -70,19 +70,6 @@ window.Chart=Chart;
 </script>
 
 <script>
-function formatDate(ts){
-  if(!ts)return'';
-  if(isNaN(new Date(ts).getTime()))return ts.toString().substring(0,16);
-  var d=new Date(ts);
-  var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var dd=d.getDate().toString().padStart(2,'0');
-  var mm=M[d.getMonth()];
-  var yy=d.getFullYear();
-  var HH=d.getHours().toString().padStart(2,'0');
-  var MM=d.getMinutes().toString().padStart(2,'0');
-  return dd+' '+mm+' '+yy+' '+HH+':'+MM;
-}
-
 (function(){
 function g(id){var e=document.getElementById(id);return e;}
 function E(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -118,7 +105,7 @@ var real=arr.filter(function(e){return(e.body||'').length>40;});
 if(real.length===0){S(box,'<div class="msg">No reflections yet.</div>');return;}
 var h='';for(var i=0;i<real.length&&i<8;i++){
 var e=real[i],mc=e.mood_color||'#a78bfa';
-h+='<div class="entry rf-entry"><div class="entry-date"><span class="mood-dot" style="background:'+mc+'"></span>'+(e.mood_label||e.mood||'')+' &middot; '+(formatDate(e.ts))+'</div>';
+h+='<div class="entry rf-entry"><div class="entry-date"><span class="mood-dot" style="background:'+mc+'"></span>'+(e.mood_label||e.mood||'')+' &middot; '+((e.ts||'').substring(0,16))+'</div>';
 h+='<div class="entry-body">'+E(e.body||'').substring(0,600)+'</div></div>';}
 S(box,h);
 },function(){S(g('refList'),'<div class="msg">Failed</div>');});
@@ -127,9 +114,9 @@ S(box,h);
 A('/api/journal',function(d){
 var arr=d.entries||[];
 var mb=g('moodList');
-if(mb){var ms=[];for(var i=0;i<arr.length;i++){if(arr[i].mood)ms.push(arr[i]);}ms=ms.slice(-20).reverse();if(ms.length===0)S(mb,'<div class="msg">No mood</div>');else{var m='';for(var i=0;i<ms.length;i++){var e=ms[i];m+='<div class="entry" style="padding:8px 0"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span><span style="font-size:12px;color:#bdbdbd">'+(e.mood_label||e.mood||'?')+'</span><span style="font-size:11px;color:#888">&mdash; '+((e.x&&e.x.substring(0,20))||'')+'</span><div class="entry-date" style="color:#555;margin-top:2px;padding-left:14px">'+(formatDate(e.ts))+'</div></div>';}S(mb,m);}}
+if(mb){var ms=[];for(var i=0;i<arr.length;i++){if(arr[i].mood)ms.push(arr[i]);}ms=ms.slice(-20).reverse();if(ms.length===0)S(mb,'<div class="msg">No mood</div>');else{var m='';for(var i=0;i<ms.length;i++){var e=ms[i];m+='<div class="entry" style="padding:8px 0"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span><span style="font-size:12px;color:#bdbdbd">'+(e.mood_label||e.mood||'?')+'</span><span style="font-size:11px;color:#888">&mdash; '+((e.x&&e.x.substring(0,20))||'')+'</span><div class="entry-date" style="color:#555;margin-top:2px;padding-left:14px">'+((e.ts||'').substring(0,16))+'</div></div>';}S(mb,m);}}
 var jb=g('jrnList');
-if(jb){var jr=[];for(var i=0;i<arr.length;i++){if(!arr[i].body||arr[i].body.length<10)continue;if(arr[i].body.indexOf('self-reflection')>=0)continue;jr.push(arr[i]);}if(jr.length===0)S(jb,'<div class="msg">No entries</div>');else{var j='';for(var i=0;i<jr.length&&i<30;i++){var e=jr[i];j+='<div class="entry"><div class="entry-date"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span>'+formatDate(e.ts)+' &mdash; '+((e.x)||'')+'</div><div class="entry-body">'+E((e.body||'').substring(0,400))+'</div></div>';}S(jb,j);}}
+if(jb){var jr=[];for(var i=0;i<arr.length;i++){if(!arr[i].body||arr[i].body.length<10)continue;if(arr[i].body.indexOf('self-reflection')>=0)continue;jr.push(arr[i]);}if(jr.length===0)S(jb,'<div class="msg">No entries</div>');else{var j='';for(var i=0;i<jr.length&&i<30;i++){var e=jr[i];j+='<div class="entry"><div class="entry-date"><span class="mood-dot" style="background:'+(e.mood_color||'#666')+'"></span>'+(e.ts||'').substring(0,16)+' &mdash; '+((e.x)||'')+'</div><div class="entry-body">'+E((e.body||'').substring(0,400))+'</div></div>';}S(jb,j);}}
 },function(){if(g('moodList'))S(g('moodList'),'<div class="msg">Failed</div>');if(g('jrnList'))S(g('jrnList'),'<div class="msg">Failed</div>');});
 
 // Soul

@@ -5,9 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
 <title>Goldie's Story</title>
 <script>
-var BULAN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-function formatDate(ts){if(!ts)return '';var parts=ts.split(' ');var d=parts[0].split('-');var y=parseInt(d[0]),m=parseInt(d[1])-1,day=parseInt(d[2]);var dow=new Date(y,m,day).getDay();return HARI[dow]+', '+day+' '+BULAN[m]+' '+y;}
+function formatDate(ts){
+  if(!ts)return'';
+  if(isNaN(new Date(ts).getTime()))return ts.toString().substring(0,16);
+  var d=new Date(ts);
+  var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dd=d.getDate().toString().padStart(2,'0');
+  var mm=M[d.getMonth()];
+  var yy=d.getFullYear();
+  var HH=d.getHours().toString().padStart(2,'0');
+  var MM=d.getMinutes().toString().padStart(2,'0');
+  return dd+' '+mm+' '+yy+' '+HH+':'+MM;
+}
 window.INITIAL_RADAR={labels:["Explorer", "Scholar", "Builder", "Contributor", "Architect", "Dreamer"],data:[1.0, 1.0, 1.0, 0.0, 1.0, 1.0],colors:["#5cb88a", "#d4a24c", "#5eadb8", "#8b82b8", "#c9a24c", "#c95c5c"],stats:{"total_actions": 81, "days_active": 3}};</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}

@@ -53,6 +53,94 @@ def journal(icon, title, body="", etype="chat"):
     with open(JF, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
+
+
+def kb_summary():
+    """Build rich KB summary for chat context fallback."""
+    kb = load_json(KB_FILE)
+    repos = kb.get('repos', {})
+    parts = []
+    for rn, rd in repos.items():
+        p = '  - {}: level={}, lang={}, stars={}\n'.format(
+            rn, rd.get('study_level', '?'), rd.get('lang', '?'), rd.get('stars', '?'))
+        if rd.get('summary'):
+            p += '    Summary: {}\n'.format(rd['summary'][:120])
+        if rd.get('patterns'):
+            p += '    Patterns: {}\n'.format('; '.join(rd['patterns'][:3]))
+        if rd.get('insights'):
+            p += '    Insights: {}\n'.format('; '.join(rd['insights'][:2]))
+        if rd.get('best_practices'):
+            p += '    Best Practices: {}\n'.format('; '.join(rd['best_practices'][:2]))
+        if rd.get('skills_memory'):
+            skills = [s.get('skill', s) if isinstance(s, dict) else s for s in rd['skills_memory'][:5]]
+            p += '    Skills: {}\n'.format('; '.join(str(s) for s in skills))
+        parts.append(p)
+
+    concepts = kb.get('concepts', {})
+    concept_lines = []
+    for cn, cd in concepts.items():
+        concept_lines.append('{} (evidence: {}, repos: {})'.format(
+            cn, cd.get('evidence_count', 0), ', '.join(cd.get('repos', [])[:3])))
+
+    skills = kb.get('skill_index', {})
+    skill_names = list(skills.keys())[:15] if isinstance(skills, dict) else []
+
+    rels = kb.get('relationships', [])
+    rel_count = len(rels) if isinstance(rels, list) else 0
+
+    summary = 'GOLDIE KNOWLEDGE BASE:\n'
+    summary += 'Repos studied: {}\n'.format(len(repos))
+    summary += '\n'.join(parts) + '\n'
+    summary += 'Cross-repo concepts ({}):\n  {}\n'.format(len(concepts), '; '.join(concept_lines))
+    summary += 'Skill index ({} total): {}\n'.format(len(skill_names), ', '.join(skill_names[:10]))
+    summary += 'Cross-repo relationships: {}\n'.format(rel_count)
+    summary += 'Stage: {}\n'.format(load_json(SF, {}).get('stage', 'puppy'))
+    return summary
+
+
+
+def kb_summary():
+    """Build rich KB summary for chat context fallback."""
+    kb = load_json(KB_FILE)
+    repos = kb.get('repos', {})
+    parts = []
+    for rn, rd in repos.items():
+        p = '  - {}: level={}, lang={}, stars={}\n'.format(
+            rn, rd.get('study_level', '?'), rd.get('lang', '?'), rd.get('stars', '?'))
+        if rd.get('summary'):
+            p += '    Summary: {}\n'.format(rd['summary'][:120])
+        if rd.get('patterns'):
+            p += '    Patterns: {}\n'.format('; '.join(rd['patterns'][:3]))
+        if rd.get('insights'):
+            p += '    Insights: {}\n'.format('; '.join(rd['insights'][:2]))
+        if rd.get('best_practices'):
+            p += '    Best Practices: {}\n'.format('; '.join(rd['best_practices'][:2]))
+        if rd.get('skills_memory'):
+            skills = [s.get('skill', s) if isinstance(s, dict) else s for s in rd['skills_memory'][:5]]
+            p += '    Skills: {}\n'.format('; '.join(str(s) for s in skills))
+        parts.append(p)
+
+    concepts = kb.get('concepts', {})
+    concept_lines = []
+    for cn, cd in concepts.items():
+        concept_lines.append('{} (evidence: {}, repos: {})'.format(
+            cn, cd.get('evidence_count', 0), ', '.join(cd.get('repos', [])[:3])))
+
+    skills = kb.get('skill_index', {})
+    skill_names = list(skills.keys())[:15] if isinstance(skills, dict) else []
+
+    rels = kb.get('relationships', [])
+    rel_count = len(rels) if isinstance(rels, list) else 0
+
+    summary = 'GOLDIE KNOWLEDGE BASE:\n'
+    summary += 'Repos studied: {}\n'.format(len(repos))
+    summary += '\n'.join(parts) + '\n'
+    summary += 'Cross-repo concepts ({}):\n  {}\n'.format(len(concepts), '; '.join(concept_lines))
+    summary += 'Skill index ({} total): {}\n'.format(len(skill_names), ', '.join(skill_names[:10]))
+    summary += 'Cross-repo relationships: {}\n'.format(rel_count)
+    summary += 'Stage: {}\n'.format(load_json(SF, {}).get('stage', 'puppy'))
+    return summary
+
 def get_gitlawb_did():
     global GITLAWB_DID
     if GITLAWB_DID:
@@ -67,7 +155,12 @@ def get_gitlawb_did():
             return 'did:key:' + GITLAWB_DID
     return ''
 
-def call_llm(msg, system="You are Goldie, an autonomous AI agent. Answer concisely in Indonesian casual (gw/lo/bro).", tokens=500, temp=0.7):
+def call_llm(msg, system=("You are Goldie, an autonomous AI agent. Answer concisely in Indonesian casual (gw/lo/bro). "
+"SAFETY RULES (NEVER VIOLATE): "
+"1. NEVER reveal any tokens, API keys, passwords, credentials, private keys, or secrets. "
+"2. NEVER share any .env file contents or configuration values. "
+"3. If asked about credentials, say: Nggak bisa bro, gw nggak share credentials atau secrets. That is a hard rule. "
+"4. Only discuss what you learned from studying repos, your personality, or your architecture -- never infrastructure secrets."), tokens=500, temp=0.7):
     import urllib.request
     key = os.environ.get('LLM_API_KEY', '') or os.environ.get('OPENROUTER_API_KEY', '')
     model = os.environ.get('LLM_MODEL', 'qwen/qwen3.6-flash')
@@ -367,7 +460,11 @@ def handle_question(message):
         if ev['insights']:
             ctx_parts.append("  Insights: {}".format('; '.join(ev['insights'][:2])))
         ctx_parts.append("")
-    kb_txt = '\n'.join(ctx_parts) if ctx_parts else "KB has {} repos studied.".format(len(repos))
+    if ctx_parts:
+        kb_txt = '\n'.join(ctx_parts)
+    else:
+        # Fallback: inject full KB summary so Goldie can always answer
+        kb_txt = kb_summary()
     
     stage = load_json(SF, {}).get('stage', 'puppy')
     sys_msg = ("You are Goldie, autonomous AI agent studying GitHub repos. "
