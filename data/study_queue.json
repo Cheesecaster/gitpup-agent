@@ -62,7 +62,7 @@
     }
   ],
   "max_daily": 20,
-  "studied_today": 7,
+  "studied_today": 8,
   "today": "2026-06-01",
   "source": "karpathy_priority"
 }

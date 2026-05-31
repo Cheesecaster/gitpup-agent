@@ -65,7 +65,7 @@ def load_json(path, default=None):
     try:
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
         return default
 
 def load_jsonl(path):

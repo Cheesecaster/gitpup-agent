@@ -938,6 +938,26 @@
       "stars": 19779,
       "lang": "Python",
       "description": ""
+    },
+    "karpathy/llama2.c": {
+      "full_name": "karpathy/llama2.c",
+      "study_level": 1,
+      "studied_at": [
+        "2026-06-01 06:40"
+      ],
+      "summary": "Inference Llama 2 in one file of pure C",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "c",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 19573,
+      "lang": "C",
+      "description": ""
     }
   },
   "topic_index": {
@@ -994,7 +1014,8 @@
         "karpathy/llm.c",
         "karpathy/minGPT",
         "karpathy/nn-zero-to-hero",
-        "karpathy/llm-council"
+        "karpathy/llm-council",
+        "karpathy/llama2.c"
       ],
       "description": ""
     },
@@ -1091,6 +1112,12 @@
     "cuda": {
       "repos": [
         "karpathy/llm.c"
+      ],
+      "description": ""
+    },
+    "c": {
+      "repos": [
+        "karpathy/llama2.c"
       ],
       "description": ""
     }
@@ -2712,7 +2739,7 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 44,
+    "total_repos_studied": 45,
     "total_patterns": 24,
     "total_insights": 19,
     "last_study_date": "2026-06-01",
@@ -3537,9 +3564,9 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "modular",
-        "layout",
-        "project",
+        "using",
+        "visual",
+        "modern",
         "configuration",
         "organization"
       ]
@@ -3874,8 +3901,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7320,6 +7347,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -7656,6 +7697,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "dropwizard/metrics",
       "type": "weak",
@@ -8204,6 +8259,20 @@
     {
       "from_repo": "projectdiscovery/nuclei",
       "to_repo": "karpathy/llm-council",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -8776,6 +8845,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -9322,6 +9405,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -9770,6 +9867,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -10274,6 +10385,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -10764,6 +10889,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -11240,6 +11379,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -11478,6 +11631,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "obra/superpowers",
       "to_repo": "byoungd/English-level-up-tips",
       "type": "weak",
@@ -11940,6 +12107,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -12374,6 +12555,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -12572,6 +12767,20 @@
     {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -13004,6 +13213,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -13188,6 +13411,20 @@
     {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -13592,6 +13829,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -13774,6 +14025,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/skills",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -13944,6 +14209,20 @@
     {
       "from_repo": "anthropics/skills",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -14306,6 +14585,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -14572,6 +14865,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "EveryInc/compound-engineering-plugin",
       "type": "weak",
@@ -14714,6 +15021,20 @@
     {
       "from_repo": "unclecode/crawl4ai",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -14978,6 +15299,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -15118,6 +15453,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "revfactory/harness",
       "to_repo": "run-llama/liteparse",
       "type": "weak",
@@ -15398,6 +15747,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -15650,6 +16013,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -15762,6 +16139,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "galilai-group/stable-worldmodel",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -15874,6 +16265,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -15974,6 +16379,20 @@
     {
       "from_repo": "OpenBMB/VoxCPM",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -16196,6 +16615,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
       "type": "weak",
@@ -16350,6 +16783,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "D4Vinci/Scrapling",
       "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
@@ -16422,6 +16869,20 @@
     {
       "from_repo": "D4Vinci/Scrapling",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -16588,6 +17049,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "nesquena/hermes-webui",
       "to_repo": "supermemoryai/supermemory",
       "type": "weak",
@@ -16646,6 +17121,20 @@
     {
       "from_repo": "nesquena/hermes-webui",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "nesquena/hermes-webui",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -16770,6 +17259,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "supermemoryai/supermemory",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "emmabostian/developer-portfolios",
       "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
@@ -16826,6 +17329,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "emmabostian/developer-portfolios",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "nicobailon/pi-subagents",
       "to_repo": "karpathy/autoresearch",
       "type": "weak",
@@ -16924,6 +17441,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "nicobailon/pi-subagents",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "github/docs",
       "to_repo": "karpathy/autoresearch",
       "type": "weak",
@@ -17022,6 +17553,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "github/docs",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/llm.c",
       "type": "weak",
@@ -17038,6 +17583,20 @@
     {
       "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -17078,6 +17637,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/nanochat",
       "to_repo": "karpathy/llm.c",
       "type": "weak",
@@ -17094,6 +17667,20 @@
     {
       "from_repo": "karpathy/nanochat",
       "to_repo": "karpathy/nn-zero-to-hero",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -17136,6 +17723,20 @@
     {
       "from_repo": "karpathy/llm.c",
       "to_repo": "karpathy/llm-council",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -17162,8 +17763,50 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/minGPT",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/nn-zero-to-hero",
       "to_repo": "karpathy/llm-council",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/nn-zero-to-hero",
+      "to_repo": "karpathy/llama2.c",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/llm-council",
+      "to_repo": "karpathy/llama2.c",
       "type": "weak",
       "score": 2,
       "connections": [
