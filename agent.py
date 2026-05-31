@@ -2969,7 +2969,7 @@ def main():
 
     st = status()
     gap = time.time() - (st.get("last_run") or 0)
-    if not args.force and gap < 3 * 3600:
+    if not args.force and gap < 1.5 * 3600:
         m = int((3 * 3600 - gap) / 60)
         log("Cooldown: {}m remaining".format(m))
         return
