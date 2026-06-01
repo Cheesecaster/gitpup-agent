@@ -52,8 +52,8 @@
     }
   ],
   "max_daily": 20,
-  "studied_today": 19,
+  "studied_today": 20,
   "today": "2026-06-01",
   "source": "karpathy_priority",
-  "active_repo": "karpathy/nanochat"
+  "active_repo": "karpathy/llm.c"
 }

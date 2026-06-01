@@ -415,6 +415,7 @@ def do_POST(self):
 # Keep public static serving, but route API calls explicitly. Chat is public; no GitHub token required.
 _CHAT_RATE = {}
 _CHAT_CONTEXT = {}
+_IMAGE_RATE = {}
 
 def _client_ip(handler):
     return handler.headers.get('X-Forwarded-For', '').split(',')[0].strip() or handler.client_address[0]
@@ -451,6 +452,175 @@ def _rate_ok(handler, user_key='anonymous', limit=5, window=60):
             _CHAT_RATE[key] = hits
         return True
 
+
+def _image_rate_ok(handler, user_key='anonymous', limit=1, window=60):
+    """Image generation/edit limiter: max 1 image/min per IP AND per user/session."""
+    import time, threading
+    lock = globals().setdefault('_IMAGE_RATE_LOCK', threading.Lock())
+    ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    keys = ['ip:' + ip, 'user:' + safe_user]
+    now = time.time()
+    with lock:
+        for seen in list(_IMAGE_RATE):
+            active = [t for t in _IMAGE_RATE.get(seen, []) if now - t < window]
+            if active: _IMAGE_RATE[seen] = active
+            else: del _IMAGE_RATE[seen]
+        for key in keys:
+            hits = [t for t in _IMAGE_RATE.get(key, []) if now - t < window]
+            if len(hits) >= limit:
+                _IMAGE_RATE[key] = hits
+                return False
+        for key in keys:
+            hits = [t for t in _IMAGE_RATE.get(key, []) if now - t < window]
+            hits.append(now)
+            _IMAGE_RATE[key] = hits
+        return True
+
+def _load_env_file_once():
+    envp = '/opt/gitpup/.env'
+    try:
+        with open(envp, encoding='utf-8') as f:
+            for line in f:
+                line=line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    k,v=line.split('=',1)
+                    os.environ.setdefault(k.strip(), v.strip())
+    except Exception:
+        pass
+
+def _extract_openrouter_image(resp):
+    import base64, urllib.request
+    msg = (resp.get('choices') or [{}])[0].get('message') or {}
+    # OpenRouter image models commonly return message.images[].image_url.url
+    for img in msg.get('images') or []:
+        url = (img.get('image_url') or {}).get('url') or img.get('url') or ''
+        if url.startswith('data:image'):
+            return base64.b64decode(url.split(',',1)[1])
+        if url.startswith('http'):
+            req = urllib.request.Request(url, headers={'User-Agent':'GoldieImage/1.0'})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read()
+    # Some routes return base64/json in content
+    content = msg.get('content') or ''
+    if isinstance(content, list):
+        for part in content:
+            if isinstance(part, dict):
+                url = ((part.get('image_url') or {}).get('url') or part.get('url') or '')
+                if url.startswith('data:image'):
+                    return base64.b64decode(url.split(',',1)[1])
+                if url.startswith('http'):
+                    req = urllib.request.Request(url, headers={'User-Agent':'GoldieImage/1.0'})
+                    with urllib.request.urlopen(req, timeout=60) as r:
+                        return r.read()
+    if isinstance(content, str) and 'data:image' in content:
+        import re
+        m = re.search(r'data:image/[^;]+;base64,([A-Za-z0-9+/=]+)', content)
+        if m:
+            return base64.b64decode(m.group(1))
+    return None
+
+def _compress_image_max(raw, out_path, max_bytes=800*1024):
+    """Write image <= max_bytes. Uses Pillow when available; otherwise writes raw if already small."""
+    import os, io
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    if len(raw) <= max_bytes:
+        with open(out_path, 'wb') as f: f.write(raw)
+        return out_path, len(raw)
+    try:
+        from PIL import Image
+        im = Image.open(io.BytesIO(raw)).convert('RGB')
+        # progressively resize + lower JPEG quality until <=800KB
+        scale = 1.0
+        for quality in [88,82,76,70,64,58,52,46,40,35,30,25,20]:
+            w,h = im.size
+            im2 = im.resize((max(256,int(w*scale)), max(256,int(h*scale)))) if scale < 1.0 else im
+            buf = io.BytesIO()
+            im2.save(buf, format='JPEG', quality=quality, optimize=True, progressive=True)
+            if buf.tell() <= max_bytes:
+                out_path = out_path.rsplit('.',1)[0] + '.jpg'
+                with open(out_path,'wb') as f: f.write(buf.getvalue())
+                return out_path, buf.tell()
+            scale *= 0.86
+        out_path = out_path.rsplit('.',1)[0] + '.jpg'
+        buf = io.BytesIO(); im.resize((512,512)).save(buf, format='JPEG', quality=20, optimize=True)
+        with open(out_path,'wb') as f: f.write(buf.getvalue()[:max_bytes])
+        return out_path, min(buf.tell(), max_bytes)
+    except Exception as e:
+        raise RuntimeError('image output exceeded 800KB and Pillow compression unavailable: ' + str(e)[:120])
+
+def _handle_image(self, data):
+    import time, json, urllib.request, base64, os
+    user_key = data.get('session') or data.get('user') or 'anonymous'
+    if not _image_rate_ok(self, user_key=user_key, limit=1, window=60):
+        return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image per minute per user/IP.','limit':'1/minute'}, 429)
+    prompt = (data.get('prompt') or data.get('message') or '').strip()
+    if not prompt:
+        return _json_resp(self, {'status':'error','error':'missing_prompt','reply':'Please enter an image prompt.'}, 400)
+    if len(prompt) > 1500:
+        prompt = prompt[:1500]
+    _load_env_file_once()
+    key = os.environ.get('OPENROUTER_API_KEY','')
+    if not key:
+        return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
+    primary_model = os.environ.get('IMAGE_MODEL','black-forest-labs/flux.2-klein-4b')
+    fallback_model = os.environ.get('IMAGE_FALLBACK_MODEL','openai/gpt-5-image-mini')
+    models_to_try = []
+    for m in [primary_model, fallback_model]:
+        if m and m not in models_to_try:
+            models_to_try.append(m)
+    content = [{'type':'text','text':prompt}]
+    image_data = data.get('image') or data.get('image_base64') or ''
+    if image_data:
+        if image_data.startswith('data:image'):
+            image_url = image_data
+        else:
+            image_url = 'data:image/png;base64,' + image_data
+        content.append({'type':'image_url','image_url':{'url': image_url}})
+    last_error = ''
+    raw = None
+    resp = None
+    used_model = None
+    for model in models_to_try:
+        payload = {
+            'model': model,
+            'messages': [{'role':'user','content': content}],
+            'modalities': ['image','text'],
+            'size': '1024x1024'
+        }
+        req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
+        req.add_header('Content-Type','application/json')
+        req.add_header('Authorization','Bearer ' + key)
+        req.add_header('HTTP-Referer','https://gitpup.fun')
+        req.add_header('X-Title','Goldie Image Chat')
+        req.add_header('User-Agent','GoldieImage/1.0')
+        try:
+            with urllib.request.urlopen(req, timeout=180) as r:
+                resp = json.loads(r.read())
+            raw = _extract_openrouter_image(resp)
+            if raw:
+                used_model = model
+                break
+            text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content','')
+            last_error = text[:500] or 'Image model did not return an image.'
+        except Exception as e:
+            last_error = str(e)[:300]
+            # Try fallback when primary model is not routed/available.
+            continue
+    if not raw:
+        return _json_resp(self, {'status':'error','error':last_error or 'no_image_returned','reply':'Image model did not return an image.'}, 502)
+    try:
+        fname = 'goldie_%d.png' % int(time.time()*1000)
+        out = '/opt/gitpup/web_dist/generated/' + fname
+        out, size = _compress_image_max(raw, out, max_bytes=800*1024)
+        url = '/generated/' + os.path.basename(out)
+        _append_chat_context(self, user_key, 'user', '[image prompt] ' + prompt)
+        _append_chat_context(self, user_key, 'assistant', '[generated image] ' + url)
+        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size,'model':used_model,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/minute','max_output_size':'800KB'})
+    except Exception as e:
+        return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}, 500)
+
+
 def _public_do_GET(self):
     p = urllib.parse.urlparse(self.path).path
     normalized_p = p.rstrip('/')
@@ -466,14 +636,41 @@ def _public_do_GET(self):
     return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 
+CHAT_HISTORY_FILE = os.path.join(DATA, 'chat_history.json')
+
 def _history_key(handler, user_key):
     ip = _client_ip(handler)
     safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
     return ip + '|' + safe_user
 
+def _load_chat_history_store():
+    try:
+        if os.path.exists(CHAT_HISTORY_FILE):
+            with open(CHAT_HISTORY_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return data if isinstance(data, dict) else {}
+    except Exception:
+        pass
+    return {}
+
+def _save_chat_history_store(store):
+    try:
+        os.makedirs(os.path.dirname(CHAT_HISTORY_FILE), exist_ok=True)
+        tmp = CHAT_HISTORY_FILE + '.tmp'
+        items = sorted(store.items(), key=lambda kv: (kv[1][-1].get('ts', 0) if kv[1] else 0), reverse=True)[:300]
+        clean = {k: (hist[-16:] if isinstance(hist, list) else []) for k, hist in items}
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(clean, f, ensure_ascii=False)
+        os.replace(tmp, CHAT_HISTORY_FILE)
+    except Exception:
+        pass
+
 def _get_chat_context(handler, user_key, max_turns=8):
     key = _history_key(handler, user_key)
-    hist = _CHAT_CONTEXT.get(key, [])[-max_turns:]
+    store = _load_chat_history_store()
+    file_hist = store.get(key, []) if isinstance(store.get(key, []), list) else []
+    mem_hist = _CHAT_CONTEXT.get(key, []) if isinstance(_CHAT_CONTEXT.get(key, []), list) else []
+    hist = (file_hist + [t for t in mem_hist if t not in file_hist])[-max_turns:]
     lines = []
     for turn in hist:
         role = turn.get('role', 'user')
@@ -485,14 +682,20 @@ def _get_chat_context(handler, user_key, max_turns=8):
 def _append_chat_context(handler, user_key, role, text, max_items=16):
     import time
     key = _history_key(handler, user_key)
+    turn = {'role': role, 'text': text or '', 'ts': time.time()}
     hist = _CHAT_CONTEXT.get(key, [])
-    hist.append({'role': role, 'text': text or '', 'ts': time.time()})
+    hist.append(turn)
     _CHAT_CONTEXT[key] = hist[-max_items:]
+    store = _load_chat_history_store()
+    sh = store.get(key, []) if isinstance(store.get(key, []), list) else []
+    sh.append(turn)
+    store[key] = sh[-max_items:]
+    _save_chat_history_store(store)
 
 
 def _public_do_POST(self):
     p = urllib.parse.urlparse(self.path).path
-    if p != '/api/chat':
+    if p not in ('/api/chat', '/api/image'):
         return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
     try:
         content_length = int(self.headers.get('Content-Length', 0))
@@ -500,6 +703,8 @@ def _public_do_POST(self):
         data = json.loads(body.decode('utf-8') if isinstance(body, bytes) else body)
         if not isinstance(data, dict):
             raise ValueError('Invalid JSON payload')
+        if p == '/api/image':
+            return _handle_image(self, data)
         user_key = data.get('session') or data.get('user') or data.get('token') or 'anonymous'
         if not _rate_ok(self, user_key=user_key, limit=5, window=60):
             return _json_resp(self, {'status': 'error', 'reply': 'Rate limit exceeded. Please wait a moment — maximum 5 chats per minute per user/IP.', 'error': 'rate_limited', 'limit': '5/minute'}, 429)
@@ -519,7 +724,8 @@ def _public_do_POST(self):
             reply = 'Untuk public chat, gw cuma ngobrol dan jelasin knowledge dulu bro. Build/trigger agent sengaja nggak dibuka publik biar aman.'
             return _json_resp(self, {'reply': reply, 'cited': [], 'public': True})
         chat_context = _get_chat_context(self, user_key)
-        result = cp.handle_question(msg, chat_context=chat_context)
+        first_turn = not bool(chat_context.strip())
+        result = cp.handle_question(msg, chat_context=chat_context, force_english_first=first_turn)
         result['public'] = True
         result['chat_model'] = os.environ.get('CHAT_LLM_MODEL', 'gpt-5.4-mini')
         reply_text = result.get('reply') or result.get('error') or ''

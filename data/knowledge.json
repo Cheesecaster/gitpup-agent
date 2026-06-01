@@ -982,14 +982,28 @@
     },
     "karpathy/llm.c": {
       "full_name": "karpathy/llm.c",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-06-01 06:01"
+        "2026-06-01 06:01",
+        "2026-06-01 11:00"
       ],
-      "summary": "LLM training in simple, raw C/CUDA",
-      "patterns": [],
+      "summary": "llm.c is a C/CUDA implementation of LLM training focused on reproducing GPT-2 and GPT-3-style models without depending on PyTorch or Python at runtime. It provides high-performance CUDA training code, a simpler CPU fp32 reference implementation, and a parallel PyTorch reference script for comparison",
+      "patterns": [
+        "Core implementation is intentionally limited to C and CUDA; ports to other languages are encouraged as separate repositories.",
+        "Primary development focus is pretraining GPT-style transformer models, especially GPT-2 124M and related GPT-2/GPT-3 model sizes.",
+        "The main high-performance path lives in CUDA code, especially train_gpt2.cu, while a simpler legacy fp32 CUDA path is preserved for learning and single-GPU use.",
+        "A clean CPU fp32 implementation in train_gpt2.c serves as a compact reference implementation of roughly 1,000 lines.",
+        "A parallel PyTorch implementation, train_gpt2.py, is maintained for reference, validation, and generating required artifacts such as model checkpoints and datasets.",
+        "Starter scripts download pretrained/debug artifacts, tokenizer files, and tokenized tinyshakespeare data to make setup easier."
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "The project prioritizes educational clarity and low-level control while still targeting competitive performance against PyTorch Nightly.",
+        "There is a deliberate separation between bleeding-edge optimized CUDA code and simpler legacy fp32 code for readability and learning.",
+        "Reproducibility is central: the README points users toward reproducing GPT-2 124M and provides scripts and discussions for exact workflows.",
+        "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets.",
+        "Developer collaboration is organized through GitHub Discussions and Discord rather than expanding the repo to include many language ports."
+      ],
       "code_examples": [],
       "arch_topics": [
         "cuda",
@@ -1359,202 +1373,6 @@
     }
   },
   "skill_index": {
-    "the repository is now deprecated in favor of nanochat, which": {
-      "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "a single 8xa100 40gb node can reproduce gpt-2 124m on openwe": {
-      "name": "A single 8xA100 40GB node can reproduce GPT-2 124M on OpenWebText in about 4 day",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "the shakespeare quick start demonstrates the full workflow: ": {
-      "name": "The Shakespeare quick start demonstrates the full workflow: prepare data, train ",
-      "category": "frontend",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control"
-      ]
-    },
-    "the codebase is intentionally small, making it easy to modif": {
-      "name": "The codebase is intentionally small, making it easy to modify for new datasets, ",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "flat root-level python scripts for core workflows such as tr": {
-      "name": "Flat root-level Python scripts for core workflows such as training, sampling, mo",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "testing_pattern",
-        "database_pattern"
-      ]
-    },
-    "config-driven experiments grouped in config/, separating reu": {
-      "name": "Config-driven experiments grouped in config/, separating reusable hyperparameter",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "version_control"
-      ]
-    },
-    "dataset-specific subdirectories under data/, reflecting a wo": {
-      "name": "Dataset-specific subdirectories under data/, reflecting a workflow where each da",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": []
-    },
-    "assets are isolated in assets/, keeping images and visual do": {
-      "name": "Assets are isolated in assets/, keeping images and visual documentation separate",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "minimal package hierarchy, favoring readability and hackabil": {
-      "name": "Minimal package hierarchy, favoring readability and hackability over deeply modu",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": []
-    },
-    "the layout is optimized for research iteration: easy to insp": {
-      "name": "The layout is optimized for research iteration: easy to inspect, modify, and run",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "configuration and dataset organization suggest reproducible ": {
-      "name": "Configuration and dataset organization suggest reproducible experiments across d",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "version_control"
-      ]
-    },
     "the repository prioritizes educational clarity and small-sca": {
       "name": "The repository prioritizes educational clarity and small-scale experimentation r",
       "category": "general",
@@ -1571,7 +1389,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "configuration is expressed as simple python files with modul": {
@@ -1593,6 +1412,7 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1612,7 +1432,8 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "model selection is controlled through an `init_from` string ": {
@@ -1632,7 +1453,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "evaluation configs share a common structure: fixed `batch_si": {
@@ -1659,7 +1482,8 @@
       "related_concepts": [
         "authentication",
         "performance_optimization",
-        "config_management"
+        "config_management",
+        "data_transformation"
       ]
     },
     "run names may be static for major experiments or dynamically": {
@@ -1695,6 +1519,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1715,6 +1540,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1736,7 +1562,9 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "small-dataset configs use frequent evaluation and logging in": {
@@ -1750,7 +1578,8 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "event_driven"
+        "event_driven",
+        "data_transformation"
       ]
     },
     "large-scale training configs align `max_iters` and `lr_decay": {
@@ -1763,7 +1592,8 @@
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
         "authentication",
-        "performance_optimization"
+        "performance_optimization",
+        "data_transformation"
       ]
     },
     "dataset preparation scripts use standard scientific/data too": {
@@ -1777,7 +1607,8 @@
       "related_concepts": [
         "authentication",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "dataset preprocessing exposes worker-count parameters such a": {
@@ -1790,7 +1621,8 @@
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "comments are used heavily to document model sizes, parameter": {
@@ -1839,7 +1671,9 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "document effective batch-size calculations directly beside t": {
@@ -1881,7 +1715,8 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "event_driven"
+        "event_driven",
+        "data_transformation"
       ]
     },
     "use frequent evaluation on small datasets where overfitting ": {
@@ -1897,6 +1732,7 @@
         "testing_pattern",
         "error_handling",
         "event_driven",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1911,7 +1747,8 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "event_driven"
+        "event_driven",
+        "data_transformation"
       ]
     },
     "name experiment outputs and wandb projects according to data": {
@@ -1935,7 +1772,8 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
-        "schema_validation"
+        "schema_validation",
+        "state_management"
       ]
     },
     "scale gradient accumulation according to hardware and target": {
@@ -1964,7 +1802,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "evaluation of gpt-2 variants is standardized; only the pretr": {
@@ -1981,6 +1820,7 @@
         "file_operations",
         "config_management",
         "plugin_system",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2001,7 +1841,9 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "the configs are designed to be overridden from the command l": {
@@ -2023,7 +1865,8 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "token throughput is treated as a first-class design concern,": {
@@ -2043,7 +1886,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "for large-scale gpt-2 training, the target schedule is expre": {
@@ -2063,6 +1908,7 @@
         "plugin_system",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2082,7 +1928,8 @@
         "config_management",
         "plugin_system",
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "data_transformation"
       ]
     },
     "small character-level shakespeare training is intended as a ": {
@@ -2113,7 +1960,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "dataset preparation is optimized for practical throughput us": {
@@ -2133,7 +1981,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "single-node gpu-oriented design, intended especially for hig": {
@@ -2176,7 +2026,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "other model and training hyperparameters are automatically d": {
@@ -2200,7 +2052,9 @@
         "error_handling",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "the repository maintains a standardized gpt-2 speedrun workf": {
@@ -2219,7 +2073,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "evaluation centers on gpt-2-grade capability using dclm core": {
@@ -2245,7 +2100,8 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "the project prioritizes simplicity and hackability while sti": {
@@ -2264,7 +2120,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "a central design idea is compute-optimal scaling: users adju": {
@@ -2290,7 +2147,9 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "the main optimization target is pretraining speed, since pre": {
@@ -2309,7 +2168,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "the leaderboard frames progress around practical wall-clock ": {
@@ -2328,7 +2188,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "the cost and time claims emphasize how modern hardware and o": {
@@ -2352,7 +2213,9 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "clear separation between reusable source code (`nanochat`) a": {
@@ -2456,7 +2319,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "keeping generated run artifacts separate from source and tes": {
@@ -2471,7 +2335,8 @@
         "performance_optimization",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "state_management"
       ]
     },
     "module-level docstrings explain purpose, design principles, ": {
@@ -2511,7 +2376,9 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "environment-variable based configuration overrides, e.g. `ra": {
@@ -2590,7 +2457,8 @@
       "learned_at": "2026-06-01 10:30",
       "related_concepts": [
         "authentication",
-        "performance_optimization"
+        "performance_optimization",
+        "data_transformation"
       ]
     },
     "dataset preparation scripts live under `dev/` and document r": {
@@ -2604,7 +2472,8 @@
       "related_concepts": [
         "authentication",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "data pipeline emphasizes streaming-friendly parquet shards, ": {
@@ -2626,7 +2495,8 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "training data loader design documents algorithmic tradeoffs,": {
@@ -2648,7 +2518,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "evaluation code separates prompt-rendering utilities from me": {
@@ -2673,7 +2545,8 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 10:30",
       "related_concepts": [
-        "data_visualization"
+        "data_visualization",
+        "data_transformation"
       ]
     },
     "synthetic data generation script is structured around divers": {
@@ -2695,7 +2568,8 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "prefer explicit mappings for user-facing string options, suc": {
@@ -2725,7 +2599,8 @@
         "data_fetching",
         "event_driven",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "document dataset provenance, preprocessing decisions, and ou": {
@@ -2742,7 +2617,8 @@
         "plugin_system",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "design large-scale datasets for streaming and caching by usi": {
@@ -2756,7 +2632,8 @@
       "related_concepts": [
         "data_visualization",
         "modular_design",
-        "schema_validation"
+        "schema_validation",
+        "state_management"
       ]
     },
     "explain data-loader tradeoffs directly in code comments, esp": {
@@ -2806,7 +2683,8 @@
         "file_operations",
         "config_management",
         "error_handling",
-        "event_driven"
+        "event_driven",
+        "data_transformation"
       ]
     },
     "keep evaluation prompt construction modular and template-dri": {
@@ -2833,7 +2711,8 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "event_driven"
+        "event_driven",
+        "data_transformation"
       ]
     },
     "the codebase is optimized for practical distributed llm trai": {
@@ -2854,7 +2733,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "nanochat emphasizes reproducibility by documenting dataset p": {
@@ -2886,7 +2767,9 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "data_transformation",
+        "version_control",
+        "state_management"
       ]
     },
     "the project favors simple, inspectable mechanisms over heavy": {
@@ -2905,7 +2788,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "backward compatibility matters because checkpoints may outli": {
@@ -2939,7 +2823,8 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "synthetic sft data generation is intentionally multi-dimensi": {
@@ -2961,7 +2846,8 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "evaluation infrastructure appears designed to replicate publ": {
@@ -2993,7 +2879,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "version_control"
+        "version_control",
+        "state_management"
       ]
     },
     "the comments reveal a performance-conscious training stack: ": {
@@ -3012,6 +2899,239 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "core implementation is intentionally limited to c and cuda; ": {
+      "name": "Core implementation is intentionally limited to C and CUDA; ports to other langu",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "primary development focus is pretraining gpt-style transform": {
+      "name": "Primary development focus is pretraining GPT-style transformer models, especiall",
+      "category": "engineering",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "testing_pattern",
+        "data_transformation"
+      ]
+    },
+    "the main high-performance path lives in cuda code, especiall": {
+      "name": "The main high-performance path lives in CUDA code, especially train_gpt2.cu, whi",
+      "category": "engineering",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "a clean cpu fp32 implementation in train_gpt2.c serves as a ": {
+      "name": "A clean CPU fp32 implementation in train_gpt2.c serves as a compact reference im",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "a parallel pytorch implementation, train_gpt2.py, is maintai": {
+      "name": "A parallel PyTorch implementation, train_gpt2.py, is maintained for reference, v",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "starter scripts download pretrained/debug artifacts, tokeniz": {
+      "name": "Starter scripts download pretrained/debug artifacts, tokenizer files, and tokeni",
+      "category": "engineering",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "state_management"
+      ]
+    },
+    "the project prioritizes educational clarity and low-level co": {
+      "name": "The project prioritizes educational clarity and low-level control while still ta",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "there is a deliberate separation between bleeding-edge optim": {
+      "name": "There is a deliberate separation between bleeding-edge optimized CUDA code and s",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "reproducibility is central: the readme points users toward r": {
+      "name": "Reproducibility is central: the README points users toward reproducing GPT-2 124",
+      "category": "engineering",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the repository relies on generated or downloaded binary arti": {
+      "name": "The repository relies on generated or downloaded binary artifacts, including che",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "developer collaboration is organized through github discussi": {
+      "name": "Developer collaboration is organized through GitHub Discussions and Discord rath",
+      "category": "general",
+      "sources": [
+        "karpathy/llm.c"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     }
@@ -3156,89 +3276,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 50,
-    "total_patterns": 74,
-    "total_insights": 49,
+    "total_patterns": 80,
+    "total_insights": 54,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 135
+    "total_skills_learned": 111
   },
   "skills_memory": [
-    {
-      "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "A single 8xA100 40GB node can reproduce GPT-2 124M on OpenWebText in about 4 day",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "The Shakespeare quick start demonstrates the full workflow: prepare data, train ",
-      "source": "karpathy/nanoGPT",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "The codebase is intentionally small, making it easy to modify for new datasets, ",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Flat root-level Python scripts for core workflows such as training, sampling, mo",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Config-driven experiments grouped in config/, separating reusable hyperparameter",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Dataset-specific subdirectories under data/, reflecting a workflow where each da",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Assets are isolated in assets/, keeping images and visual documentation separate",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Minimal package hierarchy, favoring readability and hackability over deeply modu",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "The layout is optimized for research iteration: easy to inspect, modify, and run",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Configuration and dataset organization suggest reproducible experiments across d",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
     {
       "name": "The repository prioritizes educational clarity and small-scale experimentation r",
       "source": "karpathy/nanoGPT",
@@ -3861,6 +3904,83 @@
       "category": "engineering",
       "usage_count": 0,
       "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Core implementation is intentionally limited to C and CUDA; ports to other langu",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "Primary development focus is pretraining GPT-style transformer models, especiall",
+      "source": "karpathy/llm.c",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "The main high-performance path lives in CUDA code, especially train_gpt2.cu, whi",
+      "source": "karpathy/llm.c",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "A clean CPU fp32 implementation in train_gpt2.c serves as a compact reference im",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "A parallel PyTorch implementation, train_gpt2.py, is maintained for reference, v",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "Starter scripts download pretrained/debug artifacts, tokenizer files, and tokeni",
+      "source": "karpathy/llm.c",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "The project prioritizes educational clarity and low-level control while still ta",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "There is a deliberate separation between bleeding-edge optimized CUDA code and s",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "Reproducibility is central: the README points users toward reproducing GPT-2 124",
+      "source": "karpathy/llm.c",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "The repository relies on generated or downloaded binary artifacts, including che",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "Developer collaboration is organized through GitHub Discussions and Discord rath",
+      "source": "karpathy/llm.c",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 11:00"
     }
   ],
   "concepts": {
@@ -3883,9 +4003,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 13,
+      "evidence_count": 14,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -3897,9 +4018,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 18,
+      "evidence_count": 20,
       "examples": [
         "Direct DOM manipulation paradigm enabling custom graphic authoring",
         "prepare.py is treated as fixed infrastructure for data preparation, tokenizer training, dataloading, and evaluation",
@@ -3923,9 +4045,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 18,
+      "evidence_count": 22,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -3937,9 +4060,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 21,
+      "evidence_count": 25,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4000,9 +4124,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 12,
+      "evidence_count": 15,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4013,9 +4138,10 @@
       "repos": [
         "d3/d3",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 5,
+      "evidence_count": 7,
       "examples": [
         "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
         "Fetch external data at build time to optimize runtime performance",
@@ -4037,25 +4163,49 @@
       "repos": [
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 7,
+      "evidence_count": 8,
       "examples": [
         "Model quality is compared using validation bits per byte, making results less dependent on vocabulary size",
         "Using validation bits per byte enables fairer comparisons across tokenizer or vocabulary changes",
         "Checkpoint behavior is configurable via `always_save_checkpoint`, with small or finetuning datasets saving only when validation improves."
       ]
     },
+    "data_transformation": {
+      "repos": [
+        "karpathy/nanoGPT",
+        "karpathy/llm.c"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Uses Hugging Face transformers for loading GPT-2 checkpoints",
+        "Primary development focus is pretraining GPT-style transformer models, especially GPT-2 124M and related GPT-2/GPT-3 model sizes."
+      ]
+    },
     "version_control": {
       "repos": [
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "karpathy/llm.c"
       ],
-      "evidence_count": 7,
+      "evidence_count": 8,
       "examples": [
         "Configuration and dataset organization suggest reproducible experiments across different model sizes and corpora.",
         "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ.",
         "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling save/load, config patching, tokenizer/model reconstruction, and logging."
+      ]
+    },
+    "state_management": {
+      "repos": [
+        "karpathy/nanochat",
+        "karpathy/llm.c"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Separate model checkpoint state, optimizer state, tokenizer reconstruction, and config migration responsibilities cleanly.",
+        "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets."
       ]
     }
   },
@@ -4089,11 +4239,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "evaluation",
-        "optimized",
-        "config",
-        "layout",
-        "gpt-2"
+        "research",
+        "grouped",
+        "python",
+        "generation.",
+        "standard"
       ]
     },
     {
@@ -4124,11 +4274,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "layout",
+        "indicates",
+        "separation",
+        "runtime",
         "alongside",
-        "formats",
-        "dedicated",
-        "dynamic"
+        "configuration"
       ]
     },
     {
@@ -4157,11 +4307,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "evaluation",
-        "optimized",
-        "layout",
-        "images",
-        "lightweight"
+        "research",
+        "python",
+        "treated",
+        "setup",
+        "visual"
       ]
     },
     {
@@ -4190,11 +4340,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "evaluation",
-        "optimized",
-        "dataloading,",
-        "layout",
-        "likely"
+        "research",
+        "python",
+        "wall-clock",
+        "treated",
+        "setup"
       ]
     },
     {
@@ -4222,11 +4372,75 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "layout",
+        "runtime,",
         "where",
-        "using",
-        "strategy",
-        "parallel"
+        "visual",
+        "configuration",
+        "enabling"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "karpathy/llm.c",
+      "type": "strong",
+      "score": 59,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "separation",
+        "setup",
+        "reproducibility",
+        "rather",
+        "checkpoints"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "karpathy/llm.c",
+      "type": "strong",
+      "score": 58,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ],
+      "shared_pattern_keywords": [
+        "setup",
+        "including",
+        "parallel",
+        "rather",
+        "limited"
       ]
     },
     {
@@ -4252,11 +4466,69 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "layout",
-        "using",
-        "documentation",
-        "organization",
-        "interactive"
+        "library.",
+        "visual",
+        "configuration",
+        "structure",
+        "organization"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "karpathy/llm.c",
+      "type": "strong",
+      "score": 42,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "schema_validation"
+      ],
+      "shared_pattern_keywords": [
+        "artifacts",
+        "rather",
+        "intentionally",
+        "generated",
+        "users"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/llm.c",
+      "type": "strong",
+      "score": 35,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "data_fetching"
+      ],
+      "shared_pattern_keywords": [
+        "project",
+        "prioritizes",
+        "separation",
+        "while",
+        "serves"
       ]
     },
     {
@@ -4269,8 +4541,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4285,8 +4557,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4733,8 +5005,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4765,8 +5037,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4781,8 +5053,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5389,8 +5661,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8592,20 +8864,6 @@
     },
     {
       "from_repo": "d3/d3",
-      "to_repo": "karpathy/llm.c",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "d3/d3",
       "to_repo": "karpathy/minGPT",
       "type": "weak",
       "score": 2,
@@ -21024,20 +21282,6 @@
     },
     {
       "from_repo": "karpathy/autoresearch",
-      "to_repo": "karpathy/llm.c",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
       "score": 2,
@@ -21108,20 +21352,6 @@
     },
     {
       "from_repo": "karpathy/nanoGPT",
-      "to_repo": "karpathy/llm.c",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
       "score": 2,
@@ -21179,20 +21409,6 @@
     {
       "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/convnetjs",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/nanochat",
-      "to_repo": "karpathy/llm.c",
       "type": "weak",
       "score": 2,
       "connections": [

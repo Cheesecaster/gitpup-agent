@@ -193,20 +193,31 @@ def journal(icon, title, body="", etype="evolve"):
 def set_state(s, action=None):
     import json
     import os
+    import tempfile
+
     st = status()
     st["state"] = s
     if action:
         a = st.get("actions", [])
         a.append(action)
         st["actions"] = a[-20:]
-    tmp_path = 'state.json.tmp'
+
+    state_path = 'state.json'
+    state_dir = os.path.dirname(os.path.abspath(state_path)) or '.'
+    tmp_path = None
     try:
-        with open(tmp_path, 'w') as f:
+        with tempfile.NamedTemporaryFile(mode='w', dir=state_dir, delete=False, suffix='.tmp', prefix='state.json.') as f:
+            tmp_path = f.name
             json.dump(st, f)
-        os.replace(tmp_path, 'state.json')
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, state_path)
     except:
-        if os.path.exists(tmp_path):
-            os.remove(tmp_path)
+        if tmp_path is not None and os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except OSError:
+                pass
         raise
 
 def current_stage(st=None):
