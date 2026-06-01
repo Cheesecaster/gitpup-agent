@@ -324,23 +324,30 @@ def do_GET(self):
 def do_POST(self):
     p = urllib.parse.urlparse(self.path).path
 
-    def _parse_json_payload():
-        raw_length = self.headers.get('Content-Length')
-        try:
-            content_length = int(raw_length) if raw_length is not None else 0
-        except (TypeError, ValueError) as e:
-            raise ValueError("Invalid Content-Length header") from e
+def _parse_json_payload():
+    raw_length = self.headers.get('Content-Length')
+    try:
+        content_length = int(raw_length) if raw_length is not None else 0
+    except (TypeError, ValueError) as e:
+        raise ValueError("Invalid Content-Length header") from e
 
-        if content_length < 0:
-            raise ValueError("Invalid Content-Length header")
+    if content_length < 0:
+        raise ValueError("Invalid Content-Length header")
 
-        body = self.rfile.read(content_length)
-        try:
-            if isinstance(body, (bytes, bytearray)):
-                body = body.decode('utf-8')
-            return json.loads(body)
-        except (json.JSONDecodeError, UnicodeDecodeError, TypeError, ValueError) as e:
-            raise ValueError("Invalid JSON payload") from e
+    max_content_length = getattr(self, "max_content_length", 1024 * 1024)
+    if content_length > max_content_length:
+        raise ValueError("Payload too large")
+
+    body = self.rfile.read(content_length)
+    if len(body) != content_length:
+        raise ValueError("Invalid JSON payload")
+
+    try:
+        if isinstance(body, (bytes, bytearray)):
+            body = body.decode('utf-8')
+        return json.loads(body)
+    except (json.JSONDecodeError, UnicodeDecodeError, TypeError, ValueError) as e:
+        raise ValueError("Invalid JSON payload") from e
 
     if p == '/api/chat':
         def handle_chat():
