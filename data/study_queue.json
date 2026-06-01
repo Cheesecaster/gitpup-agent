@@ -1,11 +1,6 @@
 {
   "repos": [
     {
-      "repo": "karpathy/nanochat",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
       "repo": "karpathy/llm.c",
       "target_depth": 4,
       "added_at": "2026-06-01T00:00:00"
@@ -57,7 +52,7 @@
     }
   ],
   "max_daily": 20,
-  "studied_today": 18,
+  "studied_today": 19,
   "today": "2026-06-01",
   "source": "karpathy_priority",
   "active_repo": "karpathy/nanochat"

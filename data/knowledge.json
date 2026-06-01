@@ -901,36 +901,74 @@
     },
     "karpathy/nanochat": {
       "full_name": "karpathy/nanochat",
-      "study_level": 3,
+      "study_level": 4,
       "studied_at": [
         "2026-06-01 06:00",
         "2026-06-01 09:30",
-        "2026-06-01 10:00"
+        "2026-06-01 10:00",
+        "2026-06-01 10:30"
       ],
       "summary": "nanochat is a minimal, hackable experimental harness for training and interacting with LLMs on a single GPU node. It covers the full LLM lifecycle: tokenization, pretraining, finetuning, evaluation, inference, and a ChatGPT-like web UI. It is designed to make GPT-2-level model training reproducible ",
       "patterns": [
-        "Single-node GPU-oriented design, intended especially for high-end multi-GPU nodes such as 8xH100.",
-        "End-to-end LLM pipeline included in one repository: tokenizer training, pretraining, finetuning, evaluation, inference, and chat UI.",
-        "Model scaling is controlled primarily by one complexity parameter, `--depth`, representing the number of transformer layers.",
-        "Other model and training hyperparameters are automatically derived from depth, including width, number of heads, learning-rate adjustments, training horizon, and weight decay.",
-        "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedrun.sh`, used as the reference training path for leaderboard comparisons.",
-        "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validation bits-per-byte also tracked.",
         "Clear separation between reusable source code (`nanochat`) and auxiliary execution tooling (`scripts`, `tasks`).",
         "Experiment-oriented layout with `runs` reserved for outputs, logs, checkpoints, or generated artifacts rather than source logic.",
         "Presence of `dev` and `.ipynb` files indicates active exploratory research/prototyping alongside more stable package code.",
         "Tests are isolated in a top-level `tests` directory, following common Python project conventions.",
-        "Multiple support formats (`markdown`, `shell`, `html`) suggest documentation, automation, and possibly local visualization or demo/report generation."
+        "Multiple support formats (`markdown`, `shell`, `html`) suggest documentation, automation, and possibly local visualization or demo/report generation.",
+        "Module-level docstrings explain purpose, design principles, historical context, and operational constraints before code.",
+        "Centralized common utilities module (`nanochat.common`) for shared concerns such as logging, dtype detection, base paths, downloads, and distributed helpers.",
+        "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling save/load, config patching, tokenizer/model reconstruction, and logging.",
+        "Environment-variable based configuration overrides, e.g. `RANK` for rank-aware logging and `NANOCHAT_DTYPE` for compute dtype selection.",
+        "Rank-aware logging pattern: only process rank 0 emits informational logs in distributed runs.",
+        "Default logging setup is invoked at module import for consistent logger behavior across scripts.",
+        "Small helper functions with leading underscores for internal implementation details, e.g. `_detect_compute_dtype`, `_patch_missing_config_keys`.",
+        "Explicit dtype mapping dictionary from string names to `torch.dtype` objects instead of dynamic lookup.",
+        "Distributed training awareness throughout data loading, evaluation, and checkpoint utilities via `torch.distributed`.",
+        "Dataset preparation scripts live under `dev/` and document reproducible data packaging workflows separately from runtime library code.",
+        "Data pipeline emphasizes streaming-friendly parquet shards, zstd compression, row-group sizing, shuffling, and HuggingFace hosting.",
+        "Training data loader design documents algorithmic tradeoffs, such as BOS-aligned packing, best-fit packing, cropping, padding avoidance, and utilization.",
+        "Evaluation code separates prompt-rendering utilities from metric execution logic.",
+        "Prompt rendering uses Jinja2 templates for flexible few-shot and multiple-choice prompt construction.",
+        "Synthetic data generation script is structured around diversity injection across topics, personas, conversation dynamics, and first-message variation.",
+        "Backward compatibility is handled explicitly by patching missing config keys when loading older checkpoints.",
+        "Project organization separates concerns into focused modules: common utilities, tokenizer, GPT model, checkpointing, dataloading, datasets, evaluation, and development scripts.",
+        "Imports are grouped by standard library, third-party libraries, and local project modules.",
+        "Comments distinguish compute dtype from master optimizer precision, showing attention to numerical stability.",
+        "Data preparation scripts preserve historical context about dataset choices to make experimental lineage reproducible."
       ],
-      "best_practices": [],
+      "best_practices": [
+        "Prefer explicit mappings for user-facing string options, such as dtype names, to make validation and behavior clear.",
+        "Patch missing config fields when loading checkpoints to maintain backward compatibility across model versions.",
+        "Document dataset provenance, preprocessing decisions, and output locations so training runs can be reproduced.",
+        "Design large-scale datasets for streaming and caching by using shard sizes, compression, row groups, and shuffle strategies intentionally.",
+        "Explain data-loader tradeoffs directly in code comments, especially when sacrificing data retention for cleaner training examples.",
+        "Avoid padding when possible in pretraining batches to maximize token utilization.",
+        "Align packed documents with BOS tokens when model behavior depends on document-boundary clarity.",
+        "Use file locks or distributed synchronization around shared filesystem operations.",
+        "Keep evaluation prompt construction modular and template-driven for easier task adaptation.",
+        "Use structured synthetic data generation principles to control diversity rather than relying on ad hoc prompting.",
+        "Separate model checkpoint state, optimizer state, tokenizer reconstruction, and config migration responsibilities cleanly.",
+        "Prefer clear helper functions over embedding operational logic inline.",
+        "Use logging instead of bare prints for library and training infrastructure code.",
+        "Keep imports explicit and readable, with local imports reflecting project architecture.",
+        "Record TODOs and known metric discrepancies near the relevant evaluation code."
+      ],
       "insights": [
-        "The project prioritizes simplicity and hackability while still covering all major stages needed to train and use an LLM.",
-        "A central design idea is compute-optimal scaling: users adjust model depth while the system automatically configures other hyperparameters.",
-        "The main optimization target is pretraining speed, since pretraining dominates compute cost.",
         "The leaderboard frames progress around practical wall-clock time to GPT-2 capability rather than only loss or benchmark score.",
         "The cost and time claims emphasize how modern hardware and optimized training recipes can reproduce GPT-2-level capability far more cheaply than the original 2019 training run.",
         "This layout fits a small-to-medium ML research codebase: core implementation is kept compact while training/evaluation workflows live outside the package.",
         "The repository likely prioritizes reproducibility and iteration speed, with scripts/tasks driving experiments and `runs` capturing their outputs.",
-        "Keeping generated run artifacts separate from source and tests makes the project easier to navigate and maintain."
+        "Keeping generated run artifacts separate from source and tests makes the project easier to navigate and maintain.",
+        "The codebase is optimized for practical distributed LLM training rather than minimal examples: logging, dtype control, dataset streaming, checkpoint compatibility, and distributed behavior are first-class concerns.",
+        "nanochat emphasizes reproducibility by documenting dataset preparation history and preserving scripts that explain how training data was packaged.",
+        "Data quality is treated as a systems problem: BOS alignment, document packing, cropping policy, and synthetic conversation diversity are all explicitly engineered.",
+        "The project favors simple, inspectable mechanisms over heavy abstraction, such as environment variables, helper functions, explicit dictionaries, and plain module-level utilities.",
+        "Backward compatibility matters because checkpoints may outlive configuration schemas; config patching prevents older artifacts from becoming unusable.",
+        "The data loader prioritizes coherent context over retaining every token, accepting cropping to ensure tokens can attend back to a BOS boundary.",
+        "Synthetic SFT data generation is intentionally multi-dimensional, varying user identity, topic, conversation shape, and opening messages to reduce mode collapse.",
+        "Evaluation infrastructure appears designed to replicate published metrics, with explicit acknowledgement of discrepancies for future debugging.",
+        "The runtime package is compact and modular, while experimental or one-off workflows are placed in `dev/`, reducing pollution of core APIs.",
+        "The comments reveal a performance-conscious training stack: parquet streaming, local caching, zstd compression, row-group tuning, compute dtype casting, and distributed execution are all considered."
       ],
       "code_examples": [],
       "arch_topics": [
@@ -1321,640 +1359,6 @@
     }
   },
   "skill_index": {
-    "visual-first documentation with embedded png diagrams and ma": {
-      "name": "Visual-first documentation with embedded PNG diagrams and Markdown guides",
-      "category": "frontend",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15",
-      "related_concepts": [
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "plugin_system",
-        "error_handling",
-        "data_fetching",
-        "schema_validation"
-      ]
-    },
-    "modular python package structure with clear entry points and": {
-      "name": "Modular Python package structure with clear entry points and utility modules",
-      "category": "architecture",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "database_pattern"
-      ]
-    },
-    "the project prioritizes iterative research and rapid prototy": {
-      "name": "The project prioritizes iterative research and rapid prototyping, leveraging not",
-      "category": "backend",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "heavy reliance on toml and markdown indicates a modern, ligh": {
-      "name": "Heavy reliance on TOML and Markdown indicates a modern, lightweight toolchain fo",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "minimal repo centered on three files: prepare.py, train.py, ": {
-      "name": "Minimal repo centered on three files: prepare.py, train.py, and program.md",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": []
-    },
-    "prepare.py is treated as fixed infrastructure for data prepa": {
-      "name": "prepare.py is treated as fixed infrastructure for data preparation, tokenizer tr",
-      "category": "data",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "train.py contains the gpt model, optimizer, hyperparameters,": {
-      "name": "train.py contains the GPT model, optimizer, hyperparameters, and training loop, ",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "program.md defines the research-agent instructions and is th": {
-      "name": "program.md defines the research-agent instructions and is the main interface hum",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "experiments use a fixed 5-minute wall-clock training budget,": {
-      "name": "Experiments use a fixed 5-minute wall-clock training budget, excluding startup/c",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "model quality is compared using validation bits per byte, ma": {
-      "name": "Model quality is compared using validation bits per byte, making results less de",
-      "category": "engineering",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "training setup is a simplified single-gpu implementation ins": {
-      "name": "Training setup is a simplified single-GPU implementation inspired by nanochat",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "the project reframes research as programming an autonomous r": {
-      "name": "The project reframes research as programming an autonomous research organization",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "a fixed time budget encourages changes that improve efficien": {
-      "name": "A fixed time budget encourages changes that improve efficiency as well as final ",
-      "category": "engineering",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "using validation bits per byte enables fairer comparisons ac": {
-      "name": "Using validation bits per byte enables fairer comparisons across tokenizer or vo",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "file_operations",
-        "monitoring_observability",
-        "schema_validation"
-      ]
-    },
-    "the baseline is intentionally simple so users can improve bo": {
-      "name": "The baseline is intentionally simple so users can improve both the model code an",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "the repo is designed as a practical experiment in autonomous": {
-      "name": "The repo is designed as a practical experiment in autonomous iterative ML resear",
-      "category": "architecture",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "research-oriented layout with notebooks and markdown likely ": {
-      "name": "Research-oriented layout with notebooks and Markdown likely used for experimenta",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "error_handling",
-        "schema_validation"
-      ]
-    },
-    "python is the main executable language, while notebooks like": {
-      "name": "Python is the main executable language, while notebooks likely serve as interact",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "png files indicate generated figures, screenshots, diagrams,": {
-      "name": "PNG files indicate generated figures, screenshots, diagrams, or visual artifacts",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "config_management",
-        "data_fetching"
-      ]
-    },
-    "toml configuration suggests use of modern python tooling or ": {
-      "name": "TOML configuration suggests use of modern Python tooling or project metadata con",
-      "category": "data",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control"
-      ]
-    },
-    "no prominent top-level package directory is indicated, imply": {
-      "name": "No prominent top-level package directory is indicated, implying a lightweight or",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "database_pattern"
-      ]
-    },
-    "the repo is likely optimized for readability and experimenta": {
-      "name": "The repo is likely optimized for readability and experimentation over production",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "the mix of notebooks, markdown, and images suggests the proj": {
-      "name": "The mix of notebooks, Markdown, and images suggests the project communicates res",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "if the project grows, separating source code, notebooks, ass": {
-      "name": "If the project grows, separating source code, notebooks, assets, and documentati",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "plain pytorch implementation focused on simplicity and hacka": {
-      "name": "Plain PyTorch implementation focused on simplicity and hackability",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": []
-    },
-    "core training logic kept in a compact train.py script of rou": {
-      "name": "Core training logic kept in a compact train.py script of roughly 300 lines",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "authentication",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "data_fetching"
-      ]
-    },
-    "gpt model definition kept in a compact model.py file of roug": {
-      "name": "GPT model definition kept in a compact model.py file of roughly 300 lines",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "performance_optimization",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "supports training from scratch and finetuning pretrained gpt": {
-      "name": "Supports training from scratch and finetuning pretrained GPT-2 checkpoints",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "authentication",
-        "performance_optimization"
-      ]
-    },
-    "uses hugging face transformers for loading gpt-2 checkpoints": {
-      "name": "Uses Hugging Face transformers for loading GPT-2 checkpoints",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "data_transformation"
-      ]
-    },
-    "uses hugging face datasets for downloading and preprocessing": {
-      "name": "Uses Hugging Face datasets for downloading and preprocessing datasets such as Op",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "data_transformation"
-      ]
-    },
-    "uses tiktoken for fast bpe tokenization": {
-      "name": "Uses tiktoken for fast BPE tokenization",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "data_visualization",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation"
-      ]
-    },
-    "optional weights & biases integration for experiment logging": {
-      "name": "Optional Weights & Biases integration for experiment logging",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": []
-    },
-    "configuration files define model and training settings, such": {
-      "name": "Configuration files define model and training settings, such as the Shakespeare ",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "data_fetching",
-        "version_control"
-      ]
-    },
-    "checkpoints are written to an output directory and later con": {
-      "name": "Checkpoints are written to an output directory and later consumed by the samplin",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation"
-      ]
-    },
-    "the project prioritizes practical performance and readabilit": {
-      "name": "The project prioritizes practical performance and readability over educational e",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
     "the repository is now deprecated in favor of nanochat, which": {
       "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
       "category": "general",
@@ -1973,7 +1377,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -1998,8 +1401,8 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2019,7 +1422,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2041,7 +1443,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2094,7 +1495,8 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
-        "schema_validation"
+        "schema_validation",
+        "version_control"
       ]
     },
     "minimal package hierarchy, favoring readability and hackabil": {
@@ -2125,7 +1527,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2149,6 +1550,7 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
+        "event_driven",
         "schema_validation",
         "version_control"
       ]
@@ -2169,7 +1571,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2190,8 +1591,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2209,6 +1610,7 @@
         "config_management",
         "monitoring_observability",
         "data_fetching",
+        "event_driven",
         "schema_validation",
         "version_control"
       ]
@@ -2230,7 +1632,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2273,7 +1674,8 @@
         "performance_optimization",
         "monitoring_observability",
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "event_driven"
       ]
     },
     "batching strategy is explicitly documented with comments sho": {
@@ -2293,7 +1695,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2314,7 +1715,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2334,8 +1734,8 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2350,7 +1750,7 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "data_transformation"
+        "event_driven"
       ]
     },
     "large-scale training configs align `max_iters` and `lr_decay": {
@@ -2437,8 +1837,8 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2466,7 +1866,9 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 09:00",
-      "related_concepts": []
+      "related_concepts": [
+        "version_control"
+      ]
     },
     "use validation-improvement checkpointing for small datasets ": {
       "name": "Use validation-improvement checkpointing for small datasets or finetuning to avo",
@@ -2479,7 +1881,7 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "data_transformation"
+        "event_driven"
       ]
     },
     "use frequent evaluation on small datasets where overfitting ": {
@@ -2494,7 +1896,7 @@
         "authentication",
         "testing_pattern",
         "error_handling",
-        "data_transformation",
+        "event_driven",
         "version_control"
       ]
     },
@@ -2509,7 +1911,7 @@
       "related_concepts": [
         "testing_pattern",
         "error_handling",
-        "data_transformation"
+        "event_driven"
       ]
     },
     "name experiment outputs and wandb projects according to data": {
@@ -2562,7 +1964,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2580,7 +1981,6 @@
         "file_operations",
         "config_management",
         "plugin_system",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2601,7 +2001,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2624,7 +2023,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2645,7 +2043,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2666,7 +2063,6 @@
         "plugin_system",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2686,8 +2082,7 @@
         "config_management",
         "plugin_system",
         "database_pattern",
-        "data_fetching",
-        "data_transformation"
+        "data_fetching"
       ]
     },
     "small character-level shakespeare training is intended as a ": {
@@ -2718,7 +2113,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2739,7 +2133,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2783,7 +2176,6 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2808,7 +2200,6 @@
         "error_handling",
         "data_fetching",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2828,7 +2219,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2853,8 +2243,8 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2874,7 +2264,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2899,8 +2288,8 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2920,7 +2309,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2940,7 +2328,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2965,7 +2352,6 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -2994,6 +2380,7 @@
         "testing_pattern",
         "performance_optimization",
         "error_handling",
+        "event_driven",
         "schema_validation"
       ]
     },
@@ -3010,7 +2397,6 @@
         "file_operations",
         "config_management",
         "plugin_system",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -3028,7 +2414,8 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
-        "schema_validation"
+        "schema_validation",
+        "version_control"
       ]
     },
     "multiple support formats (`markdown`, `shell`, `html`) sugge": {
@@ -3069,7 +2456,6 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
-        "data_transformation",
         "version_control"
       ]
     },
@@ -3086,6 +2472,547 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching"
+      ]
+    },
+    "module-level docstrings explain purpose, design principles, ": {
+      "name": "Module-level docstrings explain purpose, design principles, historical context, ",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": []
+    },
+    "centralized common utilities module (`nanochat.common`) for ": {
+      "name": "Centralized common utilities module (`nanochat.common`) for shared concerns such",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern"
+      ]
+    },
+    "checkpoint logic isolated in a dedicated `checkpoint_manager": {
+      "name": "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern",
+        "config_management",
+        "monitoring_observability",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "environment-variable based configuration overrides, e.g. `ra": {
+      "name": "Environment-variable based configuration overrides, e.g. `RANK` for rank-aware l",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "data_visualization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "data_fetching",
+        "event_driven",
+        "version_control"
+      ]
+    },
+    "rank-aware logging pattern: only process rank 0 emits inform": {
+      "name": "Rank-aware logging pattern: only process rank 0 emits informational logs in dist",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "version_control"
+      ]
+    },
+    "default logging setup is invoked at module import for consis": {
+      "name": "Default logging setup is invoked at module import for consistent logger behavior",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "version_control"
+      ]
+    },
+    "small helper functions with leading underscores for internal": {
+      "name": "Small helper functions with leading underscores for internal implementation deta",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "schema_validation"
+      ]
+    },
+    "explicit dtype mapping dictionary from string names to `torc": {
+      "name": "Explicit dtype mapping dictionary from string names to `torch.dtype` objects ins",
+      "category": "engineering",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern"
+      ]
+    },
+    "distributed training awareness throughout data loading, eval": {
+      "name": "Distributed training awareness throughout data loading, evaluation, and checkpoi",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "performance_optimization"
+      ]
+    },
+    "dataset preparation scripts live under `dev/` and document r": {
+      "name": "Dataset preparation scripts live under `dev/` and document reproducible data pac",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "data pipeline emphasizes streaming-friendly parquet shards, ": {
+      "name": "Data pipeline emphasizes streaming-friendly parquet shards, zstd compression, ro",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "training data loader design documents algorithmic tradeoffs,": {
+      "name": "Training data loader design documents algorithmic tradeoffs, such as BOS-aligned",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "evaluation code separates prompt-rendering utilities from me": {
+      "name": "Evaluation code separates prompt-rendering utilities from metric execution logic",
+      "category": "frontend",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "version_control"
+      ]
+    },
+    "prompt rendering uses jinja2 templates for flexible few-shot": {
+      "name": "Prompt rendering uses Jinja2 templates for flexible few-shot and multiple-choice",
+      "category": "frontend",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "data_visualization"
+      ]
+    },
+    "synthetic data generation script is structured around divers": {
+      "name": "Synthetic data generation script is structured around diversity injection across",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "prefer explicit mappings for user-facing string options, suc": {
+      "name": "Prefer explicit mappings for user-facing string options, such as dtype names, to",
+      "category": "engineering",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern"
+      ]
+    },
+    "patch missing config fields when loading checkpoints to main": {
+      "name": "Patch missing config fields when loading checkpoints to maintain backward compat",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "document dataset provenance, preprocessing decisions, and ou": {
+      "name": "Document dataset provenance, preprocessing decisions, and output locations so tr",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "design large-scale datasets for streaming and caching by usi": {
+      "name": "Design large-scale datasets for streaming and caching by using shard sizes, comp",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "schema_validation"
+      ]
+    },
+    "explain data-loader tradeoffs directly in code comments, esp": {
+      "name": "Explain data-loader tradeoffs directly in code comments, especially when sacrifi",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": []
+    },
+    "avoid padding when possible in pretraining batches to maximi": {
+      "name": "Avoid padding when possible in pretraining batches to maximize token utilization",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "schema_validation"
+      ]
+    },
+    "align packed documents with bos tokens when model behavior d": {
+      "name": "Align packed documents with BOS tokens when model behavior depends on document-b",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": []
+    },
+    "use file locks or distributed synchronization around shared ": {
+      "name": "Use file locks or distributed synchronization around shared filesystem operation",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "error_handling",
+        "event_driven"
+      ]
+    },
+    "keep evaluation prompt construction modular and template-dri": {
+      "name": "Keep evaluation prompt construction modular and template-driven for easier task ",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "version_control"
+      ]
+    },
+    "use structured synthetic data generation principles to contr": {
+      "name": "Use structured synthetic data generation principles to control diversity rather ",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern",
+        "error_handling",
+        "event_driven"
+      ]
+    },
+    "the codebase is optimized for practical distributed llm trai": {
+      "name": "The codebase is optimized for practical distributed LLM training rather than min",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "nanochat emphasizes reproducibility by documenting dataset p": {
+      "name": "nanochat emphasizes reproducibility by documenting dataset preparation history a",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": []
+    },
+    "data quality is treated as a systems problem: bos alignment,": {
+      "name": "Data quality is treated as a systems problem: BOS alignment, document packing, c",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "the project favors simple, inspectable mechanisms over heavy": {
+      "name": "The project favors simple, inspectable mechanisms over heavy abstraction, such a",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control"
+      ]
+    },
+    "backward compatibility matters because checkpoints may outli": {
+      "name": "Backward compatibility matters because checkpoints may outlive configuration sch",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "event_driven"
+      ]
+    },
+    "the data loader prioritizes coherent context over retaining ": {
+      "name": "The data loader prioritizes coherent context over retaining every token, accepti",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "synthetic sft data generation is intentionally multi-dimensi": {
+      "name": "Synthetic SFT data generation is intentionally multi-dimensional, varying user i",
+      "category": "data",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "version_control"
+      ]
+    },
+    "evaluation infrastructure appears designed to replicate publ": {
+      "name": "Evaluation infrastructure appears designed to replicate published metrics, with ",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "authentication",
+        "version_control"
+      ]
+    },
+    "the runtime package is compact and modular, while experiment": {
+      "name": "The runtime package is compact and modular, while experimental or one-off workfl",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control"
+      ]
+    },
+    "the comments reveal a performance-conscious training stack: ": {
+      "name": "The comments reveal a performance-conscious training stack: parquet streaming, l",
+      "category": "engineering",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control"
       ]
     }
   },
@@ -3229,257 +3156,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 50,
-    "total_patterns": 60,
-    "total_insights": 42,
+    "total_patterns": 74,
+    "total_insights": 49,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 108
+    "total_skills_learned": 135
   },
   "skills_memory": [
-    {
-      "name": "Visual-first documentation with embedded PNG diagrams and Markdown guides",
-      "source": "karpathy/autoresearch",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15"
-    },
-    {
-      "name": "Modular Python package structure with clear entry points and utility modules",
-      "source": "karpathy/autoresearch",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15"
-    },
-    {
-      "name": "The project prioritizes iterative research and rapid prototyping, leveraging not",
-      "source": "karpathy/autoresearch",
-      "category": "backend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15"
-    },
-    {
-      "name": "Heavy reliance on TOML and Markdown indicates a modern, lightweight toolchain fo",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:15"
-    },
-    {
-      "name": "Minimal repo centered on three files: prepare.py, train.py, and program.md",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "prepare.py is treated as fixed infrastructure for data preparation, tokenizer tr",
-      "source": "karpathy/autoresearch",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "train.py contains the GPT model, optimizer, hyperparameters, and training loop, ",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "program.md defines the research-agent instructions and is the main interface hum",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Experiments use a fixed 5-minute wall-clock training budget, excluding startup/c",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Model quality is compared using validation bits per byte, making results less de",
-      "source": "karpathy/autoresearch",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Training setup is a simplified single-GPU implementation inspired by nanochat",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "The project reframes research as programming an autonomous research organization",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "A fixed time budget encourages changes that improve efficiency as well as final ",
-      "source": "karpathy/autoresearch",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Using validation bits per byte enables fairer comparisons across tokenizer or vo",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "The baseline is intentionally simple so users can improve both the model code an",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "The repo is designed as a practical experiment in autonomous iterative ML resear",
-      "source": "karpathy/autoresearch",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Research-oriented layout with notebooks and Markdown likely used for experimenta",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Python is the main executable language, while notebooks likely serve as interact",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "PNG files indicate generated figures, screenshots, diagrams, or visual artifacts",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "TOML configuration suggests use of modern Python tooling or project metadata con",
-      "source": "karpathy/autoresearch",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "No prominent top-level package directory is indicated, implying a lightweight or",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "The repo is likely optimized for readability and experimentation over production",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "The mix of notebooks, Markdown, and images suggests the project communicates res",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "If the project grows, separating source code, notebooks, assets, and documentati",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:32"
-    },
-    {
-      "name": "Plain PyTorch implementation focused on simplicity and hackability",
-      "source": "karpathy/nanoGPT",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Core training logic kept in a compact train.py script of roughly 300 lines",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "GPT model definition kept in a compact model.py file of roughly 300 lines",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Supports training from scratch and finetuning pretrained GPT-2 checkpoints",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Uses Hugging Face transformers for loading GPT-2 checkpoints",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Uses Hugging Face datasets for downloading and preprocessing datasets such as Op",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Uses tiktoken for fast BPE tokenization",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Optional Weights & Biases integration for experiment logging",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Configuration files define model and training settings, such as the Shakespeare ",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "Checkpoints are written to an output directory and later consumed by the samplin",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
-    {
-      "name": "The project prioritizes practical performance and readability over educational e",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:25"
-    },
     {
       "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
       "source": "karpathy/nanoGPT",
@@ -3934,6 +3616,251 @@
       "category": "engineering",
       "usage_count": 0,
       "learned_at": "2026-06-01 10:00"
+    },
+    {
+      "name": "Module-level docstrings explain purpose, design principles, historical context, ",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Centralized common utilities module (`nanochat.common`) for shared concerns such",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Environment-variable based configuration overrides, e.g. `RANK` for rank-aware l",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Rank-aware logging pattern: only process rank 0 emits informational logs in dist",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Default logging setup is invoked at module import for consistent logger behavior",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Small helper functions with leading underscores for internal implementation deta",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Explicit dtype mapping dictionary from string names to `torch.dtype` objects ins",
+      "source": "karpathy/nanochat",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Distributed training awareness throughout data loading, evaluation, and checkpoi",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Dataset preparation scripts live under `dev/` and document reproducible data pac",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Data pipeline emphasizes streaming-friendly parquet shards, zstd compression, ro",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Training data loader design documents algorithmic tradeoffs, such as BOS-aligned",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Evaluation code separates prompt-rendering utilities from metric execution logic",
+      "source": "karpathy/nanochat",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Prompt rendering uses Jinja2 templates for flexible few-shot and multiple-choice",
+      "source": "karpathy/nanochat",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Synthetic data generation script is structured around diversity injection across",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Prefer explicit mappings for user-facing string options, such as dtype names, to",
+      "source": "karpathy/nanochat",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Patch missing config fields when loading checkpoints to maintain backward compat",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Document dataset provenance, preprocessing decisions, and output locations so tr",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Design large-scale datasets for streaming and caching by using shard sizes, comp",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Explain data-loader tradeoffs directly in code comments, especially when sacrifi",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Avoid padding when possible in pretraining batches to maximize token utilization",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Align packed documents with BOS tokens when model behavior depends on document-b",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Use file locks or distributed synchronization around shared filesystem operation",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Keep evaluation prompt construction modular and template-driven for easier task ",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Use structured synthetic data generation principles to control diversity rather ",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "The codebase is optimized for practical distributed LLM training rather than min",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "nanochat emphasizes reproducibility by documenting dataset preparation history a",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Data quality is treated as a systems problem: BOS alignment, document packing, c",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "The project favors simple, inspectable mechanisms over heavy abstraction, such a",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Backward compatibility matters because checkpoints may outlive configuration sch",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "The data loader prioritizes coherent context over retaining every token, accepti",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Synthetic SFT data generation is intentionally multi-dimensional, varying user i",
+      "source": "karpathy/nanochat",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "Evaluation infrastructure appears designed to replicate published metrics, with ",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "The runtime package is compact and modular, while experimental or one-off workfl",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
+    },
+    {
+      "name": "The comments reveal a performance-conscious training stack: parquet streaming, l",
+      "source": "karpathy/nanochat",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 10:30"
     }
   ],
   "concepts": {
@@ -3944,7 +3871,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 12,
+      "evidence_count": 14,
       "examples": [
         "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
         "Modular, foundational design intended to be extended by higher-level chart libraries",
@@ -3958,7 +3885,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 11,
+      "evidence_count": 13,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -3972,7 +3899,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 13,
+      "evidence_count": 18,
       "examples": [
         "Direct DOM manipulation paradigm enabling custom graphic authoring",
         "prepare.py is treated as fixed infrastructure for data preparation, tokenizer training, dataloading, and evaluation",
@@ -3998,7 +3925,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 13,
+      "evidence_count": 18,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -4012,7 +3939,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 18,
+      "evidence_count": 21,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4026,7 +3953,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 26,
+      "evidence_count": 32,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -4035,9 +3962,10 @@
     },
     "plugin_system": {
       "repos": [
-        "d3/d3"
+        "d3/d3",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 3,
+      "evidence_count": 5,
       "examples": [
         "Theme extension via base theme inheritance",
         "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
@@ -4050,7 +3978,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 10,
+      "evidence_count": 21,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -4074,7 +4002,7 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 8,
+      "evidence_count": 12,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4084,13 +4012,25 @@
     "data_fetching": {
       "repos": [
         "d3/d3",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 4,
+      "evidence_count": 5,
       "examples": [
         "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
         "Fetch external data at build time to optimize runtime performance",
         "Separate configuration, theme logic, and data fetching into distinct modules"
+      ]
+    },
+    "event_driven": {
+      "repos": [
+        "d3/d3",
+        "karpathy/nanochat"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Use try/catch with CI environment checks to prevent local build failures",
+        "Backward compatibility matters because checkpoints may outlive configuration schemas; config patching prevents older artifacts from becoming unusable."
       ]
     },
     "schema_validation": {
@@ -4099,32 +4039,23 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 5,
+      "evidence_count": 7,
       "examples": [
         "Model quality is compared using validation bits per byte, making results less dependent on vocabulary size",
         "Using validation bits per byte enables fairer comparisons across tokenizer or vocabulary changes",
         "Checkpoint behavior is configurable via `always_save_checkpoint`, with small or finetuning datasets saving only when validation improves."
       ]
     },
-    "data_transformation": {
+    "version_control": {
       "repos": [
         "karpathy/nanoGPT",
         "karpathy/nanochat"
       ],
-      "evidence_count": 2,
-      "examples": [
-        "Uses Hugging Face transformers for loading GPT-2 checkpoints",
-        "Model scaling is controlled primarily by one complexity parameter, `--depth`, representing the number of transformer layers."
-      ]
-    },
-    "version_control": {
-      "repos": [
-        "karpathy/nanoGPT"
-      ],
-      "evidence_count": 2,
+      "evidence_count": 7,
       "examples": [
         "Configuration and dataset organization suggest reproducible experiments across different model sizes and corpora.",
-        "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ."
+        "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ.",
+        "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling save/load, config patching, tokenizer/model reconstruction, and logging."
       ]
     }
   },
@@ -4133,7 +4064,7 @@
       "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/nanochat",
       "type": "strong",
-      "score": 92,
+      "score": 121,
       "connections": [
         "shared_topic",
         "same_language",
@@ -4153,15 +4084,51 @@
         "config_management",
         "monitoring_observability",
         "database_pattern",
+        "data_fetching",
         "schema_validation",
-        "data_transformation"
+        "version_control"
       ],
       "shared_pattern_keywords": [
-        "files",
-        "using",
         "evaluation",
-        "workflows",
-        "hackability"
+        "optimized",
+        "config",
+        "layout",
+        "gpt-2"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/nanochat",
+      "type": "strong",
+      "score": 82,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "event_driven"
+      ],
+      "shared_pattern_keywords": [
+        "layout",
+        "alongside",
+        "formats",
+        "dedicated",
+        "dynamic"
       ]
     },
     {
@@ -4190,18 +4157,18 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "files",
-        "production",
-        "using",
-        "deeply",
-        "evaluation"
+        "evaluation",
+        "optimized",
+        "layout",
+        "images",
+        "lightweight"
       ]
     },
     {
       "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/nanochat",
       "type": "strong",
-      "score": 68,
+      "score": 76,
       "connections": [
         "shared_topic",
         "same_language",
@@ -4223,11 +4190,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "files",
-        "wall-clock",
-        "using",
         "evaluation",
-        "rather"
+        "optimized",
+        "dataloading,",
+        "layout",
+        "likely"
       ]
     },
     {
@@ -4255,43 +4222,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "files",
+        "layout",
+        "where",
         "using",
-        "loading",
-        "parallel",
-        "source"
-      ]
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "karpathy/nanochat",
-      "type": "strong",
-      "score": 60,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "files",
-        "using",
-        "support",
-        "pipeline",
-        "source"
+        "strategy",
+        "parallel"
       ]
     },
     {
@@ -4317,11 +4252,11 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "files",
+        "layout",
         "using",
-        "source",
-        "visual",
-        "organization"
+        "documentation",
+        "organization",
+        "interactive"
       ]
     },
     {
@@ -4814,8 +4749,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4830,8 +4765,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4846,8 +4781,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5454,8 +5389,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
