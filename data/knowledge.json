@@ -1236,16 +1236,15 @@
     },
     "pbakaus/impeccable": {
       "full_name": "pbakaus/impeccable",
-      "study_level": 3,
+      "study_level": 4,
       "studied_at": [
         "2026-06-01 20:00",
         "2026-06-01 21:00",
-        "2026-06-01 22:00"
+        "2026-06-01 22:00",
+        "2026-06-02 00:00"
       ],
       "summary": "Impeccable is a frontend design skill and tooling package that gives AI agents a structured design vocabulary, reference guidance, commands, and anti-pattern checks for producing more distinctive, higher-quality frontend interfaces. It extends Anthropic’s frontend-design skill with domain-specific d",
       "patterns": [
-        "Built around a Claude-style skill named `impeccable` with a main skill document and seven domain reference files covering typography, color, spatial design, motion, interaction, responsive design, and UX writing.",
-        "Uses `/impeccable` slash commands as the primary user interface, turning design workflows into named actions such as craft, init, document, extract, shape, critique, audit, and polish.",
         "Separates reusable design knowledge from project-specific context by generating or relying on files such as PRODUCT.md and DESIGN.md.",
         "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
         "Positions itself as both a design guidance system and a quality-control layer for frontend work, addressing aesthetics, accessibility, responsiveness, hierarchy, motion, writing, and implementation polish.",
@@ -1253,18 +1252,58 @@
         "Tests are centralized in a dedicated tests directory rather than colocated with each package area.",
         "Documentation or demo/static assets appear to live under site, supported by Markdown and HTML files.",
         "The use of .mjs indicates an ES module-based JavaScript codebase.",
-        "JSON files likely provide package metadata, configuration, manifests, or structured data for the CLI/plugin/extension pieces."
+        "JSON files likely provide package metadata, configuration, manifests, or structured data for the CLI/plugin/extension pieces.",
+        "Node.js CLI entrypoint uses a shebang (`#!/usr/bin/env node`) with ESM imports and `process.argv.slice(2)` for command parsing.",
+        "CLI help handling checks for missing command, `--help`, or `-h` and prints a usage block.",
+        "ESM-compatible `__dirname` is derived via `dirname(fileURLToPath(import.meta.url))`.",
+        "Configuration constants are exported as frozen objects/arrays using `Object.freeze()` to prevent mutation.",
+        "Provider lists are derived from configuration maps with `Object.keys(...)` to avoid duplicating source-of-truth data.",
+        "Combined provider arrays are composed with spread syntax from smaller provider groups.",
+        "Browser detector bundle is wrapped in an IIFE to avoid leaking variables into global scope.",
+        "Browser-only scripts guard execution with `if (typeof window === 'undefined') return;`.",
+        "Generated bundle files include prominent comments indicating source file, rebuild command, usage, and warning not to edit directly.",
+        "Chrome extension service worker maintains per-tab state with `Map` keyed by `tabId`.",
+        "Lazy state initialization is encapsulated in a helper function (`getState(tabId)`) that creates default state on demand.",
+        "Chrome extension messaging architecture separates background service worker, content script, DevTools page, panel, and sidebar responsibilities.",
+        "Content script uses an IIFE plus a global idempotency flag to prevent duplicate injection side effects.",
+        "Content script bridges extension messaging to page-context detector because some browser APIs must run in page context.",
+        "DevTools panel is created with `chrome.devtools.panels.create(...)`.",
+        "Elements sidebar integration uses `chrome.devtools.panels.elements.createSidebarPane(...)` and loads a dedicated sidebar page.",
+        "Per-tab extension state tracks findings, overlay visibility, and injection status flags."
       ],
-      "best_practices": [],
+      "best_practices": [
+        "Use immutable configuration exports for provider registries to reduce accidental runtime mutation.",
+        "Keep one source of truth for provider names by deriving arrays from config objects.",
+        "Document CLI usage directly in the entrypoint for discoverability.",
+        "Include SPDX license identifiers and generated-file metadata in distributed/generated files.",
+        "Clearly mark generated files as generated and provide the rebuild command.",
+        "Guard browser-specific bundles so they do not fail in non-browser environments.",
+        "Wrap injected browser/content scripts in IIFEs to prevent global namespace pollution.",
+        "Make extension content scripts idempotent to avoid duplicate listeners, redeclared variables, and repeated side effects after reinjection.",
+        "Separate page-context detection logic from isolated-world content script messaging when browser security boundaries require it.",
+        "Maintain extension state per tab rather than globally to avoid cross-tab contamination.",
+        "Use DevTools port disconnects as a lifecycle signal for DevTools session cleanup.",
+        "Split Chrome extension code by responsibility: service worker for routing/state, content script for page bridge, DevTools page for panel registration, panel UI for user controls.",
+        "Use explicit default state objects for predictable extension behavior.",
+        "Expose a browser rescan hook such as `window.impeccableScan()` for manual rescanning/debugging.",
+        "Use comments to explain non-obvious extension architecture constraints, especially isolated world vs page context behavior."
+      ],
       "insights": [
-        "The project’s core thesis is that AI-generated frontend work suffers from recognizable defaults, so strong design references and explicit anti-pattern rules can improve originality and quality.",
-        "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `critique`, `distill`, `animate`, `bolder`, and `quieter` let users steer design intent more precisely.",
-        "The README distinguishes brand-level and product-level design decisions, suggesting the system adapts defaults based on context instead of applying one generic style.",
         "The inclusion of deterministic anti-pattern checks means the tool is not only prompt guidance; it also provides repeatable, automatable design linting.",
         "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling.",
         "The layout suggests a multi-surface tool: command-line usage, plugin integration, skill behavior, and extension support are developed in one repository.",
         "The project likely prioritizes modularity, making it easier to evolve or publish individual components independently.",
-        "The presence of both site and tests indicates attention to user-facing documentation as well as validation of functionality."
+        "The presence of both site and tests indicates attention to user-facing documentation as well as validation of functionality.",
+        "The project is organized as a CLI plus Chrome DevTools extension, sharing detection capabilities across command-line, injected browser, and extension environments.",
+        "The browser detector appears to be generated from modular source files into a single distributable script for easy injection or `<script>` usage.",
+        "The CLI supports multiple target types (`file`, `directory`, or `URL`) and includes skill/provider management commands.",
+        "Provider support is modeled around AI/code-assistant configuration directories such as Cursor, Claude Code, Gemini, Codex, GitHub, and others.",
+        "The extension likely performs scans in the inspected page, reports findings back through content scripts/background messaging, and visualizes them in the DevTools panel/sidebar.",
+        "Overlay visibility is treated as per-tab UI state, suggesting findings can be highlighted directly on the inspected page.",
+        "The architecture accounts for repeated script injection, which is common in Chrome extensions using `chrome.scripting.executeScript`.",
+        "The generated detector includes shared constants such as safe HTML tags, implying the detection engine checks DOM/CSS/HTML anti-patterns.",
+        "The service worker routes messages between popup, DevTools panel, and content scripts, centralizing extension coordination.",
+        "The DevTools integration includes both a custom panel for full results and an Elements sidebar for context-sensitive findings on the selected element."
       ],
       "code_examples": [],
       "arch_topics": [
@@ -1461,660 +1500,6 @@
     }
   },
   "skill_index": {
-    "disable unnecessary logging such as wandb during evaluation ": {
-      "name": "Disable unnecessary logging such as wandb during evaluation or lightweight debug",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "version_control"
-      ]
-    },
-    "use validation-improvement checkpointing for small datasets ": {
-      "name": "Use validation-improvement checkpointing for small datasets or finetuning to avo",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "error_handling",
-        "event_driven",
-        "data_transformation",
-        "cli_tooling"
-      ]
-    },
-    "use frequent evaluation on small datasets where overfitting ": {
-      "name": "Use frequent evaluation on small datasets where overfitting is expected.",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "error_handling",
-        "event_driven",
-        "data_transformation",
-        "version_control",
-        "cli_tooling"
-      ]
-    },
-    "use larger `eval_iters` for final evaluation to reduce metri": {
-      "name": "Use larger `eval_iters` for final evaluation to reduce metric noise.",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "error_handling",
-        "event_driven",
-        "data_transformation",
-        "cli_tooling"
-      ]
-    },
-    "name experiment outputs and wandb projects according to data": {
-      "name": "Name experiment outputs and wandb projects according to dataset or task for easi",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "version_control"
-      ]
-    },
-    "generate unique finetuning run names when multiple runs may ": {
-      "name": "Generate unique finetuning run names when multiple runs may be launched with sim",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "schema_validation",
-        "state_management"
-      ]
-    },
-    "scale gradient accumulation according to hardware and target": {
-      "name": "Scale gradient accumulation according to hardware and target token throughput.",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": []
-    },
-    "the repository favors transparent, editable experiment confi": {
-      "name": "The repository favors transparent, editable experiment configs over opaque confi",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "evaluation of gpt-2 variants is standardized; only the pretr": {
-      "name": "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint nam",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "the same training script can likely consume many configs by ": {
-      "name": "The same training script can likely consume many configs by executing or importi",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the configs are designed to be overridden from the command l": {
-      "name": "The configs are designed to be overridden from the command line, suggested by co",
-      "category": "architecture",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "token throughput is treated as a first-class design concern,": {
-      "name": "Token throughput is treated as a first-class design concern, not just raw batch ",
-      "category": "architecture",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "for large-scale gpt-2 training, the target schedule is expre": {
-      "name": "For large-scale GPT-2 training, the target schedule is expressed in tokens and i",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "data_visualization",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "for shakespeare finetuning, the config estimates epochs from": {
-      "name": "For Shakespeare finetuning, the config estimates epochs from token count and tok",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "data_visualization",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation"
-      ]
-    },
-    "small character-level shakespeare training is intended as a ": {
-      "name": "Small character-level Shakespeare training is intended as a debugging-friendly s",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "schema_validation"
-      ]
-    },
-    "the codebase balances research-scale runs with lightweight l": {
-      "name": "The codebase balances research-scale runs with lightweight local experiments.",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "dataset preparation is optimized for practical throughput us": {
-      "name": "Dataset preparation is optimized for practical throughput using multiprocessing ",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "single-node gpu-oriented design, intended especially for hig": {
-      "name": "Single-node GPU-oriented design, intended especially for high-end multi-GPU node",
-      "category": "architecture",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": []
-    },
-    "end-to-end llm pipeline included in one repository: tokenize": {
-      "name": "End-to-end LLM pipeline included in one repository: tokenizer training, pretrain",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "database_pattern",
-        "data_fetching",
-        "cli_tooling"
-      ]
-    },
-    "model scaling is controlled primarily by one complexity para": {
-      "name": "Model scaling is controlled primarily by one complexity parameter, `--depth`, re",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "other model and training hyperparameters are automatically d": {
-      "name": "Other model and training hyperparameters are automatically derived from depth, i",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the repository maintains a standardized gpt-2 speedrun workf": {
-      "name": "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedr",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "evaluation centers on gpt-2-grade capability using dclm core": {
-      "name": "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validat",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the project prioritizes simplicity and hackability while sti": {
-      "name": "The project prioritizes simplicity and hackability while still covering all majo",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "a central design idea is compute-optimal scaling: users adju": {
-      "name": "A central design idea is compute-optimal scaling: users adjust model depth while",
-      "category": "architecture",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the main optimization target is pretraining speed, since pre": {
-      "name": "The main optimization target is pretraining speed, since pretraining dominates c",
-      "category": "frontend",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the leaderboard frames progress around practical wall-clock ": {
-      "name": "The leaderboard frames progress around practical wall-clock time to GPT-2 capabi",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "the cost and time claims emphasize how modern hardware and o": {
-      "name": "The cost and time claims emphasize how modern hardware and optimized training re",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "clear separation between reusable source code (`nanochat`) a": {
-      "name": "Clear separation between reusable source code (`nanochat`) and auxiliary executi",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "testing_pattern",
-        "cli_tooling"
-      ]
-    },
-    "experiment-oriented layout with `runs` reserved for outputs,": {
-      "name": "Experiment-oriented layout with `runs` reserved for outputs, logs, checkpoints, ",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "error_handling",
-        "event_driven",
-        "schema_validation",
-        "cli_tooling"
-      ]
-    },
-    "presence of `dev` and `.ipynb` files indicates active explor": {
-      "name": "Presence of `dev` and `.ipynb` files indicates active exploratory research/proto",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "version_control"
-      ]
-    },
-    "tests are isolated in a top-level `tests` directory, followi": {
-      "name": "Tests are isolated in a top-level `tests` directory, following common Python pro",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "schema_validation",
-        "version_control",
-        "cli_tooling"
-      ]
-    },
-    "multiple support formats (`markdown`, `shell`, `html`) sugge": {
-      "name": "Multiple support formats (`markdown`, `shell`, `html`) suggest documentation, au",
-      "category": "frontend",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "database_pattern"
-      ]
-    },
-    "this layout fits a small-to-medium ml research codebase: cor": {
-      "name": "This layout fits a small-to-medium ML research codebase: core implementation is ",
-      "category": "general",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": []
-    },
-    "the repository likely prioritizes reproducibility and iterat": {
-      "name": "The repository likely prioritizes reproducibility and iteration speed, with scri",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanochat"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
     "keeping generated run artifacts separate from source and tes": {
       "name": "Keeping generated run artifacts separate from source and tests makes the project",
       "category": "engineering",
@@ -2291,6 +1676,7 @@
         "data_fetching",
         "schema_validation",
         "version_control",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2315,6 +1701,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2341,7 +1728,8 @@
       "learned_at": "2026-06-01 10:30",
       "related_concepts": [
         "data_visualization",
-        "data_transformation"
+        "data_transformation",
+        "dependency_injection"
       ]
     },
     "synthetic data generation script is structured around divers": {
@@ -2364,6 +1752,7 @@
         "data_fetching",
         "schema_validation",
         "version_control",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2482,7 +1871,8 @@
         "error_handling",
         "event_driven",
         "data_transformation",
-        "cli_tooling"
+        "cli_tooling",
+        "dependency_injection"
       ]
     },
     "keep evaluation prompt construction modular and template-dri": {
@@ -2511,7 +1901,8 @@
         "error_handling",
         "event_driven",
         "data_transformation",
-        "cli_tooling"
+        "cli_tooling",
+        "dependency_injection"
       ]
     },
     "the codebase is optimized for practical distributed llm trai": {
@@ -2535,6 +1926,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2570,6 +1962,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2591,6 +1984,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2627,6 +2021,7 @@
         "schema_validation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2650,6 +2045,7 @@
         "data_fetching",
         "schema_validation",
         "version_control",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2684,6 +2080,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2705,6 +2102,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2728,7 +2126,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "state_management"
+        "dependency_injection"
       ]
     },
     "primary development focus is pretraining gpt-style transform": {
@@ -2741,8 +2139,7 @@
       "learned_at": "2026-06-01 11:00",
       "related_concepts": [
         "testing_pattern",
-        "data_transformation",
-        "state_management"
+        "data_transformation"
       ]
     },
     "the main high-performance path lives in cuda code, especiall": {
@@ -2763,6 +2160,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2792,6 +2190,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2821,6 +2220,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2854,6 +2254,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2883,6 +2284,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2906,7 +2308,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "state_management"
+        "dependency_injection"
       ]
     },
     "the repository relies on generated or downloaded binary arti": {
@@ -2927,6 +2329,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2950,7 +2353,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "state_management"
+        "dependency_injection"
       ]
     },
     "built around a claude-style skill named `impeccable` with a ": {
@@ -2979,6 +2382,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -2991,7 +2395,8 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 21:00",
       "related_concepts": [
-        "data_transformation"
+        "data_transformation",
+        "dependency_injection"
       ]
     },
     "separates reusable design knowledge from project-specific co": {
@@ -3005,8 +2410,7 @@
       "related_concepts": [
         "data_visualization",
         "modular_design",
-        "cli_tooling",
-        "state_management"
+        "cli_tooling"
       ]
     },
     "combines deterministic anti-pattern detection with an llm-ba": {
@@ -3038,6 +2442,7 @@
         "schema_validation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3059,6 +2464,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3090,6 +2496,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3112,6 +2519,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3133,6 +2541,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3163,6 +2572,7 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
+        "event_driven",
         "schema_validation",
         "cli_tooling"
       ]
@@ -3187,6 +2597,7 @@
         "error_handling",
         "database_pattern",
         "data_fetching",
+        "event_driven",
         "schema_validation",
         "data_transformation",
         "version_control",
@@ -3215,6 +2626,7 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3251,6 +2663,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3272,6 +2685,7 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     },
@@ -3294,6 +2708,613 @@
         "data_fetching",
         "version_control",
         "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "node.js cli entrypoint uses a shebang (`#!/usr/bin/env node`": {
+      "name": "Node.js CLI entrypoint uses a shebang (`#!/usr/bin/env node`) with ESM imports a",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "cli_tooling"
+      ]
+    },
+    "cli help handling checks for missing command, `--help`, or `": {
+      "name": "CLI help handling checks for missing command, `--help`, or `-h` and prints a usa",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "error_handling",
+        "version_control",
+        "cli_tooling"
+      ]
+    },
+    "esm-compatible `__dirname` is derived via `dirname(fileurlto": {
+      "name": "ESM-compatible `__dirname` is derived via `dirname(fileURLToPath(import.meta.url",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "configuration constants are exported as frozen objects/array": {
+      "name": "Configuration constants are exported as frozen objects/arrays using `Object.free",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "version_control",
+        "cli_tooling"
+      ]
+    },
+    "provider lists are derived from configuration maps with `obj": {
+      "name": "Provider lists are derived from configuration maps with `Object.keys(...)` to av",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "cli_tooling"
+      ]
+    },
+    "combined provider arrays are composed with spread syntax fro": {
+      "name": "Combined provider arrays are composed with spread syntax from smaller provider g",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "event_driven"
+      ]
+    },
+    "browser detector bundle is wrapped in an iife to avoid leaki": {
+      "name": "Browser detector bundle is wrapped in an IIFE to avoid leaking variables into gl",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "database_pattern",
+        "cli_tooling"
+      ]
+    },
+    "browser-only scripts guard execution with `if (typeof window": {
+      "name": "Browser-only scripts guard execution with `if (typeof window === 'undefined') re",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": []
+    },
+    "generated bundle files include prominent comments indicating": {
+      "name": "Generated bundle files include prominent comments indicating source file, rebuil",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "config_management",
+        "database_pattern",
+        "state_management"
+      ]
+    },
+    "chrome extension service worker maintains per-tab state with": {
+      "name": "Chrome extension service worker maintains per-tab state with `Map` keyed by `tab",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "plugin_system",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "lazy state initialization is encapsulated in a helper functi": {
+      "name": "Lazy state initialization is encapsulated in a helper function (`getState(tabId)",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "chrome extension messaging architecture separates background": {
+      "name": "Chrome extension messaging architecture separates background service worker, con",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "plugin_system",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "content script uses an iife plus a global idempotency flag t": {
+      "name": "Content script uses an IIFE plus a global idempotency flag to prevent duplicate ",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "database_pattern",
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "content script bridges extension messaging to page-context d": {
+      "name": "Content script bridges extension messaging to page-context detector because some",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "database_pattern",
+        "dependency_injection"
+      ]
+    },
+    "devtools panel is created with `chrome.devtools.panels.creat": {
+      "name": "DevTools panel is created with `chrome.devtools.panels.create(...)`.",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "use immutable configuration exports for provider registries ": {
+      "name": "Use immutable configuration exports for provider registries to reduce accidental",
+      "category": "engineering",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "event_driven",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "keep one source of truth for provider names by deriving arra": {
+      "name": "Keep one source of truth for provider names by deriving arrays from config objec",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "cli_tooling"
+      ]
+    },
+    "document cli usage directly in the entrypoint for discoverab": {
+      "name": "Document CLI usage directly in the entrypoint for discoverability.",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "data_fetching",
+        "version_control",
+        "cli_tooling"
+      ]
+    },
+    "include spdx license identifiers and generated-file metadata": {
+      "name": "Include SPDX license identifiers and generated-file metadata in distributed/gene",
+      "category": "data",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": []
+    },
+    "clearly mark generated files as generated and provide the re": {
+      "name": "Clearly mark generated files as generated and provide the rebuild command.",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "state_management"
+      ]
+    },
+    "guard browser-specific bundles so they do not fail in non-br": {
+      "name": "Guard browser-specific bundles so they do not fail in non-browser environments.",
+      "category": "engineering",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "database_pattern"
+      ]
+    },
+    "wrap injected browser/content scripts in iifes to prevent gl": {
+      "name": "Wrap injected browser/content scripts in IIFEs to prevent global namespace pollu",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": []
+    },
+    "make extension content scripts idempotent to avoid duplicate": {
+      "name": "Make extension content scripts idempotent to avoid duplicate listeners, redeclar",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "plugin_system",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "separate page-context detection logic from isolated-world co": {
+      "name": "Separate page-context detection logic from isolated-world content script messagi",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "config_management",
+        "monitoring_observability",
+        "data_fetching",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "maintain extension state per tab rather than globally to avo": {
+      "name": "Maintain extension state per tab rather than globally to avoid cross-tab contami",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "plugin_system",
+        "database_pattern",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the project is organized as a cli plus chrome devtools exten": {
+      "name": "The project is organized as a CLI plus Chrome DevTools extension, sharing detect",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the browser detector appears to be generated from modular so": {
+      "name": "The browser detector appears to be generated from modular source files into a si",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the cli supports multiple target types (`file`, `directory`,": {
+      "name": "The CLI supports multiple target types (`file`, `directory`, or `URL`) and inclu",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "provider support is modeled around ai/code-assistant configu": {
+      "name": "Provider support is modeled around AI/code-assistant configuration directories s",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "the extension likely performs scans in the inspected page, r": {
+      "name": "The extension likely performs scans in the inspected page, reports findings back",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "overlay visibility is treated as per-tab ui state, suggestin": {
+      "name": "Overlay visibility is treated as per-tab UI state, suggesting findings can be hi",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "the architecture accounts for repeated script injection, whi": {
+      "name": "The architecture accounts for repeated script injection, which is common in Chro",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the generated detector includes shared constants such as saf": {
+      "name": "The generated detector includes shared constants such as safe HTML tags, implyin",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the service worker routes messages between popup, devtools p": {
+      "name": "The service worker routes messages between popup, DevTools panel, and content sc",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the devtools integration includes both a custom panel for fu": {
+      "name": "The DevTools integration includes both a custom panel for full results and an El",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
         "state_management"
       ]
     }
@@ -3438,257 +3459,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 53,
-    "total_patterns": 90,
-    "total_insights": 62,
-    "last_study_date": "2026-06-01",
-    "total_skills_learned": 108
+    "total_patterns": 105,
+    "total_insights": 69,
+    "last_study_date": "2026-06-02",
+    "total_skills_learned": 135
   },
   "skills_memory": [
-    {
-      "name": "Disable unnecessary logging such as wandb during evaluation or lightweight debug",
-      "source": "karpathy/nanoGPT",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Use validation-improvement checkpointing for small datasets or finetuning to avo",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Use frequent evaluation on small datasets where overfitting is expected.",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Use larger `eval_iters` for final evaluation to reduce metric noise.",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Name experiment outputs and wandb projects according to dataset or task for easi",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Generate unique finetuning run names when multiple runs may be launched with sim",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Scale gradient accumulation according to hardware and target token throughput.",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "The repository favors transparent, editable experiment configs over opaque confi",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint nam",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "The same training script can likely consume many configs by executing or importi",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "The configs are designed to be overridden from the command line, suggested by co",
-      "source": "karpathy/nanoGPT",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Token throughput is treated as a first-class design concern, not just raw batch ",
-      "source": "karpathy/nanoGPT",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "For large-scale GPT-2 training, the target schedule is expressed in tokens and i",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "For Shakespeare finetuning, the config estimates epochs from token count and tok",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Small character-level Shakespeare training is intended as a debugging-friendly s",
-      "source": "karpathy/nanoGPT",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "The codebase balances research-scale runs with lightweight local experiments.",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Dataset preparation is optimized for practical throughput using multiprocessing ",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Single-node GPU-oriented design, intended especially for high-end multi-GPU node",
-      "source": "karpathy/nanochat",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "End-to-end LLM pipeline included in one repository: tokenizer training, pretrain",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "Model scaling is controlled primarily by one complexity parameter, `--depth`, re",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "Other model and training hyperparameters are automatically derived from depth, i",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedr",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validat",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "The project prioritizes simplicity and hackability while still covering all majo",
-      "source": "karpathy/nanochat",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "A central design idea is compute-optimal scaling: users adjust model depth while",
-      "source": "karpathy/nanochat",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "The main optimization target is pretraining speed, since pretraining dominates c",
-      "source": "karpathy/nanochat",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "The leaderboard frames progress around practical wall-clock time to GPT-2 capabi",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "The cost and time claims emphasize how modern hardware and optimized training re",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:30"
-    },
-    {
-      "name": "Clear separation between reusable source code (`nanochat`) and auxiliary executi",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "Experiment-oriented layout with `runs` reserved for outputs, logs, checkpoints, ",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "Presence of `dev` and `.ipynb` files indicates active exploratory research/proto",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "Tests are isolated in a top-level `tests` directory, following common Python pro",
-      "source": "karpathy/nanochat",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "Multiple support formats (`markdown`, `shell`, `html`) suggest documentation, au",
-      "source": "karpathy/nanochat",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "This layout fits a small-to-medium ML research codebase: core implementation is ",
-      "source": "karpathy/nanochat",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
-    {
-      "name": "The repository likely prioritizes reproducibility and iteration speed, with scri",
-      "source": "karpathy/nanochat",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 10:00"
-    },
     {
       "name": "Keeping generated run artifacts separate from source and tests makes the project",
       "source": "karpathy/nanochat",
@@ -4143,6 +3919,251 @@
       "category": "engineering",
       "usage_count": 0,
       "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "Node.js CLI entrypoint uses a shebang (`#!/usr/bin/env node`) with ESM imports a",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "CLI help handling checks for missing command, `--help`, or `-h` and prints a usa",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "ESM-compatible `__dirname` is derived via `dirname(fileURLToPath(import.meta.url",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Configuration constants are exported as frozen objects/arrays using `Object.free",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Provider lists are derived from configuration maps with `Object.keys(...)` to av",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Combined provider arrays are composed with spread syntax from smaller provider g",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Browser detector bundle is wrapped in an IIFE to avoid leaking variables into gl",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Browser-only scripts guard execution with `if (typeof window === 'undefined') re",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Generated bundle files include prominent comments indicating source file, rebuil",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Chrome extension service worker maintains per-tab state with `Map` keyed by `tab",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Lazy state initialization is encapsulated in a helper function (`getState(tabId)",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Chrome extension messaging architecture separates background service worker, con",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Content script uses an IIFE plus a global idempotency flag to prevent duplicate ",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Content script bridges extension messaging to page-context detector because some",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "DevTools panel is created with `chrome.devtools.panels.create(...)`.",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Use immutable configuration exports for provider registries to reduce accidental",
+      "source": "pbakaus/impeccable",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Keep one source of truth for provider names by deriving arrays from config objec",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Document CLI usage directly in the entrypoint for discoverability.",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Include SPDX license identifiers and generated-file metadata in distributed/gene",
+      "source": "pbakaus/impeccable",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Clearly mark generated files as generated and provide the rebuild command.",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Guard browser-specific bundles so they do not fail in non-browser environments.",
+      "source": "pbakaus/impeccable",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Wrap injected browser/content scripts in IIFEs to prevent global namespace pollu",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Make extension content scripts idempotent to avoid duplicate listeners, redeclar",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Separate page-context detection logic from isolated-world content script messagi",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Maintain extension state per tab rather than globally to avoid cross-tab contami",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The project is organized as a CLI plus Chrome DevTools extension, sharing detect",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The browser detector appears to be generated from modular source files into a si",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The CLI supports multiple target types (`file`, `directory`, or `URL`) and inclu",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Provider support is modeled around AI/code-assistant configuration directories s",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The extension likely performs scans in the inspected page, reports findings back",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "Overlay visibility is treated as per-tab UI state, suggesting findings can be hi",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The architecture accounts for repeated script injection, which is common in Chro",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The generated detector includes shared constants such as safe HTML tags, implyin",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The service worker routes messages between popup, DevTools panel, and content sc",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
+    },
+    {
+      "name": "The DevTools integration includes both a custom panel for full results and an El",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 00:00"
     }
   ],
   "concepts": {
@@ -4170,7 +4191,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 17,
+      "evidence_count": 18,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -4211,9 +4232,10 @@
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 22,
+      "evidence_count": 23,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -4229,7 +4251,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 31,
+      "evidence_count": 36,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4244,7 +4266,7 @@
         "karpathy/nanochat",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 33,
+      "evidence_count": 38,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -4257,7 +4279,7 @@
         "karpathy/nanochat",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 9,
+      "evidence_count": 23,
       "examples": [
         "Theme extension via base theme inheritance",
         "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
@@ -4268,9 +4290,10 @@
       "repos": [
         "d3/d3",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 21,
+      "evidence_count": 22,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -4296,7 +4319,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 16,
+      "evidence_count": 20,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4320,12 +4343,14 @@
     "event_driven": {
       "repos": [
         "d3/d3",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 2,
+      "evidence_count": 6,
       "examples": [
         "Use try/catch with CI environment checks to prevent local build failures",
-        "Backward compatibility matters because checkpoints may outlive configuration schemas; config patching prevents older artifacts from becoming unusable."
+        "Backward compatibility matters because checkpoints may outlive configuration schemas; config patching prevents older artifacts from becoming unusable.",
+        "Configuration constants are exported as frozen objects/arrays using `Object.freeze()` to prevent mutation."
       ]
     },
     "schema_validation": {
@@ -4336,7 +4361,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 9,
+      "evidence_count": 10,
       "examples": [
         "Model quality is compared using validation bits per byte, making results less dependent on vocabulary size",
         "Using validation bits per byte enables fairer comparisons across tokenizer or vocabulary changes",
@@ -4358,9 +4383,10 @@
       "repos": [
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 8,
+      "evidence_count": 9,
       "examples": [
         "Configuration and dataset organization suggest reproducible experiments across different model sizes and corpora.",
         "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ.",
@@ -4372,11 +4398,23 @@
         "karpathy/nanoGPT",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 4,
+      "evidence_count": 11,
       "examples": [
         "The configs are designed to be overridden from the command line, suggested by comments such as enabling wandb externally.",
         "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
         "Clear separation between runtime components: cli, plugin, skill, and extension are isolated at the top level."
+      ]
+    },
+    "dependency_injection": {
+      "repos": [
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
+      ],
+      "evidence_count": 8,
+      "examples": [
+        "Synthetic data generation script is structured around diversity injection across topics, personas, conversation dynamics, and first-message variation.",
+        "Content script uses an IIFE plus a global idempotency flag to prevent duplicate injection side effects.",
+        "Per-tab extension state tracks findings, overlay visibility, and injection status flags."
       ]
     },
     "state_management": {
@@ -4385,11 +4423,11 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 3,
+      "evidence_count": 10,
       "examples": [
         "Separate model checkpoint state, optimizer state, tokenizer reconstruction, and config migration responsibilities cleanly.",
         "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets.",
-        "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling."
+        "Chrome extension service worker maintains per-tab state with `Map` keyed by `tabId`."
       ]
     }
   },
@@ -4423,11 +4461,48 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "practical",
-        "explicitly",
-        "standard",
-        "layout",
-        "checkpoint"
+        "generation.",
+        "organization",
+        "hardware",
+        "configuration",
+        "checkpoints"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 109,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "event_driven",
+        "schema_validation",
+        "version_control",
+        "dependency_injection",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "context",
+        "structured",
+        "presence",
+        "configuration",
+        "separation"
       ]
     },
     {
@@ -4458,11 +4533,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "dedicated",
-        "layout",
-        "templates",
-        "pipeline",
-        "development"
+        "organization",
+        "configuration",
+        "separation",
+        "development",
+        "project"
       ]
     },
     {
@@ -4491,11 +4566,44 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "practical",
-        "experiment",
-        "layout",
-        "treated",
-        "likely"
+        "organization",
+        "configuration",
+        "experimentation",
+        "training,",
+        "files"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 79,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "schema_validation",
+        "version_control",
+        "cli_tooling"
+      ],
+      "shared_pattern_keywords": [
+        "configuration",
+        "variables",
+        "files",
+        "across",
+        "common"
       ]
     },
     {
@@ -4524,18 +4632,18 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "wall-clock",
-        "practical",
-        "layout",
-        "implementation",
-        "treated"
+        "organization",
+        "configuration",
+        "project",
+        "files",
+        "across"
       ]
     },
     {
-      "from_repo": "karpathy/nanochat",
+      "from_repo": "d3/d3",
       "to_repo": "pbakaus/impeccable",
       "type": "strong",
-      "score": 76,
+      "score": 75,
       "connections": [
         "shared_topic",
         "shared_concept",
@@ -4548,19 +4656,20 @@
         "data_visualization",
         "modular_design",
         "testing_pattern",
+        "performance_optimization",
         "file_operations",
         "config_management",
         "plugin_system",
+        "monitoring_observability",
         "database_pattern",
-        "schema_validation",
-        "state_management"
+        "event_driven"
       ],
       "shared_pattern_keywords": [
-        "attention",
-        "dedicated",
-        "centralized",
-        "layout",
-        "implementation"
+        "supports",
+        "configuration",
+        "separation",
+        "project",
+        "files"
       ]
     },
     {
@@ -4588,11 +4697,41 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "layout",
         "organization",
-        "metadata",
-        "workflow",
-        "enabling"
+        "configuration",
+        "enabling",
+        "intended",
+        "strategy"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 59,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern",
+        "schema_validation"
+      ],
+      "shared_pattern_keywords": [
+        "configuration",
+        "project",
+        "files",
+        "across",
+        "directories"
       ]
     },
     {
@@ -4620,11 +4759,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "compact",
-        "implementation",
-        "repository",
-        "separate",
-        "development"
+        "checkpoints",
+        "separation",
+        "development",
+        "project",
+        "between"
       ]
     },
     {
@@ -4652,71 +4791,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "repository",
-        "educational",
+        "checkpoints",
         "separate",
-        "through",
-        "gpt-2"
-      ]
-    },
-    {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 52,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "file_operations",
-        "config_management",
-        "database_pattern",
-        "schema_validation",
-        "cli_tooling"
-      ],
-      "shared_pattern_keywords": [
-        "layout",
-        "under",
-        "assets",
-        "likely",
-        "package"
-      ]
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 51,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "dedicated",
-        "layout",
-        "layer",
-        "plugin",
-        "while"
+        "limited",
+        "educational",
+        "parallel"
       ]
     },
     {
@@ -4742,18 +4821,18 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "structure",
-        "layout",
-        "efficiency",
-        "while",
-        "organization"
+        "organization",
+        "configuration",
+        "project",
+        "files",
+        "modern"
       ]
     },
     {
-      "from_repo": "karpathy/autoresearch",
+      "from_repo": "karpathy/llm.c",
       "to_repo": "pbakaus/impeccable",
       "type": "strong",
-      "score": 45,
+      "score": 48,
       "connections": [
         "shared_topic",
         "shared_concept",
@@ -4763,19 +4842,20 @@
         "open-source"
       ],
       "shared_concepts": [
-        "data_visualization",
         "modular_design",
+        "performance_optimization",
         "file_operations",
-        "config_management",
         "database_pattern",
-        "schema_validation"
+        "schema_validation",
+        "version_control",
+        "state_management"
       ],
       "shared_pattern_keywords": [
-        "improve",
-        "layout",
-        "implementation",
-        "users",
-        "likely"
+        "provides",
+        "scripts",
+        "code,",
+        "separation",
+        "project"
       ]
     },
     {
@@ -4800,39 +4880,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "while",
-        "through",
-        "rather",
-        "tokenizer",
-        "model"
-      ]
-    },
-    {
-      "from_repo": "karpathy/llm.c",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 38,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "modular_design",
-        "file_operations",
-        "database_pattern",
-        "schema_validation",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "while",
-        "primary",
-        "rather",
-        "between",
-        "model"
+        "optimized",
+        "intentionally",
+        "readability",
+        "project",
+        "generated"
       ]
     },
     {
@@ -4857,11 +4909,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "development",
+        "serves",
+        "separation",
         "developer",
-        "while",
-        "project",
-        "control"
+        "development",
+        "parallel"
       ]
     },
     {
@@ -4874,8 +4926,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4890,8 +4942,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5226,8 +5278,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "go"
+        "go",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5354,8 +5406,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5370,8 +5422,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5386,8 +5438,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5402,8 +5454,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5418,8 +5470,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5434,8 +5486,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6042,8 +6094,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6058,8 +6110,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6074,8 +6126,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8874,8 +8926,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8890,8 +8942,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8922,8 +8974,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "javascript"
+        "javascript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
