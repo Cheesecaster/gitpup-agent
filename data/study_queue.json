@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "TauricResearch/TradingAgents",
-      "stars_today": 284,
-      "lang": "Python",
-      "target_depth": 4
-    },
-    {
       "repo": "p-e-w/heretic",
       "stars_today": 241,
       "lang": "Python",
@@ -29,7 +23,7 @@
       "source": "github_trending"
     }
   ],
-  "studied_today": 3,
+  "studied_today": 6,
   "today": "2026-06-02",
   "max_daily": 3,
   "source": "github_trending",
@@ -39,5 +33,5 @@
     "dmtrKovalenko/fff",
     "stefan-jansen/machine-learning-for-trading"
   ],
-  "active_repo": "TauricResearch/TradingAgents"
+  "active_repo": "p-e-w/heretic"
 }
