@@ -445,7 +445,11 @@ def _rate_ok(handler, limit=12, window=60):
 
 def _public_do_GET(self):
     p = urllib.parse.urlparse(self.path).path
-    if p.startswith('/api/') or p == '/story' or p == '/auth/callback':
+    normalized_p = p.rstrip('/')
+    if normalized_p == '':
+        normalized_p = '/'
+
+    if p.startswith('/api/') or normalized_p == '/story' or normalized_p == '/auth/callback' or normalized_p == '/status':
         return do_GET(self)
     return http.server.SimpleHTTPRequestHandler.do_GET(self)
 

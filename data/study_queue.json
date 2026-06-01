@@ -62,7 +62,7 @@
     }
   ],
   "max_daily": 20,
-  "studied_today": 14,
+  "studied_today": 15,
   "today": "2026-06-01",
   "source": "karpathy_priority",
   "active_repo": "karpathy/nanoGPT"

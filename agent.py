@@ -1096,38 +1096,57 @@ def queue_add_pending(repo_name, target_depth=1):
     save_queue(q)
 
 def queue_get_next():
-    """Get next repo to study. PRIORITIZE advancing existing repos over discovering new."""
+    """Strict mastery scheduler.
+
+    RULE: Goldie MUST finish active_repo to MAX/target_depth before moving
+    to any other queued repo. No round-robin, no same-day skip, no jumping.
+    """
     q = load_queue()
     repos = q.get("repos", [])
     if not repos:
+        q.pop("active_repo", None)
+        save_queue(q)
         return None
     kb = load_kb()
-    today_str = datetime.now(WIB).strftime("%Y-%m-%d")
-    studied_today = set()
-    for rn, rd in kb.get("repos", {}).items():
-        for ts in rd.get("studied_at", []):
-            if ts.startswith(today_str):
-                studied_today.add(rn)
 
-    # Sort by: (1) higher current level first (advance existing), (2) not studied today
-    scored = []
+    def level_for(rn):
+        return kb.get("repos", {}).get(rn, {}).get("study_level", 0)
+
+    def target_for(rn):
+        for item in repos:
+            if item.get("repo") == rn:
+                return item.get("target_depth", 4)
+        return None
+
+    active = q.get("active_repo")
+    if active:
+        target = target_for(active)
+        if target is not None:
+            lvl = level_for(active)
+            if lvl < target:
+                log("  STRICT MASTERY LOCK: {} L{} -> L{} before switching".format(active, lvl, target))
+                return (active, min(lvl + 1, target))
+            log("  STRICT MASTERY COMPLETE: {} reached L{}".format(active, lvl))
+            q.pop("active_repo", None)
+            save_queue(q)
+        else:
+            q.pop("active_repo", None)
+            save_queue(q)
+
+    # No active repo: choose first incomplete repo in queue order (priority sorted)
     for item in repos:
         rn = item["repo"]
-        target = item["target_depth"]
-        kb_level = 0
-        if rn in kb.get("repos", {}):
-            kb_level = kb["repos"][rn].get("study_level", 0)
-        if rn in studied_today:
-            continue
-        scored.append((rn, target, kb_level))
+        target = item.get("target_depth", 4)
+        lvl = level_for(rn)
+        if lvl < target:
+            q["active_repo"] = rn
+            save_queue(q)
+            log("  STRICT MASTERY LOCK ACQUIRED: {} L{} -> L{}".format(rn, lvl, target))
+            return (rn, min(lvl + 1, target))
 
-    # Sort: highest kb_level first (advance what's started), then lowest target first
-    if not scored:
-        return None
-    scored.sort(key=lambda x: (-x[2], x[1]))
-    rn, target, kb_level = scored[0]
-    from_level = kb_level + 1 if kb_level > 0 else 1
-    return (rn, min(from_level, target))
+    q.pop("active_repo", None)
+    save_queue(q)
+    return None
 def queue_remove(repo_name):
     q = load_queue()
     q["repos"] = [r for r in q.get("repos", []) if r["repo"] != repo_name]
@@ -1136,7 +1155,9 @@ def queue_remove(repo_name):
 def queue_pop_done():
     q = load_queue()
     kb = load_kb()
+    active = q.get("active_repo")
     new_repos = []
+    completed = set()
     for item in q.get("repos", []):
         rn = item["repo"]
         target = item["target_depth"]
@@ -1144,9 +1165,12 @@ def queue_pop_done():
         if rn in kb.get("repos", {}):
             kb_level = kb["repos"][rn].get("study_level", 0)
         if kb_level >= target:
+            completed.add(rn)
             continue  # done
         new_repos.append(item)
     q["repos"] = new_repos
+    if active in completed:
+        q.pop("active_repo", None)
     save_queue(q)
 
 # ════════════════════════════════════════════════
