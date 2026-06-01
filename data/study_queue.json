@@ -1,59 +1,18 @@
 {
   "repos": [
     {
-      "repo": "karpathy/llm.c",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/minGPT",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/nn-zero-to-hero",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/llm-council",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/llama2.c",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/micrograd",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/char-rnn",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/convnetjs",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/minbpe",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
-    },
-    {
-      "repo": "karpathy/arxiv-sanity-preserver",
-      "target_depth": 4,
-      "added_at": "2026-06-01T00:00:00"
+      "repo": "a5c-ai/babysitter",
+      "stars_today": 58,
+      "lang": "JavaScript",
+      "target_depth": 1
     }
   ],
-  "max_daily": 20,
-  "studied_today": 20,
+  "studied_today": 1,
   "today": "2026-06-01",
-  "source": "karpathy_priority",
-  "active_repo": "karpathy/llm.c"
+  "max_daily": 3,
+  "source": "github_trending",
+  "all_candidates": [
+    "a5c-ai/babysitter"
+  ],
+  "active_repo": "a5c-ai/babysitter"
 }
