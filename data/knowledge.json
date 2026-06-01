@@ -901,14 +901,28 @@
     },
     "karpathy/nanochat": {
       "full_name": "karpathy/nanochat",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-06-01 06:00"
+        "2026-06-01 06:00",
+        "2026-06-01 09:30"
       ],
-      "summary": "The best ChatGPT that $100 can buy.",
-      "patterns": [],
+      "summary": "nanochat is a minimal, hackable experimental harness for training and interacting with LLMs on a single GPU node. It covers the full LLM lifecycle: tokenization, pretraining, finetuning, evaluation, inference, and a ChatGPT-like web UI. It is designed to make GPT-2-level model training reproducible ",
+      "patterns": [
+        "Single-node GPU-oriented design, intended especially for high-end multi-GPU nodes such as 8xH100.",
+        "End-to-end LLM pipeline included in one repository: tokenizer training, pretraining, finetuning, evaluation, inference, and chat UI.",
+        "Model scaling is controlled primarily by one complexity parameter, `--depth`, representing the number of transformer layers.",
+        "Other model and training hyperparameters are automatically derived from depth, including width, number of heads, learning-rate adjustments, training horizon, and weight decay.",
+        "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedrun.sh`, used as the reference training path for leaderboard comparisons.",
+        "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validation bits-per-byte also tracked."
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "The project prioritizes simplicity and hackability while still covering all major stages needed to train and use an LLM.",
+        "A central design idea is compute-optimal scaling: users adjust model depth while the system automatically configures other hyperparameters.",
+        "The main optimization target is pretraining speed, since pretraining dominates compute cost.",
+        "The leaderboard frames progress around practical wall-clock time to GPT-2 capability rather than only loss or benchmark score.",
+        "The cost and time claims emphasize how modern hardware and optimized training recipes can reproduce GPT-2-level capability far more cheaply than the original 2019 training run."
+      ],
       "code_examples": [],
       "arch_topics": [
         "python",
@@ -1298,174 +1312,6 @@
     }
   },
   "skill_index": {
-    "the system is intentionally minimal to scale from a single b": {
-      "name": "The system is intentionally minimal to scale from a single baseline agent to a m",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:03",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "version_control"
-      ]
-    },
-    "overnight autonomous iteration accelerates research velocity": {
-      "name": "Overnight autonomous iteration accelerates research velocity by decoupling human",
-      "category": "engineering",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:03",
-      "related_concepts": []
-    },
-    "separation of core automation logic (python) from explorator": {
-      "name": "Separation of core automation logic (Python) from exploratory analysis and proto",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "version_control"
-      ]
-    },
-    "configuration-driven architecture using .toml for dependency": {
-      "name": "Configuration-driven architecture using .toml for dependency management and pipe",
-      "category": "architecture",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "authentication",
-        "file_operations",
-        "plugin_system",
-        "monitoring_observability",
-        "schema_validation"
-      ]
-    },
-    "visual result tracking and documentation through embedded .p": {
-      "name": "Visual result tracking and documentation through embedded .png assets and Markdo",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "testing_pattern",
-        "schema_validation"
-      ]
-    },
-    "pipeline-oriented directory layout grouping data ingestion, ": {
-      "name": "Pipeline-oriented directory layout grouping data ingestion, LLM prompting, and e",
-      "category": "data",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": []
-    },
-    "the prominence of .ipynb and .png files indicates an iterati": {
-      "name": "The prominence of .ipynb and .png files indicates an iterative, experimental dev",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control"
-      ]
-    },
-    "adoption of .toml reflects modern python packaging standards": {
-      "name": "Adoption of .toml reflects modern Python packaging standards, emphasizing reprod",
-      "category": "general",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "version_control"
-      ]
-    },
-    "the modular structure suggests a design optimized for chaini": {
-      "name": "The modular structure suggests a design optimized for chaining LLM-driven tasks,",
-      "category": "architecture",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control"
-      ]
-    },
-    "three-file structure: fixed prepare.py, agent-edited train.p": {
-      "name": "Three-file structure: fixed prepare.py, agent-edited train.py, and human-edited ",
-      "category": "architecture",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:13",
-      "related_concepts": [
-        "authentication"
-      ]
-    },
-    "fixed 5-minute wall-clock training budget per experiment for": {
-      "name": "Fixed 5-minute wall-clock training budget per experiment for rapid iteration",
-      "category": "backend",
-      "sources": [
-        "karpathy/autoresearch"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:13",
-      "related_concepts": [
-        "authentication"
-      ]
-    },
     "single-gpu simplified gpt training loop based on nanochat wi": {
       "name": "Single-GPU simplified GPT training loop based on nanochat with Muon + AdamW opti",
       "category": "general",
@@ -1476,6 +1322,7 @@
       "learned_at": "2026-06-01 05:13",
       "related_concepts": [
         "performance_optimization",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1495,6 +1342,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1538,6 +1386,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1557,6 +1406,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1589,6 +1439,7 @@
         "file_operations",
         "config_management",
         "plugin_system",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1643,6 +1494,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1668,6 +1520,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1698,6 +1551,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1717,6 +1571,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1736,6 +1591,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1761,6 +1617,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1781,6 +1638,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1801,6 +1659,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1820,6 +1679,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1845,6 +1705,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1881,6 +1742,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1902,6 +1764,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -1939,6 +1802,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2004,6 +1868,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2024,6 +1889,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2043,6 +1909,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2083,6 +1950,7 @@
       "related_concepts": [
         "performance_optimization",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2107,7 +1975,9 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 08:25",
-      "related_concepts": []
+      "related_concepts": [
+        "data_transformation"
+      ]
     },
     "uses hugging face datasets for downloading and preprocessing": {
       "name": "Uses Hugging Face datasets for downloading and preprocessing datasets such as Op",
@@ -2117,7 +1987,9 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-01 08:25",
-      "related_concepts": []
+      "related_concepts": [
+        "data_transformation"
+      ]
     },
     "uses tiktoken for fast bpe tokenization": {
       "name": "Uses tiktoken for fast BPE tokenization",
@@ -2135,7 +2007,8 @@
         "config_management",
         "plugin_system",
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "data_transformation"
       ]
     },
     "optional weights & biases integration for experiment logging": {
@@ -2178,7 +2051,8 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
-        "schema_validation"
+        "schema_validation",
+        "data_transformation"
       ]
     },
     "the project prioritizes practical performance and readabilit": {
@@ -2197,6 +2071,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2218,6 +2093,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2243,6 +2119,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2262,6 +2139,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2283,6 +2161,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2364,6 +2243,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2407,6 +2287,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2428,6 +2309,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2466,6 +2348,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2528,6 +2411,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2548,6 +2432,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2568,6 +2453,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2581,7 +2467,8 @@
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
         "testing_pattern",
-        "error_handling"
+        "error_handling",
+        "data_transformation"
       ]
     },
     "large-scale training configs align `max_iters` and `lr_decay": {
@@ -2669,6 +2556,7 @@
         "error_handling",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2708,7 +2596,8 @@
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
         "testing_pattern",
-        "error_handling"
+        "error_handling",
+        "data_transformation"
       ]
     },
     "use frequent evaluation on small datasets where overfitting ": {
@@ -2723,6 +2612,7 @@
         "authentication",
         "testing_pattern",
         "error_handling",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2736,7 +2626,8 @@
       "learned_at": "2026-06-01 09:00",
       "related_concepts": [
         "testing_pattern",
-        "error_handling"
+        "error_handling",
+        "data_transformation"
       ]
     },
     "name experiment outputs and wandb projects according to data": {
@@ -2789,6 +2680,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2806,6 +2698,7 @@
         "file_operations",
         "config_management",
         "plugin_system",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2826,6 +2719,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2848,6 +2742,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2868,6 +2763,7 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2888,6 +2784,7 @@
         "plugin_system",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2907,7 +2804,8 @@
         "config_management",
         "plugin_system",
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "data_transformation"
       ]
     },
     "small character-level shakespeare training is intended as a ": {
@@ -2938,6 +2836,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     },
@@ -2958,6 +2857,233 @@
         "database_pattern",
         "data_fetching",
         "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "single-node gpu-oriented design, intended especially for hig": {
+      "name": "Single-node GPU-oriented design, intended especially for high-end multi-GPU node",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": []
+    },
+    "end-to-end llm pipeline included in one repository: tokenize": {
+      "name": "End-to-end LLM pipeline included in one repository: tokenizer training, pretrain",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "model scaling is controlled primarily by one complexity para": {
+      "name": "Model scaling is controlled primarily by one complexity parameter, `--depth`, re",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "other model and training hyperparameters are automatically d": {
+      "name": "Other model and training hyperparameters are automatically derived from depth, i",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the repository maintains a standardized gpt-2 speedrun workf": {
+      "name": "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedr",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "evaluation centers on gpt-2-grade capability using dclm core": {
+      "name": "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validat",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the project prioritizes simplicity and hackability while sti": {
+      "name": "The project prioritizes simplicity and hackability while still covering all majo",
+      "category": "engineering",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "a central design idea is compute-optimal scaling: users adju": {
+      "name": "A central design idea is compute-optimal scaling: users adjust model depth while",
+      "category": "architecture",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the main optimization target is pretraining speed, since pre": {
+      "name": "The main optimization target is pretraining speed, since pretraining dominates c",
+      "category": "frontend",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the leaderboard frames progress around practical wall-clock ": {
+      "name": "The leaderboard frames progress around practical wall-clock time to GPT-2 capabi",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "version_control"
+      ]
+    },
+    "the cost and time claims emphasize how modern hardware and o": {
+      "name": "The cost and time claims emphasize how modern hardware and optimized training re",
+      "category": "general",
+      "sources": [
+        "karpathy/nanochat"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
         "version_control"
       ]
     }
@@ -3102,89 +3228,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 50,
-    "total_patterns": 49,
-    "total_insights": 34,
+    "total_patterns": 55,
+    "total_insights": 39,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 134
+    "total_skills_learned": 111
   },
   "skills_memory": [
-    {
-      "name": "The system is intentionally minimal to scale from a single baseline agent to a m",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:03"
-    },
-    {
-      "name": "Overnight autonomous iteration accelerates research velocity by decoupling human",
-      "source": "karpathy/autoresearch",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:03"
-    },
-    {
-      "name": "Separation of core automation logic (Python) from exploratory analysis and proto",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "Configuration-driven architecture using .toml for dependency management and pipe",
-      "source": "karpathy/autoresearch",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "Visual result tracking and documentation through embedded .png assets and Markdo",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "Pipeline-oriented directory layout grouping data ingestion, LLM prompting, and e",
-      "source": "karpathy/autoresearch",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "The prominence of .ipynb and .png files indicates an iterative, experimental dev",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "Adoption of .toml reflects modern Python packaging standards, emphasizing reprod",
-      "source": "karpathy/autoresearch",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "The modular structure suggests a design optimized for chaining LLM-driven tasks,",
-      "source": "karpathy/autoresearch",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:04"
-    },
-    {
-      "name": "Three-file structure: fixed prepare.py, agent-edited train.py, and human-edited ",
-      "source": "karpathy/autoresearch",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:13"
-    },
-    {
-      "name": "Fixed 5-minute wall-clock training budget per experiment for rapid iteration",
-      "source": "karpathy/autoresearch",
-      "category": "backend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 05:13"
-    },
     {
       "name": "Single-GPU simplified GPT training loop based on nanochat with Muon + AdamW opti",
       "source": "karpathy/autoresearch",
@@ -3807,6 +3856,83 @@
       "category": "data",
       "usage_count": 0,
       "learned_at": "2026-06-01 09:00"
+    },
+    {
+      "name": "Single-node GPU-oriented design, intended especially for high-end multi-GPU node",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "End-to-end LLM pipeline included in one repository: tokenizer training, pretrain",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "Model scaling is controlled primarily by one complexity parameter, `--depth`, re",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "Other model and training hyperparameters are automatically derived from depth, i",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "The repository maintains a standardized GPT-2 speedrun workflow via `runs/speedr",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "Evaluation centers on GPT-2-grade capability using DCLM CORE score, with validat",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "The project prioritizes simplicity and hackability while still covering all majo",
+      "source": "karpathy/nanochat",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "A central design idea is compute-optimal scaling: users adjust model depth while",
+      "source": "karpathy/nanochat",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "The main optimization target is pretraining speed, since pretraining dominates c",
+      "source": "karpathy/nanochat",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "The leaderboard frames progress around practical wall-clock time to GPT-2 capabi",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
+    },
+    {
+      "name": "The cost and time claims emphasize how modern hardware and optimized training re",
+      "source": "karpathy/nanochat",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 09:30"
     }
   ],
   "concepts": {
@@ -3827,9 +3953,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 9,
+      "evidence_count": 10,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -3840,9 +3967,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 12,
+      "evidence_count": 13,
       "examples": [
         "Direct DOM manipulation paradigm enabling custom graphic authoring",
         "prepare.py is treated as fixed infrastructure for data preparation, tokenizer training, dataloading, and evaluation",
@@ -3863,9 +3991,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 12,
+      "evidence_count": 13,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -3876,9 +4005,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 15,
+      "evidence_count": 16,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -3889,9 +4019,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 25,
+      "evidence_count": 26,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -3935,9 +4066,10 @@
       "repos": [
         "d3/d3",
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 5,
+      "evidence_count": 6,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -3959,13 +4091,25 @@
     "schema_validation": {
       "repos": [
         "karpathy/autoresearch",
-        "karpathy/nanoGPT"
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
       ],
-      "evidence_count": 4,
+      "evidence_count": 5,
       "examples": [
         "Model quality is compared using validation bits per byte, making results less dependent on vocabulary size",
         "Using validation bits per byte enables fairer comparisons across tokenizer or vocabulary changes",
         "Checkpoint behavior is configurable via `always_save_checkpoint`, with small or finetuning datasets saving only when validation improves."
+      ]
+    },
+    "data_transformation": {
+      "repos": [
+        "karpathy/nanoGPT",
+        "karpathy/nanochat"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Uses Hugging Face transformers for loading GPT-2 checkpoints",
+        "Model scaling is controlled primarily by one complexity parameter, `--depth`, representing the number of transformer layers."
       ]
     },
     "version_control": {
@@ -4006,11 +4150,44 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "readability",
-        "model",
-        "separating",
-        "production",
-        "research"
+        "rather",
+        "minimal",
+        "practical",
+        "modular",
+        "production"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "karpathy/nanochat",
+      "type": "strong",
+      "score": 63,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern",
+        "schema_validation",
+        "data_transformation"
+      ],
+      "shared_pattern_keywords": [
+        "rather",
+        "prioritizes",
+        "design",
+        "including",
+        "practical"
       ]
     },
     {
@@ -4040,9 +4217,9 @@
       "shared_pattern_keywords": [
         "where",
         "design",
-        "strategy",
+        "prioritizes",
         "modular",
-        "visual"
+        "metadata"
       ]
     },
     {
@@ -4068,11 +4245,72 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "infrastructure",
-        "explicit",
         "modular",
-        "visual",
-        "modern"
+        "metadata",
+        "documentation",
+        "modern",
+        "visual"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "karpathy/nanochat",
+      "type": "strong",
+      "score": 50,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern",
+        "schema_validation"
+      ],
+      "shared_pattern_keywords": [
+        "rather",
+        "tokenizer",
+        "users",
+        "validation",
+        "practical"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/nanochat",
+      "type": "strong",
+      "score": 37,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "prioritizes",
+        "design",
+        "pipeline",
+        "workflow",
+        "while"
       ]
     },
     {
@@ -4085,8 +4323,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4101,8 +4339,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4453,8 +4691,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4469,8 +4707,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4485,8 +4723,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4501,8 +4739,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4517,8 +4755,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4533,8 +4771,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4549,8 +4787,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4565,8 +4803,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5989,8 +6227,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6005,8 +6243,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6021,8 +6259,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6037,8 +6275,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6053,8 +6291,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6293,8 +6531,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6309,8 +6547,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6325,8 +6563,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6341,8 +6579,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7109,8 +7347,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7125,8 +7363,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7141,8 +7379,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7301,8 +7539,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7317,8 +7555,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7461,8 +7699,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7477,8 +7715,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
+        "typescript",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7605,23 +7843,7 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "typescript"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "karpathy/nanochat",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "python",
+        "typescript",
         "open-source"
       ],
       "shared_concepts": [],
@@ -7678,22 +7900,6 @@
     {
       "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/arxiv-sanity-preserver",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "karpathy/nanochat",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -7893,8 +8099,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7956,8 +8162,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8427,20 +8633,6 @@
     {
       "from_repo": "d3/d3",
       "to_repo": "github/docs",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "karpathy/nanochat",
       "type": "weak",
       "score": 2,
       "connections": [
