@@ -1314,6 +1314,26 @@
       "stars": 32287,
       "lang": "JavaScript",
       "description": ""
+    },
+    "TauricResearch/TradingAgents": {
+      "full_name": "TauricResearch/TradingAgents",
+      "study_level": 1,
+      "studied_at": [
+        "2026-06-02 01:00"
+      ],
+      "summary": "TradingAgents: Multi-Agents LLM Financial Trading Framework",
+      "patterns": [],
+      "best_practices": [],
+      "insights": [],
+      "code_examples": [],
+      "arch_topics": [
+        "python",
+        "open-source"
+      ],
+      "readme_insights": "",
+      "stars": 81619,
+      "lang": "Python",
+      "description": ""
     }
   },
   "topic_index": {
@@ -1379,7 +1399,8 @@
         "karpathy/arxiv-sanity-preserver",
         "a5c-ai/babysitter",
         "can1357/oh-my-pi",
-        "pbakaus/impeccable"
+        "pbakaus/impeccable",
+        "TauricResearch/TradingAgents"
       ],
       "description": ""
     },
@@ -1405,7 +1426,8 @@
         "karpathy/minGPT",
         "karpathy/llm-council",
         "karpathy/minbpe",
-        "karpathy/arxiv-sanity-preserver"
+        "karpathy/arxiv-sanity-preserver",
+        "TauricResearch/TradingAgents"
       ],
       "description": ""
     },
@@ -3458,11 +3480,11 @@
   ],
   "pr_history": [],
   "stats": {
-    "total_repos_studied": 53,
+    "total_repos_studied": 54,
     "total_patterns": 105,
     "total_insights": 69,
     "last_study_date": "2026-06-02",
-    "total_skills_learned": 135
+    "total_skills_learned": 100
   },
   "skills_memory": [
     {
@@ -4444,8 +4466,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4461,11 +4483,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "generation.",
-        "organization",
-        "hardware",
-        "configuration",
-        "checkpoints"
+        "compute",
+        "source",
+        "common",
+        "prioritizes",
+        "designed"
       ]
     },
     {
@@ -4498,11 +4520,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "context",
-        "structured",
-        "presence",
-        "configuration",
-        "separation"
+        "source",
+        "common",
+        "support",
+        "while",
+        "helper"
       ]
     },
     {
@@ -4533,11 +4555,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "organization",
-        "configuration",
-        "separation",
-        "development",
-        "project"
+        "source",
+        "while",
+        "support",
+        "prioritizes",
+        "modern"
       ]
     },
     {
@@ -4552,8 +4574,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4566,11 +4588,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "organization",
-        "configuration",
-        "experimentation",
-        "training,",
-        "files"
+        "fixed",
+        "source",
+        "using",
+        "python",
+        "designed"
       ]
     },
     {
@@ -4599,11 +4621,11 @@
         "cli_tooling"
       ],
       "shared_pattern_keywords": [
-        "configuration",
-        "variables",
-        "files",
-        "across",
-        "common"
+        "source",
+        "using",
+        "prioritizes",
+        "visual",
+        "likely"
       ]
     },
     {
@@ -4618,8 +4640,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4632,11 +4654,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "organization",
-        "configuration",
-        "project",
-        "files",
-        "across"
+        "source",
+        "while",
+        "python",
+        "designed",
+        "modern"
       ]
     },
     {
@@ -4665,11 +4687,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "supports",
-        "configuration",
-        "separation",
-        "project",
-        "files"
+        "source",
+        "suggests",
+        "while",
+        "using",
+        "support"
       ]
     },
     {
@@ -4697,11 +4719,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "organization",
-        "configuration",
-        "enabling",
-        "intended",
-        "strategy"
+        "source",
+        "parallel",
+        "using",
+        "prioritizes",
+        "static"
       ]
     },
     {
@@ -4727,11 +4749,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "configuration",
-        "project",
-        "files",
-        "across",
-        "directories"
+        "source",
+        "suggests",
+        "while",
+        "using",
+        "visual"
       ]
     },
     {
@@ -4759,11 +4781,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "checkpoints",
-        "separation",
-        "development",
-        "project",
-        "between"
+        "while",
+        "prioritizes",
+        "reproducibility",
+        "between",
+        "separate"
       ]
     },
     {
@@ -4791,11 +4813,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "checkpoints",
-        "separate",
-        "limited",
-        "educational",
-        "parallel"
+        "binary",
+        "parallel",
+        "prioritizes",
+        "clarity",
+        "separate"
       ]
     },
     {
@@ -4821,10 +4843,10 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "organization",
-        "configuration",
-        "project",
-        "files",
+        "source",
+        "suggests",
+        "while",
+        "using",
         "modern"
       ]
     },
@@ -4851,11 +4873,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "provides",
-        "scripts",
+        "while",
         "code,",
-        "separation",
-        "project"
+        "prioritizes",
+        "generating",
+        "implementation"
       ]
     },
     {
@@ -4880,11 +4902,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "optimized",
-        "intentionally",
-        "readability",
+        "while",
+        "code,",
         "project",
-        "generated"
+        "through",
+        "implementation"
       ]
     },
     {
@@ -4909,11 +4931,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "serves",
-        "separation",
+        "parallel",
+        "while",
         "developer",
-        "development",
-        "parallel"
+        "project",
+        "serves"
       ]
     },
     {
@@ -4958,8 +4980,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4974,8 +4996,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4990,8 +5012,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5006,8 +5028,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5022,8 +5044,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5038,8 +5060,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5054,8 +5076,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5070,8 +5092,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5086,8 +5108,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5102,8 +5124,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5118,8 +5140,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5134,8 +5156,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5150,8 +5172,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5166,8 +5188,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5182,8 +5204,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5198,8 +5220,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5214,8 +5236,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5230,8 +5252,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5246,8 +5268,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5262,8 +5284,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "sansan0/TrendRadar",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5278,8 +5316,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5502,8 +5540,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5518,8 +5556,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5534,8 +5572,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5550,8 +5588,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5566,8 +5604,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5582,8 +5620,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5598,8 +5636,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5614,8 +5652,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5630,8 +5668,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5646,8 +5684,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5662,8 +5700,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5678,8 +5716,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5694,8 +5732,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5710,8 +5748,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5726,8 +5764,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5742,8 +5780,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5758,8 +5796,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5774,8 +5812,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5790,8 +5828,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "harry0703/MoneyPrinterTurbo",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5806,8 +5860,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5822,8 +5876,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5838,8 +5892,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5854,8 +5908,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5870,8 +5924,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5886,8 +5940,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5902,8 +5956,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5918,8 +5972,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5934,8 +5988,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5950,8 +6004,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5966,8 +6020,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5982,8 +6036,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5998,8 +6052,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6014,8 +6068,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6030,8 +6084,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6046,8 +6100,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6062,8 +6116,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6078,8 +6132,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6142,8 +6212,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6158,8 +6228,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6174,8 +6244,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6190,8 +6260,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6206,8 +6276,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6222,8 +6292,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6238,8 +6308,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6254,8 +6324,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6270,8 +6340,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6286,8 +6356,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6302,8 +6372,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6318,8 +6388,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6334,8 +6404,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6350,8 +6420,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6366,8 +6436,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6382,8 +6452,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6398,8 +6468,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/knowledge-work-plugins",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6414,8 +6500,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6430,8 +6516,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6446,8 +6532,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6462,8 +6548,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6478,8 +6564,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6494,8 +6580,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6510,8 +6596,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6526,8 +6612,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6542,8 +6628,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6558,8 +6644,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6574,8 +6660,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6590,8 +6676,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6606,8 +6692,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6622,8 +6708,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6638,8 +6724,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6654,8 +6740,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "microsoft/markitdown",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6670,8 +6772,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6686,8 +6788,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6702,8 +6804,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6718,8 +6820,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6734,8 +6836,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6750,8 +6852,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6766,8 +6868,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6782,8 +6884,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6798,8 +6900,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6814,8 +6916,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6830,8 +6932,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6846,8 +6948,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6862,8 +6964,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6878,8 +6980,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6894,8 +6996,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/skills",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7006,8 +7124,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7022,8 +7140,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7038,8 +7156,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7054,8 +7172,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7070,8 +7188,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7086,8 +7204,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7102,8 +7220,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7118,8 +7236,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7134,8 +7252,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7150,8 +7268,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7166,8 +7284,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7182,8 +7300,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7198,8 +7316,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7214,8 +7332,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "unclecode/crawl4ai",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7310,8 +7444,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7326,8 +7460,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7342,8 +7476,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7358,8 +7492,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7374,8 +7508,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7390,8 +7524,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7406,8 +7540,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7422,8 +7556,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7438,8 +7572,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7454,8 +7588,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7470,8 +7604,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7486,8 +7620,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7502,8 +7636,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenMOSS/MOSS-TTS",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7518,8 +7668,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "rust",
-        "open-source"
+        "open-source",
+        "rust"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7534,8 +7684,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7550,8 +7700,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7566,8 +7716,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7582,8 +7732,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7598,8 +7748,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7614,8 +7764,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7630,8 +7780,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7646,8 +7796,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7662,8 +7812,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7678,8 +7828,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7694,8 +7844,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7710,8 +7860,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "anthropics/claude-code",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7726,8 +7892,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7742,8 +7908,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7758,8 +7924,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7774,8 +7940,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7790,8 +7956,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7806,8 +7972,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7822,8 +7988,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7838,8 +8004,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7854,8 +8020,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7870,8 +8036,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7886,8 +8052,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "galilai-group/stable-worldmodel",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7902,8 +8084,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7918,8 +8100,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7934,8 +8116,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7950,8 +8132,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7966,8 +8148,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7982,8 +8164,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7998,8 +8180,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8014,8 +8196,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8030,8 +8212,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8046,8 +8228,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "OpenBMB/VoxCPM",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8126,8 +8324,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8142,8 +8340,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8158,8 +8356,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8174,8 +8372,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8190,8 +8388,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8206,8 +8404,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8222,8 +8420,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8238,8 +8436,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8254,8 +8452,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "D4Vinci/Scrapling",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8270,8 +8484,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8286,8 +8500,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8302,8 +8516,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8318,8 +8532,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8334,8 +8548,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8350,8 +8564,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8366,8 +8580,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8382,8 +8596,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8398,8 +8612,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8414,8 +8628,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "nesquena/hermes-webui",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8478,8 +8708,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8494,8 +8724,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8510,8 +8740,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8526,8 +8756,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8542,8 +8772,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8558,8 +8788,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8574,8 +8804,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "emmabostian/developer-portfolios",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8638,8 +8884,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8654,8 +8900,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8670,8 +8916,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8686,8 +8932,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8702,8 +8964,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8718,8 +8980,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8734,8 +8996,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8750,8 +9012,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8766,8 +9044,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8782,8 +9060,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8798,8 +9076,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8814,8 +9092,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8830,8 +9124,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8846,8 +9140,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8862,8 +9156,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/minGPT",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8878,8 +9188,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8894,8 +9204,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8910,8 +9220,24 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/llm-council",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8958,8 +9284,40 @@
         "same_language"
       ],
       "shared_topics": [
-        "python",
-        "open-source"
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/minbpe",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/arxiv-sanity-preserver",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "moderate",
+      "score": 7,
+      "connections": [
+        "shared_topic",
+        "same_language"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8989,8 +9347,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "open-source",
-        "unknown"
+        "unknown",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -9626,6 +9984,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "d3/d3",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -10746,6 +11118,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "projectdiscovery/nuclei",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "dropwizard/metrics",
       "to_repo": "AnalogJ/scrutiny",
       "type": "weak",
@@ -11432,6 +11818,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "dropwizard/metrics",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "AnalogJ/scrutiny",
       "to_repo": "Lum1104/Understand-Anything",
       "type": "weak",
@@ -12104,6 +12504,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "AnalogJ/scrutiny",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Lum1104/Understand-Anything",
       "to_repo": "Leonxlnx/taste-skill",
       "type": "weak",
@@ -12664,6 +13078,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Lum1104/Understand-Anything",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Leonxlnx/taste-skill",
       "to_repo": "DigitalPlatDev/FreeDomain",
       "type": "weak",
@@ -13294,6 +13722,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Leonxlnx/taste-skill",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "DigitalPlatDev/FreeDomain",
       "to_repo": "affaan-m/ECC",
       "type": "weak",
@@ -13910,6 +14352,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "DigitalPlatDev/FreeDomain",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "affaan-m/ECC",
       "to_repo": "harry0703/MoneyPrinterTurbo",
       "type": "weak",
@@ -14470,6 +14926,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "affaan-m/ECC",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "harry0703/MoneyPrinterTurbo",
       "to_repo": "obra/superpowers",
       "type": "weak",
@@ -15394,6 +15864,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "obra/superpowers",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "byoungd/English-level-up-tips",
       "to_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "type": "weak",
@@ -15954,6 +16438,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "byoungd/English-level-up-tips",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "mukul975/Anthropic-Cybersecurity-Skills",
       "to_repo": "Axorax/awesome-free-apps",
       "type": "weak",
@@ -16766,6 +17264,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Axorax/awesome-free-apps",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/knowledge-work-plugins",
       "to_repo": "hardikpandya/stop-slop",
       "type": "weak",
@@ -17578,6 +18090,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "hardikpandya/stop-slop",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "microsoft/markitdown",
       "to_repo": "codecrafters-io/build-your-own-x",
       "type": "weak",
@@ -18614,6 +19140,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "codecrafters-io/build-your-own-x",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "twentyhq/twenty",
       "to_repo": "unclecode/crawl4ai",
       "type": "weak",
@@ -18980,6 +19520,20 @@
     {
       "from_repo": "twentyhq/twenty",
       "to_repo": "pbakaus/impeccable",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "twentyhq/twenty",
+      "to_repo": "TauricResearch/TradingAgents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -19608,6 +20162,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "EveryInc/compound-engineering-plugin",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "OpenMOSS/MOSS-TTS",
       "to_repo": "revfactory/harness",
       "type": "weak",
@@ -20252,6 +20820,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "revfactory/harness",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "run-llama/liteparse",
       "to_repo": "anthropics/claude-code",
       "type": "weak",
@@ -20630,6 +21212,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "run-llama/liteparse",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "anthropics/claude-code",
       "to_repo": "ruvnet/RuView",
       "type": "weak",
@@ -21596,6 +22192,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "ruvnet/RuView",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "Crosstalk-Solutions/project-nomad",
       "to_repo": "D4Vinci/Scrapling",
       "type": "weak",
@@ -21862,6 +22472,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "Crosstalk-Solutions/project-nomad",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "D4Vinci/Scrapling",
       "to_repo": "FareedKhan-dev/train-llm-from-scratch",
       "type": "weak",
@@ -22310,6 +22934,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "FareedKhan-dev/train-llm-from-scratch",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "nesquena/hermes-webui",
       "to_repo": "supermemoryai/supermemory",
       "type": "weak",
@@ -22702,6 +23340,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "supermemoryai/supermemory",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "emmabostian/developer-portfolios",
       "to_repo": "nicobailon/pi-subagents",
       "type": "weak",
@@ -23066,6 +23718,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "nicobailon/pi-subagents",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "github/docs",
       "to_repo": "karpathy/autoresearch",
       "type": "weak",
@@ -23276,6 +23942,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "github/docs",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
@@ -23724,6 +24404,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/minGPT",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
@@ -23962,6 +24656,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/nn-zero-to-hero",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/llm-council",
       "to_repo": "karpathy/llama2.c",
       "type": "weak",
@@ -24172,6 +24880,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/llama2.c",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/micrograd",
       "to_repo": "karpathy/char-rnn",
       "type": "weak",
@@ -24270,6 +24992,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/micrograd",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/char-rnn",
       "to_repo": "karpathy/convnetjs",
       "type": "weak",
@@ -24354,6 +25090,20 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "karpathy/char-rnn",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "karpathy/convnetjs",
       "to_repo": "karpathy/minbpe",
       "type": "weak",
@@ -24384,6 +25134,20 @@
     {
       "from_repo": "karpathy/convnetjs",
       "to_repo": "can1357/oh-my-pi",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "karpathy/convnetjs",
+      "to_repo": "TauricResearch/TradingAgents",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -24494,8 +25258,50 @@
       "shared_pattern_keywords": []
     },
     {
+      "from_repo": "a5c-ai/babysitter",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
       "from_repo": "can1357/oh-my-pi",
       "to_repo": "pbakaus/impeccable",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "can1357/oh-my-pi",
+      "to_repo": "TauricResearch/TradingAgents",
+      "type": "weak",
+      "score": 2,
+      "connections": [
+        "shared_topic"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [],
+      "shared_pattern_keywords": []
+    },
+    {
+      "from_repo": "pbakaus/impeccable",
+      "to_repo": "TauricResearch/TradingAgents",
       "type": "weak",
       "score": 2,
       "connections": [

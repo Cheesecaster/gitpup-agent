@@ -29,7 +29,7 @@
       "source": "github_trending"
     }
   ],
-  "studied_today": 1,
+  "studied_today": 2,
   "today": "2026-06-02",
   "max_daily": 3,
   "source": "github_trending",
@@ -40,5 +40,5 @@
     "dmtrKovalenko/fff",
     "stefan-jansen/machine-learning-for-trading"
   ],
-  "active_repo": "pbakaus/impeccable"
+  "active_repo": "TauricResearch/TradingAgents"
 }
