@@ -1236,14 +1236,27 @@
     },
     "pbakaus/impeccable": {
       "full_name": "pbakaus/impeccable",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-06-01 20:00"
+        "2026-06-01 20:00",
+        "2026-06-01 21:00"
       ],
-      "summary": "The design language that makes your AI harness better at design.",
-      "patterns": [],
+      "summary": "Impeccable is a frontend design skill and tooling package that gives AI agents a structured design vocabulary, reference guidance, commands, and anti-pattern checks for producing more distinctive, higher-quality frontend interfaces. It extends Anthropic’s frontend-design skill with domain-specific d",
+      "patterns": [
+        "Built around a Claude-style skill named `impeccable` with a main skill document and seven domain reference files covering typography, color, spatial design, motion, interaction, responsive design, and UX writing.",
+        "Uses `/impeccable` slash commands as the primary user interface, turning design workflows into named actions such as craft, init, document, extract, shape, critique, audit, and polish.",
+        "Separates reusable design knowledge from project-specific context by generating or relying on files such as PRODUCT.md and DESIGN.md.",
+        "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
+        "Positions itself as both a design guidance system and a quality-control layer for frontend work, addressing aesthetics, accessibility, responsiveness, hierarchy, motion, writing, and implementation polish."
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "The project’s core thesis is that AI-generated frontend work suffers from recognizable defaults, so strong design references and explicit anti-pattern rules can improve originality and quality.",
+        "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `critique`, `distill`, `animate`, `bolder`, and `quieter` let users steer design intent more precisely.",
+        "The README distinguishes brand-level and product-level design decisions, suggesting the system adapts defaults based on context instead of applying one generic style.",
+        "The inclusion of deterministic anti-pattern checks means the tool is not only prompt guidance; it also provides repeatable, automatable design linting.",
+        "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling."
+      ],
       "code_examples": [],
       "arch_topics": [
         "javascript",
@@ -1439,200 +1452,6 @@
     }
   },
   "skill_index": {
-    "the repository prioritizes educational clarity and small-sca": {
-      "name": "The repository prioritizes educational clarity and small-scale experimentation r",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "state_management"
-      ]
-    },
-    "configuration is expressed as simple python files with modul": {
-      "name": "Configuration is expressed as simple Python files with module-level variables ra",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "separate config files are used for distinct workflows: evalu": {
-      "name": "Separate config files are used for distinct workflows: evaluating pretrained GPT",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "version_control",
-        "state_management"
-      ]
-    },
-    "model selection is controlled through an `init_from` string ": {
-      "name": "Model selection is controlled through an `init_from` string such as `'gpt2'`, `'",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "state_management"
-      ]
-    },
-    "evaluation configs share a common structure: fixed `batch_si": {
-      "name": "Evaluation configs share a common structure: fixed `batch_size`, larger `eval_it",
-      "category": "architecture",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "version_control"
-      ]
-    },
-    "training configs define experiment metadata with `wandb_log`": {
-      "name": "Training configs define experiment metadata with `wandb_log`, `wandb_project`, a",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "performance_optimization",
-        "config_management",
-        "data_transformation"
-      ]
-    },
-    "run names may be static for major experiments or dynamically": {
-      "name": "Run names may be static for major experiments or dynamically generated using tim",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "performance_optimization",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "event_driven"
-      ]
-    },
-    "batching strategy is explicitly documented with comments sho": {
-      "name": "Batching strategy is explicitly documented with comments showing how `batch_size",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "gradient accumulation is used to simulate large effective ba": {
-      "name": "Gradient accumulation is used to simulate large effective batch sizes, especiall",
-      "category": "engineering",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control"
-      ]
-    },
-    "checkpoint behavior is configurable via `always_save_checkpo": {
-      "name": "Checkpoint behavior is configurable via `always_save_checkpoint`, with small or ",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "state_management"
-      ]
-    },
     "small-dataset configs use frequent evaluation and logging in": {
       "name": "Small-dataset configs use frequent evaluation and logging intervals to monitor o",
       "category": "data",
@@ -1645,7 +1464,8 @@
         "testing_pattern",
         "error_handling",
         "event_driven",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "large-scale training configs align `max_iters` and `lr_decay": {
@@ -1659,7 +1479,8 @@
       "related_concepts": [
         "authentication",
         "performance_optimization",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "dataset preparation scripts use standard scientific/data too": {
@@ -1705,7 +1526,8 @@
         "monitoring_observability",
         "error_handling",
         "data_fetching",
-        "schema_validation"
+        "schema_validation",
+        "cli_tooling"
       ]
     },
     "keep experiment configurations separate by purpose and scale": {
@@ -1739,6 +1561,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -1782,7 +1605,8 @@
         "testing_pattern",
         "error_handling",
         "event_driven",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "use frequent evaluation on small datasets where overfitting ": {
@@ -1799,7 +1623,8 @@
         "error_handling",
         "event_driven",
         "data_transformation",
-        "version_control"
+        "version_control",
+        "cli_tooling"
       ]
     },
     "use larger `eval_iters` for final evaluation to reduce metri": {
@@ -1814,7 +1639,8 @@
         "testing_pattern",
         "error_handling",
         "event_driven",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "name experiment outputs and wandb projects according to data": {
@@ -1869,6 +1695,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -1909,6 +1736,7 @@
         "data_fetching",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -1932,6 +1760,7 @@
         "data_fetching",
         "schema_validation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -1954,6 +1783,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2027,6 +1857,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2049,6 +1880,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2072,7 +1904,8 @@
       "learned_at": "2026-06-01 09:30",
       "related_concepts": [
         "database_pattern",
-        "data_fetching"
+        "data_fetching",
+        "cli_tooling"
       ]
     },
     "model scaling is controlled primarily by one complexity para": {
@@ -2094,6 +1927,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2120,6 +1954,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2140,6 +1975,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2167,6 +2003,7 @@
         "event_driven",
         "schema_validation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2187,6 +2024,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2215,6 +2053,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2235,6 +2074,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2255,6 +2095,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2281,6 +2122,7 @@
         "data_fetching",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2310,7 +2152,8 @@
         "performance_optimization",
         "error_handling",
         "event_driven",
-        "schema_validation"
+        "schema_validation",
+        "cli_tooling"
       ]
     },
     "presence of `dev` and `.ipynb` files indicates active explor": {
@@ -2344,7 +2187,8 @@
         "error_handling",
         "data_fetching",
         "schema_validation",
-        "version_control"
+        "version_control",
+        "cli_tooling"
       ]
     },
     "multiple support formats (`markdown`, `shell`, `html`) sugge": {
@@ -2386,6 +2230,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2402,6 +2247,7 @@
         "monitoring_observability",
         "database_pattern",
         "data_fetching",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2462,7 +2308,8 @@
         "monitoring_observability",
         "data_fetching",
         "event_driven",
-        "version_control"
+        "version_control",
+        "cli_tooling"
       ]
     },
     "rank-aware logging pattern: only process rank 0 emits inform": {
@@ -2666,6 +2513,7 @@
         "event_driven",
         "schema_validation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2699,6 +2547,7 @@
         "data_visualization",
         "modular_design",
         "schema_validation",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2750,7 +2599,8 @@
         "config_management",
         "error_handling",
         "event_driven",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "keep evaluation prompt construction modular and template-dri": {
@@ -2778,7 +2628,8 @@
         "testing_pattern",
         "error_handling",
         "event_driven",
-        "data_transformation"
+        "data_transformation",
+        "cli_tooling"
       ]
     },
     "the codebase is optimized for practical distributed llm trai": {
@@ -2801,6 +2652,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2835,6 +2687,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2855,6 +2708,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2890,6 +2744,7 @@
         "data_fetching",
         "schema_validation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2946,6 +2801,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2966,6 +2822,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -2987,7 +2844,9 @@
         "data_fetching",
         "schema_validation",
         "data_transformation",
-        "version_control"
+        "version_control",
+        "cli_tooling",
+        "state_management"
       ]
     },
     "primary development focus is pretraining gpt-style transform": {
@@ -3000,7 +2859,8 @@
       "learned_at": "2026-06-01 11:00",
       "related_concepts": [
         "testing_pattern",
-        "data_transformation"
+        "data_transformation",
+        "state_management"
       ]
     },
     "the main high-performance path lives in cuda code, especiall": {
@@ -3020,6 +2880,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3048,6 +2909,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3076,6 +2938,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3108,6 +2971,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3136,6 +3000,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3157,7 +3022,9 @@
         "data_fetching",
         "schema_validation",
         "data_transformation",
-        "version_control"
+        "version_control",
+        "cli_tooling",
+        "state_management"
       ]
     },
     "the repository relies on generated or downloaded binary arti": {
@@ -3177,6 +3044,7 @@
         "database_pattern",
         "data_fetching",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3198,7 +3066,192 @@
         "data_fetching",
         "schema_validation",
         "data_transformation",
-        "version_control"
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "built around a claude-style skill named `impeccable` with a ": {
+      "name": "Built around a Claude-style skill named `impeccable` with a main skill document ",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "uses `/impeccable` slash commands as the primary user interf": {
+      "name": "Uses `/impeccable` slash commands as the primary user interface, turning design ",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "data_transformation"
+      ]
+    },
+    "separates reusable design knowledge from project-specific co": {
+      "name": "Separates reusable design knowledge from project-specific context by generating ",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "combines deterministic anti-pattern detection with an llm-ba": {
+      "name": "Combines deterministic anti-pattern detection with an LLM-based critique pass: C",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "cli_tooling"
+      ]
+    },
+    "positions itself as both a design guidance system and a qual": {
+      "name": "Positions itself as both a design guidance system and a quality-control layer fo",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "plugin_system",
+        "database_pattern",
+        "event_driven",
+        "schema_validation",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "the project’s core thesis is that ai-generated frontend work": {
+      "name": "The project’s core thesis is that AI-generated frontend work suffers from recogn",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "impeccable emphasizes shared vocabulary: commands like `poli": {
+      "name": "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `criti",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": []
+    },
+    "the readme distinguishes brand-level and product-level desig": {
+      "name": "The README distinguishes brand-level and product-level design decisions, suggest",
+      "category": "frontend",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "the inclusion of deterministic anti-pattern checks means the": {
+      "name": "The inclusion of deterministic anti-pattern checks means the tool is not only pr",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "the skill covers both visual design and ux substance, includ": {
+      "name": "The skill covers both visual design and UX substance, including writing, interac",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
       ]
     }
   },
@@ -3342,82 +3395,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 53,
-    "total_patterns": 80,
-    "total_insights": 54,
+    "total_patterns": 85,
+    "total_insights": 59,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 100
+    "total_skills_learned": 110
   },
   "skills_memory": [
-    {
-      "name": "The repository prioritizes educational clarity and small-scale experimentation r",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 08:30"
-    },
-    {
-      "name": "Configuration is expressed as simple Python files with module-level variables ra",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Separate config files are used for distinct workflows: evaluating pretrained GPT",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Model selection is controlled through an `init_from` string such as `'gpt2'`, `'",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Evaluation configs share a common structure: fixed `batch_size`, larger `eval_it",
-      "source": "karpathy/nanoGPT",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Training configs define experiment metadata with `wandb_log`, `wandb_project`, a",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Run names may be static for major experiments or dynamically generated using tim",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Batching strategy is explicitly documented with comments showing how `batch_size",
-      "source": "karpathy/nanoGPT",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Gradient accumulation is used to simulate large effective batch sizes, especiall",
-      "source": "karpathy/nanoGPT",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Checkpoint behavior is configurable via `always_save_checkpoint`, with small or ",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
     {
       "name": "Small-dataset configs use frequent evaluation and logging intervals to monitor o",
       "source": "karpathy/nanoGPT",
@@ -4047,6 +4030,76 @@
       "category": "general",
       "usage_count": 0,
       "learned_at": "2026-06-01 11:00"
+    },
+    {
+      "name": "Built around a Claude-style skill named `impeccable` with a main skill document ",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Uses `/impeccable` slash commands as the primary user interface, turning design ",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Separates reusable design knowledge from project-specific context by generating ",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Combines deterministic anti-pattern detection with an LLM-based critique pass: C",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Positions itself as both a design guidance system and a quality-control layer fo",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "The project’s core thesis is that AI-generated frontend work suffers from recogn",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `criti",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "The README distinguishes brand-level and product-level design decisions, suggest",
+      "source": "pbakaus/impeccable",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "The inclusion of deterministic anti-pattern checks means the tool is not only pr",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "The skill covers both visual design and UX substance, including writing, interac",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 21:00"
     }
   ],
   "concepts": {
@@ -4055,9 +4108,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 14,
+      "evidence_count": 16,
       "examples": [
         "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
         "Modular, foundational design intended to be extended by higher-level chart libraries",
@@ -4070,9 +4124,10 @@
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 14,
+      "evidence_count": 15,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -4127,9 +4182,10 @@
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 25,
+      "evidence_count": 28,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4153,9 +4209,10 @@
     "plugin_system": {
       "repos": [
         "d3/d3",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 5,
+      "evidence_count": 6,
       "examples": [
         "Theme extension via base theme inheritance",
         "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
@@ -4191,9 +4248,10 @@
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 15,
+      "evidence_count": 16,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4263,15 +4321,28 @@
         "Checkpoint logic isolated in a dedicated `checkpoint_manager.py` module handling save/load, config patching, tokenizer/model reconstruction, and logging."
       ]
     },
-    "state_management": {
+    "cli_tooling": {
       "repos": [
-        "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/nanoGPT",
+        "pbakaus/impeccable"
       ],
       "evidence_count": 2,
       "examples": [
+        "The configs are designed to be overridden from the command line, suggested by comments such as enabling wandb externally.",
+        "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning."
+      ]
+    },
+    "state_management": {
+      "repos": [
+        "karpathy/nanochat",
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
+      ],
+      "evidence_count": 3,
+      "examples": [
         "Separate model checkpoint state, optimizer state, tokenizer reconstruction, and config migration responsibilities cleanly.",
-        "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets."
+        "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets.",
+        "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling."
       ]
     }
   },
@@ -4305,11 +4376,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "practical",
-        "optimized",
-        "operational",
-        "logging",
-        "module-level"
+        "standard",
+        "evaluation",
+        "showing",
+        "names",
+        "makes"
       ]
     },
     {
@@ -4340,11 +4411,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
+        "dedicated",
+        "development",
+        "organization",
         "prioritizes",
-        "rendering",
-        "design",
-        "generation",
-        "development"
+        "runtime"
       ]
     },
     {
@@ -4373,11 +4444,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "practical",
-        "deeply",
+        "evaluation",
+        "designed",
         "using",
-        "optimized",
-        "designed"
+        "treated",
+        "deeply"
       ]
     },
     {
@@ -4406,11 +4477,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "practical",
-        "tooling",
-        "optimized",
+        "evaluation",
+        "dataloading,",
         "designed",
-        "python"
+        "treated",
+        "quality"
       ]
     },
     {
@@ -4439,10 +4510,10 @@
       ],
       "shared_pattern_keywords": [
         "using",
-        "runtime,",
+        "organization",
         "prioritizes",
-        "design",
-        "documentation"
+        "strategy",
+        "layout"
       ]
     },
     {
@@ -4470,11 +4541,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "optimized",
-        "between",
-        "prioritizes",
         "development",
-        "rather"
+        "artifacts",
+        "scripts",
+        "repository",
+        "generated"
       ]
     },
     {
@@ -4502,11 +4573,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "limited",
-        "including",
-        "optimized",
         "clarity",
-        "prioritizes"
+        "scripts",
+        "including",
+        "repository",
+        "generated"
       ]
     },
     {
@@ -4533,10 +4604,39 @@
       ],
       "shared_pattern_keywords": [
         "using",
-        "documentation",
-        "modular",
-        "metadata",
-        "visual"
+        "organization",
+        "structure",
+        "suggests",
+        "efficiency"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 44,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "database_pattern",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "prompt",
+        "separates",
+        "shared",
+        "explicit",
+        "document"
       ]
     },
     {
@@ -4561,11 +4661,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "intentionally",
-        "implementation",
+        "generated",
+        "model",
         "through",
-        "artifacts",
-        "optimized"
+        "users",
+        "project"
       ]
     },
     {
@@ -4590,11 +4690,121 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "separation",
         "control",
-        "developer",
         "serves",
-        "prioritizes"
+        "development",
+        "separation",
+        "developer"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 34,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "file_operations",
+        "database_pattern",
+        "cli_tooling"
+      ],
+      "shared_pattern_keywords": [
+        "model",
+        "without",
+        "including",
+        "rather",
+        "files"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 30,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "explicit",
+        "layer",
+        "extension",
+        "files",
+        "while"
+      ]
+    },
+    {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 30,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "file_operations",
+        "database_pattern",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "model",
+        "users",
+        "primary",
+        "implementation",
+        "generating"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 27,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "file_operations",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "model",
+        "users",
+        "explicit",
+        "implementation",
+        "rather"
       ]
     },
     {
@@ -4959,8 +5169,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4975,8 +5185,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4991,8 +5201,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5007,8 +5217,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5023,8 +5233,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5039,8 +5249,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5055,8 +5265,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5071,8 +5281,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5103,8 +5313,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "html",
-        "open-source"
+        "open-source",
+        "html"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5119,8 +5329,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5135,8 +5345,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5151,8 +5361,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5167,8 +5377,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5775,8 +5985,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5791,8 +6001,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5807,8 +6017,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6591,8 +6801,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6607,8 +6817,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6623,8 +6833,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6639,8 +6849,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6655,8 +6865,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6671,8 +6881,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6911,8 +7121,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6927,8 +7137,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6943,8 +7153,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6959,8 +7169,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6975,8 +7185,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7743,8 +7953,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7759,8 +7969,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7775,8 +7985,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7791,8 +8001,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7951,8 +8161,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7967,8 +8177,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8111,8 +8321,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8127,8 +8337,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8143,8 +8353,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8271,8 +8481,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8287,8 +8497,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8303,8 +8513,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "typescript",
-        "open-source"
+        "open-source",
+        "typescript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8559,8 +8769,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "jupyter notebook",
-        "open-source"
+        "open-source",
+        "jupyter notebook"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8607,8 +8817,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8623,8 +8833,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8655,8 +8865,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8670,8 +8880,8 @@
         "shared_topic"
       ],
       "shared_topics": [
-        "unknown",
-        "open-source"
+        "open-source",
+        "unknown"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -9307,20 +9517,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "d3/d3",
-      "to_repo": "pbakaus/impeccable",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -23069,20 +23265,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "pbakaus/impeccable",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
@@ -23181,20 +23363,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "pbakaus/impeccable",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "karpathy/nanochat",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
@@ -23281,20 +23449,6 @@
     {
       "from_repo": "karpathy/nanochat",
       "to_repo": "can1357/oh-my-pi",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/nanochat",
-      "to_repo": "pbakaus/impeccable",
       "type": "weak",
       "score": 2,
       "connections": [
@@ -23449,20 +23603,6 @@
     {
       "from_repo": "karpathy/llm.c",
       "to_repo": "can1357/oh-my-pi",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/llm.c",
-      "to_repo": "pbakaus/impeccable",
       "type": "weak",
       "score": 2,
       "connections": [

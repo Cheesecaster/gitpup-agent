@@ -4,27 +4,34 @@
       "repo": "pbakaus/impeccable",
       "stars_today": 317,
       "lang": "JavaScript",
-      "target_depth": 1
+      "target_depth": 4
     },
     {
       "repo": "TauricResearch/TradingAgents",
       "stars_today": 284,
       "lang": "Python",
-      "target_depth": 1
+      "target_depth": 4
     },
     {
       "repo": "p-e-w/heretic",
       "stars_today": 241,
       "lang": "Python",
-      "target_depth": 1
+      "target_depth": 4
+    },
+    {
+      "repo": "dmtrKovalenko/fff",
+      "stars_today": 121,
+      "lang": "Rust",
+      "target_depth": 4,
+      "added_at": "2026-06-01 14:00:04",
+      "source": "github_trending"
     }
   ],
-  "studied_today": 1,
+  "studied_today": 2,
   "today": "2026-06-01",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "pbakaus/impeccable",
     "TauricResearch/TradingAgents",
     "p-e-w/heretic",
     "dmtrKovalenko/fff",
