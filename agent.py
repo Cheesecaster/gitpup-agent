@@ -87,16 +87,71 @@ def day():
     try:
         d = (datetime.now(timezone.utc) - datetime.strptime(BIRTH, "%Y-%m-%d").replace(tzinfo=timezone.utc)).days + 1
         # Sync to status.json so UI shows correct day
+        def _run_decay(state, elapsed_days):
+            if elapsed_days <= 0:
+                return
+
+            call_variants = (
+                (state, elapsed_days, d),
+                (state, elapsed_days),
+                (elapsed_days, d),
+                (state, d),
+                (elapsed_days,),
+                (d,),
+                (state,),
+                (),
+            )
+
+            for name in (
+                "personality_decay",
+                "apply_personality_decay",
+                "decay_personality",
+                "daily_decay",
+                "decay_traits",
+                "decay_skills",
+                "normalize_personality",
+                "normalize_traits",
+                "apply_decay",
+            ):
+                fn = globals().get(name)
+                if callable(fn):
+                    for args in call_variants:
+                        try:
+                            fn(*args)
+                            return
+                        except TypeError:
+                            continue
+
+            factor = 0.95 ** elapsed_days
+            for section in ("personality", "traits", "skills"):
+                values = state.get(section)
+                if isinstance(values, dict):
+                    for k, v in list(values.items()):
+                        if isinstance(v, (int, float)):
+                            nv = v * factor
+                            if abs(nv) < 1e-9:
+                                nv = 0
+                            values[k] = nv
+
         try:
             with open(SF) as fh:
                 st = json.load(fh)
+
             if st.get("day") != d:
+                try:
+                    elapsed = d - int(st.get("day"))
+                except Exception:
+                    elapsed = 0
+
+                if elapsed > 0:
+                    _run_decay(st, elapsed)
+
                 st["day"] = d
                 st.setdefault("stats", {})["days_active"] = d
                 with open(SF, "w") as fh:
                     json.dump(st, fh, indent=2)
         except Exception:
-            pass
+            st = None
         return d
     except Exception:
         return 1
