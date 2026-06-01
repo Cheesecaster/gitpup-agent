@@ -1236,10 +1236,11 @@
     },
     "pbakaus/impeccable": {
       "full_name": "pbakaus/impeccable",
-      "study_level": 2,
+      "study_level": 3,
       "studied_at": [
         "2026-06-01 20:00",
-        "2026-06-01 21:00"
+        "2026-06-01 21:00",
+        "2026-06-01 22:00"
       ],
       "summary": "Impeccable is a frontend design skill and tooling package that gives AI agents a structured design vocabulary, reference guidance, commands, and anti-pattern checks for producing more distinctive, higher-quality frontend interfaces. It extends Anthropic’s frontend-design skill with domain-specific d",
       "patterns": [
@@ -1247,7 +1248,12 @@
         "Uses `/impeccable` slash commands as the primary user interface, turning design workflows into named actions such as craft, init, document, extract, shape, critique, audit, and polish.",
         "Separates reusable design knowledge from project-specific context by generating or relying on files such as PRODUCT.md and DESIGN.md.",
         "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
-        "Positions itself as both a design guidance system and a quality-control layer for frontend work, addressing aesthetics, accessibility, responsiveness, hierarchy, motion, writing, and implementation polish."
+        "Positions itself as both a design guidance system and a quality-control layer for frontend work, addressing aesthetics, accessibility, responsiveness, hierarchy, motion, writing, and implementation polish.",
+        "Clear separation between runtime components: cli, plugin, skill, and extension are isolated at the top level.",
+        "Tests are centralized in a dedicated tests directory rather than colocated with each package area.",
+        "Documentation or demo/static assets appear to live under site, supported by Markdown and HTML files.",
+        "The use of .mjs indicates an ES module-based JavaScript codebase.",
+        "JSON files likely provide package metadata, configuration, manifests, or structured data for the CLI/plugin/extension pieces."
       ],
       "best_practices": [],
       "insights": [
@@ -1255,14 +1261,17 @@
         "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `critique`, `distill`, `animate`, `bolder`, and `quieter` let users steer design intent more precisely.",
         "The README distinguishes brand-level and product-level design decisions, suggesting the system adapts defaults based on context instead of applying one generic style.",
         "The inclusion of deterministic anti-pattern checks means the tool is not only prompt guidance; it also provides repeatable, automatable design linting.",
-        "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling."
+        "The skill covers both visual design and UX substance, including writing, interaction states, accessibility, responsive behavior, and motion rather than focusing only on surface styling.",
+        "The layout suggests a multi-surface tool: command-line usage, plugin integration, skill behavior, and extension support are developed in one repository.",
+        "The project likely prioritizes modularity, making it easier to evolve or publish individual components independently.",
+        "The presence of both site and tests indicates attention to user-facing documentation as well as validation of functionality."
       ],
       "code_examples": [],
       "arch_topics": [
         "javascript",
         "open-source"
       ],
-      "readme_insights": "",
+      "readme_insights": "The repository is organized as a JavaScript/Node-style project with separate top-level areas for tests, documentation/site content, a plugin, skill logic, a CLI, and a browser/editor extension. File types suggest ES modules, JSON configuration, Markdown documentation, and HTML assets.",
       "stars": 32287,
       "lang": "JavaScript",
       "description": ""
@@ -1452,135 +1461,6 @@
     }
   },
   "skill_index": {
-    "small-dataset configs use frequent evaluation and logging in": {
-      "name": "Small-dataset configs use frequent evaluation and logging intervals to monitor o",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "error_handling",
-        "event_driven",
-        "data_transformation",
-        "cli_tooling"
-      ]
-    },
-    "large-scale training configs align `max_iters` and `lr_decay": {
-      "name": "Large-scale training configs align `max_iters` and `lr_decay_iters` to define a ",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "performance_optimization",
-        "data_transformation",
-        "cli_tooling"
-      ]
-    },
-    "dataset preparation scripts use standard scientific/data too": {
-      "name": "Dataset preparation scripts use standard scientific/data tooling: `os`, `numpy`,",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "schema_validation",
-        "version_control",
-        "state_management"
-      ]
-    },
-    "dataset preprocessing exposes worker-count parameters such a": {
-      "name": "Dataset preprocessing exposes worker-count parameters such as `num_proc` for par",
-      "category": "data",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "schema_validation",
-        "version_control",
-        "state_management"
-      ]
-    },
-    "comments are used heavily to document model sizes, parameter": {
-      "name": "Comments are used heavily to document model sizes, parameter counts, expected ru",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "schema_validation",
-        "cli_tooling"
-      ]
-    },
-    "keep experiment configurations separate by purpose and scale": {
-      "name": "Keep experiment configurations separate by purpose and scale to make runs reprod",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "version_control"
-      ]
-    },
-    "use python-based config files when arithmetic, imports, comm": {
-      "name": "Use Python-based config files when arithmetic, imports, comments, or dynamic val",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "document effective batch-size calculations directly beside t": {
-      "name": "Document effective batch-size calculations directly beside the hyperparameters t",
-      "category": "general",
-      "sources": [
-        "karpathy/nanoGPT"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "plugin_system",
-        "data_fetching",
-        "version_control"
-      ]
-    },
     "disable unnecessary logging such as wandb during evaluation ": {
       "name": "Disable unnecessary logging such as wandb during evaluation or lightweight debug",
       "category": "engineering",
@@ -2135,7 +2015,8 @@
       "usage_count": 0,
       "learned_at": "2026-06-01 10:00",
       "related_concepts": [
-        "testing_pattern"
+        "testing_pattern",
+        "cli_tooling"
       ]
     },
     "experiment-oriented layout with `runs` reserved for outputs,": {
@@ -2290,6 +2171,7 @@
         "schema_validation",
         "data_transformation",
         "version_control",
+        "cli_tooling",
         "state_management"
       ]
     },
@@ -3253,6 +3135,167 @@
         "cli_tooling",
         "state_management"
       ]
+    },
+    "clear separation between runtime components: cli, plugin, sk": {
+      "name": "Clear separation between runtime components: cli, plugin, skill, and extension a",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "testing_pattern",
+        "cli_tooling"
+      ]
+    },
+    "tests are centralized in a dedicated tests directory rather ": {
+      "name": "Tests are centralized in a dedicated tests directory rather than colocated with ",
+      "category": "engineering",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "schema_validation",
+        "cli_tooling"
+      ]
+    },
+    "documentation or demo/static assets appear to live under sit": {
+      "name": "Documentation or demo/static assets appear to live under site, supported by Mark",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ]
+    },
+    "the use of .mjs indicates an es module-based javascript code": {
+      "name": "The use of .mjs indicates an ES module-based JavaScript codebase.",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "json files likely provide package metadata, configuration, m": {
+      "name": "JSON files likely provide package metadata, configuration, manifests, or structu",
+      "category": "data",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "config_management",
+        "database_pattern"
+      ]
+    },
+    "the layout suggests a multi-surface tool: command-line usage": {
+      "name": "The layout suggests a multi-surface tool: command-line usage, plugin integration",
+      "category": "general",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "the project likely prioritizes modularity, making it easier ": {
+      "name": "The project likely prioritizes modularity, making it easier to evolve or publish",
+      "category": "architecture",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "the presence of both site and tests indicates attention to u": {
+      "name": "The presence of both site and tests indicates attention to user-facing documenta",
+      "category": "engineering",
+      "sources": [
+        "pbakaus/impeccable"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "state_management"
+      ]
     }
   },
   "memory_summaries": [
@@ -3395,68 +3438,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 53,
-    "total_patterns": 85,
-    "total_insights": 59,
+    "total_patterns": 90,
+    "total_insights": 62,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 110
+    "total_skills_learned": 108
   },
   "skills_memory": [
-    {
-      "name": "Small-dataset configs use frequent evaluation and logging intervals to monitor o",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Large-scale training configs align `max_iters` and `lr_decay_iters` to define a ",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Dataset preparation scripts use standard scientific/data tooling: `os`, `numpy`,",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Dataset preprocessing exposes worker-count parameters such as `num_proc` for par",
-      "source": "karpathy/nanoGPT",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Comments are used heavily to document model sizes, parameter counts, expected ru",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Keep experiment configurations separate by purpose and scale to make runs reprod",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Use Python-based config files when arithmetic, imports, comments, or dynamic val",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
-    {
-      "name": "Document effective batch-size calculations directly beside the hyperparameters t",
-      "source": "karpathy/nanoGPT",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 09:00"
-    },
     {
       "name": "Disable unnecessary logging such as wandb during evaluation or lightweight debug",
       "source": "karpathy/nanoGPT",
@@ -4100,6 +4087,62 @@
       "category": "architecture",
       "usage_count": 0,
       "learned_at": "2026-06-01 21:00"
+    },
+    {
+      "name": "Clear separation between runtime components: cli, plugin, skill, and extension a",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "Tests are centralized in a dedicated tests directory rather than colocated with ",
+      "source": "pbakaus/impeccable",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "Documentation or demo/static assets appear to live under site, supported by Mark",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "The use of .mjs indicates an ES module-based JavaScript codebase.",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "JSON files likely provide package metadata, configuration, manifests, or structu",
+      "source": "pbakaus/impeccable",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "The layout suggests a multi-surface tool: command-line usage, plugin integration",
+      "source": "pbakaus/impeccable",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "The project likely prioritizes modularity, making it easier to evolve or publish",
+      "source": "pbakaus/impeccable",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
+    },
+    {
+      "name": "The presence of both site and tests indicates attention to user-facing documenta",
+      "source": "pbakaus/impeccable",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 22:00"
     }
   ],
   "concepts": {
@@ -4127,7 +4170,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 15,
+      "evidence_count": 17,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -4152,9 +4195,10 @@
     "testing_pattern": {
       "repos": [
         "d3/d3",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 4,
+      "evidence_count": 6,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library.",
@@ -4185,7 +4229,7 @@
         "karpathy/llm.c",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 28,
+      "evidence_count": 31,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4197,9 +4241,10 @@
         "d3/d3",
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
-        "karpathy/nanochat"
+        "karpathy/nanochat",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 32,
+      "evidence_count": 33,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -4212,7 +4257,7 @@
         "karpathy/nanochat",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 6,
+      "evidence_count": 9,
       "examples": [
         "Theme extension via base theme inheritance",
         "Its architecture prioritizes granular control and flexibility over out-of-the-box chart templates",
@@ -4288,9 +4333,10 @@
         "karpathy/autoresearch",
         "karpathy/nanoGPT",
         "karpathy/nanochat",
-        "karpathy/llm.c"
+        "karpathy/llm.c",
+        "pbakaus/impeccable"
       ],
-      "evidence_count": 8,
+      "evidence_count": 9,
       "examples": [
         "Model quality is compared using validation bits per byte, making results less dependent on vocabulary size",
         "Using validation bits per byte enables fairer comparisons across tokenizer or vocabulary changes",
@@ -4326,10 +4372,11 @@
         "karpathy/nanoGPT",
         "pbakaus/impeccable"
       ],
-      "evidence_count": 2,
+      "evidence_count": 4,
       "examples": [
         "The configs are designed to be overridden from the command line, suggested by comments such as enabling wandb externally.",
-        "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning."
+        "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
+        "Clear separation between runtime components: cli, plugin, skill, and extension are isolated at the top level."
       ]
     },
     "state_management": {
@@ -4359,8 +4406,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4376,11 +4423,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
+        "practical",
+        "explicitly",
         "standard",
-        "evaluation",
-        "showing",
-        "names",
-        "makes"
+        "layout",
+        "checkpoint"
       ]
     },
     {
@@ -4412,10 +4459,10 @@
       ],
       "shared_pattern_keywords": [
         "dedicated",
-        "development",
-        "organization",
-        "prioritizes",
-        "runtime"
+        "layout",
+        "templates",
+        "pipeline",
+        "development"
       ]
     },
     {
@@ -4430,8 +4477,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4444,11 +4491,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "evaluation",
-        "designed",
-        "using",
+        "practical",
+        "experiment",
+        "layout",
         "treated",
-        "deeply"
+        "likely"
       ]
     },
     {
@@ -4463,8 +4510,8 @@
         "pattern_similarity"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [
         "data_visualization",
@@ -4477,11 +4524,43 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "evaluation",
-        "dataloading,",
-        "designed",
-        "treated",
-        "quality"
+        "wall-clock",
+        "practical",
+        "layout",
+        "implementation",
+        "treated"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 76,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "database_pattern",
+        "schema_validation",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "attention",
+        "dedicated",
+        "centralized",
+        "layout",
+        "implementation"
       ]
     },
     {
@@ -4509,11 +4588,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "using",
+        "layout",
         "organization",
-        "prioritizes",
-        "strategy",
-        "layout"
+        "metadata",
+        "workflow",
+        "enabling"
       ]
     },
     {
@@ -4541,11 +4620,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "development",
-        "artifacts",
-        "scripts",
+        "compact",
+        "implementation",
         "repository",
-        "generated"
+        "separate",
+        "development"
       ]
     },
     {
@@ -4573,11 +4652,71 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "clarity",
-        "scripts",
-        "including",
         "repository",
-        "generated"
+        "educational",
+        "separate",
+        "through",
+        "gpt-2"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 52,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "file_operations",
+        "config_management",
+        "database_pattern",
+        "schema_validation",
+        "cli_tooling"
+      ],
+      "shared_pattern_keywords": [
+        "layout",
+        "under",
+        "assets",
+        "likely",
+        "package"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 51,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "dedicated",
+        "layout",
+        "layer",
+        "plugin",
+        "while"
       ]
     },
     {
@@ -4603,18 +4742,18 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "using",
-        "organization",
         "structure",
-        "suggests",
-        "efficiency"
+        "layout",
+        "efficiency",
+        "while",
+        "organization"
       ]
     },
     {
-      "from_repo": "karpathy/nanochat",
+      "from_repo": "karpathy/autoresearch",
       "to_repo": "pbakaus/impeccable",
       "type": "strong",
-      "score": 44,
+      "score": 45,
       "connections": [
         "shared_topic",
         "shared_concept",
@@ -4627,16 +4766,16 @@
         "data_visualization",
         "modular_design",
         "file_operations",
-        "plugin_system",
+        "config_management",
         "database_pattern",
-        "state_management"
+        "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "prompt",
-        "separates",
-        "shared",
-        "explicit",
-        "document"
+        "improve",
+        "layout",
+        "implementation",
+        "users",
+        "likely"
       ]
     },
     {
@@ -4661,11 +4800,39 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "generated",
-        "model",
+        "while",
         "through",
-        "users",
-        "project"
+        "rather",
+        "tokenizer",
+        "model"
+      ]
+    },
+    {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "pbakaus/impeccable",
+      "type": "strong",
+      "score": 38,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "file_operations",
+        "database_pattern",
+        "schema_validation",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "while",
+        "primary",
+        "rather",
+        "between",
+        "model"
       ]
     },
     {
@@ -4690,121 +4857,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "control",
-        "serves",
         "development",
-        "separation",
-        "developer"
-      ]
-    },
-    {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 34,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "file_operations",
-        "database_pattern",
-        "cli_tooling"
-      ],
-      "shared_pattern_keywords": [
-        "model",
-        "without",
-        "including",
-        "rather",
-        "files"
-      ]
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 30,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "file_operations",
-        "plugin_system",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "explicit",
-        "layer",
-        "extension",
-        "files",
-        "while"
-      ]
-    },
-    {
-      "from_repo": "karpathy/llm.c",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 30,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "modular_design",
-        "file_operations",
-        "database_pattern",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "model",
-        "users",
-        "primary",
-        "implementation",
-        "generating"
-      ]
-    },
-    {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "pbakaus/impeccable",
-      "type": "strong",
-      "score": 27,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "data_visualization",
-        "modular_design",
-        "file_operations",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "model",
-        "users",
-        "explicit",
-        "implementation",
-        "rather"
+        "developer",
+        "while",
+        "project",
+        "control"
       ]
     },
     {
@@ -4817,8 +4874,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4833,8 +4890,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4849,8 +4906,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4865,8 +4922,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4881,8 +4938,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4897,8 +4954,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4913,8 +4970,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4929,8 +4986,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4945,8 +5002,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4961,8 +5018,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4977,8 +5034,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4993,8 +5050,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5009,8 +5066,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5025,8 +5082,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5041,8 +5098,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5057,8 +5114,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5073,8 +5130,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5089,8 +5146,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5105,8 +5162,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5121,8 +5178,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5137,8 +5194,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5153,8 +5210,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5297,8 +5354,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5313,8 +5370,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "html"
+        "html",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5393,8 +5450,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5409,8 +5466,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5425,8 +5482,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5441,8 +5498,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5457,8 +5514,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5473,8 +5530,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5489,8 +5546,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5505,8 +5562,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5521,8 +5578,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5537,8 +5594,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5553,8 +5610,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5569,8 +5626,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5585,8 +5642,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5601,8 +5658,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5617,8 +5674,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5633,8 +5690,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5649,8 +5706,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5665,8 +5722,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5681,8 +5738,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5697,8 +5754,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5713,8 +5770,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5729,8 +5786,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5745,8 +5802,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5761,8 +5818,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5777,8 +5834,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5793,8 +5850,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5809,8 +5866,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5825,8 +5882,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5841,8 +5898,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5857,8 +5914,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5873,8 +5930,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5889,8 +5946,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5905,8 +5962,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5921,8 +5978,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5937,8 +5994,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5953,8 +6010,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5969,8 +6026,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6033,8 +6090,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6049,8 +6106,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6065,8 +6122,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6081,8 +6138,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6097,8 +6154,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6113,8 +6170,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6129,8 +6186,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6145,8 +6202,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6161,8 +6218,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6177,8 +6234,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6193,8 +6250,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6209,8 +6266,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6225,8 +6282,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6241,8 +6298,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6257,8 +6314,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6273,8 +6330,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6289,8 +6346,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6305,8 +6362,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6321,8 +6378,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6337,8 +6394,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6353,8 +6410,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6369,8 +6426,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6385,8 +6442,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6401,8 +6458,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6417,8 +6474,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6433,8 +6490,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6449,8 +6506,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6465,8 +6522,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6481,8 +6538,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6497,8 +6554,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6513,8 +6570,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6529,8 +6586,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6545,8 +6602,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6561,8 +6618,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6577,8 +6634,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6593,8 +6650,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6609,8 +6666,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6625,8 +6682,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6641,8 +6698,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6657,8 +6714,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6673,8 +6730,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6689,8 +6746,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6705,8 +6762,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6721,8 +6778,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6737,8 +6794,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6753,8 +6810,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6769,8 +6826,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6785,8 +6842,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6897,8 +6954,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6913,8 +6970,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6929,8 +6986,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6945,8 +7002,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6961,8 +7018,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6977,8 +7034,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6993,8 +7050,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7009,8 +7066,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7025,8 +7082,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7041,8 +7098,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7057,8 +7114,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7073,8 +7130,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7089,8 +7146,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7105,8 +7162,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7201,8 +7258,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7217,8 +7274,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7233,8 +7290,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7249,8 +7306,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7265,8 +7322,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7281,8 +7338,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7297,8 +7354,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7313,8 +7370,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7329,8 +7386,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7345,8 +7402,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7361,8 +7418,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7377,8 +7434,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7393,8 +7450,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7425,8 +7482,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7441,8 +7498,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7457,8 +7514,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7473,8 +7530,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7489,8 +7546,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7505,8 +7562,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7521,8 +7578,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7537,8 +7594,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7553,8 +7610,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7569,8 +7626,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7585,8 +7642,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7601,8 +7658,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7617,8 +7674,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7633,8 +7690,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7649,8 +7706,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7665,8 +7722,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7681,8 +7738,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7697,8 +7754,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7713,8 +7770,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7729,8 +7786,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7745,8 +7802,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7761,8 +7818,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7777,8 +7834,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7793,8 +7850,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7809,8 +7866,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7825,8 +7882,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7841,8 +7898,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7857,8 +7914,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7873,8 +7930,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7889,8 +7946,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7905,8 +7962,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7921,8 +7978,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7937,8 +7994,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8017,8 +8074,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8033,8 +8090,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8049,8 +8106,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8065,8 +8122,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8081,8 +8138,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8097,8 +8154,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8113,8 +8170,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8129,8 +8186,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8145,8 +8202,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8161,8 +8218,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8177,8 +8234,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8193,8 +8250,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8209,8 +8266,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8225,8 +8282,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8241,8 +8298,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8257,8 +8314,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8273,8 +8330,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8289,8 +8346,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8305,8 +8362,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8369,8 +8426,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8385,8 +8442,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8401,8 +8458,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8417,8 +8474,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8433,8 +8490,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8449,8 +8506,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8465,8 +8522,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8529,8 +8586,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8545,8 +8602,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8561,8 +8618,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8577,8 +8634,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8593,8 +8650,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8609,8 +8666,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8625,8 +8682,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8641,8 +8698,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8657,8 +8714,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8673,8 +8730,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8689,8 +8746,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8705,8 +8762,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8721,8 +8778,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8737,8 +8794,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8753,8 +8810,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8769,8 +8826,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "jupyter notebook"
+        "jupyter notebook",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8785,8 +8842,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8801,8 +8858,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -8849,8 +8906,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "python"
+        "python",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
