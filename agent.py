@@ -305,7 +305,22 @@ def gh_put(path, data=None):
     req.add_header("Accept", "application/vnd.github+json")
     try:
         with urllib.request.urlopen(req, timeout=15) as r:
-            return {"status": r.status, "ok": r.status in (200, 201, 204)}
+            status = r.status
+            result = {"status": status, "ok": status in (200, 201, 204)}
+
+            # 204 responses commonly have no JSON body (e.g. star/unstar actions).
+            if status == 204:
+                return result
+
+            raw = r.read()
+            if not raw:
+                return result
+
+            try:
+                result["json"] = json.loads(raw.decode("utf-8"))
+            except (ValueError, UnicodeDecodeError):
+                result["body"] = raw.decode("utf-8", errors="replace")
+            return result
     except Exception as e:
         return {"error": str(e)}
 
