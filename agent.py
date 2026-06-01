@@ -1091,7 +1091,7 @@ def queue_mark_studied(q=None):
     q["studied_today"] += 1
     save_queue(q)
 
-def queue_add_pending(repo_name, target_depth=1):
+def queue_add_pending(repo_name, target_depth=4):
     q = load_queue()
     for item in q.get("repos", []):
         if item["repo"] == repo_name:
@@ -1114,6 +1114,15 @@ def queue_get_next():
     """
     q = load_queue()
     repos = q.get("repos", [])
+    # Normalize old queues: every repo must be studied to full L4 mastery before switching.
+    changed = False
+    for item in repos:
+        if item.get("target_depth", 0) < 4:
+            item["target_depth"] = 4
+            changed = True
+    if changed:
+        q["repos"] = repos
+        save_queue(q)
     if not repos:
         q.pop("active_repo", None)
         save_queue(q)
@@ -1171,7 +1180,8 @@ def queue_pop_done():
     completed = set()
     for item in q.get("repos", []):
         rn = item["repo"]
-        target = item["target_depth"]
+        target = max(int(item.get("target_depth", 4) or 4), 4)
+        item["target_depth"] = target
         kb_level = 0
         if rn in kb.get("repos", {}):
             kb_level = kb["repos"][rn].get("study_level", 0)
@@ -1239,22 +1249,32 @@ def do_fetch_github_trending():
         # Sort by stars descending
         new_repos.sort(key=lambda x: x["stars_today"], reverse=True)
 
-        # Queue top 3
+        # Queue top 3 without overwriting active/incomplete mastery queue.
         today = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
         top = new_repos[:3] if new_repos else []
         if top:
-            q = {
-                "repos": [{"repo": r["name"], "stars_today": r["stars_today"],
-                           "lang": r.get("lang", ""), "target_depth": 1} for r in top],
-                "studied_today": 0,
-                "today": today,
-                "max_daily": 3,
-                "source": "github_trending",
-                "all_candidates": [r["name"] for r in new_repos[:10]]
-            }
+            q = load_queue()
+            q.setdefault("repos", [])
+            existing = {item.get("repo") for item in q.get("repos", [])}
+            for item in q.get("repos", []):
+                if item.get("target_depth", 0) < 4:
+                    item["target_depth"] = 4
+            added = []
+            for r in top:
+                if r["name"] in existing:
+                    continue
+                q["repos"].append({"repo": r["name"], "stars_today": r["stars_today"],
+                                   "lang": r.get("lang", ""), "target_depth": 4,
+                                   "added_at": today, "source": "github_trending"})
+                existing.add(r["name"])
+                added.append(r["name"])
+            q["today"] = q.get("today") or today
+            q["max_daily"] = q.get("max_daily", 3)
+            q["source"] = "github_trending"
+            q["all_candidates"] = [r["name"] for r in new_repos[:10]]
             save_queue(q)
-            log("  Queued {} trending repos: {}".format(
-                len(top), ", ".join(r["name"] for r in top)))
+            log("  Queued {} trending repos for L4 mastery: {}".format(
+                len(added), ", ".join(added) if added else "none new"))
         else:
             log("  No new trending repos today")
 
@@ -1344,8 +1364,8 @@ def do_explore_github():
     if queue_can_study():
         unstudied = [r for r in repos if not kb_has_repo(r["full_name"])]
         for pick in unstudied[:1]:
-            queue_add_pending(pick["full_name"], target_depth=1)
-            log("  Queued: " + pick["full_name"])
+            queue_add_pending(pick["full_name"], target_depth=4)
+            log("  Queued for L4 mastery: " + pick["full_name"])
             journal("\U0001f4cb", "Queued for study", pick["full_name"])
 
     set_state("explored_github", "Found " + str(len(repos)) + " repos")

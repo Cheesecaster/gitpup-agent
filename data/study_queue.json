@@ -29,12 +29,11 @@
       "source": "github_trending"
     }
   ],
-  "studied_today": 2,
+  "studied_today": 3,
   "today": "2026-06-02",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "TauricResearch/TradingAgents",
     "p-e-w/heretic",
     "godotengine/godot",
     "dmtrKovalenko/fff",
