@@ -411,6 +411,82 @@ def do_POST(self):
         pass
 
 
+# === PUBLIC CHAT OVERRIDES ===
+# Keep public static serving, but route API calls explicitly. Chat is public; no GitHub token required.
+_CHAT_RATE = {}
+
+def _client_ip(handler):
+    return handler.headers.get('X-Forwarded-For', '').split(',')[0].strip() or handler.client_address[0]
+
+def _rate_ok(handler, limit=12, window=60):
+    import time
+    import threading
+
+    lock = globals().setdefault('_CHAT_RATE_LOCK', threading.Lock())
+    ip = _client_ip(handler)
+    now = time.time()
+
+    with lock:
+        # prune stale entries for all IPs to avoid unbounded memory growth
+        for seen_ip in list(_CHAT_RATE):
+            active_hits = [t for t in _CHAT_RATE.get(seen_ip, []) if now - t < window]
+            if active_hits:
+                _CHAT_RATE[seen_ip] = active_hits
+            else:
+                del _CHAT_RATE[seen_ip]
+
+        hits = [t for t in _CHAT_RATE.get(ip, []) if now - t < window]
+        if len(hits) >= limit:
+            _CHAT_RATE[ip] = hits
+            return False
+        hits.append(now)
+        _CHAT_RATE[ip] = hits
+        return True
+
+def _public_do_GET(self):
+    p = urllib.parse.urlparse(self.path).path
+    if p.startswith('/api/') or p == '/story' or p == '/auth/callback':
+        return do_GET(self)
+    return http.server.SimpleHTTPRequestHandler.do_GET(self)
+
+def _public_do_POST(self):
+    p = urllib.parse.urlparse(self.path).path
+    if p != '/api/chat':
+        return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
+    if not _rate_ok(self):
+        return _json_resp(self, {'status': 'error', 'reply': 'Pelan-pelan bro, rate limit dulu bentar.', 'error': 'rate_limited'}, 429)
+    try:
+        content_length = int(self.headers.get('Content-Length', 0))
+        body = self.rfile.read(content_length)
+        data = json.loads(body.decode('utf-8') if isinstance(body, bytes) else body)
+        if not isinstance(data, dict):
+            raise ValueError('Invalid JSON payload')
+        msg = (data.get('message') or '').strip()
+        if not msg:
+            return _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+        if len(msg) > 2000:
+            msg = msg[:2000]
+        # lightweight KB shortcut
+        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+            return _json_resp(self, {'reply': cp.kb_summary(), 'cited': [], 'kb_context_used': True, 'public': True})
+        intent = cp.detect_intent(msg)
+        if intent == 'build_request':
+            reply = 'Untuk public chat, gw cuma ngobrol dan jelasin knowledge dulu bro. Build/trigger agent sengaja nggak dibuka publik biar aman.'
+            return _json_resp(self, {'reply': reply, 'cited': [], 'public': True})
+        result = cp.handle_question(msg)
+        result['public'] = True
+        result['chat_model'] = os.environ.get('CHAT_LLM_MODEL', 'gpt-5.4-mini')
+        return _json_resp(self, result)
+    except Exception as e:
+        return _json_resp(self, {'status': 'error', 'reply': 'Error bentar bro: ' + str(e)[:120], 'error': str(e)[:120]}, 500)
+
+def _quiet_log(self, fmt, *args):
+    pass
+
+H.do_GET = _public_do_GET
+H.do_POST = _public_do_POST
+H.log_message = _quiet_log
+
 os.chdir('/opt/gitpup/web_dist')
 srv = http.server.ThreadingHTTPServer(('0.0.0.0', 5173), H)
 srv.daemon_threads = True
