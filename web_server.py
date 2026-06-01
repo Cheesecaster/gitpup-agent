@@ -323,92 +323,119 @@ def do_GET(self):
 
 def do_POST(self):
     p = urllib.parse.urlparse(self.path).path
+
+    def _parse_json_payload():
+        raw_length = self.headers.get('Content-Length')
+        try:
+            content_length = int(raw_length) if raw_length is not None else 0
+        except (TypeError, ValueError) as e:
+            raise ValueError("Invalid Content-Length header") from e
+
+        if content_length < 0:
+            raise ValueError("Invalid Content-Length header")
+
+        body = self.rfile.read(content_length)
+        try:
+            if isinstance(body, (bytes, bytearray)):
+                body = body.decode('utf-8')
+            return json.loads(body)
+        except (json.JSONDecodeError, UnicodeDecodeError, TypeError, ValueError) as e:
+            raise ValueError("Invalid JSON payload") from e
+
     if p == '/api/chat':
         def handle_chat():
             try:
-                content_length = int(self.headers.get('Content-Length', 0))
-                body = self.rfile.read(content_length)
-                data = json.loads(body)
+                data = _parse_json_payload()
                 if not isinstance(data, dict):
                     raise ValueError("Invalid JSON payload: expected object")
-                self._handle_chat(data)
+                import asyncio
+                asyncio.run(self._handle_chat(data))
             except (KeyError, TypeError, ValueError) as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+                _json_resp(self, {'status': 'error', 'error': str(e)}, 400)
             except Exception as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+                _json_resp(self, {'status': 'error', 'error': str(e)}, 500)
         threading.Thread(target=handle_chat, daemon=True).start()
     elif p == '/api/trigger':
         def handle_trigger():
             try:
-                content_length = int(self.headers.get('Content-Length', 0))
-                body = self.rfile.read(content_length)
-                data = json.loads(body)
+                data = _parse_json_payload()
                 if not isinstance(data, dict):
                     raise ValueError("Invalid JSON payload: expected object")
                 r = subprocess.run(['python3', os.path.join(GITPUP, 'agent.py'), '--force'],
                     cwd=GITPUP, capture_output=True, text=True, timeout=300)
                 _json_resp(self, {'status': 'done', 'stdout': r.stdout[:500], 'returncode': r.returncode})
             except (KeyError, TypeError, ValueError) as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+                _json_resp(self, {'status': 'error', 'error': str(e)}, 400)
             except Exception as e:
-                _json_resp(self, {'status': 'error', 'error': str(e)})
+                _json_resp(self, {'status': 'error', 'error': str(e)}, 500)
         threading.Thread(target=handle_trigger, daemon=True).start()
     else:
         self.send_response(404)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
-    async def _handle_chat(self):
-        import concurrent.futures
-        import json
-        import asyncio
-        executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+async def _handle_chat(self, body=None):
+    import concurrent.futures
+    import json
+    import asyncio
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+
+    if body is None:
         try:
-            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
-        except (json.JSONDecodeError, ValueError):
+            raw_length = self.headers.get('Content-Length', 0)
+            content_length = int(raw_length)
+            if content_length < 0:
+                raise ValueError("Invalid Content-Length header")
+            body = self.rfile.read(content_length)
+            if isinstance(body, (bytes, bytearray)):
+                body = body.decode('utf-8')
+            body = json.loads(body)
+        except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
             return _json_resp(self, {'error': 'Invalid JSON'}, 400)
         except Exception:
             return _json_resp(self, {'error': 'Internal Server Error'}, 500)
+    elif not isinstance(body, dict):
+        return _json_resp(self, {'error': 'Invalid JSON'}, 400)
 
-        msg = body.get('message', '').strip()
-        if not msg:
-            _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
-            return
+    msg = body.get('message', '').strip()
+    if not msg:
+        _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
+        return
 
-        if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-            summary = cp.kb_summary()
-            _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
-            return
+    if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
+        summary = cp.kb_summary()
+        _json_resp(self, {'reply': summary, 'cited': [], 'kb_context_used': True})
+        return
 
-        try:
-            intent = await asyncio.wrap_future(executor.submit(cp.detect_intent, msg))
+    try:
+        intent = await asyncio.wrap_future(executor.submit(cp.detect_intent, msg))
 
-            if intent == 'build_request':
-                lower = msg.lower()
-                if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
-                    session_key = body.get('session', 'default')
-                    if session_key in self._pending_proposals:
-                        proposal = self._pending_proposals.pop(session_key)
-                        result = await asyncio.wrap_future(executor.submit(cp.handle_build_confirm, msg, proposal))
-                        _json_resp(self, result)
-                        return
+        if intent == 'build_request':
+            lower = msg.lower()
+            if any(w in lower for w in ['ya', 'gas', 'ok', 'oke', 'lanjut', 'konfirmasi', 'confirm', 'yes', 'y', 'jalan']):
+                session_key = body.get('session', 'default')
+                if session_key in self._pending_proposals:
+                    proposal = self._pending_proposals.pop(session_key)
+                    result = await asyncio.wrap_future(executor.submit(cp.handle_build_confirm, msg, proposal))
+                    _json_resp(self, result)
+                    return
 
-                result = await asyncio.wrap_future(executor.submit(cp.handle_build_proposal, msg))
-                if result['status'] == 'proposal':
-                    self._pending_proposals[msg[:50]] = result['data']
-                _json_resp(self, result)
+            result = await asyncio.wrap_future(executor.submit(cp.handle_build_proposal, msg))
+            if result['status'] == 'proposal':
+                self._pending_proposals[msg[:50]] = result['data']
+            _json_resp(self, result)
 
-            elif intent == 'question':
-                result = await asyncio.wrap_future(executor.submit(cp.handle_question, msg))
-                _json_resp(self, result)
+        elif intent == 'question':
+            result = await asyncio.wrap_future(executor.submit(cp.handle_question, msg))
+            _json_resp(self, result)
 
-            else:
-                _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
-        except Exception:
-            return _json_resp(self, {'error': 'Internal Server Error'}, 500)
+        else:
+            _json_resp(self, {'reply': 'Gw belum ngerti apa yang lo mau bro.', 'cited': []})
+    except Exception:
+        return _json_resp(self, {'error': 'Internal Server Error'}, 500)
 
-    def log_message(self, fmt, *args):
-        pass
+def log_message(self, fmt, *args):
+    return
 
 
 # === PUBLIC CHAT OVERRIDES ===
@@ -416,6 +443,7 @@ def do_POST(self):
 _CHAT_RATE = {}
 _CHAT_CONTEXT = {}
 _IMAGE_RATE = {}
+_SONG_RATE = {}
 
 def _client_ip(handler):
     return handler.headers.get('X-Forwarded-For', '').split(',')[0].strip() or handler.client_address[0]
@@ -453,7 +481,7 @@ def _rate_ok(handler, user_key='anonymous', limit=5, window=60):
         return True
 
 
-def _image_rate_ok(handler, user_key='anonymous', limit=1, window=60):
+def _image_rate_ok(handler, user_key='anonymous', limit=1, window=300):
     """Image generation/edit limiter: max 1 image/min per IP AND per user/session."""
     import time, threading
     lock = globals().setdefault('_IMAGE_RATE_LOCK', threading.Lock())
@@ -476,6 +504,24 @@ def _image_rate_ok(handler, user_key='anonymous', limit=1, window=60):
             hits.append(now)
             _IMAGE_RATE[key] = hits
         return True
+
+def _image_rate_refund(handler, user_key='anonymous'):
+    """Refund image limiter when provider fails before producing an image."""
+    import threading
+    lock = globals().setdefault('_IMAGE_RATE_LOCK', threading.Lock())
+    ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    keys = ['ip:' + ip, 'user:' + safe_user]
+    with lock:
+        for key in keys:
+            hits = _IMAGE_RATE.get(key, [])
+            if hits:
+                hits.pop()
+            if hits:
+                _IMAGE_RATE[key] = hits
+            else:
+                _IMAGE_RATE.pop(key, None)
+
 
 def _load_env_file_once():
     envp = '/opt/gitpup/.env'
@@ -549,11 +595,47 @@ def _compress_image_max(raw, out_path, max_bytes=800*1024):
     except Exception as e:
         raise RuntimeError('image output exceeded 800KB and Pillow compression unavailable: ' + str(e)[:120])
 
+
+def _song_rate_ok(handler, user_key='anonymous', limit=1, window=14400):
+    import time, threading
+    lock = globals().setdefault('_SONG_RATE_LOCK', threading.Lock())
+    ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    keys = ['ip:' + ip, 'user:' + safe_user]
+    now = time.time()
+    with lock:
+        for seen in list(_SONG_RATE):
+            active = [t for t in _SONG_RATE.get(seen, []) if now - t < window]
+            if active: _SONG_RATE[seen] = active
+            else: del _SONG_RATE[seen]
+        for key in keys:
+            hits = [t for t in _SONG_RATE.get(key, []) if now - t < window]
+            if len(hits) >= limit:
+                _SONG_RATE[key] = hits
+                return False
+        for key in keys:
+            hits = [t for t in _SONG_RATE.get(key, []) if now - t < window]
+            hits.append(now); _SONG_RATE[key] = hits
+        return True
+
+def _song_rate_refund(handler, user_key='anonymous'):
+    import threading
+    lock = globals().setdefault('_SONG_RATE_LOCK', threading.Lock())
+    ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    with lock:
+        for key in ['ip:' + ip, 'user:' + safe_user]:
+            hits = _SONG_RATE.get(key, [])
+            if hits: hits.pop()
+            if hits: _SONG_RATE[key] = hits
+            else: _SONG_RATE.pop(key, None)
+
+
 def _handle_image(self, data):
     import time, json, urllib.request, base64, os
     user_key = data.get('session') or data.get('user') or 'anonymous'
-    if not _image_rate_ok(self, user_key=user_key, limit=1, window=60):
-        return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image per minute per user/IP.','limit':'1/minute'}, 429)
+    if not _image_rate_ok(self, user_key=user_key, limit=1, window=300):
+        return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image every 5 minutes per user/IP.','limit':'1/5 minutes'}, 429)
     prompt = (data.get('prompt') or data.get('message') or '').strip()
     if not prompt:
         return _json_resp(self, {'status':'error','error':'missing_prompt','reply':'Please enter an image prompt.'}, 400)
@@ -563,20 +645,22 @@ def _handle_image(self, data):
     key = os.environ.get('OPENROUTER_API_KEY','')
     if not key:
         return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
-    primary_model = os.environ.get('IMAGE_MODEL','black-forest-labs/flux.2-klein-4b')
-    fallback_model = os.environ.get('IMAGE_FALLBACK_MODEL','openai/gpt-5-image-mini')
+    primary_model = os.environ.get('IMAGE_MODEL','x-ai/grok-imagine-image-quality')
+    fallback_model = os.environ.get('IMAGE_FALLBACK_MODEL','')
     models_to_try = []
     for m in [primary_model, fallback_model]:
         if m and m not in models_to_try:
             models_to_try.append(m)
-    content = [{'type':'text','text':prompt}]
     image_data = data.get('image') or data.get('image_base64') or ''
+    # OpenRouter Grok Imagine docs expect plain string content + modalities:["image"] for generation.
     if image_data:
         if image_data.startswith('data:image'):
             image_url = image_data
         else:
             image_url = 'data:image/png;base64,' + image_data
-        content.append({'type':'image_url','image_url':{'url': image_url}})
+        content = [{'type':'text','text':prompt}, {'type':'image_url','image_url':{'url': image_url}}]
+    else:
+        content = prompt
     last_error = ''
     raw = None
     resp = None
@@ -585,8 +669,7 @@ def _handle_image(self, data):
         payload = {
             'model': model,
             'messages': [{'role':'user','content': content}],
-            'modalities': ['image','text'],
-            'size': '1024x1024'
+            'modalities': ['image']
         }
         req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
         req.add_header('Content-Type','application/json')
@@ -608,17 +691,79 @@ def _handle_image(self, data):
             # Try fallback when primary model is not routed/available.
             continue
     if not raw:
+        _image_rate_refund(self, user_key)
         return _json_resp(self, {'status':'error','error':last_error or 'no_image_returned','reply':'Image model did not return an image.'}, 502)
     try:
         fname = 'goldie_%d.png' % int(time.time()*1000)
         out = '/opt/gitpup/web_dist/generated/' + fname
-        out, size = _compress_image_max(raw, out, max_bytes=800*1024)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, 'wb') as f:
+            f.write(raw)
+        size = os.path.getsize(out)
         url = '/generated/' + os.path.basename(out)
         _append_chat_context(self, user_key, 'user', '[image prompt] ' + prompt)
         _append_chat_context(self, user_key, 'assistant', '[generated image] ' + url)
-        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size,'model':used_model,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/minute','max_output_size':'800KB'})
+        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size,'model':used_model,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':'model_default'})
     except Exception as e:
         return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}, 500)
+
+
+
+def _handle_song(self, data):
+    import os, json, urllib.request, base64, time
+    user_key = data.get('session') or data.get('user') or 'anonymous'
+    if not _song_rate_ok(self, user_key=user_key, limit=1, window=14400):
+        return _json_resp(self, {'status':'error','error':'song_rate_limited','reply':'Song rate limit exceeded. Please wait — maximum 1 song every 4 hours per user/IP.','limit':'1/4 hours'}, 429)
+    prompt = (data.get('prompt') or data.get('message') or '').strip()
+    if not prompt:
+        _song_rate_refund(self, user_key)
+        return _json_resp(self, {'status':'error','error':'missing_prompt','reply':'Please enter a song prompt.'}, 400)
+    if len(prompt) > 1200: prompt = prompt[:1200]
+    _load_env_file_once()
+    key = os.environ.get('OPENROUTER_API_KEY','')
+    model = os.environ.get('SONG_MODEL','google/lyria-3-pro-preview')
+    if not key:
+        _song_rate_refund(self, user_key)
+        return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
+    full_prompt = 'Create music/audio from this prompt. Return audio only. Prompt: ' + prompt
+    payload = {'model': model, 'stream': True, 'messages':[{'role':'user','content': full_prompt}], 'modalities':['audio']}
+    req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
+    for k,v in {'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://gitpup.fun','X-Title':'Goldie Song Chat','User-Agent':'GoldieSong/1.0'}.items(): req.add_header(k,v)
+    audio_b64 = None; used_model = model; err = ''
+    try:
+        with urllib.request.urlopen(req, timeout=480) as r:
+            for line in r:
+                txt=line.decode('utf-8','replace').strip()
+                if not txt or not txt.startswith('data: '): continue
+                dat=txt[6:]
+                if dat == '[DONE]': break
+                try:
+                    obj=json.loads(dat)
+                    used_model = obj.get('model') or used_model
+                    delta=(obj.get('choices') or [{}])[0].get('delta') or {}
+                    aud=delta.get('audio') or {}
+                    if isinstance(aud, dict) and aud.get('data'):
+                        audio_b64 = aud.get('data')
+                except Exception as e:
+                    err = str(e)[:180]
+    except Exception as e:
+        err = str(e)[:300]
+    if not audio_b64:
+        _song_rate_refund(self, user_key)
+        return _json_resp(self, {'status':'error','error':err or 'no_audio_returned','reply':'Song model did not return audio.'}, 502)
+    try:
+        raw = base64.b64decode(audio_b64)
+        os.makedirs('/opt/gitpup/web_dist/generated', exist_ok=True)
+        fname='goldie_song_%d.mp3' % int(time.time()*1000)
+        out='/opt/gitpup/web_dist/generated/'+fname
+        with open(out,'wb') as f: f.write(raw)
+        url='/generated/'+fname
+        _append_chat_context(self, user_key, 'user', '[song prompt] '+prompt)
+        _append_chat_context(self, user_key, 'assistant', '[generated song] '+url)
+        return _json_resp(self, {'status':'ok','reply':'Song generated.','audio_url':url,'size_bytes':os.path.getsize(out),'model':used_model,'requested_model':model,'limit':'1/4 hours'})
+    except Exception as e:
+        _song_rate_refund(self, user_key)
+        return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Song generation failed.'}, 500)
 
 
 def _public_do_GET(self):
@@ -695,7 +840,7 @@ def _append_chat_context(handler, user_key, role, text, max_items=16):
 
 def _public_do_POST(self):
     p = urllib.parse.urlparse(self.path).path
-    if p not in ('/api/chat', '/api/image'):
+    if p not in ('/api/chat', '/api/image', '/api/song'):
         return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
     try:
         content_length = int(self.headers.get('Content-Length', 0))
@@ -705,6 +850,8 @@ def _public_do_POST(self):
             raise ValueError('Invalid JSON payload')
         if p == '/api/image':
             return _handle_image(self, data)
+        if p == '/api/song':
+            return _handle_song(self, data)
         user_key = data.get('session') or data.get('user') or data.get('token') or 'anonymous'
         if not _rate_ok(self, user_key=user_key, limit=5, window=60):
             return _json_resp(self, {'status': 'error', 'reply': 'Rate limit exceeded. Please wait a moment — maximum 5 chats per minute per user/IP.', 'error': 'rate_limited', 'limit': '5/minute'}, 429)
