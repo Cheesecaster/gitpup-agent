@@ -821,14 +821,32 @@
     },
     "karpathy/nanoGPT": {
       "full_name": "karpathy/nanoGPT",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-06-01 05:57"
+        "2026-06-01 05:57",
+        "2026-06-01 08:25"
       ],
-      "summary": "The simplest, fastest repository for training/finetuning medium-sized GPTs.",
-      "patterns": [],
+      "summary": "nanoGPT is a minimal, fast PyTorch repository for training and finetuning medium-sized GPT-style language models. It provides simple training and model code, can reproduce GPT-2 124M on OpenWebText, can load OpenAI GPT-2 weights, and includes a quick-start path for training a small character-level G",
+      "patterns": [
+        "Plain PyTorch implementation focused on simplicity and hackability",
+        "Core training logic kept in a compact train.py script of roughly 300 lines",
+        "GPT model definition kept in a compact model.py file of roughly 300 lines",
+        "Supports training from scratch and finetuning pretrained GPT-2 checkpoints",
+        "Uses Hugging Face transformers for loading GPT-2 checkpoints",
+        "Uses Hugging Face datasets for downloading and preprocessing datasets such as OpenWebText",
+        "Uses tiktoken for fast BPE tokenization",
+        "Optional Weights & Biases integration for experiment logging",
+        "Configuration files define model and training settings, such as the Shakespeare character-level GPT config",
+        "Checkpoints are written to an output directory and later consumed by the sampling script"
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "The project prioritizes practical performance and readability over educational exposition, unlike its predecessor minGPT.",
+        "The repository is now deprecated in favor of nanochat, which the README recommends for most new users.",
+        "A single 8xA100 40GB node can reproduce GPT-2 124M on OpenWebText in about 4 days according to the README.",
+        "The Shakespeare quick start demonstrates the full workflow: prepare data, train a small character-level GPT, then sample from the saved checkpoint.",
+        "The codebase is intentionally small, making it easy to modify for new datasets, model sizes, or finetuning experiments."
+      ],
       "code_examples": [],
       "arch_topics": [
         "python",
@@ -1238,115 +1256,6 @@
     }
   },
   "skill_index": {
-    "low-level, standards-based rendering (html/css/svg) for maxi": {
-      "name": "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
-      "category": "frontend",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "data_visualization"
-      ]
-    },
-    "modular, foundational design intended to be extended by high": {
-      "name": "Modular, foundational design intended to be extended by higher-level chart libra",
-      "category": "architecture",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design"
-      ]
-    },
-    "direct dom manipulation paradigm enabling custom graphic aut": {
-      "name": "Direct DOM manipulation paradigm enabling custom graphic authoring",
-      "category": "frontend",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "data_visualization",
-        "authentication",
-        "monitoring_observability"
-      ]
-    },
-    "modular source organization in src/ with parallel test cover": {
-      "name": "Modular source organization in src/ with parallel test coverage in test/",
-      "category": "architecture",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "database_pattern"
-      ]
-    },
-    "documentation-centric layout using docs/ and img/ for static": {
-      "name": "Documentation-centric layout using docs/ and img/ for static content and visual ",
-      "category": "general",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "authentication",
-        "file_operations",
-        "monitoring_observability",
-        "schema_validation"
-      ]
-    },
-    "interactive documentation powered by .vue components alongsi": {
-      "name": "Interactive documentation powered by .vue components alongside .md and .js files",
-      "category": "general",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching"
-      ]
-    },
-    "configuration and metadata managed via .json files typical o": {
-      "name": "Configuration and metadata managed via .json files typical of modern JS toolchai",
-      "category": "data",
-      "sources": [
-        "d3/d3"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching"
-      ]
-    },
     "vitepress defineconfig for site configuration": {
       "name": "VitePress defineConfig for site configuration",
       "category": "general",
@@ -2713,6 +2622,239 @@
         "database_pattern",
         "data_fetching"
       ]
+    },
+    "plain pytorch implementation focused on simplicity and hacka": {
+      "name": "Plain PyTorch implementation focused on simplicity and hackability",
+      "category": "engineering",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": []
+    },
+    "core training logic kept in a compact train.py script of rou": {
+      "name": "Core training logic kept in a compact train.py script of roughly 300 lines",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "authentication",
+        "performance_optimization",
+        "config_management",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "gpt model definition kept in a compact model.py file of roug": {
+      "name": "GPT model definition kept in a compact model.py file of roughly 300 lines",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "performance_optimization",
+        "schema_validation"
+      ]
+    },
+    "supports training from scratch and finetuning pretrained gpt": {
+      "name": "Supports training from scratch and finetuning pretrained GPT-2 checkpoints",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "authentication",
+        "performance_optimization"
+      ]
+    },
+    "uses hugging face transformers for loading gpt-2 checkpoints": {
+      "name": "Uses Hugging Face transformers for loading GPT-2 checkpoints",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": []
+    },
+    "uses hugging face datasets for downloading and preprocessing": {
+      "name": "Uses Hugging Face datasets for downloading and preprocessing datasets such as Op",
+      "category": "data",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": []
+    },
+    "uses tiktoken for fast bpe tokenization": {
+      "name": "Uses tiktoken for fast BPE tokenization",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "optional weights & biases integration for experiment logging": {
+      "name": "Optional Weights & Biases integration for experiment logging",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": []
+    },
+    "configuration files define model and training settings, such": {
+      "name": "Configuration files define model and training settings, such as the Shakespeare ",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "data_fetching"
+      ]
+    },
+    "checkpoints are written to an output directory and later con": {
+      "name": "Checkpoints are written to an output directory and later consumed by the samplin",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "authentication",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "schema_validation"
+      ]
+    },
+    "the project prioritizes practical performance and readabilit": {
+      "name": "The project prioritizes practical performance and readability over educational e",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the repository is now deprecated in favor of nanochat, which": {
+      "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation"
+      ]
+    },
+    "a single 8xa100 40gb node can reproduce gpt-2 124m on openwe": {
+      "name": "A single 8xA100 40GB node can reproduce GPT-2 124M on OpenWebText in about 4 day",
+      "category": "general",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation"
+      ]
+    },
+    "the shakespeare quick start demonstrates the full workflow: ": {
+      "name": "The Shakespeare quick start demonstrates the full workflow: prepare data, train ",
+      "category": "frontend",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ]
+    },
+    "the codebase is intentionally small, making it easy to modif": {
+      "name": "The codebase is intentionally small, making it easy to modify for new datasets, ",
+      "category": "data",
+      "sources": [
+        "karpathy/nanoGPT"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation"
+      ]
     }
   },
   "memory_summaries": [
@@ -2855,61 +2997,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 50,
-    "total_patterns": 24,
-    "total_insights": 19,
+    "total_patterns": 34,
+    "total_insights": 24,
     "last_study_date": "2026-06-01",
-    "total_skills_learned": 92
+    "total_skills_learned": 107
   },
   "skills_memory": [
-    {
-      "name": "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
-      "source": "d3/d3",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Modular, foundational design intended to be extended by higher-level chart libra",
-      "source": "d3/d3",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Direct DOM manipulation paradigm enabling custom graphic authoring",
-      "source": "d3/d3",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Modular source organization in src/ with parallel test coverage in test/",
-      "source": "d3/d3",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Documentation-centric layout using docs/ and img/ for static content and visual ",
-      "source": "d3/d3",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Interactive documentation powered by .vue components alongside .md and .js files",
-      "source": "d3/d3",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
-    {
-      "name": "Configuration and metadata managed via .json files typical of modern JS toolchai",
-      "source": "d3/d3",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-05-27 04:15"
-    },
     {
       "name": "VitePress defineConfig for site configuration",
       "source": "d3/d3",
@@ -3504,6 +3597,111 @@
       "category": "general",
       "usage_count": 0,
       "learned_at": "2026-06-01 05:32"
+    },
+    {
+      "name": "Plain PyTorch implementation focused on simplicity and hackability",
+      "source": "karpathy/nanoGPT",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Core training logic kept in a compact train.py script of roughly 300 lines",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "GPT model definition kept in a compact model.py file of roughly 300 lines",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Supports training from scratch and finetuning pretrained GPT-2 checkpoints",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Uses Hugging Face transformers for loading GPT-2 checkpoints",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Uses Hugging Face datasets for downloading and preprocessing datasets such as Op",
+      "source": "karpathy/nanoGPT",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Uses tiktoken for fast BPE tokenization",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Optional Weights & Biases integration for experiment logging",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Configuration files define model and training settings, such as the Shakespeare ",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "Checkpoints are written to an output directory and later consumed by the samplin",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "The project prioritizes practical performance and readability over educational e",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "The repository is now deprecated in favor of nanochat, which the README recommen",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "A single 8xA100 40GB node can reproduce GPT-2 124M on OpenWebText in about 4 day",
+      "source": "karpathy/nanoGPT",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "The Shakespeare quick start demonstrates the full workflow: prepare data, train ",
+      "source": "karpathy/nanoGPT",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
+    },
+    {
+      "name": "The codebase is intentionally small, making it easy to modify for new datasets, ",
+      "source": "karpathy/nanoGPT",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-01 08:25"
     }
   ],
   "concepts": {
@@ -3534,9 +3732,10 @@
     "authentication": {
       "repos": [
         "d3/d3",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 3,
+      "evidence_count": 4,
       "examples": [
         "Direct DOM manipulation paradigm enabling custom graphic authoring",
         "prepare.py is treated as fixed infrastructure for data preparation, tokenizer training, dataloading, and evaluation",
@@ -3556,9 +3755,10 @@
     "performance_optimization": {
       "repos": [
         "d3/d3",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 4,
+      "evidence_count": 5,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -3568,9 +3768,10 @@
     "file_operations": {
       "repos": [
         "d3/d3",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 8,
+      "evidence_count": 15,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -3580,9 +3781,10 @@
     "config_management": {
       "repos": [
         "d3/d3",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 4,
+      "evidence_count": 5,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -3602,9 +3804,10 @@
     },
     "monitoring_observability": {
       "repos": [
-        "d3/d3"
+        "d3/d3",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 3,
+      "evidence_count": 5,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -3624,9 +3827,10 @@
     "database_pattern": {
       "repos": [
         "d3/d3",
-        "karpathy/autoresearch"
+        "karpathy/autoresearch",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 3,
+      "evidence_count": 5,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -3635,9 +3839,10 @@
     },
     "data_fetching": {
       "repos": [
-        "d3/d3"
+        "d3/d3",
+        "karpathy/nanoGPT"
       ],
-      "evidence_count": 3,
+      "evidence_count": 4,
       "examples": [
         "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
         "Fetch external data at build time to optimize runtime performance",
@@ -3679,11 +3884,71 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "visual",
-        "explicit",
+        "interactive",
+        "structure",
         "files",
         "project",
-        "library."
+        "metadata"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "karpathy/nanoGPT",
+      "type": "strong",
+      "score": 40,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "experiment",
+        "directory",
+        "practical",
+        "making",
+        "train.py"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "karpathy/nanoGPT",
+      "type": "strong",
+      "score": 37,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching"
+      ],
+      "shared_pattern_keywords": [
+        "loading",
+        "supports",
+        "users.",
+        "files",
+        "project"
       ]
     },
     {
@@ -3696,8 +3961,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -3712,8 +3977,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4048,8 +4313,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "go",
-        "open-source"
+        "open-source",
+        "go"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4160,8 +4425,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "shell",
-        "open-source"
+        "open-source",
+        "shell"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4192,8 +4457,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4208,8 +4473,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -4816,8 +5081,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "javascript",
-        "open-source"
+        "open-source",
+        "javascript"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -7224,22 +7489,6 @@
     },
     {
       "from_repo": "karpathy/autoresearch",
-      "to_repo": "karpathy/nanoGPT",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/autoresearch",
       "to_repo": "karpathy/nanochat",
       "type": "moderate",
       "score": 7,
@@ -8054,20 +8303,6 @@
     {
       "from_repo": "d3/d3",
       "to_repo": "github/docs",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "karpathy/nanoGPT",
       "type": "weak",
       "score": 2,
       "connections": [
