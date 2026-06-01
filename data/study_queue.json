@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "can1357/oh-my-pi",
-      "stars_today": 333,
-      "lang": "TypeScript",
-      "target_depth": 1
-    },
-    {
       "repo": "pbakaus/impeccable",
       "stars_today": 317,
       "lang": "JavaScript",
@@ -17,6 +11,12 @@
       "stars_today": 284,
       "lang": "Python",
       "target_depth": 1
+    },
+    {
+      "repo": "p-e-w/heretic",
+      "stars_today": 241,
+      "lang": "Python",
+      "target_depth": 1
     }
   ],
   "studied_today": 1,
@@ -24,7 +24,6 @@
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "can1357/oh-my-pi",
     "pbakaus/impeccable",
     "TauricResearch/TradingAgents",
     "p-e-w/heretic",
@@ -32,5 +31,5 @@
     "stefan-jansen/machine-learning-for-trading",
     "godotengine/godot"
   ],
-  "active_repo": "can1357/oh-my-pi"
+  "active_repo": "pbakaus/impeccable"
 }
