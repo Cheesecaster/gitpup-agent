@@ -1,18 +1,10 @@
 {
-  "repos": [
-    {
-      "repo": "a5c-ai/babysitter",
-      "stars_today": 58,
-      "lang": "JavaScript",
-      "target_depth": 1
-    }
-  ],
+  "repos": [],
   "studied_today": 1,
   "today": "2026-06-01",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
     "a5c-ai/babysitter"
-  ],
-  "active_repo": "a5c-ai/babysitter"
+  ]
 }
