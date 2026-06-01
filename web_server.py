@@ -414,33 +414,41 @@ def do_POST(self):
 # === PUBLIC CHAT OVERRIDES ===
 # Keep public static serving, but route API calls explicitly. Chat is public; no GitHub token required.
 _CHAT_RATE = {}
+_CHAT_CONTEXT = {}
 
 def _client_ip(handler):
     return handler.headers.get('X-Forwarded-For', '').split(',')[0].strip() or handler.client_address[0]
 
-def _rate_ok(handler, limit=12, window=60):
+def _rate_ok(handler, user_key='anonymous', limit=5, window=60):
+    """Strict public chat limiter: max 5 chats/min per IP AND per user/session."""
     import time
     import threading
 
     lock = globals().setdefault('_CHAT_RATE_LOCK', threading.Lock())
     ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    keys = ['ip:' + ip, 'user:' + safe_user]
     now = time.time()
 
     with lock:
-        # prune stale entries for all IPs to avoid unbounded memory growth
-        for seen_ip in list(_CHAT_RATE):
-            active_hits = [t for t in _CHAT_RATE.get(seen_ip, []) if now - t < window]
+        # prune stale entries to avoid unbounded memory growth
+        for seen in list(_CHAT_RATE):
+            active_hits = [t for t in _CHAT_RATE.get(seen, []) if now - t < window]
             if active_hits:
-                _CHAT_RATE[seen_ip] = active_hits
+                _CHAT_RATE[seen] = active_hits
             else:
-                del _CHAT_RATE[seen_ip]
+                del _CHAT_RATE[seen]
 
-        hits = [t for t in _CHAT_RATE.get(ip, []) if now - t < window]
-        if len(hits) >= limit:
-            _CHAT_RATE[ip] = hits
-            return False
-        hits.append(now)
-        _CHAT_RATE[ip] = hits
+        for key in keys:
+            hits = [t for t in _CHAT_RATE.get(key, []) if now - t < window]
+            if len(hits) >= limit:
+                _CHAT_RATE[key] = hits
+                return False
+
+        for key in keys:
+            hits = [t for t in _CHAT_RATE.get(key, []) if now - t < window]
+            hits.append(now)
+            _CHAT_RATE[key] = hits
         return True
 
 def _public_do_GET(self):
@@ -449,22 +457,52 @@ def _public_do_GET(self):
     if normalized_p == '':
         normalized_p = '/'
 
-    if p.startswith('/api/') or normalized_p == '/story' or normalized_p == '/auth/callback' or normalized_p == '/status':
+    if (normalized_p == '/api' or
+            normalized_p.startswith('/api/') or
+            normalized_p == '/story' or
+            normalized_p == '/auth/callback' or
+            normalized_p == '/status'):
         return do_GET(self)
     return http.server.SimpleHTTPRequestHandler.do_GET(self)
+
+
+def _history_key(handler, user_key):
+    ip = _client_ip(handler)
+    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    return ip + '|' + safe_user
+
+def _get_chat_context(handler, user_key, max_turns=8):
+    key = _history_key(handler, user_key)
+    hist = _CHAT_CONTEXT.get(key, [])[-max_turns:]
+    lines = []
+    for turn in hist:
+        role = turn.get('role', 'user')
+        text = (turn.get('text') or '').replace('\n', ' ').strip()
+        if text:
+            lines.append(role.upper() + ': ' + text[:800])
+    return '\n'.join(lines)
+
+def _append_chat_context(handler, user_key, role, text, max_items=16):
+    import time
+    key = _history_key(handler, user_key)
+    hist = _CHAT_CONTEXT.get(key, [])
+    hist.append({'role': role, 'text': text or '', 'ts': time.time()})
+    _CHAT_CONTEXT[key] = hist[-max_items:]
+
 
 def _public_do_POST(self):
     p = urllib.parse.urlparse(self.path).path
     if p != '/api/chat':
         return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
-    if not _rate_ok(self):
-        return _json_resp(self, {'status': 'error', 'reply': 'Pelan-pelan bro, rate limit dulu bentar.', 'error': 'rate_limited'}, 429)
     try:
         content_length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(content_length)
         data = json.loads(body.decode('utf-8') if isinstance(body, bytes) else body)
         if not isinstance(data, dict):
             raise ValueError('Invalid JSON payload')
+        user_key = data.get('session') or data.get('user') or data.get('token') or 'anonymous'
+        if not _rate_ok(self, user_key=user_key, limit=5, window=60):
+            return _json_resp(self, {'status': 'error', 'reply': 'Rate limit exceeded. Please wait a moment — maximum 5 chats per minute per user/IP.', 'error': 'rate_limited', 'limit': '5/minute'}, 429)
         msg = (data.get('message') or '').strip()
         if not msg:
             return _json_resp(self, {'reply': 'Yo, ketik sesuatu bro', 'cited': []})
@@ -472,14 +510,21 @@ def _public_do_POST(self):
             msg = msg[:2000]
         # lightweight KB shortcut
         if msg.lower() in ('stats', 'knowledge', 'kb', 'apa yang lo pelajari', 'what do you know'):
-            return _json_resp(self, {'reply': cp.kb_summary(), 'cited': [], 'kb_context_used': True, 'public': True})
+            reply_text = cp.kb_summary()
+            _append_chat_context(self, user_key, 'user', msg)
+            _append_chat_context(self, user_key, 'assistant', reply_text)
+            return _json_resp(self, {'reply': reply_text, 'cited': [], 'kb_context_used': True, 'public': True})
         intent = cp.detect_intent(msg)
         if intent == 'build_request':
             reply = 'Untuk public chat, gw cuma ngobrol dan jelasin knowledge dulu bro. Build/trigger agent sengaja nggak dibuka publik biar aman.'
             return _json_resp(self, {'reply': reply, 'cited': [], 'public': True})
-        result = cp.handle_question(msg)
+        chat_context = _get_chat_context(self, user_key)
+        result = cp.handle_question(msg, chat_context=chat_context)
         result['public'] = True
         result['chat_model'] = os.environ.get('CHAT_LLM_MODEL', 'gpt-5.4-mini')
+        reply_text = result.get('reply') or result.get('error') or ''
+        _append_chat_context(self, user_key, 'user', msg)
+        _append_chat_context(self, user_key, 'assistant', reply_text)
         return _json_resp(self, result)
     except Exception as e:
         return _json_resp(self, {'status': 'error', 'reply': 'Error bentar bro: ' + str(e)[:120], 'error': str(e)[:120]}, 500)
