@@ -40,22 +40,31 @@ _CACHE_TTL = 30
 def _cached_jsonl(key, path):
     """Cache JSONL reads to avoid disk I/O."""
     import time, json
-    now = time.time()
     import os
-    mtime = os.path.getmtime(path) if os.path.exists(path) else 0
-    if key in _CACHE:
-        data, cached_mtime, cached_at = _CACHE[key]
-        if (now - cached_at) < _CACHE_TTL and mtime == cached_mtime:
+    now = time.time()
+    canonical_path = os.path.abspath(path)
+    cache_key = (key, canonical_path)
+
+    try:
+        stat_result = os.stat(canonical_path)
+        file_signature = (stat_result.st_mtime_ns, stat_result.st_size, stat_result.st_ino)
+    except OSError:
+        file_signature = None
+
+    if cache_key in _CACHE:
+        data, cached_signature, cached_at = _CACHE[cache_key]
+        if (now - cached_at) < _CACHE_TTL and cached_signature == file_signature:
             return data
+
     entries = []
     try:
-        with open(path, encoding="utf-8") as f:
+        with open(canonical_path, encoding="utf-8") as f:
             for line in f:
                 if line.strip():
                     entries.append(json.loads(line))
     except:
         pass
-    _CACHE[key] = (entries, mtime, now)
+    _CACHE[cache_key] = (entries, file_signature, now)
     return entries
 
 import personality as pers
