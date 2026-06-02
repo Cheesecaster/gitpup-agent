@@ -21,17 +21,24 @@
       "target_depth": 4,
       "added_at": "2026-06-01 17:00:03",
       "source": "github_trending"
+    },
+    {
+      "repo": "stefan-jansen/machine-learning-for-trading",
+      "stars_today": 93,
+      "lang": "Jupyter Notebook",
+      "target_depth": 4,
+      "added_at": "2026-06-02 00:00:03",
+      "source": "github_trending"
     }
   ],
-  "studied_today": 6,
+  "studied_today": 7,
   "today": "2026-06-02",
   "max_daily": 3,
   "source": "github_trending",
   "all_candidates": [
-    "p-e-w/heretic",
-    "godotengine/godot",
     "dmtrKovalenko/fff",
-    "stefan-jansen/machine-learning-for-trading"
+    "stefan-jansen/machine-learning-for-trading",
+    "godotengine/godot"
   ],
   "active_repo": "p-e-w/heretic"
 }

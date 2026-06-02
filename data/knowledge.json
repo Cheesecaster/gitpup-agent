@@ -1394,14 +1394,27 @@
     },
     "p-e-w/heretic": {
       "full_name": "p-e-w/heretic",
-      "study_level": 1,
+      "study_level": 2,
       "studied_at": [
-        "2026-06-02 06:00"
+        "2026-06-02 06:00",
+        "2026-06-02 07:00"
       ],
-      "summary": "Fully automatic censorship removal for language models",
-      "patterns": [],
+      "summary": "Heretic is a command-line tool for automatically removing refusal/safety-alignment behavior from transformer-based language models without expensive post-training. It applies directional ablation/“abliteration” and automatically searches for parameters that reduce refusals while preserving the origi",
+      "patterns": [
+        "Uses directional ablation/abliteration to modify model behavior by removing refusal-related directions from internal representations.",
+        "Includes a TPE-based hyperparameter optimizer powered by Optuna to automatically find effective ablation settings.",
+        "Optimizes for two objectives: minimizing refusals on harmful prompts and minimizing KL divergence from the original model on harmless prompts.",
+        "Designed to work without requiring users to understand transformer internals; intended as a command-line workflow.",
+        "Supports most dense transformer models, many multimodal models, several MoE architectures, and some hybrid models, but not pure state-space models or some research architectures out of the box."
+      ],
       "best_practices": [],
-      "insights": [],
+      "insights": [
+        "The project positions automation as its main differentiator: users do not manually tune ablation parameters.",
+        "Its quality metric balances censorship removal against capability preservation, rather than only maximizing refusal reduction.",
+        "KL divergence from the original model is used as a proxy for retaining the model’s original intelligence and behavior.",
+        "The README frames safety alignment as censorship and treats decensoring as the primary goal.",
+        "The tool builds on recent abliteration research and packages it into a practical optimizer-driven workflow."
+      ],
       "code_examples": [],
       "arch_topics": [
         "python",
@@ -1601,196 +1614,6 @@
     }
   },
   "skill_index": {
-    "built around a claude-style skill named `impeccable` with a ": {
-      "name": "Built around a Claude-style skill named `impeccable` with a main skill document ",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "uses `/impeccable` slash commands as the primary user interf": {
-      "name": "Uses `/impeccable` slash commands as the primary user interface, turning design ",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "data_transformation",
-        "dependency_injection"
-      ]
-    },
-    "separates reusable design knowledge from project-specific co": {
-      "name": "Separates reusable design knowledge from project-specific context by generating ",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "data_visualization",
-        "modular_design",
-        "cli_tooling"
-      ]
-    },
-    "combines deterministic anti-pattern detection with an llm-ba": {
-      "name": "Combines deterministic anti-pattern detection with an LLM-based critique pass: C",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "cli_tooling"
-      ]
-    },
-    "positions itself as both a design guidance system and a qual": {
-      "name": "Positions itself as both a design guidance system and a quality-control layer fo",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "data_visualization",
-        "authentication",
-        "plugin_system",
-        "error_handling",
-        "database_pattern",
-        "event_driven",
-        "schema_validation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the project’s core thesis is that ai-generated frontend work": {
-      "name": "The project’s core thesis is that AI-generated frontend work suffers from recogn",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "impeccable emphasizes shared vocabulary: commands like `poli": {
-      "name": "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `criti",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": []
-    },
-    "the readme distinguishes brand-level and product-level desig": {
-      "name": "The README distinguishes brand-level and product-level design decisions, suggest",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the inclusion of deterministic anti-pattern checks means the": {
-      "name": "The inclusion of deterministic anti-pattern checks means the tool is not only pr",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the skill covers both visual design and ux substance, includ": {
-      "name": "The skill covers both visual design and UX substance, including writing, interac",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
     "clear separation between runtime components: cli, plugin, sk": {
       "name": "Clear separation between runtime components: cli, plugin, skill, and extension a",
       "category": "general",
@@ -3492,6 +3315,203 @@
         "dependency_injection",
         "state_management"
       ]
+    },
+    "uses directional ablation/abliteration to modify model behav": {
+      "name": "Uses directional ablation/abliteration to modify model behavior by removing refu",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "includes a tpe-based hyperparameter optimizer powered by opt": {
+      "name": "Includes a TPE-based hyperparameter optimizer powered by Optuna to automatically",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "optimizes for two objectives: minimizing refusals on harmful": {
+      "name": "Optimizes for two objectives: minimizing refusals on harmful prompts and minimiz",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation"
+      ]
+    },
+    "designed to work without requiring users to understand trans": {
+      "name": "Designed to work without requiring users to understand transformer internals; in",
+      "category": "frontend",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "supports most dense transformer models, many multimodal mode": {
+      "name": "Supports most dense transformer models, many multimodal models, several MoE arch",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": []
+    },
+    "the project positions automation as its main differentiator:": {
+      "name": "The project positions automation as its main differentiator: users do not manual",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "its quality metric balances censorship removal against capab": {
+      "name": "Its quality metric balances censorship removal against capability preservation, ",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "authentication",
+        "plugin_system",
+        "schema_validation"
+      ]
+    },
+    "kl divergence from the original model is used as a proxy for": {
+      "name": "KL divergence from the original model is used as a proxy for retaining the model",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "event_driven",
+        "cli_tooling"
+      ]
+    },
+    "the readme frames safety alignment as censorship and treats ": {
+      "name": "The README frames safety alignment as censorship and treats decensoring as the p",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the tool builds on recent abliteration research and packages": {
+      "name": "The tool builds on recent abliteration research and packages it into a practical",
+      "category": "frontend",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
     }
   },
   "memory_summaries": [
@@ -3634,82 +3654,12 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 55,
-    "total_patterns": 126,
-    "total_insights": 84,
+    "total_patterns": 131,
+    "total_insights": 89,
     "last_study_date": "2026-06-02",
-    "total_skills_learned": 100
+    "total_skills_learned": 110
   },
   "skills_memory": [
-    {
-      "name": "Built around a Claude-style skill named `impeccable` with a main skill document ",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "Uses `/impeccable` slash commands as the primary user interface, turning design ",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "Separates reusable design knowledge from project-specific context by generating ",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "Combines deterministic anti-pattern detection with an LLM-based critique pass: C",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "Positions itself as both a design guidance system and a quality-control layer fo",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "The project’s core thesis is that AI-generated frontend work suffers from recogn",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "Impeccable emphasizes shared vocabulary: commands like `polish`, `audit`, `criti",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "The README distinguishes brand-level and product-level design decisions, suggest",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "The inclusion of deterministic anti-pattern checks means the tool is not only pr",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
-    {
-      "name": "The skill covers both visual design and UX substance, including writing, interac",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-01 21:00"
-    },
     {
       "name": "Clear separation between runtime components: cli, plugin, skill, and extension a",
       "source": "pbakaus/impeccable",
@@ -4339,6 +4289,76 @@
       "category": "general",
       "usage_count": 0,
       "learned_at": "2026-06-02 05:10"
+    },
+    {
+      "name": "Uses directional ablation/abliteration to modify model behavior by removing refu",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "Includes a TPE-based hyperparameter optimizer powered by Optuna to automatically",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "Optimizes for two objectives: minimizing refusals on harmful prompts and minimiz",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "Designed to work without requiring users to understand transformer internals; in",
+      "source": "p-e-w/heretic",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "Supports most dense transformer models, many multimodal models, several MoE arch",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "The project positions automation as its main differentiator: users do not manual",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "Its quality metric balances censorship removal against capability preservation, ",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "KL divergence from the original model is used as a proxy for retaining the model",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "The README frames safety alignment as censorship and treats decensoring as the p",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
+    },
+    {
+      "name": "The tool builds on recent abliteration research and packages it into a practical",
+      "source": "p-e-w/heretic",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 07:00"
     }
   ],
   "concepts": {
@@ -4413,9 +4433,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 24,
+      "evidence_count": 27,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -4430,9 +4451,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 43,
+      "evidence_count": 44,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4446,9 +4468,10 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 49,
+      "evidence_count": 50,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -4474,9 +4497,10 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 29,
+      "evidence_count": 30,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -4503,9 +4527,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 27,
+      "evidence_count": 29,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4561,9 +4586,10 @@
       "repos": [
         "karpathy/nanoGPT",
         "karpathy/llm.c",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 3,
+      "evidence_count": 5,
       "examples": [
         "Uses Hugging Face transformers for loading GPT-2 checkpoints",
         "Primary development focus is pretraining GPT-style transformer models, especially GPT-2 124M and related GPT-2/GPT-3 model sizes.",
@@ -4576,9 +4602,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 10,
+      "evidence_count": 11,
       "examples": [
         "Configuration and dataset organization suggest reproducible experiments across different model sizes and corpora.",
         "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ.",
@@ -4616,9 +4643,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 12,
+      "evidence_count": 13,
       "examples": [
         "Separate model checkpoint state, optimizer state, tokenizer reconstruction, and config migration responsibilities cleanly.",
         "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets.",
@@ -4656,11 +4684,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "names",
-        "package",
-        "document",
-        "optimized",
-        "checkpoints"
+        "evaluation",
+        "training",
+        "codebase",
+        "reproducible",
+        "treated"
       ]
     },
     {
@@ -4696,11 +4724,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "around",
-        "package",
-        "between",
-        "execution",
-        "centralized"
+        "small",
+        "codebase",
+        "environment",
+        "research",
+        "between"
       ]
     },
     {
@@ -4733,11 +4761,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "around",
-        "constants",
-        "user-facing",
-        "global"
+        "using",
+        "configuration,",
+        "suggesting",
+        "between",
+        "constants"
       ]
     },
     {
@@ -4770,11 +4798,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "around",
-        "helper",
-        "generated",
-        "reusable"
+        "easier",
+        "tests",
+        "injection",
+        "treated",
+        "files"
       ]
     },
     {
@@ -4808,11 +4836,11 @@
         "cli_tooling"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "production",
-        "execution",
+        "codebase",
         "using",
-        "token"
+        "application",
+        "designed",
+        "command"
       ]
     },
     {
@@ -4843,11 +4871,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "modern",
-        "alongside",
-        "execution",
         "explicit",
-        "indicates"
+        "files",
+        "generation",
+        "while",
+        "module"
       ]
     },
     {
@@ -4876,11 +4904,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "optimized",
-        "readability",
-        "generated",
-        "production"
+        "evaluation",
+        "training",
+        "directory",
+        "deeply",
+        "experiment"
       ]
     },
     {
@@ -4909,11 +4937,11 @@
         "cli_tooling"
       ],
       "shared_pattern_keywords": [
-        "hierarchy,",
-        "package",
-        "generated",
-        "reusable",
-        "execution"
+        "directory",
+        "treated",
+        "using",
+        "files",
+        "hierarchy,"
       ]
     },
     {
@@ -4942,11 +4970,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "nanochat",
-        "optimized",
-        "tooling",
-        "modern"
+        "evaluation",
+        "training",
+        "treated",
+        "explicit",
+        "files"
       ]
     },
     {
@@ -4976,10 +5004,10 @@
       ],
       "shared_pattern_keywords": [
         "plugin",
-        "maintains",
-        "components",
-        "execution",
-        "indicates"
+        "using",
+        "files",
+        "system",
+        "while"
       ]
     },
     {
@@ -5010,11 +5038,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "components",
-        "execution",
-        "indicates",
-        "directly",
-        "using"
+        "using",
+        "system",
+        "while",
+        "supports",
+        "rendered"
       ]
     },
     {
@@ -5043,11 +5071,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "documentation.",
-        "production",
+        "users",
+        "agent",
         "using",
-        "research"
+        "framework",
+        "designed"
       ]
     },
     {
@@ -5075,11 +5103,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "execution",
+        "workflow",
+        "parallel",
         "using",
-        "static",
-        "loading",
-        "source"
+        "files",
+        "static"
       ]
     },
     {
@@ -5108,11 +5136,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "readme",
-        "scripts",
-        "users",
+        "rather",
+        "project",
+        "model",
         "organized",
-        "through"
+        "users"
       ]
     },
     {
@@ -5138,11 +5166,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "package",
-        "implying",
-        "generated",
-        "prominent",
-        "using"
+        "directory",
+        "treated",
+        "using",
+        "files",
+        "across"
       ]
     },
     {
@@ -5170,11 +5198,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
+        "reproducibility",
         "optimized",
-        "checkpoints",
-        "artifacts",
-        "repository",
-        "generated"
+        "gpt-2",
+        "between",
+        "while"
       ]
     },
     {
@@ -5202,11 +5230,44 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
+        "parallel",
         "optimized",
+        "gpt-2",
         "checkpoints",
-        "readability",
-        "clarity",
-        "limited"
+        "readability"
+      ]
+    },
+    {
+      "from_repo": "TauricResearch/TradingAgents",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 58,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "users",
+        "designed",
+        "supports",
+        "prompts.",
+        "positions"
       ]
     },
     {
@@ -5232,11 +5293,43 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "modern",
-        "explicit",
         "using",
-        "source",
-        "documentation"
+        "explicit",
+        "files",
+        "while",
+        "suggests"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 49,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "version_control",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "rather",
+        "original",
+        "project",
+        "retaining",
+        "quality"
       ]
     },
     {
@@ -5262,11 +5355,43 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "implementation",
-        "scripts",
+        "generating",
+        "rather",
+        "code,",
         "organized",
-        "generated",
-        "code,"
+        "model"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 46,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_transformation",
+        "version_control"
+      ],
+      "shared_pattern_keywords": [
+        "without",
+        "rather",
+        "model",
+        "effective",
+        "intended"
       ]
     },
     {
@@ -5291,11 +5416,41 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "implementation",
-        "setup",
-        "optimized",
-        "users",
-        "readability"
+        "rather",
+        "code,",
+        "model",
+        "through",
+        "users"
+      ]
+    },
+    {
+      "from_repo": "pbakaus/impeccable",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 38,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "version_control",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "without",
+        "rather",
+        "project",
+        "model",
+        "includes"
       ]
     },
     {
@@ -5320,11 +5475,97 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "developer",
-        "control",
         "project",
-        "serves",
-        "development"
+        "parallel",
+        "separation",
+        "control",
+        "serves"
+      ]
+    },
+    {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 35,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "data_transformation",
+        "version_control",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "primary",
+        "rather",
+        "project",
+        "model",
+        "users"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 32,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source",
+        "python"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "rather",
+        "project",
+        "model",
+        "users",
+        "manually"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 27,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "project",
+        "intended",
+        "builds",
+        "supports",
+        "powered"
       ]
     },
     {
@@ -9552,22 +9793,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "p-e-w/heretic",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "open-source",
-        "python"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/minGPT",
       "type": "moderate",
@@ -9632,22 +9857,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "p-e-w/heretic",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "open-source",
-        "python"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "karpathy/nanochat",
       "to_repo": "karpathy/minGPT",
       "type": "moderate",
@@ -9698,22 +9907,6 @@
     {
       "from_repo": "karpathy/nanochat",
       "to_repo": "karpathy/arxiv-sanity-preserver",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "open-source",
-        "python"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "karpathy/nanochat",
-      "to_repo": "p-e-w/heretic",
       "type": "moderate",
       "score": 7,
       "connections": [
@@ -10011,22 +10204,6 @@
       "shared_topics": [
         "open-source",
         "javascript"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "TauricResearch/TradingAgents",
-      "to_repo": "p-e-w/heretic",
-      "type": "moderate",
-      "score": 7,
-      "connections": [
-        "shared_topic",
-        "same_language"
-      ],
-      "shared_topics": [
-        "open-source",
-        "python"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -10677,20 +10854,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "d3/d3",
-      "to_repo": "p-e-w/heretic",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "sansan0/TrendRadar",
       "to_repo": "projectdiscovery/nuclei",
       "type": "weak",
@@ -25405,20 +25568,6 @@
       "shared_pattern_keywords": []
     },
     {
-      "from_repo": "karpathy/llm.c",
-      "to_repo": "p-e-w/heretic",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
       "from_repo": "karpathy/minGPT",
       "to_repo": "karpathy/nn-zero-to-hero",
       "type": "weak",
@@ -26386,20 +26535,6 @@
     },
     {
       "from_repo": "can1357/oh-my-pi",
-      "to_repo": "p-e-w/heretic",
-      "type": "weak",
-      "score": 2,
-      "connections": [
-        "shared_topic"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [],
-      "shared_pattern_keywords": []
-    },
-    {
-      "from_repo": "pbakaus/impeccable",
       "to_repo": "p-e-w/heretic",
       "type": "weak",
       "score": 2,
