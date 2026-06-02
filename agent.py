@@ -299,6 +299,19 @@ def _model_aliases(model):
     return out
 
 
+
+def _manual_price_overrides_per_m(model):
+    # Conservative Jatevo overrides. Jatevo gpt-5.5 is the expensive quality tier,
+    # so do not use the cheaper OpenRouter public gpt-5.5 row for accounting.
+    m = (model or '').strip().lower()
+    overrides = {
+        'gpt-5.5': (30.0, 180.0, 'manual_jatevo:gpt-5.5'),
+        'openai/gpt-5.5': (30.0, 180.0, 'manual_jatevo:gpt-5.5'),
+        'gpt-5.5-pro': (30.0, 180.0, 'manual_jatevo:gpt-5.5-pro'),
+        'openai/gpt-5.5-pro': (30.0, 180.0, 'manual_jatevo:gpt-5.5-pro'),
+    }
+    return overrides.get(m)
+
 def _cost_price_for_model(model):
     import os, re
     m = (model or '').strip()
@@ -315,6 +328,9 @@ def _cost_price_for_model(model):
         out = _env_float('LLM_PRICE_' + slug + '_OUTPUT_PER_M')
         if inp is not None and out is not None:
             return inp, out, 'env_model_price'
+    manual_price = _manual_price_overrides_per_m(m)
+    if manual_price is not None:
+        return manual_price
     prices = _openrouter_model_prices()
     for alias in _model_aliases(m):
         pr = prices.get(alias)
