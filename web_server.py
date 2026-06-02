@@ -77,6 +77,8 @@ def load_json(path, default=None):
             return json.load(f)
     except (FileNotFoundError, OSError, decode_error, TypeError, UnicodeError):
         return default
+    except Exception:
+        return default
 
 def load_jsonl(path):
     entries = []
