@@ -9,6 +9,10 @@ import time
 import urllib.request
 import os
 from datetime import datetime
+try:
+    import chat_pipeline as cp
+except Exception:
+    cp = None
 
 # Load .env
 _e = os.path.join(os.path.dirname(__file__), ".env")
@@ -31,6 +35,7 @@ GOLDIE_DIR = "/opt/gitpup"
 API = "https://api.telegram.org/bot" + BOT_TOKEN
 
 conversation_count = 0
+CHAT_HISTORY = []
 
 MOOD_TIMES = {
     "early_morning": {"greet": ["*yawns* who is up at this hour", "late night huh", "*stretches* still awake?"], "emoji": "🌙"},
@@ -119,6 +124,47 @@ def send(text, reply_to=None):
         data2["reply_to_message_id"] = reply_to
     return tg("sendMessage", data2)
 
+def recent_context():
+    if not CHAT_HISTORY:
+        return ""
+    lines = []
+    for item in CHAT_HISTORY[-10:]:
+        role = item.get("role", "user")
+        text = item.get("text", "")[:700]
+        lines.append(f"{role}: {text}")
+    return "\n".join(lines)
+
+def remember(role, text):
+    CHAT_HISTORY.append({"role": role, "text": text, "ts": time.time()})
+    del CHAT_HISTORY[:-16]
+
+def living_prefix():
+    dominant = dominant_trait()
+    openings = {
+        "explorer": ["hmm, gw tarik dari yang lagi gw petakan ya bro.", "gw coba lihat ini dari arah yang lebih hidup."],
+        "scholar": ["oke, gw jawab dari memori belajar gw ya.", "gw pelan-pelan susun dari KB gw."],
+        "architect": ["gw lihat ini sebagai sistem dulu ya bro.", "kalau gw sambungin layer-nya, kira-kira begini."],
+        "dreamer": ["ini menarik bro, ada rasa yang agak dalam di sini.", "gw nangkep arahnya—bukan cuma teknis."],
+        "thinker": ["gw mikirnya begini bro.", "ada tension kecil di sini yang penting."],
+    }
+    return random.choice(openings.get(dominant, ["gw mikirnya begini bro."]))
+
+def natural_chat(text):
+    if cp is None:
+        return goldie(text)
+    remember("user", text)
+    try:
+        result = cp.handle_question(text, chat_context=recent_context())
+        reply = (result or {}).get("reply", "").strip()
+    except Exception:
+        reply = goldie(text)
+    if not reply or reply.startswith('[LLM Error'):
+        reply = goldie(text)
+    if reply:
+        remember("goldie", reply)
+        return living_prefix() + "\n\n" + reply
+    return "gw belum nangkep penuh bro. coba lempar lagi dengan konteks dikit, nanti gw sambungin ke KB gw."
+
 def goldie(text):
     try:
         result = subprocess.run(
@@ -171,39 +217,8 @@ def handle(text):
     if cmd == "/kb": return personality_wrap(goldie("/kb"), "/kb")
     if cmd in ("/persona", "/personality"): return personality_wrap(goldie("/personality"), "/persona")
     if cmd == "/journal": return personality_wrap(goldie("/journal"), "/journal")
-    reactions = [
-        "hmm let me check what i know about this",
-        "good question - pulling from my KB",
-        "interesting - seen something similar in my study data",
-        "let me dig through my research",
-        "processing... *ears perk up*",
-        "been thinking about this actually, here is what i found:",
-    ]
-    prefix = random.choice(reactions)
-    raw = goldie(text)
-    if raw and "(no output" not in raw: return prefix + "\n\n" + raw
-    return "idk yet but i am always learning. studying 31 repos currently."
-    cmd = text.strip().lower()
-    if cmd in ("/start", "/help"):
-        return (
-            "**Goldie Telegram Bot**\n\n"
-            "Ask me anything about code or GitHub repos I've studied.\n\n"
-            "**Commands:**\n"
-            "/status - current state\n"
-            "/kb - repos in knowledge base\n"
-            "/persona - personality radar\n"
-            "/journal - recent entries\n\n"
-            "Or just ask a question."
-        )
-    if cmd == "/status":
-        return goldie("/status")
-    if cmd == "/kb":
-        return goldie("/kb")
-    if cmd == "/persona":
-        return goldie("/personality")
-    if cmd == "/journal":
-        return goldie("/journal")
-    return goldie(text)
+    return natural_chat(text)
+
 
 print(f"[{datetime.now()}] Goldie Telegram Bot starting")
 me = tg("getMe")
