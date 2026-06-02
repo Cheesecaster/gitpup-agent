@@ -1156,6 +1156,30 @@ def do_build_knowledge_relationships():
 # ════════════════════════════════════════════════
 
 # ════════════════════════════════════════════════
+
+def sync_goldie_hermes_skill(reason="study_pass"):
+    """Conservatively sync Goldie's KB into one local Hermes skill after study.
+
+    Non-critical: failures are logged but never block the study loop.
+    """
+    try:
+        import subprocess, sys
+        script = os.path.join(ROOT, "goldie_skill_sync.py")
+        if not os.path.exists(script):
+            return False
+        cp = subprocess.run(
+            [sys.executable, script, "--apply", "--max-new", "4", "--min-score", "0.78", "--json"],
+            cwd=ROOT, text=True, capture_output=True, timeout=60
+        )
+        out = (cp.stdout or cp.stderr or "")[:500]
+        if cp.returncode == 0:
+            log("  Hermes skill sync ok: " + out.replace("\n", " ")[:240])
+            return True
+        log("  Hermes skill sync failed: " + out.replace("\n", " ")[:240])
+    except Exception as e:
+        log("  Hermes skill sync error: " + str(e)[:180])
+    return False
+
 # ── SKILL EXTRACTION (patterns -> permanent reusable skills)
 # ════════════════════════════════════════════════
 def _categorize_skill(text):
@@ -1828,6 +1852,8 @@ def do_study_pass(repo_name, from_level=0):
         best_practices=rd.get("best_practices",[]))
     # Build knowledge relationships (concepts, skill graph, repo links)
     do_build_knowledge_relationships()
+    # Sync high-confidence learned patterns into local Hermes skill memory.
+    sync_goldie_hermes_skill("study_pass")
     # Soulful narrative journal entry
     personality.track('study_pass_complete', day())
     # Track milestone for significant study
