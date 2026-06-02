@@ -22,9 +22,22 @@ except ImportError:
 def _get_dominant_trait(p):
     """Get the strongest personality dimension."""
     dims = p.get('dimensions', {})
-    if not dims:
+    if not isinstance(dims, dict) or not dims:
         return {}
-    best_k = max(dims.keys(), key=lambda k: dims[k].get('value', 0))
+
+    valid_keys = [k for k, v in dims.items() if isinstance(v, dict)]
+    if not valid_keys:
+        return {}
+
+    def _value_for(k):
+        trait = dims[k]
+        raw = trait.get('value', 0)
+        try:
+            return float(raw)
+        except (TypeError, ValueError):
+            return 0
+
+    best_k = max(valid_keys, key=_value_for)
     dims[best_k]['key'] = best_k
     return dims[best_k]
 WIB = timezone(timedelta(hours=7))
