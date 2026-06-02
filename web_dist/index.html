@@ -493,18 +493,38 @@ function formatDate(ts){
   }
   function addBotText(text){var bb=document.createElement('div');bb.className='bb bo';bb.innerHTML=formatGoldieReply(text||'...');CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;return bb;}
   function addBotImage(url, caption){var bb=document.createElement('div');bb.className='bb bo';bb.textContent=caption||'Image generated';var im=document.createElement('img');im.className='gi';im.src=url;im.onclick=function(){window.open(url,'_blank')};bb.appendChild(im);CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;}
+  function compressImageFile(file, cb){
+    if(!file){cb('');return;}
+    if(!/^image\//.test(file.type||'')){cb('', 'Please upload an image file.');return;}
+    var r=new FileReader();
+    r.onerror=function(){cb('', 'Could not read image file.');};
+    r.onload=function(){
+      var img=new Image();
+      img.onerror=function(){cb(r.result||'', 'Could not preview image; sending original upload.');};
+      img.onload=function(){
+        var maxSide=1024, w=img.width||1024, h=img.height||1024, scale=Math.min(1, maxSide/Math.max(w,h));
+        var cw=Math.max(1, Math.round(w*scale)), ch=Math.max(1, Math.round(h*scale));
+        var cv=document.createElement('canvas');cv.width=cw;cv.height=ch;
+        var cx=cv.getContext('2d');cx.drawImage(img,0,0,cw,ch);
+        try{cb(cv.toDataURL('image/png'), 'Prepared '+cw+'×'+ch+' PNG for edit.');}
+        catch(e){cb(r.result||'', 'Sending original upload.');}
+      };
+      img.src=r.result;
+    };
+    r.readAsDataURL(file);
+  }
   function sendImagePrompt(prompt,imgData){
     if(!prompt)return;
     var ub=document.createElement('div');ub.className='bb bu';ub.textContent=(imgData?'Edit image: ':'Generate image: ')+prompt;CB.appendChild(ub);CB.scrollTop=CB.scrollHeight;
-    var wait=document.createElement('div');wait.className='bb bo';wait.textContent='Generating image...';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
+    var wait=document.createElement('div');wait.className='bb bo';wait.textContent=imgData?'Editing image with uploaded source...':'Generating image...';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
     if(IMGB)IMGB.disabled=true;
     setGoldieAction('image',true);
-    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.json().then(function(d){d._status=r.status;return d})}).then(function(d){
+    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.json().catch(function(){return {reply:'Image request failed'}}).then(function(d){d._status=r.status;return d})}).then(function(d){
       wait.remove();
-      if(d.image_url){addBotImage(d.image_url,d.reply||'Image generated');}
-      else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=d.reply||d.error||'Image failed';CB.appendChild(bb);}
+      if(d.image_url){addBotImage(d.image_url,d.reply||((d.mode==='edit')?'Image edited':'Image generated'));}
+      else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=(d.reply||'Image failed')+(d.error?' — '+d.error:'');CB.appendChild(bb);}
       CB.scrollTop=CB.scrollHeight;
-    }).catch(function(e){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Image failed';CB.appendChild(bb);}).finally(function(){if(IMGB)IMGB.disabled=false;clearGoldieAction(900);});
+    }).catch(function(e){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Image failed — '+(e&&e.message?e.message:'network error');CB.appendChild(bb);}).finally(function(){if(IMGB)IMGB.disabled=false;clearGoldieAction(900);});
   }
   var imageMode='generate', imageUploadData='';
   var imgStylePrompts=[
@@ -577,7 +597,7 @@ function formatDate(ts){
   if(ISCL)ISCL.onclick=function(){if(ISPT)ISPT.value='';setUploadPreview('');};
   if(ISUP)ISUP.onclick=function(){setImageMode('edit');if(IMGF)IMGF.click();};
   if(ISSB)ISSB.onclick=function(){var p=(ISPT&&ISPT.value.trim())||'';if(!p){if(ISPT)ISPT.focus();return;}if(imageMode==='edit'&&!imageUploadData){if(IMGF)IMGF.click();return;}closeImageStudio();sendImagePrompt(p,imageMode==='edit'?imageUploadData:null);};
-  if(IMGF){IMGF.onchange=function(){var f=IMGF.files&&IMGF.files[0];if(!f)return;var r=new FileReader();r.onload=function(){setImageMode('edit');setUploadPreview(r.result);openImageStudio('edit');IMGF.value='';};r.readAsDataURL(f);};}
+  if(IMGF){IMGF.onchange=function(){var f=IMGF.files&&IMGF.files[0];if(!f)return;setImageMode('edit');if(ISUP)ISUP.textContent='Preparing image...';compressImageFile(f,function(data,msg){if(data)setUploadPreview(data);else if(ISUP)ISUP.textContent=msg||'Upload failed';if(msg&&data&&ISUP){var note=document.createElement('div');note.style.cssText='font-size:10px;color:#8a8f98;margin-top:6px';note.textContent=msg;ISUP.appendChild(note);}openImageStudio('edit');IMGF.value='';});};}
   renderImageTemplates();setImageMode('generate');
   function addBotAudio(url, caption){var bb=document.createElement('div');bb.className='bb bo';var cap=document.createElement('div');cap.textContent=caption||'Song generated';bb.appendChild(cap);var au=document.createElement('audio');au.className='ga';au.controls=true;au.src=url;bb.appendChild(au);var dl=document.createElement('a');dl.className='dlb';dl.href=url;dl.download=(url.split('/').pop()||'goldie-song.mp3');dl.textContent='Download song';bb.appendChild(dl);CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;}
   function sendSongPrompt(prompt){
