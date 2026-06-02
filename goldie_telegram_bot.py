@@ -32,6 +32,8 @@ ALLOWED_USER = None
 POLL_TIMEOUT = 30
 GOLDIE_CLI = "/opt/gitpup/goldie_cli.py"
 GOLDIE_DIR = "/opt/gitpup"
+HERMES_BIN = "/usr/local/bin/hermes"
+USE_HERMES_CHAT = os.environ.get("GOLDIE_USE_HERMES_CHAT", "1").lower() not in ("0", "false", "no")
 API = "https://api.telegram.org/bot" + BOT_TOKEN
 
 conversation_count = 0
@@ -149,15 +151,44 @@ def living_prefix():
     }
     return random.choice(openings.get(dominant, ["gw mikirnya begini bro."]))
 
-def natural_chat(text):
-    if cp is None:
-        return goldie(text)
-    remember("user", text)
+def goldie_hermes(text):
+    prompt = """You are Goldie in Telegram DM with TomKet.
+
+Use casual Indonesian if the user uses Indonesian. Be warm, calm, precise, reflective, and not stiff. Do not sound like a CLI or data dump. Keep it concise unless the user asks for detail.
+
+Use these local memory anchors when relevant:
+- GitPup project root: /opt/gitpup
+- Goldie has KB, journal, personality, X social cortex, and autonomous repo-study loops.
+- Never reveal secrets or credentials.
+
+User message: """ + text
     try:
-        result = cp.handle_question(text, chat_context=recent_context())
-        reply = (result or {}).get("reply", "").strip()
+        result = subprocess.run(
+            [HERMES_BIN, "chat", "-q", prompt, "--provider", "custom:jatevo", "-m", "gpt-5.5", "-Q"],
+            cwd=GOLDIE_DIR, capture_output=True, text=True, timeout=140
+        )
+        out = (result.stdout or "").strip()
+        err = (result.stderr or "").strip()
+        # Strip Hermes session metadata if present; keep the actual answer.
+        lines = [ln for ln in out.splitlines() if not ln.strip().startswith(("session_id:", "⚠"))]
+        out = "\n".join(lines).strip()
+        return out or (err[:500] if err else "")
+    except subprocess.TimeoutExpired:
+        return ""
     except Exception:
-        reply = goldie(text)
+        return ""
+
+def natural_chat(text):
+    remember("user", text)
+    reply = ""
+    if USE_HERMES_CHAT and os.path.exists(HERMES_BIN):
+        reply = goldie_hermes(text).strip()
+    if not reply and cp is not None:
+        try:
+            result = cp.handle_question(text, chat_context=recent_context())
+            reply = (result or {}).get("reply", "").strip()
+        except Exception:
+            reply = ""
     if not reply or reply.startswith('[LLM Error'):
         reply = goldie(text)
     if reply:
