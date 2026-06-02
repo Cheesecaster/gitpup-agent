@@ -1,12 +1,6 @@
 {
   "repos": [
     {
-      "repo": "p-e-w/heretic",
-      "stars_today": 241,
-      "lang": "Python",
-      "target_depth": 4
-    },
-    {
       "repo": "dmtrKovalenko/fff",
       "stars_today": 121,
       "lang": "Rust",
@@ -31,7 +25,7 @@
       "source": "github_trending"
     }
   ],
-  "studied_today": 8,
+  "studied_today": 9,
   "today": "2026-06-02",
   "max_daily": 3,
   "source": "github_trending",

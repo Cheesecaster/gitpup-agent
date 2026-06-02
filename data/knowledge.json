@@ -7,7 +7,8 @@
         "2026-05-26 16:42",
         "2026-05-26 16:43",
         "2026-05-26 19:28",
-        "2026-05-26 19:30"
+        "2026-05-26 19:30",
+        "2026-06-02 08:27"
       ],
       "summary": "A free, open-source JavaScript library for creating dynamic, data-driven visualizations using a low-level, web-standards-based approach.",
       "patterns": [
@@ -44,7 +45,10 @@
         "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
         "Modular theme architecture supports easy customization and maintenance"
       ],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: rollup.config.js\nimport {readFileSync} from \"fs\";\nimport json from \"@rollup/plugin-json\";\nimport nodeResolve from \"@rollup/plugin-node-resolve\";\nimport terser from \"@rollup/plugin-terser\";\nimport meta from \"./package.json\" assert {type: \"json\"};\n\n// Extract copyrights from the LICENSE.\nconst copyright = readFileSync(\"./LICENSE\", \"utf-8\")\n  .split(/\\n/g)\n  .filter(line => /^Copyright\\s+/.test(line))\n  .map(line => line.replace(/^Copyright\\s+/, \"\"))\n  .join(\", \");\n\nconst config = {\n  input: ",
+        "FILE: src/index.js\nexport * from \"d3-array\";\nexport * from \"d3-axis\";\nexport * from \"d3-brush\";\nexport * from \"d3-chord\";\nexport * from \"d3-color\";\nexport * from \"d3-contour\";\nexport * from \"d3-delaunay\";\nexport * from \"d3-dispatch\";\nexport * from \"d3-drag\";\nexport * from \"d3-dsv\";\nexport * from \"d3-ease\";\nexport * from \"d3-fetch\";\nexport * from \"d3-force\";\nexport * from \"d3-format\";\nexport * from \"d3-geo\";\nexport * from \"d3-hierarchy\";\nexport * from \"d3-interpolate\";\nexport * from \"d3-path\";\nex"
+      ],
       "arch_topics": [
         "shell",
         "open-source"
@@ -56,15 +60,19 @@
     },
     "sansan0/TrendRadar": {
       "full_name": "sansan0/TrendRadar",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-26 18:14"
+        "2026-05-26 18:14",
+        "2026-06-02 08:27"
       ],
       "summary": "⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart alerts.🎯 告别信息过载，你的 AI 舆情监控助手与热点筛选工具！聚合多平台热点 +  RSS 订阅，支持关键词精准筛选。AI 智能筛选新闻 + AI 翻译 +  AI 分析简报直推手机，也支持接入 MCP 架构，赋能 AI 自然语言对话分析、情感洞察与趋势预测等。支持 Docker ，数据本地/云端自持。集成微信/飞书/钉钉/Telegram/邮件/ntfy/bark/slack 等渠道智能推送。",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: docker/manage.py\n#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\"\"\"\n新闻爬虫容器管理工具 - supercronic\n\"\"\"\n\nimport os\nimport sys\nimport subprocess\nimport time\nimport signal\nfrom pathlib import Path\nfrom datetime import datetime\n\n# Web 服务器配置\nWEBSERVER_PORT = int(os.environ.get(\"WEBSERVER_PORT\", \"8080\"))\nWEBSERVER_DIR = \"/app/output\"\nWEBSERVER_PID_FILE = \"/tmp/webserver.pid\"\ndef get_timestamp():\n    \"\"\"获取当前时间戳字符串\"\"\"\n    return datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")\n\n\ndef run_command(cmd, shell=T",
+        "FILE: mcp_server/server.py\n\"\"\"\nTrendRadar MCP Server - FastMCP 2.0 实现\n\n使用 FastMCP 2.0 提供生产级 MCP 工具服务器。\n支持 stdio 和 HTTP 两种传输模式。\n\"\"\"\n\nimport asyncio\nimport json\nfrom typing import List, Optional, Dict, Union\n\nfrom fastmcp import FastMCP\n\nfrom .tools.data_query import DataQueryTools\nfrom .tools.analytics import AnalyticsTools\nfrom .tools.search_tools import SearchTools\nfrom .tools.config_mgmt import ConfigManagementTools\nfrom .tools.system import SystemManagementTools\nfrom .tools.storage_sync impor"
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -76,15 +84,20 @@
     },
     "projectdiscovery/nuclei": {
       "full_name": "projectdiscovery/nuclei",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-27 04:00"
+        "2026-05-27 04:00",
+        "2026-06-02 08:27"
       ],
       "summary": "Nuclei is a fast, customizable vulnerability scanner powered by the global security community and built on a simple YAML-based DSL, enabling collaboration to tackle trending vulnerabilities on the internet. It helps you find vulnerabilities in your applications, APIs, networks, DNS, and cloud config",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: cmd/docgen/docgen.go\npackage main\n\nimport (\n\t\"bytes\"\n\t\"log\"\n\t\"os\"\n\t\"reflect\"\n\t\"regexp\"\n\n\t\"github.com/invopop/jsonschema\"\n\t\"github.com/projectdiscovery/nuclei/v3/pkg/templates\"\n\t\"github.com/projectdiscovery/nuclei/v3/pkg/utils/json\"\n)\n\nvar pathRegex = regexp.MustCompile(`github\\.com/projectdiscovery/nuclei/v3/(?:internal|pkg)/(?:.*/)?([A-Za-z.]+)`)\n\nfunc writeToFile(filename string, data []byte) {\n\tfile, err := os.Create(filename)\n\tif err != nil {\n\t\tlog.Fatalf(\"Could not create file %s: %s\\",
+        "FILE: cmd/generate-checksum/main.go\npackage main\n\nimport (\n\t\"bytes\"\n\t\"crypto/sha1\"\n\t\"encoding/hex\"\n\t\"io\"\n\t\"io/fs\"\n\t\"log\"\n\t\"os\"\n\t\"path/filepath\"\n\t\"strings\"\n)\n\nfunc main() {\n\tif len(os.Args) < 3 {\n\t\tlog.Fatalf(\"Usage: %s <templates-directory> <checksum-file>\\n\", os.Args[0])\n\t}\n\tchecksumFile := os.Args[2]\n\ttemplatesDirectory := os.Args[1]\n\n\tfile, err := os.Create(checksumFile)\n\tif err != nil {\n\t\tlog.Fatalf(\"Could not create file: %s\\n\", err)\n\t}\n\tdefer func() {\n\t\t_ = file.Close()\n\t}()\n\n\terr = filepa",
+        "FILE: cmd/memogen/memogen.go\n// this small cli tool is specific for those functions with arbitrary parameters and with result-error tuple as return values\n// func(x,y) => result, error\n// it works by creating a new memoized version of the functions in the same path as memo.original.file.go\n// some parts are specific for nuclei and hardcoded within the template\npackage main\n\nimport (\n\t\"flag\"\n\t\"io/fs\"\n\t\"log\"\n\t\"os\"\n\t\"path/filepath\"\n\n\t\"github.com/projectdiscovery/utils/memoize\"\n\tstringsutil \"github."
+      ],
       "arch_topics": [
         "go",
         "open-source"
@@ -96,15 +109,18 @@
     },
     "dropwizard/metrics": {
       "full_name": "dropwizard/metrics",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-27 06:32"
+        "2026-05-27 06:32",
+        "2026-06-02 08:27"
       ],
       "summary": ":chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: metrics-graphite/src/test/resources/upickle.py\n# Pulls apart the pickled payload. This skips ahead 4 characters to safely ignore\n# the header (length)\nimport cPickle\nimport struct\nformat = '!L'\nheaderLength = struct.calcsize(format)\npayloadLength, = struct.unpack(format, payload[:headerLength])\nbatchLength = headerLength + payloadLength\nmetrics = cPickle.loads(payload[headerLength:batchLength])"
+      ],
       "arch_topics": [
         "java",
         "open-source"
@@ -116,15 +132,20 @@
     },
     "AnalogJ/scrutiny": {
       "full_name": "AnalogJ/scrutiny",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-27 07:00"
+        "2026-05-27 07:00",
+        "2026-06-02 08:27"
       ],
       "summary": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: collector/cmd/collector-metrics/collector-metrics.go\npackage main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"io\"\n\t\"log\"\n\t\"os\"\n\t\"strings\"\n\t\"time\"\n\n\t\"github.com/analogj/scrutiny/collector/pkg/collector\"\n\t\"github.com/analogj/scrutiny/collector/pkg/config\"\n\t\"github.com/analogj/scrutiny/collector/pkg/errors\"\n\t\"github.com/analogj/scrutiny/webapp/backend/pkg/version\"\n\t\"github.com/sirupsen/logrus\"\n\n\tutils \"github.com/analogj/go-util/utils\"\n\t\"github.com/fatih/color\"\n\t\"github.com/urfave/cli/v2\"\n)\n\nvar goos",
+        "FILE: collector/cmd/collector-selftest/collector-selftest.go\npackage main\n\nimport (\n\t\"fmt\"\n\t\"io\"\n\t\"log\"\n\t\"os\"\n\t\"time\"\n\n\t\"github.com/analogj/scrutiny/collector/pkg/collector\"\n\t\"github.com/analogj/scrutiny/webapp/backend/pkg/version\"\n\t\"github.com/sirupsen/logrus\"\n\n\tutils \"github.com/analogj/go-util/utils\"\n\t\"github.com/fatih/color\"\n\t\"github.com/urfave/cli/v2\"\n)\n\nvar goos string\nvar goarch string\n\nfunc main() {\n\n\tcli.CommandHelpTemplate = `NAME:\n   {{.HelpName}} - {{.Usage}}\nUSAGE:\n   {{if .UsageTex",
+        "FILE: collector/pkg/collector/base.go\npackage collector\n\nimport (\n\t\"bytes\"\n\t\"encoding/json\"\n\t\"net/http\"\n\t\"time\"\n\n\t\"github.com/sirupsen/logrus\"\n)\n\nvar httpClient = &http.Client{Timeout: 60 * time.Second}\n\ntype BaseCollector struct {\n\tlogger *logrus.Entry\n}\n\nfunc (c *BaseCollector) postJson(url string, body interface{}, target interface{}) error {\n\trequestBody, err := json.Marshal(body)\n\tif err != nil {\n\t\treturn err\n\t}\n\n\tr, err := httpClient.Post(url, \"application/json\", bytes.NewBuffer(requestBod"
+      ],
       "arch_topics": [
         "go",
         "open-source"
@@ -136,15 +157,20 @@
     },
     "Lum1104/Understand-Anything": {
       "full_name": "Lum1104/Understand-Anything",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 07:00"
+        "2026-05-28 07:00",
+        "2026-06-02 08:27"
       ],
       "summary": "Graphs that teach > graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about. Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: tests/skill/understand/test_merge_batch_graphs.py\n#!/usr/bin/env python3\n\"\"\"\ntest_merge_batch_graphs.py — Tests for the deterministic tested_by linker.\n\nRun from the repo root:\n    python -m unittest tests.skill.understand.test_merge_batch_graphs -v\n\"\"\"\n\nfrom __future__ import annotations\n\nimport importlib.util\nimport sys\nimport unittest\nfrom pathlib import Path\nfrom typing import Any\n\n\n# ── Module loader ─────────────────────────────────────────────────────────\n# `merge-batch-graphs.py` h",
+        "FILE: understand-anything-plugin/packages/core/src/__tests__/change-classifier.test.ts\nimport { describe, it, expect } from \"vitest\";\nimport { classifyUpdate } from \"../change-classifier.js\";\nimport type { ChangeAnalysis } from \"../fingerprint.js\";\n\nfunction makeAnalysis(overrides: Partial<ChangeAnalysis> = {}): ChangeAnalysis {\n  return {\n    fileChanges: [],\n    newFiles: [],\n    deletedFiles: [],\n    structurallyChangedFiles: [],\n    cosmeticOnlyFiles: [],\n    unchangedFiles: [],\n    ...overr",
+        "FILE: understand-anything-plugin/packages/core/src/__tests__/domain-normalize.test.ts\nimport { describe, it, expect } from \"vitest\";\nimport { normalizeNodeId } from \"../analyzer/normalize-graph.js\";\n\ndescribe(\"normalizeNodeId — domain types\", () => {\n  it(\"normalizes domain node IDs\", () => {\n    const result = normalizeNodeId(\"domain:order-management\", {\n      type: \"domain\",\n      name: \"Order Management\",\n    });\n    expect(result).toBe(\"domain:order-management\");\n  });\n\n  it(\"normalizes flow"
+      ],
       "arch_topics": [
         "typescript",
         "open-source"
@@ -176,15 +202,19 @@
     },
     "DigitalPlatDev/FreeDomain": {
       "full_name": "DigitalPlatDev/FreeDomain",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 10:29"
+        "2026-05-28 10:29",
+        "2026-06-02 08:27"
       ],
       "summary": "DigitalPlat FreeDomain: Free Domain For Everyone",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: opensource/static/config/cookieconsent-config.js\nimport 'https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js';\n\nCookieConsent.run({\n    guiOptions: {\n        consentModal: {\n            layout: \"bar inline\",\n            position: \"bottom\",\n            equalWeightButtons: true,\n            flipButtons: false\n        },\n        preferencesModal: {\n            layout: \"bar\",\n            position: \"left\",\n            equalWeightButtons: true,\n            flipBut",
+        "FILE: opensource/whois_server/whois.py\nimport socket\nimport logging\n\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\n\ndef whois(query):\n    try:\n        response = get_whois(query).format(query)\n        return response\n    except Exception as e:\n        logging.error(f\"Error processing WHOIS query: {e}\")\n        return \"Internal server error\"\n\ndef main():\n    host = '0.0.0.0'\n    port = 43\n\n    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STR"
+      ],
       "arch_topics": [
         "html",
         "open-source"
@@ -196,15 +226,20 @@
     },
     "affaan-m/ECC": {
       "full_name": "affaan-m/ECC",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 10:36"
+        "2026-05-28 10:36",
+        "2026-06-02 08:27"
       ],
       "summary": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: commitlint.config.js\nmodule.exports = {\n  extends: ['@commitlint/config-conventional'],\n  rules: {\n    'type-enum': [2, 'always', [\n      'feat', 'fix', 'docs', 'style', 'refactor',\n      'perf', 'test', 'chore', 'ci', 'build', 'revert'\n    ]],\n    'subject-case': [2, 'never', ['sentence-case', 'start-case', 'pascal-case', 'upper-case']],\n    'header-max-length': [2, 'always', 100]\n  }\n};",
+        "FILE: ecc2/src/comms/mod.rs\nuse anyhow::Result;\nuse serde::{Deserialize, Serialize};\nuse std::fmt;\n\nuse crate::session::store::StateStore;\n\n#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]\n#[serde(rename_all = \"snake_case\")]\npub enum TaskPriority {\n    Low,\n    #[default]\n    Normal,\n    High,\n    Critical,\n}\n\nimpl fmt::Display for TaskPriority {\n    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {\n        let label = match self {\n         ",
+        "FILE: ecc2/src/config/mod.rs\nuse anyhow::{Context, Result};\nuse crossterm::event::{KeyCode, KeyEvent, KeyModifiers};\nuse regex::Regex;\nuse serde::{Deserialize, Serialize};\nuse std::collections::BTreeMap;\nuse std::path::PathBuf;\n\nuse crate::notifications::{\n    CompletionSummaryConfig, DesktopNotificationConfig, WebhookNotificationConfig,\n};\n\n#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]\n#[serde(rename_all = \"snake_case\")]\npub enum PaneLayout {\n    #[default]\n    H"
+      ],
       "arch_topics": [
         "javascript",
         "open-source"
@@ -216,15 +251,19 @@
     },
     "harry0703/MoneyPrinterTurbo": {
       "full_name": "harry0703/MoneyPrinterTurbo",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 10:43"
+        "2026-05-28 10:43",
+        "2026-06-02 08:27"
       ],
       "summary": "利用AI大模型，一键生成高清短视频 Generate short videos with one click using AI LLM.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: app/asgi.py\n\"\"\"Application implementation - ASGI.\"\"\"\n\nimport os\n\nfrom fastapi import FastAPI, Request\nfrom fastapi.exceptions import RequestValidationError\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom fastapi.responses import JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom loguru import logger\n\nfrom app.config import config\nfrom app.models.exception import HttpException\nfrom app.router import root_api_router\nfrom app.utils import utils\n\n\ndef exception_handler(reque",
+        "FILE: app/config/__init__.py\nimport os\nimport sys\n\nfrom loguru import logger\n\nfrom app.config import config\nfrom app.utils import utils\n\n\ndef __init_logger():\n    # _log_file = utils.storage_dir(\"logs/server.log\")\n    _lvl = config.log_level\n    root_dir = os.path.dirname(\n        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))\n    )\n\n    def format_record(record):\n        # 获取日志记录中的文件全路径\n        file_path = record[\"file\"].path\n        # 将绝对路径转换为相对于项目根目录的路径\n        relative_path = o"
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -236,15 +275,20 @@
     },
     "obra/superpowers": {
       "full_name": "obra/superpowers",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 10:48"
+        "2026-05-28 10:48",
+        "2026-06-02 08:27"
       ],
       "summary": "An agentic skills framework & software development methodology that works.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: skills/brainstorming/scripts/helper.js\n(function() {\n  const WS_URL = 'ws://' + window.location.host;\n  let ws = null;\n  let eventQueue = [];\n\n  function connect() {\n    ws = new WebSocket(WS_URL);\n\n    ws.onopen = () => {\n      eventQueue.forEach(e => ws.send(JSON.stringify(e)));\n      eventQueue = [];\n    };\n\n    ws.onmessage = (msg) => {\n      const data = JSON.parse(msg.data);\n      if (data.type === 'reload') {\n        window.location.reload();\n      }\n    };\n\n    ws.onclose = () => {",
+        "FILE: skills/systematic-debugging/condition-based-waiting-example.ts\n// Complete implementation of condition-based waiting utilities\n// From: Lace test infrastructure improvements (2025-10-03)\n// Context: Fixed 15 flaky tests by replacing arbitrary timeouts\n\nimport type { ThreadManager } from '~/threads/thread-manager';\nimport type { LaceEvent, LaceEventType } from '~/threads/types';\n\n/**\n * Wait for a specific event type to appear in thread\n *\n * @param threadManager - The thread manager to que",
+        "FILE: skills/writing-skills/render-graphs.js\n#!/usr/bin/env node\n\n/**\n * Render graphviz diagrams from a skill's SKILL.md to SVG files.\n *\n * Usage:\n *   ./render-graphs.js <skill-directory>           # Render each diagram separately\n *   ./render-graphs.js <skill-directory> --combine # Combine all into one diagram\n *\n * Extracts all ```dot blocks from SKILL.md and renders to SVG.\n * Useful for helping your human partner visualize the process flows.\n *\n * Requires: graphviz (dot) installed on sy"
+      ],
       "arch_topics": [
         "shell",
         "open-source"
@@ -276,15 +320,20 @@
     },
     "mukul975/Anthropic-Cybersecurity-Skills": {
       "full_name": "mukul975/Anthropic-Cybersecurity-Skills",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 12:08"
+        "2026-05-28 12:08",
+        "2026-06-02 08:27"
       ],
       "summary": "754 structured cybersecurity skills for AI agents · Mapped to 5 frameworks: MITRE ATT&CK, NIST CSF 2.0, MITRE ATLAS, D3FEND & NIST AI RMF · agentskills.io standard · Works with Claude Code, GitHub Copilot, Codex CLI, Cursor, Gemini CLI & 20+ platforms · 26 security domains · Apache 2.0",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: skills/acquiring-disk-image-with-dd-and-dcfldd/scripts/agent.py\n#!/usr/bin/env python3\n\"\"\"Forensic disk image acquisition agent using dd and dcfldd with hash verification.\"\"\"\n\nimport shlex\nimport subprocess\nimport hashlib\nimport os\nimport datetime\nimport json\n\n\ndef run_cmd(cmd, capture=True):\n    \"\"\"Execute a command and return output.\"\"\"\n    if isinstance(cmd, str):\n        cmd = shlex.split(cmd)\n    result = subprocess.run(cmd, capture_output=capture, text=True, timeout=120)\n    return r",
+        "FILE: skills/analyzing-active-directory-acl-abuse/scripts/agent.py\n#!/usr/bin/env python3\n\"\"\"Active Directory ACL abuse detection using ldap3 to find dangerous permissions.\"\"\"\n\nimport argparse\nimport json\nimport struct\n\nfrom ldap3 import Server, Connection, ALL, NTLM, SUBTREE\n\n\nDANGEROUS_MASKS = {\n    \"GenericAll\": 0x10000000,\n    \"GenericWrite\": 0x40000000,\n    \"WriteDACL\": 0x00040000,\n    \"WriteOwner\": 0x00080000,\n    \"WriteProperty\": 0x00000020,\n    \"Self\": 0x00000008,\n    \"ExtendedRight\": 0x",
+        "FILE: skills/analyzing-android-malware-with-apktool/scripts/agent.py\n#!/usr/bin/env python3\n\"\"\"Agent for static analysis of Android APK malware using androguard.\"\"\"\n\nimport json\nimport re\nimport argparse\nfrom datetime import datetime\n\ntry:\n    from androguard.core.apk import APK\n    from androguard.core.dex import DEX\n    from androguard.misc import AnalyzeAPK\nexcept ImportError:\n    APK = None\n    AnalyzeAPK = None\n\nDANGEROUS_PERMISSIONS = [\n    \"android.permission.SEND_SMS\", \"android.permissio"
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -296,15 +345,18 @@
     },
     "Axorax/awesome-free-apps": {
       "full_name": "Axorax/awesome-free-apps",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 15:01"
+        "2026-05-28 15:01",
+        "2026-06-02 08:27"
       ],
       "summary": "Curated list of the best free apps for PC and mobile",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: index.js\nconst fs = require('fs');\nconst { execSync, spawn } = require('child_process');\n\nfunction create(file, fileName, emoji) {\n  const startTime = Date.now();\n  let data = fs.readFileSync(file, 'utf8');\n  const emojis = new Set([\"🪟\", \"🍎\", \"🐧\", \"🟢\", \"⭐\", \"🤖\"]);\n  let result = [];\n  let lineCount = 0;\n  const lines = data.split('\\n');\n\n  const outputDir = './filter';\n  if (!fs.existsSync(outputDir)) {\n    fs.mkdirSync(outputDir);\n  }\n\n  for (let i = 0; i < lines.length; i++) {\n    let li"
+      ],
       "arch_topics": [
         "javascript",
         "open-source"
@@ -316,15 +368,20 @@
     },
     "anthropics/knowledge-work-plugins": {
       "full_name": "anthropics/knowledge-work-plugins",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 17:04"
+        "2026-05-28 17:04",
+        "2026-06-02 08:27"
       ],
       "summary": "Open source repository of plugins primarily intended for knowledge workers to use in Claude Cowork",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: bio-research/skills/instrument-data-to-allotrope/scripts/convert_to_asm.py\n#!/usr/bin/env python3\n\"\"\"\nInstrument Data to ASM Converter\n\nConverts laboratory instrument output files to Allotrope Simple Model (ASM) JSON format.\nSupports auto-detection of instrument types and fallback parsing for unsupported formats.\n\nUsage:\n    python convert_to_asm.py <input_file> [--vendor VENDOR] [--output OUTPUT]\n\"\"\"\n\nimport json\nimport sys\nimport re\nimport hashlib\nimport importlib.metadata\nfrom pathlib i",
+        "FILE: bio-research/skills/instrument-data-to-allotrope/scripts/export_parser.py\n#!/usr/bin/env python3\n\"\"\"\nExport Parser Code\n\nGenerates standalone Python scripts that can be handed off to data engineers\nor run in Jupyter notebooks. The exported code is self-contained and\nproduction-ready.\n\nUsage:\n    python export_parser.py --vendor VI_CELL_BLU --output vicell_parser.py\n    python export_parser.py --vendor NANODROP_EIGHT --format notebook --output nanodrop_parser.ipynb\n\"\"\"\n\nimport sys\nfrom path",
+        "FILE: bio-research/skills/instrument-data-to-allotrope/scripts/flatten_asm.py\n#!/usr/bin/env python3\n\"\"\"\nFlatten ASM JSON to 2D CSV\n\nConverts hierarchical Allotrope Simple Model (ASM) JSON to flat tabular format\nsuitable for LIMS import, spreadsheet analysis, or database loading.\n\nUsage:\n    python flatten_asm.py <input_asm.json> [--output OUTPUT.csv]\n\"\"\"\n\nimport json\nimport sys\nimport re\nfrom pathlib import Path\nfrom typing import Dict, Any, List, Optional\nfrom datetime import datetime\n\ntry:\n  "
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -356,15 +413,20 @@
     },
     "microsoft/markitdown": {
       "full_name": "microsoft/markitdown",
-      "study_level": 1,
+      "study_level": 4,
       "studied_at": [
-        "2026-05-28 23:02"
+        "2026-05-28 23:02",
+        "2026-06-02 08:27"
       ],
       "summary": "Python tool for converting files and office documents to Markdown.",
       "patterns": [],
       "best_practices": [],
       "insights": [],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: packages/markitdown-mcp/src/markitdown_mcp/__about__.py\n# SPDX-FileCopyrightText: 2024-present Adam Fourney <adamfo@microsoft.com>\n#\n# SPDX-License-Identifier: MIT\n__version__ = \"0.0.1a5\"",
+        "FILE: packages/markitdown-mcp/src/markitdown_mcp/__init__.py\n# SPDX-FileCopyrightText: 2024-present Adam Fourney <adamfo@microsoft.com>\n#\n# SPDX-License-Identifier: MIT\n\nfrom .__about__ import __version__\n\n__all__ = [\n    \"__version__\",\n]",
+        "FILE: packages/markitdown-mcp/src/markitdown_mcp/__main__.py\nimport contextlib\nimport sys\nimport os\nfrom collections.abc import AsyncIterator\nfrom mcp.server.fastmcp import FastMCP\nfrom starlette.applications import Starlette\nfrom mcp.server.sse import SseServerTransport\nfrom starlette.requests import Request\nfrom starlette.routing import Mount, Route\nfrom starlette.types import Receive, Scope, Send\nfrom mcp.server import Server\nfrom mcp.server.streamable_http_manager import StreamableHTTPSessio"
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -1394,37 +1456,81 @@
     },
     "p-e-w/heretic": {
       "full_name": "p-e-w/heretic",
-      "study_level": 3,
+      "study_level": 4,
       "studied_at": [
         "2026-06-02 06:00",
         "2026-06-02 07:00",
-        "2026-06-02 08:00"
+        "2026-06-02 08:00",
+        "2026-06-02 09:00"
       ],
       "summary": "Heretic is a command-line tool for automatically removing refusal/safety-alignment behavior from transformer-based language models without expensive post-training. It applies directional ablation/“abliteration” and automatically searches for parameters that reduce refusals while preserving the origi",
       "patterns": [
-        "Uses directional ablation/abliteration to modify model behavior by removing refusal-related directions from internal representations.",
-        "Includes a TPE-based hyperparameter optimizer powered by Optuna to automatically find effective ablation settings.",
-        "Optimizes for two objectives: minimizing refusals on harmful prompts and minimizing KL divergence from the original model on harmless prompts.",
-        "Designed to work without requiring users to understand transformer internals; intended as a command-line workflow.",
-        "Supports most dense transformer models, many multimodal models, several MoE architectures, and some hybrid models, but not pure state-space models or some research architectures out of the box.",
-        "Source code is separated into `src/`, indicating an installable Python package layout rather than flat scripts at the repository root.",
-        "TOML configuration suggests modern Python packaging/tooling, likely centralized in `pyproject.toml`.",
-        "Presence of a lock file indicates dependency versions are pinned for reproducible installs or builds.",
-        "Markdown files are used for repository-level documentation such as README or project notes.",
-        "YAML files likely support automation, CI, or configuration outside the Python package itself."
+        "Uses a modular package structure with separate modules for configuration, model handling, evaluation, analysis, progress display, and CLI entrypoint.",
+        "Applies SPDX license headers consistently across source files.",
+        "Uses type annotations extensively for class attributes, constructor arguments, and tensor-related values.",
+        "Uses Pydantic and pydantic-settings for strongly typed configuration management.",
+        "Defines settings via BaseSettings/BaseModel and supports multiple configuration sources such as CLI, environment variables, and TOML files.",
+        "Includes privacy-aware configuration comments requiring new settings to be evaluated for sensitive data exposure.",
+        "Uses enums for constrained configuration options such as quantization modes.",
+        "Separates heavyweight ML imports from lightweight CLI help handling to reduce startup cost for help invocations.",
+        "Implements an early CLI help path by checking sys.argv before importing expensive dependencies.",
+        "Wraps domain functionality in classes such as Analyzer, Evaluator, and Model.",
+        "Stores injected dependencies such as Settings and Model as instance attributes.",
+        "Uses PyTorch tensors and torch.nn.functional for model evaluation and analysis.",
+        "Uses torch.linalg for linear algebra operations.",
+        "Uses Hugging Face Transformers for causal language model loading and tokenizer/model abstractions.",
+        "Uses PEFT/LoRA integrations for parameter-efficient fine-tuning.",
+        "Uses bitsandbytes for quantization or low-memory model loading support.",
+        "Uses dataclasses where lightweight structured containers are appropriate.",
+        "Uses rich for formatted console output, tables, and progress display.",
+        "Uses tqdm-compatible shim class to adapt tqdm-style APIs to Rich progress rendering.",
+        "Uses custom utility wrappers such as .utils.print, Prompt, and load_prompts for consistent I/O and prompt handling.",
+        "Uses local relative imports within the package to keep modules cohesive.",
+        "Uses comments and FIXME notes to document known runtime issues and implementation tradeoffs.",
+        "Uses suppress from contextlib for intentionally ignored exceptions in model-related logic.",
+        "Uses typing helpers such as Any, Type, cast, and numpy.typing.NDArray where needed.",
+        "Uses class-level attribute annotations to document expected instance state."
       ],
-      "best_practices": [],
+      "best_practices": [
+        "Avoid importing heavyweight ML dependencies when only CLI help output is requested.",
+        "Separate concerns between configuration, model loading, evaluation, analysis, progress handling, and CLI orchestration.",
+        "Use dependency injection for shared objects like settings and model instances to improve testability and clarity.",
+        "Annotate tensors and model-related values to make ML code easier to understand and maintain.",
+        "Use established ecosystem libraries such as Transformers, PEFT, bitsandbytes, PyTorch, Rich, and tqdm rather than reinventing core functionality.",
+        "Provide compatibility shims when replacing one UI/progress backend with another.",
+        "Document known issues with FIXME comments so operational limitations are visible to maintainers.",
+        "Use package-relative imports for internal modules.",
+        "Use SPDX identifiers for unambiguous license metadata.",
+        "Keep CLI startup responsive by deferring expensive imports until they are actually needed.",
+        "Use Rich for human-readable terminal output and tables in command-line tools.",
+        "Represent prompts and loaded datasets through utility abstractions instead of scattering raw parsing logic across modules.",
+        "Maintain clear class boundaries for analysis and evaluation workflows.",
+        "Use explicit field definitions in settings classes to control defaults, metadata, and serialization behavior.",
+        "Use enums instead of free-form strings for configuration choices with a finite set of valid values."
+      ],
       "insights": [
-        "The project positions automation as its main differentiator: users do not manually tune ablation parameters.",
-        "Its quality metric balances censorship removal against capability preservation, rather than only maximizing refusal reduction.",
-        "KL divergence from the original model is used as a proxy for retaining the model’s original intelligence and behavior.",
         "The README frames safety alignment as censorship and treats decensoring as the primary goal.",
         "The tool builds on recent abliteration research and packages it into a practical optimizer-driven workflow.",
         "The layout favors maintainability and packaging correctness by avoiding accidental imports from the repository root.",
         "The combination of TOML plus a lock file suggests the project is managed with contemporary Python tooling and is intended to be reproducibly developed or deployed.",
-        "With only a `src/` top-level code directory, the repository structure is relatively focused and likely small to medium in scope."
+        "With only a `src/` top-level code directory, the repository structure is relatively focused and likely small to medium in scope.",
+        "The project is a Python ML/LLM tool focused on model analysis, evaluation, and likely steering or fine-tuning workflows.",
+        "The architecture suggests a command-line application that loads settings, initializes a model, evaluates prompt sets, and analyzes residual activations or related tensor data.",
+        "The codebase prioritizes typed configuration and reproducibility-oriented execution.",
+        "The presence of good_prompts, bad_prompts, good_residuals, bad_residuals, base_logprobs, and refusals suggests comparative evaluation between desired and undesired behaviors.",
+        "The model layer likely supports quantized loading and LoRA-based adaptation, indicating a focus on efficient experimentation with large language models.",
+        "The explicit help-invocation optimization indicates awareness that ML imports can significantly slow command startup.",
+        "The custom progress shim suggests the project wants Rich-styled progress output while maintaining compatibility with APIs expecting tqdm.",
+        "The privacy warning in config.py implies settings may include paths, prompts, model identifiers, tokens, or other sensitive experiment metadata.",
+        "The use of torch.linalg and residual tensors points to linear algebra analysis of internal model representations.",
+        "The code appears designed for research tooling rather than a minimal inference wrapper, with dedicated analyzer and evaluator components."
       ],
-      "code_examples": [],
+      "code_examples": [
+        "FILE: src/heretic/__init__.py",
+        "FILE: src/heretic/analyzer.py\n# SPDX-License-Identifier: AGPL-3.0-or-later\n# Copyright (C) 2025-2026  Philipp Emanuel Weidmann <pew@worldwidemann.com> + contributors\n\nfrom pathlib import Path\n\nimport numpy as np\nimport torch\nimport torch.linalg as LA\nimport torch.nn.functional as F\nfrom numpy.typing import NDArray\nfrom rich.progress import track\nfrom rich.table import Table\nfrom torch import Tensor\n\nfrom .config import Settings\nfrom .model import Model\nfrom .utils import print\n\n\nclass Analyzer:\n",
+        "FILE: src/heretic/config.py\n# SPDX-License-Identifier: AGPL-3.0-or-later\n# Copyright (C) 2025-2026  Philipp Emanuel Weidmann <pew@worldwidemann.com> + contributors\n\nfrom enum import Enum\nfrom typing import Dict\n\nfrom pydantic import BaseModel, Field\nfrom pydantic_settings import (\n    BaseSettings,\n    CliSettingsSource,\n    EnvSettingsSource,\n    PydanticBaseSettingsSource,\n    TomlConfigSettingsSource,\n)\n\n# !!!IMPORTANT!!!\n#\n# Any settings added to the classes defined in this module\n# must be ",
+        "FILE: src/heretic/evaluator.py\n# SPDX-License-Identifier: AGPL-3.0-or-later\n# Copyright (C) 2025-2026  Philipp Emanuel Weidmann <pew@worldwidemann.com> + contributors\n\nimport torch.nn.functional as F\nfrom torch import Tensor\n\nfrom .config import Settings\nfrom .model import Model\nfrom .utils import Prompt, load_prompts, print\n\n\nclass Evaluator:\n    settings: Settings\n    model: Model\n    good_prompts: list[Prompt]\n    bad_prompts: list[Prompt]\n    base_logprobs: Tensor\n    base_refusals: int\n\n   "
+      ],
       "arch_topics": [
         "python",
         "open-source"
@@ -1623,620 +1729,6 @@
     }
   },
   "skill_index": {
-    "node.js cli entrypoint uses a shebang (`#!/usr/bin/env node`": {
-      "name": "Node.js CLI entrypoint uses a shebang (`#!/usr/bin/env node`) with ESM imports a",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "error_handling",
-        "cli_tooling"
-      ]
-    },
-    "cli help handling checks for missing command, `--help`, or `": {
-      "name": "CLI help handling checks for missing command, `--help`, or `-h` and prints a usa",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "error_handling",
-        "version_control",
-        "cli_tooling"
-      ]
-    },
-    "esm-compatible `__dirname` is derived via `dirname(fileurlto": {
-      "name": "ESM-compatible `__dirname` is derived via `dirname(fileURLToPath(import.meta.url",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection"
-      ]
-    },
-    "configuration constants are exported as frozen objects/array": {
-      "name": "Configuration constants are exported as frozen objects/arrays using `Object.free",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "version_control",
-        "cli_tooling"
-      ]
-    },
-    "provider lists are derived from configuration maps with `obj": {
-      "name": "Provider lists are derived from configuration maps with `Object.keys(...)` to av",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "event_driven",
-        "schema_validation",
-        "cli_tooling"
-      ]
-    },
-    "combined provider arrays are composed with spread syntax fro": {
-      "name": "Combined provider arrays are composed with spread syntax from smaller provider g",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "event_driven"
-      ]
-    },
-    "browser detector bundle is wrapped in an iife to avoid leaki": {
-      "name": "Browser detector bundle is wrapped in an IIFE to avoid leaking variables into gl",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "database_pattern",
-        "cli_tooling"
-      ]
-    },
-    "browser-only scripts guard execution with `if (typeof window": {
-      "name": "Browser-only scripts guard execution with `if (typeof window === 'undefined') re",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": []
-    },
-    "generated bundle files include prominent comments indicating": {
-      "name": "Generated bundle files include prominent comments indicating source file, rebuil",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "config_management",
-        "database_pattern",
-        "state_management"
-      ]
-    },
-    "chrome extension service worker maintains per-tab state with": {
-      "name": "Chrome extension service worker maintains per-tab state with `Map` keyed by `tab",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "plugin_system",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "lazy state initialization is encapsulated in a helper functi": {
-      "name": "Lazy state initialization is encapsulated in a helper function (`getState(tabId)",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "chrome extension messaging architecture separates background": {
-      "name": "Chrome extension messaging architecture separates background service worker, con",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "plugin_system",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "content script uses an iife plus a global idempotency flag t": {
-      "name": "Content script uses an IIFE plus a global idempotency flag to prevent duplicate ",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "database_pattern",
-        "data_transformation",
-        "dependency_injection"
-      ]
-    },
-    "content script bridges extension messaging to page-context d": {
-      "name": "Content script bridges extension messaging to page-context detector because some",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "database_pattern",
-        "dependency_injection"
-      ]
-    },
-    "devtools panel is created with `chrome.devtools.panels.creat": {
-      "name": "DevTools panel is created with `chrome.devtools.panels.create(...)`.",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection"
-      ]
-    },
-    "use immutable configuration exports for provider registries ": {
-      "name": "Use immutable configuration exports for provider registries to reduce accidental",
-      "category": "engineering",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "data_fetching",
-        "event_driven",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection"
-      ]
-    },
-    "keep one source of truth for provider names by deriving arra": {
-      "name": "Keep one source of truth for provider names by deriving arrays from config objec",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "modular_design",
-        "testing_pattern",
-        "performance_optimization",
-        "file_operations",
-        "database_pattern",
-        "cli_tooling"
-      ]
-    },
-    "document cli usage directly in the entrypoint for discoverab": {
-      "name": "Document CLI usage directly in the entrypoint for discoverability.",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "modular_design",
-        "file_operations",
-        "plugin_system",
-        "error_handling",
-        "data_fetching",
-        "version_control",
-        "cli_tooling"
-      ]
-    },
-    "include spdx license identifiers and generated-file metadata": {
-      "name": "Include SPDX license identifiers and generated-file metadata in distributed/gene",
-      "category": "data",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": []
-    },
-    "clearly mark generated files as generated and provide the re": {
-      "name": "Clearly mark generated files as generated and provide the rebuild command.",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "state_management"
-      ]
-    },
-    "guard browser-specific bundles so they do not fail in non-br": {
-      "name": "Guard browser-specific bundles so they do not fail in non-browser environments.",
-      "category": "engineering",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "database_pattern"
-      ]
-    },
-    "wrap injected browser/content scripts in iifes to prevent gl": {
-      "name": "Wrap injected browser/content scripts in IIFEs to prevent global namespace pollu",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": []
-    },
-    "make extension content scripts idempotent to avoid duplicate": {
-      "name": "Make extension content scripts idempotent to avoid duplicate listeners, redeclar",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "plugin_system",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "separate page-context detection logic from isolated-world co": {
-      "name": "Separate page-context detection logic from isolated-world content script messagi",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "config_management",
-        "monitoring_observability",
-        "data_fetching",
-        "cli_tooling",
-        "state_management"
-      ]
-    },
-    "maintain extension state per tab rather than globally to avo": {
-      "name": "Maintain extension state per tab rather than globally to avoid cross-tab contami",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "plugin_system",
-        "database_pattern",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the project is organized as a cli plus chrome devtools exten": {
-      "name": "The project is organized as a CLI plus Chrome DevTools extension, sharing detect",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the browser detector appears to be generated from modular so": {
-      "name": "The browser detector appears to be generated from modular source files into a si",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the cli supports multiple target types (`file`, `directory`,": {
-      "name": "The CLI supports multiple target types (`file`, `directory`, or `URL`) and inclu",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "provider support is modeled around ai/code-assistant configu": {
-      "name": "Provider support is modeled around AI/code-assistant configuration directories s",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection"
-      ]
-    },
-    "the extension likely performs scans in the inspected page, r": {
-      "name": "The extension likely performs scans in the inspected page, reports findings back",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "overlay visibility is treated as per-tab ui state, suggestin": {
-      "name": "Overlay visibility is treated as per-tab UI state, suggesting findings can be hi",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "authentication",
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "monitoring_observability",
-        "error_handling",
-        "database_pattern",
-        "data_fetching",
-        "schema_validation",
-        "data_transformation",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection"
-      ]
-    },
-    "the architecture accounts for repeated script injection, whi": {
-      "name": "The architecture accounts for repeated script injection, which is common in Chro",
-      "category": "architecture",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the generated detector includes shared constants such as saf": {
-      "name": "The generated detector includes shared constants such as safe HTML tags, implyin",
-      "category": "frontend",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the service worker routes messages between popup, devtools p": {
-      "name": "The service worker routes messages between popup, DevTools panel, and content sc",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
-    "the devtools integration includes both a custom panel for fu": {
-      "name": "The DevTools integration includes both a custom panel for full results and an El",
-      "category": "general",
-      "sources": [
-        "pbakaus/impeccable"
-      ],
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00",
-      "related_concepts": [
-        "testing_pattern",
-        "performance_optimization",
-        "config_management",
-        "plugin_system",
-        "monitoring_observability",
-        "database_pattern",
-        "data_fetching",
-        "version_control",
-        "cli_tooling",
-        "dependency_injection",
-        "state_management"
-      ]
-    },
     "multi-agent architecture that separates financial analysis, ": {
       "name": "Multi-agent architecture that separates financial analysis, debate/research, tra",
       "category": "architecture",
@@ -2302,7 +1794,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "configuration is environment-variable driven via tradingagen": {
@@ -2328,7 +1821,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "includes persistent decision logging, backtesting/date fidel": {
@@ -2339,7 +1833,9 @@
       ],
       "usage_count": 0,
       "learned_at": "2026-06-02 02:00",
-      "related_concepts": []
+      "related_concepts": [
+        "caching"
+      ]
     },
     "the project is evolving quickly, with frequent releases focu": {
       "name": "The project is evolving quickly, with frequent releases focused on production-re",
@@ -2364,7 +1860,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "a major design priority is provider flexibility, allowing us": {
@@ -2394,7 +1891,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "the framework treats trading as a collaborative reasoning pr": {
@@ -2450,7 +1948,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "structure dirs: tradingagents, tests, assets, cli, scripts": {
@@ -2488,7 +1987,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "centralized dictionary-based cli configuration is used for s": {
@@ -2537,7 +2037,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "rich is used extensively for terminal ux: `console`, `panel`": {
@@ -2561,7 +2062,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "typer and questionary are combined for cli command handling ": {
@@ -2588,7 +2090,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "environment and api-key management are separated into utilit": {
@@ -2616,7 +2119,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "constants are used for repeated cli prompt data, such as tic": {
@@ -2660,7 +2164,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "network calls use `requests.get`, configurable timeout value": {
@@ -2714,7 +2219,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "smoke-test scripts are provided for end-to-end validation ag": {
@@ -3093,7 +2599,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "short announcement timeouts imply remote announcements are n": {
@@ -3133,7 +2640,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "the code shows attention to production concerns: fallback be": {
@@ -3198,7 +2706,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "optimizes for two objectives: minimizing refusals on harmful": {
@@ -3248,7 +2757,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "supports most dense transformer models, many multimodal mode": {
@@ -3329,7 +2839,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "the tool builds on recent abliteration research and packages": {
@@ -3377,7 +2888,8 @@
         "data_transformation",
         "version_control",
         "cli_tooling",
-        "dependency_injection"
+        "dependency_injection",
+        "caching"
       ]
     },
     "toml configuration suggests modern python packaging/tooling,": {
@@ -3426,7 +2938,8 @@
         "version_control",
         "cli_tooling",
         "dependency_injection",
-        "state_management"
+        "state_management",
+        "caching"
       ]
     },
     "markdown files are used for repository-level documentation s": {
@@ -3535,6 +3048,673 @@
         "event_driven",
         "schema_validation",
         "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "uses a modular package structure with separate modules for c": {
+      "name": "Uses a modular package structure with separate modules for configuration, model ",
+      "category": "architecture",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "applies spdx license headers consistently across source file": {
+      "name": "Applies SPDX license headers consistently across source files.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": []
+    },
+    "uses type annotations extensively for class attributes, cons": {
+      "name": "Uses type annotations extensively for class attributes, constructor arguments, a",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "uses pydantic and pydantic-settings for strongly typed confi": {
+      "name": "Uses Pydantic and pydantic-settings for strongly typed configuration management.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "defines settings via basesettings/basemodel and supports mul": {
+      "name": "Defines settings via BaseSettings/BaseModel and supports multiple configuration ",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "schema_validation",
+        "caching"
+      ]
+    },
+    "includes privacy-aware configuration comments requiring new ": {
+      "name": "Includes privacy-aware configuration comments requiring new settings to be evalu",
+      "category": "frontend",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "event_driven",
+        "version_control",
+        "caching"
+      ]
+    },
+    "uses enums for constrained configuration options such as qua": {
+      "name": "Uses enums for constrained configuration options such as quantization modes.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "separates heavyweight ml imports from lightweight cli help h": {
+      "name": "Separates heavyweight ML imports from lightweight CLI help handling to reduce st",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization"
+      ]
+    },
+    "implements an early cli help path by checking sys.argv befor": {
+      "name": "Implements an early CLI help path by checking sys.argv before importing expensiv",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "wraps domain functionality in classes such as analyzer, eval": {
+      "name": "Wraps domain functionality in classes such as Analyzer, Evaluator, and Model.",
+      "category": "frontend",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": []
+    },
+    "stores injected dependencies such as settings and model as i": {
+      "name": "Stores injected dependencies such as Settings and Model as instance attributes.",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "caching"
+      ]
+    },
+    "uses pytorch tensors and torch.nn.functional for model evalu": {
+      "name": "Uses PyTorch tensors and torch.nn.functional for model evaluation and analysis.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "uses torch.linalg for linear algebra operations.": {
+      "name": "Uses torch.linalg for linear algebra operations.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "uses hugging face transformers for causal language model loa": {
+      "name": "Uses Hugging Face Transformers for causal language model loading and tokenizer/m",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "uses peft/lora integrations for parameter-efficient fine-tun": {
+      "name": "Uses PEFT/LoRA integrations for parameter-efficient fine-tuning.",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_transformation",
+        "dependency_injection"
+      ]
+    },
+    "avoid importing heavyweight ml dependencies when only cli he": {
+      "name": "Avoid importing heavyweight ML dependencies when only CLI help output is request",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": []
+    },
+    "separate concerns between configuration, model loading, eval": {
+      "name": "Separate concerns between configuration, model loading, evaluation, analysis, pr",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "config_management",
+        "monitoring_observability",
+        "data_fetching",
+        "cli_tooling",
+        "state_management"
+      ]
+    },
+    "use dependency injection for shared objects like settings an": {
+      "name": "Use dependency injection for shared objects like settings and model instances to",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "error_handling",
+        "event_driven",
+        "data_transformation",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "annotate tensors and model-related values to make ml code ea": {
+      "name": "Annotate tensors and model-related values to make ML code easier to understand a",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "data_fetching",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "use established ecosystem libraries such as transformers, pe": {
+      "name": "Use established ecosystem libraries such as Transformers, PEFT, bitsandbytes, Py",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "error_handling",
+        "event_driven",
+        "data_transformation",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "provide compatibility shims when replacing one ui/progress b": {
+      "name": "Provide compatibility shims when replacing one UI/progress backend with another.",
+      "category": "frontend",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "event_driven",
+        "data_transformation"
+      ]
+    },
+    "document known issues with fixme comments so operational lim": {
+      "name": "Document known issues with FIXME comments so operational limitations are visible",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "modular_design",
+        "file_operations",
+        "plugin_system",
+        "data_fetching",
+        "version_control"
+      ]
+    },
+    "use package-relative imports for internal modules.": {
+      "name": "Use package-relative imports for internal modules.",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "error_handling",
+        "event_driven",
+        "data_transformation",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "use spdx identifiers for unambiguous license metadata.": {
+      "name": "Use SPDX identifiers for unambiguous license metadata.",
+      "category": "data",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "error_handling",
+        "event_driven",
+        "data_transformation",
+        "cli_tooling",
+        "dependency_injection"
+      ]
+    },
+    "keep cli startup responsive by deferring expensive imports u": {
+      "name": "Keep CLI startup responsive by deferring expensive imports until they are actual",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "error_handling",
+        "cli_tooling"
+      ]
+    },
+    "the project is a python ml/llm tool focused on model analysi": {
+      "name": "The project is a Python ML/LLM tool focused on model analysis, evaluation, and l",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "the architecture suggests a command-line application that lo": {
+      "name": "The architecture suggests a command-line application that loads settings, initia",
+      "category": "architecture",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the codebase prioritizes typed configuration and reproducibi": {
+      "name": "The codebase prioritizes typed configuration and reproducibility-oriented execut",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the presence of good_prompts, bad_prompts, good_residuals, b": {
+      "name": "The presence of good_prompts, bad_prompts, good_residuals, bad_residuals, base_l",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the model layer likely supports quantized loading and lora-b": {
+      "name": "The model layer likely supports quantized loading and LoRA-based adaptation, ind",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "schema_validation",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ]
+    },
+    "the explicit help-invocation optimization indicates awarenes": {
+      "name": "The explicit help-invocation optimization indicates awareness that ML imports ca",
+      "category": "engineering",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the custom progress shim suggests the project wants rich-sty": {
+      "name": "The custom progress shim suggests the project wants Rich-styled progress output ",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "data_visualization",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the privacy warning in config.py implies settings may includ": {
+      "name": "The privacy warning in config.py implies settings may include paths, prompts, mo",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the use of torch.linalg and residual tensors points to linea": {
+      "name": "The use of torch.linalg and residual tensors points to linear algebra analysis o",
+      "category": "general",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "event_driven",
+        "data_transformation",
+        "version_control",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ]
+    },
+    "the code appears designed for research tooling rather than a": {
+      "name": "The code appears designed for research tooling rather than a minimal inference w",
+      "category": "architecture",
+      "sources": [
+        "p-e-w/heretic"
+      ],
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00",
+      "related_concepts": [
+        "testing_pattern",
+        "performance_optimization",
+        "config_management",
+        "plugin_system",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
         "version_control",
         "cli_tooling",
         "dependency_injection",
@@ -3682,258 +3862,13 @@
   "pr_history": [],
   "stats": {
     "total_repos_studied": 55,
-    "total_patterns": 136,
-    "total_insights": 92,
+    "total_patterns": 151,
+    "total_insights": 99,
     "last_study_date": "2026-06-02",
-    "total_skills_learned": 108,
-    "total_cli_skill_hooks": 268
+    "total_skills_learned": 135,
+    "total_cli_skill_hooks": 437
   },
   "skills_memory": [
-    {
-      "name": "Node.js CLI entrypoint uses a shebang (`#!/usr/bin/env node`) with ESM imports a",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "CLI help handling checks for missing command, `--help`, or `-h` and prints a usa",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "ESM-compatible `__dirname` is derived via `dirname(fileURLToPath(import.meta.url",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Configuration constants are exported as frozen objects/arrays using `Object.free",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Provider lists are derived from configuration maps with `Object.keys(...)` to av",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Combined provider arrays are composed with spread syntax from smaller provider g",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Browser detector bundle is wrapped in an IIFE to avoid leaking variables into gl",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Browser-only scripts guard execution with `if (typeof window === 'undefined') re",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Generated bundle files include prominent comments indicating source file, rebuil",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Chrome extension service worker maintains per-tab state with `Map` keyed by `tab",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Lazy state initialization is encapsulated in a helper function (`getState(tabId)",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Chrome extension messaging architecture separates background service worker, con",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Content script uses an IIFE plus a global idempotency flag to prevent duplicate ",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Content script bridges extension messaging to page-context detector because some",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "DevTools panel is created with `chrome.devtools.panels.create(...)`.",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Use immutable configuration exports for provider registries to reduce accidental",
-      "source": "pbakaus/impeccable",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Keep one source of truth for provider names by deriving arrays from config objec",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Document CLI usage directly in the entrypoint for discoverability.",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Include SPDX license identifiers and generated-file metadata in distributed/gene",
-      "source": "pbakaus/impeccable",
-      "category": "data",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Clearly mark generated files as generated and provide the rebuild command.",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Guard browser-specific bundles so they do not fail in non-browser environments.",
-      "source": "pbakaus/impeccable",
-      "category": "engineering",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Wrap injected browser/content scripts in IIFEs to prevent global namespace pollu",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Make extension content scripts idempotent to avoid duplicate listeners, redeclar",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Separate page-context detection logic from isolated-world content script messagi",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Maintain extension state per tab rather than globally to avoid cross-tab contami",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The project is organized as a CLI plus Chrome DevTools extension, sharing detect",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The browser detector appears to be generated from modular source files into a si",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The CLI supports multiple target types (`file`, `directory`, or `URL`) and inclu",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Provider support is modeled around AI/code-assistant configuration directories s",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The extension likely performs scans in the inspected page, reports findings back",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "Overlay visibility is treated as per-tab UI state, suggesting findings can be hi",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The architecture accounts for repeated script injection, which is common in Chro",
-      "source": "pbakaus/impeccable",
-      "category": "architecture",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The generated detector includes shared constants such as safe HTML tags, implyin",
-      "source": "pbakaus/impeccable",
-      "category": "frontend",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The service worker routes messages between popup, DevTools panel, and content sc",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
-    {
-      "name": "The DevTools integration includes both a custom panel for full results and an El",
-      "source": "pbakaus/impeccable",
-      "category": "general",
-      "usage_count": 0,
-      "learned_at": "2026-06-02 00:00"
-    },
     {
       "name": "Multi-agent architecture that separates financial analysis, debate/research, tra",
       "source": "TauricResearch/TradingAgents",
@@ -4388,6 +4323,251 @@
       "category": "architecture",
       "usage_count": 0,
       "learned_at": "2026-06-02 08:00"
+    },
+    {
+      "name": "Uses a modular package structure with separate modules for configuration, model ",
+      "source": "p-e-w/heretic",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Applies SPDX license headers consistently across source files.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses type annotations extensively for class attributes, constructor arguments, a",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses Pydantic and pydantic-settings for strongly typed configuration management.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Defines settings via BaseSettings/BaseModel and supports multiple configuration ",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Includes privacy-aware configuration comments requiring new settings to be evalu",
+      "source": "p-e-w/heretic",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses enums for constrained configuration options such as quantization modes.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Separates heavyweight ML imports from lightweight CLI help handling to reduce st",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Implements an early CLI help path by checking sys.argv before importing expensiv",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Wraps domain functionality in classes such as Analyzer, Evaluator, and Model.",
+      "source": "p-e-w/heretic",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Stores injected dependencies such as Settings and Model as instance attributes.",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses PyTorch tensors and torch.nn.functional for model evaluation and analysis.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses torch.linalg for linear algebra operations.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses Hugging Face Transformers for causal language model loading and tokenizer/m",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Uses PEFT/LoRA integrations for parameter-efficient fine-tuning.",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Avoid importing heavyweight ML dependencies when only CLI help output is request",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Separate concerns between configuration, model loading, evaluation, analysis, pr",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Use dependency injection for shared objects like settings and model instances to",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Annotate tensors and model-related values to make ML code easier to understand a",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Use established ecosystem libraries such as Transformers, PEFT, bitsandbytes, Py",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Provide compatibility shims when replacing one UI/progress backend with another.",
+      "source": "p-e-w/heretic",
+      "category": "frontend",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Document known issues with FIXME comments so operational limitations are visible",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Use package-relative imports for internal modules.",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Use SPDX identifiers for unambiguous license metadata.",
+      "source": "p-e-w/heretic",
+      "category": "data",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "Keep CLI startup responsive by deferring expensive imports until they are actual",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The project is a Python ML/LLM tool focused on model analysis, evaluation, and l",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The architecture suggests a command-line application that loads settings, initia",
+      "source": "p-e-w/heretic",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The codebase prioritizes typed configuration and reproducibility-oriented execut",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The presence of good_prompts, bad_prompts, good_residuals, bad_residuals, base_l",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The model layer likely supports quantized loading and LoRA-based adaptation, ind",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The explicit help-invocation optimization indicates awareness that ML imports ca",
+      "source": "p-e-w/heretic",
+      "category": "engineering",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The custom progress shim suggests the project wants Rich-styled progress output ",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The privacy warning in config.py implies settings may include paths, prompts, mo",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The use of torch.linalg and residual tensors points to linear algebra analysis o",
+      "source": "p-e-w/heretic",
+      "category": "general",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
+    },
+    {
+      "name": "The code appears designed for research tooling rather than a minimal inference w",
+      "source": "p-e-w/heretic",
+      "category": "architecture",
+      "usage_count": 0,
+      "learned_at": "2026-06-02 09:00"
     }
   ],
   "concepts": {
@@ -4398,9 +4578,10 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 18,
+      "evidence_count": 19,
       "examples": [
         "Low-level, standards-based rendering (HTML/CSS/SVG) for maximum flexibility",
         "Modular, foundational design intended to be extended by higher-level chart libraries",
@@ -4415,9 +4596,10 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 19,
+      "evidence_count": 24,
       "examples": [
         "Modular, foundational design intended to be extended by higher-level chart libraries",
         "Modular source organization in src/ with parallel test coverage in test/",
@@ -4431,9 +4613,10 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat",
         "karpathy/llm.c",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 21,
+      "evidence_count": 23,
       "examples": [
         "Direct DOM manipulation paradigm enabling custom graphic authoring",
         "prepare.py is treated as fixed infrastructure for data preparation, tokenizer training, dataloading, and evaluation",
@@ -4445,9 +4628,10 @@
         "d3/d3",
         "karpathy/nanochat",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 15,
+      "evidence_count": 16,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "The explicit separation of src/ and test/ reflects a mature, test-driven development workflow essential for a widely-used data visualization library.",
@@ -4465,7 +4649,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 27,
+      "evidence_count": 25,
       "examples": [
         "Modular source organization in src/ with parallel test coverage in test/",
         "Fetch external data at build time to optimize runtime performance",
@@ -4483,7 +4667,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 49,
+      "evidence_count": 51,
       "examples": [
         "Interactive documentation powered by .vue components alongside .md and .js files",
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
@@ -4500,7 +4684,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 52,
+      "evidence_count": 62,
       "examples": [
         "Configuration and metadata managed via .json files typical of modern JS toolchains",
         "VitePress defineConfig for site configuration",
@@ -4529,7 +4713,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 30,
+      "evidence_count": 32,
       "examples": [
         "Dynamic module execution via Observable Runtime",
         "Interactive D3 examples are embedded directly using Observable's runtime, enhancing developer experience",
@@ -4539,9 +4723,10 @@
     "error_handling": {
       "repos": [
         "d3/d3",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 8,
+      "evidence_count": 9,
       "examples": [
         "Graceful error handling with environment-aware fallbacks",
         "Use try/catch with CI environment checks to prevent local build failures",
@@ -4559,7 +4744,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 29,
+      "evidence_count": 32,
       "examples": [
         "The structure suggests a build pipeline that bundles modular JavaScript into distributable formats while maintaining a rich, component-driven docs experience.",
         "Fetch external data at build time to optimize runtime performance",
@@ -4572,9 +4757,10 @@
         "karpathy/nanoGPT",
         "karpathy/nanochat",
         "karpathy/llm.c",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 9,
+      "evidence_count": 10,
       "examples": [
         "Environment-aware API fetching indicates a mature CI/CD pipeline strategy for documentation builds",
         "Fetch external data at build time to optimize runtime performance",
@@ -4631,10 +4817,9 @@
         "karpathy/nanochat",
         "karpathy/llm.c",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents",
-        "p-e-w/heretic"
+        "TauricResearch/TradingAgents"
       ],
-      "evidence_count": 11,
+      "evidence_count": 10,
       "examples": [
         "Configuration and dataset organization suggest reproducible experiments across different model sizes and corpora.",
         "Evaluation of GPT-2 variants is standardized; only the pretrained checkpoint name and documented model dimensions differ.",
@@ -4645,9 +4830,10 @@
       "repos": [
         "karpathy/nanoGPT",
         "pbakaus/impeccable",
-        "TauricResearch/TradingAgents"
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
       ],
-      "evidence_count": 25,
+      "evidence_count": 32,
       "examples": [
         "The configs are designed to be overridden from the command line, suggested by comments such as enabling wandb externally.",
         "Combines deterministic anti-pattern detection with an LLM-based critique pass: CLI and browser extension can run deterministic checks without an API key, while richer critique can use model reasoning.",
@@ -4661,7 +4847,7 @@
         "TauricResearch/TradingAgents",
         "p-e-w/heretic"
       ],
-      "evidence_count": 12,
+      "evidence_count": 14,
       "examples": [
         "Synthetic data generation script is structured around diversity injection across topics, personas, conversation dynamics, and first-message variation.",
         "Content script uses an IIFE plus a global idempotency flag to prevent duplicate injection side effects.",
@@ -4682,9 +4868,61 @@
         "The repository relies on generated or downloaded binary artifacts, including checkpoints, tokenizer data, debug states, and tokenized datasets.",
         "Chrome extension service worker maintains per-tab state with `Map` keyed by `tabId`."
       ]
+    },
+    "caching": {
+      "repos": [
+        "TauricResearch/TradingAgents",
+        "p-e-w/heretic"
+      ],
+      "evidence_count": 2,
+      "examples": [
+        "Includes persistent decision logging, backtesting/date fidelity improvements, proxy support, Docker support, multilingual README/community access, and ticker input hardening against path traversal.",
+        "Stores injected dependencies such as Settings and Model as instance attributes."
+      ]
     }
   },
   "relationships": [
+    {
+      "from_repo": "TauricResearch/TradingAgents",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 123,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management",
+        "caching"
+      ],
+      "shared_pattern_keywords": [
+        "configuration",
+        "pydantic",
+        "between",
+        "appears",
+        "extensively"
+      ]
+    },
     {
       "from_repo": "karpathy/nanoGPT",
       "to_repo": "karpathy/nanochat",
@@ -4714,11 +4952,11 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
-        "first-class",
-        "repository",
-        "code.",
-        "document",
-        "codebase"
+        "selection.",
+        "source",
+        "experiments",
+        "configuration",
+        "string"
       ]
     },
     {
@@ -4754,11 +4992,48 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "checkpoint",
-        "centralized",
-        "focused",
-        "codebase",
-        "between"
+        "between",
+        "configuration",
+        "keeping",
+        "appears",
+        "rather"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanochat",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 115,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "dependency_injection",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "source",
+        "configuration",
+        "between",
+        "tooling",
+        "appears"
       ]
     },
     {
@@ -4791,11 +5066,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "centralized",
-        "gemini,",
-        "positions",
         "directly",
-        "constants"
+        "user-facing",
+        "between",
+        "configuration",
+        "organized"
       ]
     },
     {
@@ -4828,11 +5103,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "centralized",
-        "missing",
-        "default",
-        "messages",
-        "separation"
+        "injection",
+        "source",
+        "between",
+        "configuration",
+        "reusable"
       ]
     },
     {
@@ -4866,11 +5141,81 @@
         "cli_tooling"
       ],
       "shared_pattern_keywords": [
-        "production",
-        "model",
-        "codebase",
-        "using",
-        "allowing"
+        "token",
+        "configuration",
+        "keeping",
+        "rather",
+        "checkpoint"
+      ]
+    },
+    {
+      "from_repo": "karpathy/nanoGPT",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 92,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "cli_tooling"
+      ],
+      "shared_pattern_keywords": [
+        "source",
+        "configuration",
+        "experimentation",
+        "rather",
+        "document"
+      ]
+    },
+    {
+      "from_repo": "pbakaus/impeccable",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 90,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "database_pattern",
+        "cli_tooling",
+        "dependency_injection",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "source",
+        "configuration",
+        "between",
+        "appears",
+        "files."
       ]
     },
     {
@@ -4901,11 +5246,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "formats",
-        "explicit",
-        "templates",
-        "separation",
-        "runtime"
+        "development",
+        "visualization",
+        "source",
+        "configuration",
+        "dynamic"
       ]
     },
     {
@@ -4934,11 +5279,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "production",
-        "code.",
-        "model",
-        "readability",
-        "python"
+        "fixed",
+        "source",
+        "experiments",
+        "setup",
+        "configuration"
       ]
     },
     {
@@ -4967,44 +5312,11 @@
         "cli_tooling"
       ],
       "shared_pattern_keywords": [
-        "model",
-        "target",
-        "using",
-        "design",
-        "generated"
-      ]
-    },
-    {
-      "from_repo": "karpathy/nanochat",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 78,
-      "connections": [
-        "shared_topic",
-        "same_language",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "version_control",
-        "dependency_injection",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "original",
-        "capability",
-        "tooling",
-        "centralized",
-        "focused"
+        "assets",
+        "source",
+        "configuration",
+        "reusable",
+        "common"
       ]
     },
     {
@@ -5033,11 +5345,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "model,",
-        "explicit",
-        "tooling",
-        "quality",
-        "code."
+        "source",
+        "experiments",
+        "setup",
+        "configuration",
+        "tooling"
       ]
     },
     {
@@ -5066,45 +5378,11 @@
         "event_driven"
       ],
       "shared_pattern_keywords": [
-        "extension",
         "directly",
-        "custom",
-        "system",
-        "separation"
-      ]
-    },
-    {
-      "from_repo": "TauricResearch/TradingAgents",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 74,
-      "connections": [
-        "shared_topic",
-        "same_language",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_transformation",
-        "version_control",
-        "dependency_injection",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "treats",
-        "recent",
-        "centralized",
-        "focused",
-        "positions"
+        "source",
+        "configuration",
+        "components",
+        "dedicated"
       ]
     },
     {
@@ -5136,10 +5414,44 @@
       ],
       "shared_pattern_keywords": [
         "directly",
-        "critical",
-        "system",
-        "runtime",
-        "using"
+        "configuration",
+        "components",
+        "examples",
+        "system"
+      ]
+    },
+    {
+      "from_repo": "d3/d3",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 71,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "testing_pattern",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "monitoring_observability",
+        "error_handling",
+        "database_pattern",
+        "data_fetching"
+      ],
+      "shared_pattern_keywords": [
+        "source",
+        "configuration",
+        "dedicated",
+        "builds",
+        "handling"
       ]
     },
     {
@@ -5169,10 +5481,42 @@
       ],
       "shared_pattern_keywords": [
         "agent",
-        "production",
-        "model",
-        "documentation.",
-        "using"
+        "configuration",
+        "rather",
+        "markdown",
+        "polished"
+      ]
+    },
+    {
+      "from_repo": "karpathy/autoresearch",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 64,
+      "connections": [
+        "shared_topic",
+        "same_language",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "python",
+        "open-source"
+      ],
+      "shared_concepts": [
+        "data_visualization",
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "config_management",
+        "database_pattern"
+      ],
+      "shared_pattern_keywords": [
+        "source",
+        "configuration",
+        "tooling",
+        "experimentation",
+        "intentionally"
       ]
     },
     {
@@ -5200,11 +5544,11 @@
         "data_fetching"
       ],
       "shared_pattern_keywords": [
-        "static",
-        "using",
-        "design",
-        "loading",
-        "prioritizes"
+        "source",
+        "configuration",
+        "strategy",
+        "workflow",
+        "static"
       ]
     },
     {
@@ -5233,42 +5577,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
+        "including",
+        "github",
         "workflows.",
-        "users",
-        "data,",
-        "through",
-        "preserved"
-      ]
-    },
-    {
-      "from_repo": "pbakaus/impeccable",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 60,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "version_control",
-        "dependency_injection",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "centralized",
-        "positions",
-        "developed",
-        "model",
-        "scope."
+        "organized",
+        "users"
       ]
     },
     {
@@ -5294,43 +5607,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "model",
-        "prominent",
-        "using",
-        "generated",
-        "across"
-      ]
-    },
-    {
-      "from_repo": "karpathy/nanoGPT",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 59,
-      "connections": [
-        "shared_topic",
-        "same_language",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern",
-        "data_transformation",
-        "version_control"
-      ],
-      "shared_pattern_keywords": [
-        "repository",
-        "model",
-        "python",
-        "behavior",
-        "configuration"
+        "source",
+        "configuration",
+        "rather",
+        "across",
+        "markdown"
       ]
     },
     {
@@ -5358,11 +5639,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
-        "repository",
-        "separation",
-        "between",
-        "intentionally",
-        "development"
+        "development",
+        "checkpoints,",
+        "reproducibility",
+        "setup",
+        "between"
       ]
     },
     {
@@ -5390,11 +5671,42 @@
         "version_control"
       ],
       "shared_pattern_keywords": [
+        "setup",
+        "rather",
+        "educational",
         "repository",
-        "especially",
-        "model",
-        "readability",
-        "generated"
+        "optimized"
+      ]
+    },
+    {
+      "from_repo": "karpathy/llm.c",
+      "to_repo": "p-e-w/heretic",
+      "type": "strong",
+      "score": 54,
+      "connections": [
+        "shared_topic",
+        "shared_concept",
+        "pattern_similarity"
+      ],
+      "shared_topics": [
+        "open-source"
+      ],
+      "shared_concepts": [
+        "modular_design",
+        "authentication",
+        "performance_optimization",
+        "file_operations",
+        "database_pattern",
+        "data_fetching",
+        "data_transformation",
+        "state_management"
+      ],
+      "shared_pattern_keywords": [
+        "between",
+        "language",
+        "intentionally",
+        "rather",
+        "pytorch"
       ]
     },
     {
@@ -5420,11 +5732,11 @@
         "database_pattern"
       ],
       "shared_pattern_keywords": [
-        "explicit",
-        "using",
-        "modern",
-        "organization",
-        "configuration"
+        "source",
+        "configuration",
+        "suggests",
+        "layout",
+        "explicit"
       ]
     },
     {
@@ -5450,40 +5762,11 @@
         "state_management"
       ],
       "shared_pattern_keywords": [
+        "including",
         "include",
-        "generated",
-        "prioritizes",
-        "through",
-        "scripts"
-      ]
-    },
-    {
-      "from_repo": "karpathy/autoresearch",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 46,
-      "connections": [
-        "shared_topic",
-        "same_language",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "python",
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "tooling",
-        "quality",
-        "model",
-        "python",
-        "manually"
+        "generating",
+        "provides",
+        "organized"
       ]
     },
     {
@@ -5508,68 +5791,11 @@
         "schema_validation"
       ],
       "shared_pattern_keywords": [
-        "intentionally",
-        "generated",
+        "readability",
+        "setup",
         "users",
-        "optimized",
-        "tokenizer"
-      ]
-    },
-    {
-      "from_repo": "d3/d3",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 38,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "config_management",
-        "monitoring_observability",
-        "database_pattern"
-      ],
-      "shared_pattern_keywords": [
-        "indicates",
-        "powered",
-        "modern",
-        "documentation",
-        "configuration"
-      ]
-    },
-    {
-      "from_repo": "karpathy/llm.c",
-      "to_repo": "p-e-w/heretic",
-      "type": "strong",
-      "score": 37,
-      "connections": [
-        "shared_topic",
-        "shared_concept",
-        "pattern_similarity"
-      ],
-      "shared_topics": [
-        "open-source"
-      ],
-      "shared_concepts": [
-        "performance_optimization",
-        "file_operations",
-        "database_pattern",
-        "data_transformation",
-        "version_control",
-        "state_management"
-      ],
-      "shared_pattern_keywords": [
-        "primary",
-        "users",
-        "repository",
-        "transformer",
-        "model"
+        "through",
+        "artifacts"
       ]
     },
     {
@@ -5595,10 +5821,10 @@
       ],
       "shared_pattern_keywords": [
         "development",
-        "control",
         "prioritizes",
-        "serves",
-        "developer"
+        "developer",
+        "parallel",
+        "while"
       ]
     },
     {
@@ -5611,8 +5837,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -5627,8 +5853,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
@@ -6123,8 +6349,8 @@
         "same_language"
       ],
       "shared_topics": [
-        "open-source",
-        "shell"
+        "shell",
+        "open-source"
       ],
       "shared_concepts": [],
       "shared_pattern_keywords": []
