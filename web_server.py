@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """GitPup Web Server v3.0 — Full API with project build pipeline"""
-import http.server, json, os, urllib.parse, urllib.request, subprocess, time, threading
+import http.server, json, os, urllib.parse, urllib.request, subprocess, time, threading, re
 
 GITPUP = '/opt/gitpup'
 DATA = os.path.join(GITPUP, 'data')
@@ -199,20 +199,24 @@ def do_GET(self):
                         if line:
                             try: entries.append(json.loads(line))
                             except: pass
-            # Compute aggregates
-            total_in = sum(e.get('prompt_tokens',0) for e in entries)
-            total_out = sum(e.get('completion_tokens',0) for e in entries)
-            total_all = sum(e.get('total_tokens',0) for e in entries)
-            total_cost = sum(e.get('cost_usd',0) for e in entries)
+            # Compute aggregates. IMPORTANT: story card must show REAL tracked spend,
+            # not estimated historical baseline rows.
+            real_entries = [e for e in entries if e.get('phase') != 'historical_baseline']
+            estimated_entries = [e for e in entries if e.get('phase') == 'historical_baseline']
+            total_in = sum(e.get('prompt_tokens',0) for e in real_entries)
+            total_out = sum(e.get('completion_tokens',0) for e in real_entries)
+            total_all = sum(e.get('total_tokens',0) for e in real_entries)
+            total_cost = sum(e.get('cost_usd',0) for e in real_entries)
+            estimated_total_cost = total_cost + sum(e.get('cost_usd',0) for e in estimated_entries)
             # Today
             import time
             today = time.strftime('%Y-%m-%d')
-            today_entries = [e for e in entries if today in e.get('date','')]
+            today_entries = [e for e in real_entries if today in e.get('date','')]
             today_cost = sum(e.get('cost_usd',0) for e in today_entries)
             today_tokens = sum(e.get('total_tokens',0) for e in today_entries)
             # Per run
             runs = {}
-            for e in entries:
+            for e in real_entries:
                 phase = e.get('phase','unknown')
                 if phase not in runs:
                     runs[phase] = {'count':0, 'tokens':0, 'cost':0}
@@ -220,13 +224,16 @@ def do_GET(self):
                 runs[phase]['tokens'] += e.get('total_tokens',0)
                 runs[phase]['cost'] += e.get('cost_usd',0)
             _json_resp(self, {
-                'total_cost_usd': round(total_cost, 4),
+                'total_cost_usd': round(total_cost, 8),
                 'total_tokens': total_all,
                 'total_prompt_tokens': total_in,
                 'total_completion_tokens': total_out,
-                'today_cost': round(today_cost, 4),
+                'today_cost': round(today_cost, 8),
                 'today_tokens': today_tokens,
-                'entries_count': len(entries),
+                'entries_count': len(real_entries),
+                'estimated_total_cost_usd': round(estimated_total_cost, 4),
+                'estimated_baseline_cost_usd': round(sum(e.get('cost_usd',0) for e in estimated_entries), 4),
+                'source': 'real_cost_tracking_jsonl_excluding_estimated_baseline',
                 'per_phase': {k: {'count': v['count'], 'tokens': v['tokens'], 'cost_usd': round(v['cost'],4)} for k,v in runs.items()}
             })
         except Exception as e:
@@ -560,7 +567,7 @@ def _extract_openrouter_image(resp):
             return base64.b64decode(url.split(',',1)[1])
         if url.startswith('http'):
             req = urllib.request.Request(url, headers={'User-Agent':'GoldieImage/1.0'})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=120) as r:
                 return r.read()
     # Some routes return base64/json in content
     content = msg.get('content') or ''
@@ -572,7 +579,7 @@ def _extract_openrouter_image(resp):
                     return base64.b64decode(url.split(',',1)[1])
                 if url.startswith('http'):
                     req = urllib.request.Request(url, headers={'User-Agent':'GoldieImage/1.0'})
-                    with urllib.request.urlopen(req, timeout=60) as r:
+                    with urllib.request.urlopen(req, timeout=120) as r:
                         return r.read()
     if isinstance(content, str) and 'data:image' in content:
         import re
@@ -698,6 +705,7 @@ def _handle_image(self, data):
             raw = _extract_openrouter_image(resp)
             if raw:
                 used_model = model
+                _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='openrouter', phase='image_generation', source='api_image')
                 break
             text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content','')
             last_error = text[:500] or 'Image model did not return an image.'
@@ -744,7 +752,7 @@ def _handle_song(self, data):
     payload = {'model': model, 'stream': True, 'messages':[{'role':'user','content': full_prompt}], 'modalities':['audio']}
     req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
     for k,v in {'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://gitpup.fun','X-Title':'Goldie Song Chat','User-Agent':'GoldieSong/1.0'}.items(): req.add_header(k,v)
-    audio_b64 = None; used_model = model; err = ''
+    audio_b64 = None; used_model = model; err = ''; usage = {}
     try:
         with urllib.request.urlopen(req, timeout=480) as r:
             for line in r:
@@ -755,6 +763,7 @@ def _handle_song(self, data):
                 try:
                     obj=json.loads(dat)
                     used_model = obj.get('model') or used_model
+                    if obj.get('usage'): usage = obj.get('usage') or usage
                     delta=(obj.get('choices') or [{}])[0].get('delta') or {}
                     aud=delta.get('audio') or {}
                     if isinstance(aud, dict) and aud.get('data'):
@@ -773,6 +782,7 @@ def _handle_song(self, data):
         out='/opt/gitpup/web_dist/generated/'+fname
         with open(out,'wb') as f: f.write(raw)
         url='/generated/'+fname
+        _record_llm_cost_usage(usage, model=used_model, provider='openrouter', phase='song_generation', source='api_song')
         _append_chat_context(self, user_key, 'user', '[song prompt] '+prompt)
         _append_chat_context(self, user_key, 'assistant', '[generated song] '+url)
         return _json_resp(self, {'status':'ok','reply':'Song generated.','audio_url':url,'size_bytes':os.path.getsize(out),'model':used_model,'requested_model':model,'limit':'1/4 hours'})
@@ -921,6 +931,125 @@ def _cli_direct_command(msg):
     return (msg or '').lstrip().startswith(('/files','/run ','/read ','/write ','/help'))
 
 
+# Goldie real LLM cost tracking shared helpers. Prices are USD per 1M tokens.
+def _openrouter_model_prices():
+    import os, json, time, urllib.request
+    cache = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'cache', 'openrouter_model_prices.json')
+    now = time.time()
+    try:
+        if os.path.exists(cache) and now - os.path.getmtime(cache) < 86400:
+            return json.load(open(cache, encoding='utf-8'))
+    except Exception:
+        pass
+    prices = {}
+    try:
+        req = urllib.request.Request('https://openrouter.ai/api/v1/models', headers={'User-Agent':'GoldieCostTracker/1.0'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.loads(r.read())
+        for m in data.get('data', []):
+            mid = m.get('id') or ''
+            pr = m.get('pricing') or {}
+            if mid:
+                prices[mid] = pr
+        os.makedirs(os.path.dirname(cache), exist_ok=True)
+        with open(cache, 'w', encoding='utf-8') as f:
+            json.dump(prices, f)
+    except Exception:
+        pass
+    return prices
+
+
+def _model_aliases(model):
+    m = (model or '').strip()
+    aliases = [m]
+    if '/' not in m:
+        aliases.append('openai/' + m)
+    fixed = {
+        'gpt-5.5': 'openai/gpt-5.5',
+        'gpt-5.5-pro': 'openai/gpt-5.5-pro',
+        'gpt-5.3-codex-spark': 'openai/gpt-5.3-codex',
+        'gpt-5.3-codex': 'openai/gpt-5.3-codex',
+        'gpt-5.3-chat': 'openai/gpt-5.3-chat',
+        'inclusionai/ling-2.6-flash': 'inclusionai/ling-2.6-flash',
+        'google/lyria-3-pro-preview': 'google/lyria-3-pro-preview',
+        'x-ai/grok-imagine-image-quality': 'x-ai/grok-imagine-image-quality',
+    }
+    if m in fixed:
+        aliases.insert(0, fixed[m])
+    # de-dupe preserving order
+    out=[]
+    for a in aliases:
+        if a and a not in out: out.append(a)
+    return out
+
+
+def _cost_price_for_model(model):
+    import os, re
+    m = (model or '').strip()
+    slug = re.sub(r'[^A-Za-z0-9]+', '_', m).strip('_').upper()
+    def _env_float(name, default=None):
+        try:
+            v = os.environ.get(name)
+            if v is None or v == '': return default
+            return float(v)
+        except Exception:
+            return default
+    if slug:
+        inp = _env_float('LLM_PRICE_' + slug + '_INPUT_PER_M')
+        out = _env_float('LLM_PRICE_' + slug + '_OUTPUT_PER_M')
+        if inp is not None and out is not None:
+            return inp, out, 'env_model_price'
+    prices = _openrouter_model_prices()
+    for alias in _model_aliases(m):
+        pr = prices.get(alias)
+        if pr:
+            try:
+                # OpenRouter pricing is USD per token. Convert to USD per 1M tokens.
+                return float(pr.get('prompt') or 0) * 1000000.0, float(pr.get('completion') or 0) * 1000000.0, 'openrouter_models:' + alias
+            except Exception:
+                pass
+    return _env_float('LLM_DEFAULT_INPUT_PER_M', 0.01), _env_float('LLM_DEFAULT_OUTPUT_PER_M', 0.03), 'default_price_unmatched_model'
+
+
+def _record_llm_cost_usage(usage, model='', provider='', phase='unknown', source='unknown'):
+    try:
+        import os, json, time
+        if not isinstance(usage, dict): return None
+        prompt_t = int(usage.get('prompt_tokens') or usage.get('input_tokens') or 0)
+        completion_t = int(usage.get('completion_tokens') or usage.get('output_tokens') or 0)
+        total_t = int(usage.get('total_tokens') or (prompt_t + completion_t) or 0)
+        provider_cost = usage.get('cost') or usage.get('total_cost') or usage.get('cost_usd')
+        inp_per_m, out_per_m, price_source = _cost_price_for_model(model)
+        if provider_cost is not None:
+            cost = float(provider_cost)
+            price_source = 'provider_usage_cost'
+        else:
+            if total_t <= 0: return None
+            cost = (prompt_t * inp_per_m + completion_t * out_per_m) / 1000000.0
+        root = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(root, 'data', 'journal', 'cost_tracking.jsonl')
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        entry = {
+            'ts': time.time(), 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'phase': phase or 'unknown', 'source': source,
+            'provider': provider or '', 'model': model or '',
+            'prompt_tokens': prompt_t, 'completion_tokens': completion_t, 'total_tokens': total_t,
+            'input_cost_per_m': inp_per_m, 'output_cost_per_m': out_per_m,
+            'price_source': price_source, 'cost_usd': round(cost, 8),
+        }
+        with open(path, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + '\n')
+        try:
+            sf = os.path.join(root, 'data', 'state', 'status.json')
+            st = json.load(open(sf, encoding='utf-8')) if os.path.exists(sf) else {}
+            st['cumulative_cost_usd'] = round(float(st.get('cumulative_cost_usd', 0) or 0) + cost, 8)
+            with open(sf, 'w', encoding='utf-8') as f:
+                json.dump(st, f, indent=2)
+        except Exception:
+            pass
+        return entry
+    except Exception:
+        return None
 def _cli_call_llm(prompt, system, tokens=500, temp=0.25):
     import urllib.request
     key = os.environ.get('CLI_LLM_API_KEY') or os.environ.get('LLM_API_KEY') or os.environ.get('JATEVO_API_KEY')
@@ -944,8 +1073,9 @@ def _cli_call_llm(prompt, system, tokens=500, temp=0.25):
     req.add_header('HTTP-Referer', 'https://gitpup.fun')
     req.add_header('X-Title', 'GitPup Goldie CLI Workspace')
     try:
-        with urllib.request.urlopen(req, timeout=60) as r:
+        with urllib.request.urlopen(req, timeout=120) as r:
             resp = json.loads(r.read())
+            _record_llm_cost_usage(resp.get('usage', {}), model=CLI_LLM_MODEL, provider=CLI_LLM_PROVIDER, phase='cli_workspace', source='api_cli')
             return resp.get('choices', [{}])[0].get('message', {}).get('content', '')
     except Exception as e:
         detail = str(e)[:80]
@@ -1077,6 +1207,45 @@ def _cli_run(workspace, cmd, timeout=25):
         return {'ok': False, 'blocked': False, 'output': _cli_redact(str(e)), 'returncode': 1}
 
 
+
+CLI_SKILL_HOOKS_FILE = os.path.join(DATA, "cli_skill_hooks.json")
+
+def _cli_skill_hook_query(message, limit=5):
+    try:
+        with open(CLI_SKILL_HOOKS_FILE, encoding="utf-8") as fh:
+            reg = json.load(fh)
+        hooks = reg.get("hooks", []) if isinstance(reg, dict) else []
+    except Exception:
+        return []
+    text = (message or "").lower()
+    q = set(re.findall(r"[a-zA-Z][a-zA-Z0-9_\-]{2,}", text))
+    scored=[]
+    for h in hooks:
+        kws = set(h.get("keywords") or [])
+        domains = set(h.get("applies_to") or [])
+        score = len(q & kws) * 3 + len(q & domains) * 2
+        if any(d in text for d in domains): score += 2
+        if h.get("source_repo") and any(part.lower() in text for part in str(h.get("source_repo")).split('/')): score += 2
+        if score > 0:
+            scored.append((score, h))
+    scored.sort(key=lambda x: (x[0], x[1].get("study_level",0)), reverse=True)
+    return [h for _, h in scored[:limit]]
+
+def _cli_skill_hook_context(message, limit=5):
+    hooks = _cli_skill_hook_query(message, limit)
+    if not hooks:
+        return ""
+    lines = ["CLI SKILL HOOKS (learned from Goldie repo study; apply when relevant, never override exact user request):"]
+    for h in hooks:
+        lines.append("- {name} from {repo} L{lvl}: {summary}".format(
+            name=(h.get("name") or h.get("id"))[:80], repo=h.get("source_repo","repo"), lvl=h.get("study_level",0), summary=(h.get("summary") or "")[:220]))
+        if h.get("actions"):
+            lines.append("  actions: " + ", ".join(h.get("actions")[:5]))
+        if h.get("validators"):
+            lines.append("  validators: " + ", ".join(h.get("validators")[:5]))
+    return "\n".join(lines)
+
+
 def _cli_kb_context(message):
     try:
         results = cp.kb_query(message, limit=4)
@@ -1095,17 +1264,16 @@ def _cli_kb_context(message):
 def _cli_is_build_command(msg):
     t = (msg or '').lower()
     build_words = ['build', 'buat', 'bikin', 'create', 'generate', 'kodekan', 'make']
-    target_words = ['landing', 'website', 'page', 'html', 'app', 'portfolio', 'todo']
+    target_words = [
+        'landing', 'website', 'web', 'page', 'html', 'app', 'aplikasi', 'portfolio', 'todo',
+        'game', 'browser', 'canvas', 'snake', 'quiz', 'arcade',
+        'backend', 'api', 'rest', 'server', 'endpoint', 'route', 'fastapi', 'express', 'flask',
+        'crud', 'database', 'dashboard', 'admin', 'auth', 'login', 'realtime', 'websocket', 'payment'
+    ]
     return any(w in t for w in build_words) and any(w in t for w in target_words)
 
 def _cli_template_for_prompt(msg):
-    t = (msg or '').lower()
-    if 'cyberpunk' in t or 'neon' in t:
-        return 'cyberpunk-landing'
-    if 'todo' in t or 'task' in t:
-        return 'todo-static'
-    return 'static-landing'
-
+    raise RuntimeError('Templates are disabled. CLI builds must come from the exact user request via LLM + Goldie KB + Hermes tools.')
 
 def _cli_extract_json_object(text):
     t = (text or '').strip()
@@ -1121,46 +1289,7 @@ def _cli_extract_json_object(text):
 
 
 def _cli_generate_project_files_locally(msg):
-    import html as _html_mod, re as _re_mod
-    raw = (msg or '').strip()
-    low = raw.lower()
-    title = 'Goldie CLI Project'
-    if 'ramen' in low:
-        title = 'Cyberpunk Ramen'
-    elif 'cyberpunk' in low or 'neon' in low:
-        title = 'Cyberpunk Landing'
-    elif 'todo' in low:
-        title = 'Todo App'
-    elif 'portfolio' in low:
-        title = 'Portfolio Landing'
-    words = [w for w in _re_mod.findall(r'[A-Za-z0-9][A-Za-z0-9\-]{2,}', raw) if w.lower() not in {'build','buat','bikin','create','generate','landing','page','with','yang','dan','baru','real'}]
-    keyword = next((w for w in words if any(c.isdigit() for c in w) or '-' in w), '')
-    subtitle = raw[:180] or 'A polished static web experience generated by Goldie CLI.'
-    esc=lambda x:_html_mod.escape(str(x), quote=True)
-    cyber = 'cyberpunk' in low or 'neon' in low or 'ramen' in low
-    cards = ['Neon rain atmosphere','Glitch call-to-action','Responsive conversion layout']
-    if 'price' in low or 'pricing' in low or 'harga' in low:
-        cards = ['Starter Bowl — $9','Night Market Combo — $19','Neon Feast — $39']
-    elif 'ramen' in low:
-        cards = ['Shoyu Voltage — $12','Miso Afterburner — $15','RAMEN-77X Special — $21']
-    palette_bg = '#05020d' if cyber else '#08111f'
-    accent = '#28f7ff' if cyber else '#64ffda'
-    accent2 = '#ff2bd6' if cyber else '#f4c542'
-    html = """<!doctype html>
-<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">
-<title>{title}</title>
-<style>
-:root{{--bg:{bg};--accent:{accent};--accent2:{accent2};--text:#f7fbff;--muted:#b7c7df}}
-*{{box-sizing:border-box}} body{{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui;background:radial-gradient(circle at 18% 8%,rgba(255,43,214,.25),transparent 26%),radial-gradient(circle at 82% 14%,rgba(40,247,255,.20),transparent 28%),linear-gradient(180deg,var(--bg),#02040b);color:var(--text);overflow-x:hidden}}
-.rain{{position:fixed;inset:0;background-image:linear-gradient(115deg,transparent 0 48%,rgba(40,247,255,.22) 49%,transparent 51%),linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:90px 90px,42px 42px;animation:drift 16s linear infinite;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent)}}@keyframes drift{{to{{background-position:180px 360px,42px 84px}}}}
-.wrap{{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:34px}} .hero{{width:min(1120px,94vw);border:1px solid color-mix(in srgb,var(--accent),transparent 62%);border-radius:34px;padding:42px;background:linear-gradient(135deg,rgba(255,43,214,.14),rgba(40,247,255,.08));box-shadow:0 0 90px rgba(255,43,214,.20),inset 0 0 60px rgba(40,247,255,.08)}}
-.kicker{{color:var(--accent);letter-spacing:.24em;text-transform:uppercase;font-weight:900;text-shadow:0 0 18px var(--accent)}} h1{{font-size:clamp(48px,9vw,116px);line-height:.88;margin:18px 0;text-transform:uppercase;text-shadow:5px 0 var(--accent2),-4px 0 var(--accent),0 0 38px rgba(255,43,214,.48)}} p{{max-width:760px;color:var(--muted);font-size:20px;line-height:1.7}} .keyword{{display:inline-block;margin:8px 0 20px;padding:8px 12px;border:1px solid var(--accent2);color:var(--accent2);border-radius:999px;font-weight:900;box-shadow:0 0 22px rgba(255,43,214,.25)}}
-.cta{{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0}} .btn{{padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:950;color:#06010d;background:linear-gradient(90deg,var(--accent),#f8ff4a);box-shadow:0 0 28px rgba(40,247,255,.38)}} .btn.alt{{background:transparent;color:var(--accent2);border:1px solid var(--accent2)}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:34px}} .card{{border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:20px;background:rgba(0,0,0,.30);min-height:130px}} .card b{{color:var(--accent);font-size:24px}} footer{{margin-top:30px;color:#7f93af;font-size:13px}}
-</style></head><body><div class=\"rain\"></div><main class=\"wrap\"><section class=\"hero\"><div class=\"kicker\">generated from CLI command</div><h1>{title}</h1>{kw}<p>{subtitle}</p><div class=\"cta\"><a class=\"btn\" href=\"#order\">Launch Now</a><a class=\"btn alt\" href=\"#menu\">View Protocol</a></div><div class=\"grid\">{cards}</div><footer>Built and persisted by Goldie CLI from: {prompt}</footer></section></main></body></html>""".format(title=esc(title),bg=palette_bg,accent=accent,accent2=accent2,kw=('<div class=\"keyword\">'+esc(keyword)+'</div>' if keyword else ''),subtitle=esc(subtitle),cards=''.join('<div class=\"card\"><b>%02d</b><br>%s</div>'%(i+1,esc(c)) for i,c in enumerate(cards)),prompt=esc(raw[:260]))
-    readme = '# '+title+'\n\nBuilt and persisted by Goldie CLI from this command:\n\n```text\n'+raw[:1000]+'\n```\n\n## Files\n\n- `index.html` — previewable static page\n- `README.md` — this file\n'
-    return [{'path':'index.html','content':html},{'path':'README.md','content':readme}]
-
+    raise RuntimeError('Local/default website templates are disabled. Use the request-driven LLM writer only.')
 
 def _cli_files_from_llm_text(raw, msg):
     import re as _re_mod
@@ -1216,27 +1345,508 @@ def _cli_files_from_json_obj(obj, msg):
         out.append({'path':'README.md','content':'# Goldie CLI Project\n\nBuilt by Goldie CLI from command:\n\n```text\n'+msg[:1000]+'\n```\n'})
     return out
 
+
+def _cli_is_public_http_url(raw):
+    try:
+        import socket, ipaddress
+        u = urllib.parse.urlparse((raw or '').strip())
+        if u.scheme not in ('http', 'https') or not u.netloc:
+            return False, 'only http/https URLs are allowed'
+        host = (u.hostname or '').strip()
+        if not host:
+            return False, 'missing URL host'
+        if host.lower() in ('localhost', 'local') or host.endswith('.local'):
+            return False, 'local hosts are blocked'
+        try:
+            infos = socket.getaddrinfo(host, None)
+            for info in infos:
+                ip = ipaddress.ip_address(info[4][0])
+                if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_multicast or ip.is_reserved:
+                    return False, 'private/internal network URLs are blocked'
+        except Exception:
+            return False, 'could not resolve URL host safely'
+        return True, ''
+    except Exception as e:
+        return False, str(e)[:120]
+
+
+def _cli_fetch_url_bytes(url, max_bytes=900000, timeout=12):
+    import tempfile, subprocess
+    cur = (url or '').strip()
+    for _ in range(4):
+        ok, err = _cli_is_public_http_url(cur)
+        if not ok:
+            raise ValueError(err)
+        head_cmd = ['curl','-4','-sS','-I','--max-time',str(int(timeout)),'--max-redirs','0',cur]
+        hr = subprocess.run(head_cmd, capture_output=True, text=True, timeout=int(timeout)+3)
+        headers = (hr.stdout or '') + (hr.stderr or '')
+        status = 0
+        first = headers.splitlines()[0] if headers.splitlines() else ''
+        try: status = int(first.split()[1])
+        except Exception: status = 0
+        if status in (301,302,303,307,308):
+            loc = ''
+            for line in headers.splitlines():
+                if line.lower().startswith('location:'):
+                    loc = line.split(':',1)[1].strip(); break
+            if not loc: break
+            cur = urllib.parse.urljoin(cur, loc)
+            continue
+        break
+    ok, err = _cli_is_public_http_url(cur)
+    if not ok:
+        raise ValueError(err)
+    fd, tmp = tempfile.mkstemp(prefix='goldie-urlscan-', suffix='.bin')
+    os.close(fd)
+    try:
+        cmd = ['curl','-4','-sS','--max-time',str(int(timeout)),'--range','0-%d' % max(0, max_bytes-1),'-L','--max-redirs','0','-H','User-Agent: GoldieCLI-URLScanner/1.0 (+https://gitpup.fun)','-w','\n%{content_type}\n%{url_effective}\n','-o',tmp,cur]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=int(timeout)+5)
+        if r.returncode != 0:
+            raise ValueError('URL fetch failed: ' + ((r.stderr or r.stdout or '')[:160]))
+        lines = (r.stdout or '').strip().splitlines()
+        ctype = (lines[-2] if len(lines) >= 2 else '').split(';')[0].strip().lower()
+        final_url = lines[-1].strip() if lines else cur
+        ok2, err2 = _cli_is_public_http_url(final_url)
+        if not ok2:
+            raise ValueError('redirect blocked: ' + err2)
+        with open(tmp, 'rb') as f:
+            data = f.read(max_bytes)
+        return data, ctype, final_url
+    finally:
+        try: os.remove(tmp)
+        except Exception: pass
+
+
+def _cli_html_text_excerpt(html, limit=6000):
+    import re, html as _html
+    t = re.sub(r'(?is)<(script|style|noscript|svg)[^>]*>.*?</\1>', ' ', html or '')
+    t = re.sub(r'(?is)<br\s*/?>', '\n', t)
+    t = re.sub(r'(?is)</(p|div|section|article|header|footer|h[1-6]|li)>', '\n', t)
+    t = re.sub(r'(?is)<[^>]+>', ' ', t)
+    t = _html.unescape(t)
+    t = re.sub(r'[ \t\r\f\v]+', ' ', t)
+    t = re.sub(r'\n\s*\n+', '\n', t).strip()
+    return t[:limit]
+
+
+def _cli_extract_url_reference(html, base_url):
+    import re, html as _html
+    text = html or ''
+    def clean(x):
+        return _html.unescape(re.sub(r'\s+', ' ', (x or '').strip()))[:500]
+    title = ''
+    m = re.search(r'(?is)<title[^>]*>(.*?)</title>', text)
+    if m: title = clean(re.sub(r'<[^>]+>', ' ', m.group(1)))
+    metas = {}
+    for m in re.finditer(r'(?is)<meta\s+([^>]+)>', text):
+        attrs = dict((k.lower(), v) for k,_,v in re.findall(r'([a-zA-Z_:.-]+)\s*=\s*(["\'])(.*?)\2', m.group(1)))
+        key = attrs.get('name') or attrs.get('property')
+        val = attrs.get('content')
+        if key and val and key.lower() in ('description','keywords','og:title','og:description','twitter:title','twitter:description'):
+            metas[key.lower()] = clean(val)
+    headings=[]
+    for tag, body in re.findall(r'(?is)<(h[1-3])[^>]*>(.*?)</\1>', text)[:40]:
+        val = clean(re.sub(r'<[^>]+>', ' ', body))
+        if val: headings.append({'level': tag.lower(), 'text': val[:220]})
+    assets=[]
+    seen=set()
+    patterns = [
+        ('img', r'(?is)<img[^>]+(?:src|data-src)\s*=\s*(["\'])(.*?)\1'),
+        ('css', r'(?is)<link[^>]+href\s*=\s*(["\'])(.*?)\1'),
+        ('js', r'(?is)<script[^>]+src\s*=\s*(["\'])(.*?)\1'),
+        ('media', r'(?is)<source[^>]+src\s*=\s*(["\'])(.*?)\1'),
+    ]
+    for typ, pat in patterns:
+        for _, raw in re.findall(pat, text):
+            url = urllib.parse.urljoin(base_url, raw.strip())
+            if not url.startswith(('http://','https://')) or url in seen: continue
+            if typ == 'css' and '.css' not in urllib.parse.urlparse(url).path.lower(): continue
+            seen.add(url); assets.append({'type': typ, 'url': url})
+            if len(assets) >= 40: break
+    colors=[]
+    for c in re.findall(r'#[0-9a-fA-F]{3,8}\b|rgba?\([^\)]+\)', text)[:80]:
+        if c not in colors: colors.append(c)
+    return {'title': title, 'meta': metas, 'headings': headings[:30], 'assets': assets, 'colors': colors[:30], 'text_excerpt': _cli_html_text_excerpt(text)}
+
+
+def _cli_asset_filename(asset_url, idx, ctype=''):
+    import re
+    up = urllib.parse.urlparse(asset_url)
+    name = os.path.basename(up.path) or ('asset-%02d' % idx)
+    name = urllib.parse.unquote(name).split('?')[0]
+    name = re.sub(r'[^A-Za-z0-9._-]+', '-', name).strip('-._')[:80] or ('asset-%02d' % idx)
+    if '.' not in name:
+        ext = ''
+        if 'png' in ctype: ext = '.png'
+        elif 'jpeg' in ctype or 'jpg' in ctype: ext = '.jpg'
+        elif 'webp' in ctype: ext = '.webp'
+        elif 'gif' in ctype: ext = '.gif'
+        elif 'css' in ctype: ext = '.css'
+        elif 'javascript' in ctype: ext = '.js'
+        name += ext
+    return name
+
+
+def _cli_download_reference_assets(workspace, ref_dir, assets, max_assets=14):
+    saved=[]
+    allowed_types = ('image/', 'text/css', 'application/javascript', 'text/javascript')
+    for i, asset in enumerate((assets or [])[:40], 1):
+        if len(saved) >= max_assets: break
+        url = asset.get('url') or ''
+        try:
+            data, ctype, final_url = _cli_fetch_url_bytes(url, max_bytes=350000, timeout=8)
+            if not (ctype.startswith('image/') or ctype in allowed_types or ctype.endswith('javascript')):
+                continue
+            name = _cli_asset_filename(final_url, i, ctype)
+            subdir = 'images' if ctype.startswith('image/') else ('css' if 'css' in ctype else 'js')
+            rel = ('references/%s/assets/%s/%s' % (ref_dir, subdir, name)).replace('//','/')
+            path = _cli_safe_path(workspace, rel)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'wb') as f: f.write(data)
+            saved.append({'type': asset.get('type'), 'url': final_url, 'content_type': ctype, 'path': rel, 'bytes': len(data)})
+        except Exception:
+            continue
+    return saved
+
+
+def _cli_scan_url_reference(handler, data, sid=None, workspace=None, msg=''):
+    import re
+    sid = sid or _cli_session_id(handler, data)
+    workspace = workspace or _cli_workspace(handler, data)[1]
+    raw = (data.get('url') or '').strip()
+    source = msg or raw or (data.get('message') or '')
+    if not raw:
+        m = re.search(r'https?://[^\s<>"\']+', source)
+        if m: raw = m.group(0).rstrip('.,;)')
+    if not raw:
+        raise ValueError('Format: /scan https://example.com [what assets/data you want]')
+    html_bytes, ctype, final_url = _cli_fetch_url_bytes(raw, max_bytes=1200000, timeout=14)
+    if 'html' not in ctype and 'xml' not in ctype and ctype not in ('text/plain',''):
+        raise ValueError('URL must return HTML/text for reference scan, got ' + (ctype or 'unknown'))
+    html = html_bytes.decode('utf-8', errors='replace')
+    ref = _cli_extract_url_reference(html, final_url)
+    host = urllib.parse.urlparse(final_url).netloc.lower().replace(':','-')
+    ref_dir = _cli_slug(host)[:40]
+    saved_assets = _cli_download_reference_assets(workspace, ref_dir, ref.get('assets', []), max_assets=14)
+    ref['url'] = final_url
+    ref['requested'] = source[:800]
+    ref['saved_assets'] = saved_assets
+    ref['scanned_at'] = time.time()
+    scan_rel = 'references/%s/scan.json' % ref_dir
+    md_rel = 'references/%s/reference.md' % ref_dir
+    os.makedirs(os.path.dirname(_cli_safe_path(workspace, scan_rel)), exist_ok=True)
+    _pathlib_cli.Path(_cli_safe_path(workspace, scan_rel)).write_text(json.dumps(ref, indent=2, ensure_ascii=False), encoding='utf-8')
+    md = []
+    md.append('# URL Reference: ' + (ref.get('title') or host))
+    md.append('')
+    md.append('Source: ' + final_url)
+    md.append('')
+    if ref.get('meta'):
+        md.append('## Meta')
+        for k,v in ref['meta'].items(): md.append('- %s: %s' % (k, v))
+        md.append('')
+    if ref.get('headings'):
+        md.append('## Structure')
+        for h in ref['headings'][:20]: md.append('- %s: %s' % (h.get('level'), h.get('text')))
+        md.append('')
+    if ref.get('colors'):
+        md.append('## Detected Colors')
+        md.append(', '.join(ref['colors'][:24])); md.append('')
+    if saved_assets:
+        md.append('## Saved Assets')
+        for a in saved_assets: md.append('- `%s` <- %s' % (a.get('path'), a.get('url')))
+        md.append('')
+    md.append('## Text Excerpt')
+    md.append(ref.get('text_excerpt','')[:5000])
+    _pathlib_cli.Path(_cli_safe_path(workspace, md_rel)).write_text('\n'.join(md), encoding='utf-8')
+    _cli_append_memory(sid, 'system', 'URL reference scanned: %s -> %s, %s assets saved' % (final_url, md_rel, len(saved_assets)))
+    return {'status':'ok','url':final_url,'reference_dir':'references/'+ref_dir,'reference_file':md_rel,'scan_file':scan_rel,'assets_saved':len(saved_assets),'assets':saved_assets[:14],'title':ref.get('title'),'headings_count':len(ref.get('headings') or []),'colors':ref.get('colors')[:12]}
+
+
+def _cli_reference_context(workspace, limit=3):
+    try:
+        refs=[]
+        base=_cli_safe_path(workspace, 'references')
+        if not os.path.isdir(base): return ''
+        for root, dirs, files in os.walk(base):
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ('assets',)]
+            for name in files:
+                if name == 'reference.md':
+                    path=os.path.join(root,name)
+                    refs.append((os.path.getmtime(path), path))
+        refs=sorted(refs, reverse=True)[:limit]
+        chunks=[]
+        for _, path in refs:
+            rel=os.path.relpath(path, workspace).replace(os.sep,'/')
+            txt=_pathlib_cli.Path(path).read_text(encoding='utf-8', errors='replace')[:4000]
+            chunks.append('REFERENCE FILE: %s\n%s' % (rel, txt))
+        return '\n\n'.join(chunks)
+    except Exception:
+        return ''
+
+
+def _cli_is_game_command(msg):
+    t = (msg or '').lower()
+    return any(w in t for w in [
+        'game','permainan','playable','dimainkan','snake','pong','quiz','arcade','canvas','browser game','web game',
+        'shooter','spaceship','asteroid','platformer','runner','racing','balap','tetris','flappy','puzzle','rpg','roguelike',
+        'tower defense','clicker','idle','combat','battle','laser','enemy','enemies','boss fight'
+    ])
+
+
+def _cli_validate_playable_game(files):
+    html = ''
+    for f in files or []:
+        if isinstance(f, dict) and str(f.get('path','')).lower().endswith('.html'):
+            html += '\n' + str(f.get('content',''))
+    low = html.lower()
+    checks = {
+        'html': '<html' in low or '<!doctype' in low,
+        'not_plain_text': len(low) > 3500 and ('<style' in low or 'stylesheet' in low) and ('<script' in low or '.js' in low),
+        'canvas_or_dom_playfield': '<canvas' in low or 'game-board' in low or 'playfield' in low or 'arena' in low,
+        'input_controls': 'addeventlistener' in low and any(x in low for x in ['keydown','keyup','touchstart','touchmove','pointerdown','pointermove','click']),
+        'mobile_controls': any(x in low for x in ['touchstart','pointerdown','touch-controls','mobile-controls','ontouch','touchmove','button']),
+        'game_loop': any(x in low for x in ['requestanimationframe','setinterval(','settimeout(']),
+        'score_state': 'score' in low and any(x in low for x in ['let score','score =','score++','score +=','score+=','scoreboard','scoreel.textcontent']),
+        'restart_or_start': any(x in low for x in ['restart','startgame','resetgame','gameover','play again','main lagi','newgame']),
+        'rules_or_collision': any(x in low for x in ['collision','collide','hitbox','intersect','distance','rect','bounds','winner','lose','lives','health']),
+    }
+    return all(checks.values()), checks
+
+
+def _cli_snake_game_files(msg):
+    raise RuntimeError('Hardcoded game templates are disabled. Use the request-driven LLM writer only.')
+
+def _cli_game_theme_terms(msg):
+    t = (msg or '').lower()
+    if any(w in t for w in ['spaceship','space ship','space-shooter','space shooter','space','pesawat luar angkasa','kapal luar angkasa','rocket','roket']):
+        return ['spaceship','space','ship','rocket','asteroid','laser','alien','star']
+    if 'snake' in t or 'ular' in t:
+        return ['snake','food','fruit','grid']
+    if any(w in t for w in ['mancing','fishing','ikan','fish','rod','pancing','hook','umpan','bait']):
+        return ['fishing','fish','ikan','rod','hook','bait','catch','mancing']
+    if 'pong' in t:
+        return ['pong','paddle','ball']
+    if 'quiz' in t:
+        return ['quiz','question','answer']
+    return []
+
+
+
+
+def _cli_request_terms(msg):
+    words = re.findall(r"[a-zA-Z][a-zA-Z0-9_-]{3,}", (msg or "").lower())
+    stop=set("buatkan build create generate with yang untuk agar bisa from this that playable browser mini app web page website dalam dan the user into dari sebuah simple".split())
+    out=[]
+    for w in words:
+        if w not in stop and w not in out:
+            out.append(w)
+    return out[:14]
+
+def _cli_all_generated_text(files):
+    return '\n'.join(str(f.get('content','')) for f in (files or []) if isinstance(f, dict)).lower()
+
+def _cli_validate_domain_build(msg, files, hooks=None):
+    text = _cli_all_generated_text(files)
+    paths = [str(f.get('path','')).lower() for f in (files or []) if isinstance(f, dict)]
+    t=(msg or '').lower()
+    checks={
+        'has_writable_files': bool(files),
+        'has_index_or_source': any(p.endswith(('.html','.js','.ts','.py','.css','.md','.json')) for p in paths),
+        'request_terms_present': True,
+        'no_obvious_template_markers': not any(x in text for x in ['goldie static landing','todo static app','lorem ipsum','template fallback','snake game template','hello world example']),
+    }
+    terms=[w for w in _cli_request_terms(msg) if w not in ('game','website','dashboard','landing','browser','responsive','backend','server','api','application','aplikasi')]
+    if terms:
+        checks['request_terms_present'] = any(term in text for term in terms[:8])
+
+    wants_landing = any(w in t for w in ['landing','landingpage','company profile','profile company','perkebunan','sawit','cpo','brand page','marketing page'])
+    wants_dashboard = any(w in t for w in ['dashboard','chart','analytics','trading','admin','saas','kpi','metric'])
+    wants_backend = any(w in t for w in ['api','backend','server','endpoint','route','fastapi','express','flask','rest api','graphql'])
+    wants_auth = any(w in t for w in ['auth','login','register','token','oauth','password','secret','session'])
+    wants_db = any(w in t for w in ['database','db','sqlite','postgres','mysql','schema','model','crud','supabase','prisma'])
+    wants_realtime = any(w in t for w in ['realtime','real-time','websocket','socket.io','sse','eventsource','live chat'])
+    wants_payment = any(w in t for w in ['payment','stripe','checkout','invoice','billing','x402','wallet'])
+    wants_app = any(w in t for w in ['app','aplikasi','todo','crud','form','calculator','notes','kanban','ecommerce','shop','inventory','tracker','manager']) and not wants_backend
+    wants_web_ui = wants_landing or wants_dashboard or wants_app or any(w in t for w in ['website','frontend','ui','web app','single page'])
+
+    if wants_web_ui:
+        checks.update({
+            'visual_styling': any(x in text for x in ['<style', 'stylesheet', 'background:', 'linear-gradient', 'box-shadow', 'border-radius', 'font-family', 'display: grid', 'display:flex', 'class=']),
+            'not_plain_text': ('<html' in text or '<!doctype' in text) and '<body' in text and len(text) > 2500,
+            'responsive_ui': any(x in text for x in ['@media','grid-template','flex','viewport','max-width','minmax(']),
+        })
+    if wants_landing:
+        checks['landing_sections'] = sum(1 for x in ['hero','about','benefit','process','produk','product','contact','cta','section','nav','footer'] if x in text) >= 4
+    if wants_dashboard:
+        checks.update({
+            'dashboard_structure': any(x in text for x in ['dashboard','chart','metric','card','analytics','kpi','trading','table','summary']),
+            'dashboard_data_state': any(x in text for x in ['const data','let data','dataset','array','json','canvas','svg','chart']),
+        })
+    if wants_app:
+        checks.update({
+            'app_interactivity': 'addeventlistener' in text or any(x in text for x in ['onclick','onsubmit','onchange','addtask','save','render']),
+            'app_state': any(x in text for x in ['let ','const ','localstorage','state','items','tasks','cart','list','array','object']),
+            'app_forms_or_controls': any(x in text for x in ['<form','<input','<button','select','textarea','contenteditable']),
+        })
+    if wants_backend:
+        checks.update({
+            'backend_source_file': any(p.endswith(('.py','.js','.ts')) for p in paths),
+            'api_structure': any(x in text for x in ['fastapi','flask','express','http.server','app.get','app.post','@app.get','@app.post','router.','create_server','createserver','route','endpoint']),
+            'http_methods': (any(x in text for x in ['get','post','put','delete','patch']) and any(x in text for x in ['/api','/health','/items','/users','/todos','/products','/inventory'])) or any(x in text for x in ['@app.get','@app.post','@app.put','@app.delete','app.get','app.post','app.put','app.delete']),
+            'json_handling': any(x in text for x in ['jsonify','jsonresponse','response.json','res.json','json.dumps','application/json','body-parser','express.json']),
+            'error_handling': any(x in text for x in ['try','catch','except','raise httpexception','status_code','res.status','error']),
+            'runnable_entry': any(x in text for x in ['if __name__','uvicorn','app.listen','serve_forever','npm start','main()']),
+        })
+    if wants_auth:
+        checks.update({
+            'auth_ui_or_flow': any(x in text for x in ['login','register','token','auth','password','session','oauth','jwt','bcrypt','hash']),
+            'no_hardcoded_secret': not any(x in text for x in ['sk-','ghp_','private key','api_key = "','password = "','secret = "changeme"','jwt_secret = "']),
+        })
+    if wants_db:
+        checks.update({
+            'database_layer': any(x in text for x in ['sqlite','postgres','mysql','database','schema','create table','prisma','sqlalchemy','model','db.','connection','query','inventory =','items =','store =','in_memory','in-memory','dict','list[']),
+            'crud_operations': any(x in text for x in ['create','insert','add']) and any(x in text for x in ['read','select','list','get']) and any(x in text for x in ['update','edit','put','patch']) and any(x in text for x in ['delete','remove']),
+        })
+    if wants_realtime:
+        checks['realtime_transport'] = any(x in text for x in ['websocket','socket.io','eventsource','sse','server-sent','broadcast','ws://'])
+    if wants_payment:
+        checks.update({
+            'payment_flow': any(x in text for x in ['checkout','payment','invoice','billing','stripe','x402','wallet','webhook']),
+            'no_payment_secret_inline': not any(x in text for x in ['sk_live','sk_test_','stripe_secret_key = "','private_key','api_key = "']),
+            'payment_safety_note': any(x in text for x in ['test mode','sandbox','webhook','server-side','never expose','environment variable','env']),
+        })
+    if hooks:
+        validators=[]
+        for h in hooks:
+            validators += list(h.get('validators') or [])
+        if validators:
+            checks['hook_validators_present'] = True
+    return all(checks.values()), checks
+
+def _cli_post_build_verify(workspace, msg, written, preview_payload=None):
+    proof={'files_exist': True, 'syntax': {}, 'preview_url': bool((preview_payload or {}).get('preview_url')), 'issues': []}
+    for rel in written or []:
+        try:
+            path=_cli_safe_path(workspace, rel)
+            if not os.path.exists(path):
+                proof['files_exist']=False; proof['issues'].append('missing:'+rel); continue
+            if rel.endswith('.py'):
+                r=subprocess.run(['python3','-m','py_compile',path],cwd=workspace,env={'PATH':os.environ.get('PATH','/usr/bin:/bin'),'HOME':workspace,'PWD':workspace},text=True,capture_output=True,timeout=12)
+                proof['syntax'][rel]=(r.returncode==0)
+                if r.returncode!=0: proof['issues'].append('py_compile:'+rel+':'+(r.stderr or r.stdout)[:160])
+            elif rel.endswith('.js'):
+                node = subprocess.run(['bash','-lc','command -v node >/dev/null 2>&1'],capture_output=True,text=True,timeout=5)
+                if node.returncode==0:
+                    r=subprocess.run(['node','--check',path],cwd=workspace,env={'PATH':os.environ.get('PATH','/usr/bin:/bin'),'HOME':workspace,'PWD':workspace},text=True,capture_output=True,timeout=12)
+                    proof['syntax'][rel]=(r.returncode==0)
+                    if r.returncode!=0: proof['issues'].append('node_check:'+rel+':'+(r.stderr or r.stdout)[:160])
+            elif rel.endswith('.html'):
+                raw=open(path,encoding='utf-8',errors='ignore').read().lower()
+                ok=('<html' in raw or '<!doctype' in raw) and ('</html>' in raw or '</body>' in raw)
+                rich = len(raw) > 2500 and ('<style' in raw or 'stylesheet' in raw) and ('<section' in raw or 'class=' in raw)
+                proof['syntax'][rel]=ok and rich
+                if not ok: proof['issues'].append('html_structure:'+rel)
+                if ok and not rich: proof['issues'].append('html_too_plain_or_unstyled:'+rel)
+            elif rel.endswith('.json'):
+                try:
+                    json.loads(open(path,encoding='utf-8',errors='ignore').read())
+                    proof['syntax'][rel]=True
+                except Exception as e:
+                    proof['syntax'][rel]=False; proof['issues'].append('json_parse:'+rel+':'+str(e)[:120])
+        except Exception as e:
+            proof['issues'].append('verify:'+rel+':'+str(e)[:120])
+    proof['ok']=proof['files_exist'] and all(proof['syntax'].values() or [True]) and not proof['issues']
+    return proof
+
+def _cli_repair_game_files_with_llm(msg, memory_text='', kb_text='', failed_checks=None):
+    theme_terms = ', '.join(_cli_game_theme_terms(msg)) or 'the exact game subject from the user command'
+    system = (
+        'You are Goldie CLI, a request-driven real game developer inside a sandbox. '
+        'Do NOT use templates. Do NOT switch game genre. Do NOT create Snake unless the user explicitly asked Snake. '
+        'Return ONLY valid JSON with {"files":[{"path":"index.html","content":"..."},{"path":"README.md","content":"..."}]}. '
+        'Build one directly playable browser game matching the exact user request. '
+        'index.html must contain inline CSS and JavaScript, a real playfield/canvas or DOM board, keyboard and mobile/touch/click controls, score/game state, collision/win/loss rules, start/restart, and a game loop using requestAnimationFrame or timer.'
+    )
+    prompt = (
+        'USER REQUEST (must follow exactly):\n{cmd}\n\n'
+        'IMPORTANT THEME TERMS THAT SHOULD APPEAR IN GAME UI/CODE:\n{theme}\n\n'
+        'FAILED VALIDATION CHECKS FROM PREVIOUS OUTPUT:\n{failed}\n\n'
+        'SESSION MEMORY:\n{mem}\n\nGOLDIE KB CONTEXT:\n{kb}\n\n'
+        'Generate the real playable game files now. No prose outside JSON.'
+    ).format(cmd=msg[:1800], theme=theme_terms, failed=', '.join(failed_checks or []) or '(first repair)', mem=memory_text[:1200] or '(none)', kb=kb_text[:1600] or '(none)')
+    raw = _cli_call_llm(prompt, system=system, tokens=4200, temp=0.18)
+    if raw.startswith('[LLM Error:'):
+        raise ValueError(raw)
+    data = _cli_extract_json_object(raw)
+    files = None
+    if isinstance(data, dict):
+        files = _cli_files_from_json_obj(data, msg)
+    if not files:
+        files = _cli_files_from_llm_text(raw, msg)
+    if not files:
+        raise ValueError('Game repair did not return writable index.html')
+    return files
+
+def _cli_repair_game_html_only_with_llm(msg, memory_text='', kb_text='', failed_checks=None):
+    theme_terms = ', '.join(_cli_game_theme_terms(msg)) or 'the exact game subject from the user command'
+    system = (
+        'You are Goldie CLI, a request-driven browser game developer. Return ONLY one complete HTML document, no markdown, no prose. '
+        'Do not use templates. Do not switch genre. Match the exact user command. '
+        'The HTML must be directly playable in browser with inline CSS and JS: canvas/playfield, controls, game loop, score, collision/win/loss, restart/start, and mobile controls.'
+    )
+    prompt = (
+        'USER REQUEST:\n{cmd}\n\n'
+        'THEME TERMS TO INCLUDE:\n{theme}\n\n'
+        'FAILED CHECKS:\n{failed}\n\n'
+        'MEMORY:\n{mem}\n\n'
+        'GOLDIE KB:\n{kb}\n\n'
+        'Write the complete index.html now. Match the exact requested genre and mechanics. If the user names any subject, implement that subject only; never reuse a prior game or template.'
+    ).format(cmd=msg[:1800], theme=theme_terms, failed=', '.join(failed_checks or []) or '(none)', mem=memory_text[:900] or '(none)', kb=kb_text[:1200] or '(none)')
+    raw = _cli_call_llm(prompt, system=system, tokens=5200, temp=0.20)
+    if raw.startswith('[LLM Error:'):
+        raise ValueError(raw)
+    readme = '# Goldie Browser Game\n\nBuilt from user request:\n\n```text\n' + msg[:1000] + '\n```\n\nGenerated by Goldie CLI request-driven LLM writer.\n'
+    return [{'path': 'index.html', 'content': raw.strip()}, {'path': 'README.md', 'content': readme}]
+
 def _cli_generate_project_files_with_llm(msg, existing_files, memory_text='', kb_text='', workspace=''):
+    is_game = _cli_is_game_command(msg)
+    if is_game:
+        # Game builds are latency-sensitive behind nginx. Use one request-driven HTML writer
+        # instead of strict JSON first + repair second; validation still happens before success.
+        return _cli_repair_game_html_only_with_llm(msg, '', kb_text, failed_checks=['direct_game_build_required'])
     system = (
         'You are Goldie CLI inside a secure Hermes-style sandbox. You are a REAL file-writing builder. '
-        'Use the user command, session memory, Goldie KB context, and current workspace files to create files. '
+        'Use the user command, session memory, Goldie KB context, scanned URL references/assets, and current workspace files to create files. '
         'Return ONLY valid JSON, no markdown, no prose. JSON shape: '
         '{"files":[{"path":"index.html","content":"..."},{"path":"README.md","content":"..."}],"summary":"..."}. '
         'Paths must be safe relative paths only. Do not use absolute paths or .. traversal. '
         'For static sites, write a complete previewable index.html with inline CSS/JS unless separate files are necessary. '
+        'For backend/API/server requests, write real runnable backend source files (for example server.py/app.py or server.js), README.md with run instructions, JSON endpoints, error handling, and do not satisfy the request with only index.html. '
+        'For CRUD/database requests, include data/schema/model handling and create/read/update/delete routes. '
+        + ('For game requests, build an ACTUAL PLAYABLE browser game, not a landing page: include canvas or DOM playfield, game state, input controls, requestAnimationFrame or timed loop, scoring, collision/win/loss rules, restart/start button, keyboard and mobile/touch controls. ' if is_game else '') +
+        'Mobile-first is mandatory: include <meta viewport>, no horizontal scroll, responsive nav, fluid grids, clamp() typography, flexible cards/buttons, break-all long contract/wallet text, and @media rules for max-width 820px and 430px. '
         'Do not claim files are written; just return file contents for Hermes tools to write.'
     )
     prompt = (
         'USER COMMAND:\n{cmd}\n\n'
         'SESSION MEMORY:\n{mem}\n\n'
-        'GOLDIE KB CONTEXT:\n{kb}\n\n'
+        'GOLDIE KB + SCANNED URL REFERENCES:\n{kb}\n\n'
         'CURRENT WORKSPACE FILES:\n{files}\n\n'
         'WORKSPACE ROOT (for context only; never output absolute paths):\n{ws}\n\n'
-        'Now generate the actual files to write. Minimum required files: index.html and README.md.'
+        'Now generate the actual files to write. Minimum required files: README.md plus index.html for browser/UI builds, or a runnable backend source file for backend/API builds.' +
+        (' For game requests, the index.html must be directly playable when opened in preview; no placeholder instructions, no static mockup, no only-code-in-chat.' if is_game else '')
     ).format(cmd=msg[:1800], mem=memory_text[:1800] or '(none)', kb=kb_text[:1800] or '(none)', files='\n'.join(existing_files[:80]) or '(empty)', ws=workspace)
-    raw = _cli_call_llm(prompt, system=system, tokens=2200, temp=0.25)
+    raw = _cli_call_llm(prompt, system=system, tokens=2600, temp=0.22)
     if raw.startswith('[LLM Error:'):
-        raise ValueError(raw)
+        # Some providers time out on strict JSON mode for rich URL-inspired builds.
+        # Retry once in HTML-only mode so the build can still produce a real persisted index.html.
+        repair_system = 'You are Goldie CLI. Return ONLY one complete, production-quality HTML document for index.html. No markdown, no explanation. Inline CSS/JS. Follow the exact user request; do not use templates and do not switch the requested product/game/app type.'
+        repair_prompt = ('USER COMMAND:\n' + msg[:1400] + '\n\nSCANNED/KB REFERENCE:\n' + (kb_text or '')[:2200] + '\n\nBuild the exact requested artifact now. Preserve the requested subject, features, labels, interaction model, and visual direction. No template substitution.')
+        repair_raw = _cli_call_llm(repair_prompt, system=repair_system, tokens=3200, temp=0.22)
+        if repair_raw.startswith('[LLM Error:'):
+            raise ValueError(repair_raw)
+        raw = '```html\n' + repair_raw + '\n```'
     try:
         obj = _cli_extract_json_object(raw)
         files = _cli_files_from_json_obj(obj, msg)
@@ -1245,8 +1855,8 @@ def _cli_generate_project_files_with_llm(msg, existing_files, memory_text='', kb
     if not isinstance(files, list) or not files:
         files = _cli_files_from_llm_text(raw, msg)
     if not isinstance(files, list) or not files:
-        repair_system = 'Return ONLY one complete HTML document for index.html. No explanation, no markdown.'
-        repair_prompt = 'Create a previewable static landing page for this user command:\n' + msg[:1200]
+        repair_system = 'Return ONLY files/content matching the exact user command. No explanation, no markdown, no template substitution.'
+        repair_prompt = 'Create a previewable implementation for this exact user command, preserving the requested type/features/genre:\n' + msg[:1200]
         repair_raw = _cli_call_llm(repair_prompt, system=repair_system, tokens=1800, temp=0.25)
         files = _cli_files_from_llm_text('```html\n' + repair_raw + '\n```', msg)
     if not isinstance(files, list) or not files:
@@ -1254,22 +1864,67 @@ def _cli_generate_project_files_with_llm(msg, existing_files, memory_text='', kb
     cleaned=[]
     has_index=False
     for item in files[:16]:
+        if isinstance(item, str):
+            item = {'path': 'index.html', 'content': item}
         if not isinstance(item, dict): continue
-        rel = str(item.get('path') or item.get('filename') or item.get('file') or item.get('name') or '').strip().lstrip('/').replace('\\','/')
-        content = item.get('content') if item.get('content') is not None else (item.get('html') if item.get('html') is not None else item.get('code'))
+        rel = str(item.get('path') or item.get('filename') or item.get('file') or item.get('name') or item.get('filepath') or item.get('file_path') or item.get('pathname') or '').strip().lstrip('/').replace('\\','/')
+        content = None
+        for ck in ('content','html','code','html_content','source','text','body','data','markdown'):
+            if item.get(ck) is not None:
+                content = item.get(ck); break
+        if not rel and isinstance(item.get('index.html'), str):
+            rel, content = 'index.html', item.get('index.html')
         if not rel or content is None: continue
+        content_s = str(content)
         if rel.startswith('../') or '/../' in rel or rel in ('.','..'):
             continue
-        if rel.endswith('/index.html') and not has_index:
+        low_rel = rel.lower()
+        low_content = content_s[:5000].lower()
+        if (rel.endswith('/index.html') or rel == 'index_html' or rel == 'html' or ('<html' in low_content or '<!doctype' in low_content)) and not has_index:
             rel = 'index.html'
         if rel == 'index.html':
             has_index=True
-        cleaned.append({'path': rel, 'content': str(content)[:300000]})
+        cleaned.append({'path': rel, 'content': content_s[:300000]})
+    if not any(f['path'] == 'index.html' for f in cleaned):
+        # Last bounded salvage: if the LLM returned any non-empty text/html-like content, persist it as index.html instead of dropping it.
+        for f in cleaned:
+            if str(f.get('content','')).strip():
+                f['path'] = 'index.html'
+                has_index = True
+                break
     if not any(f['path'] == 'index.html' for f in cleaned):
         raise ValueError('LLM builder did not return index.html')
     if not any(f['path'] == 'README.md' for f in cleaned):
         cleaned.append({'path':'README.md','content':'# Goldie CLI Project\n\nBuilt by Goldie CLI from command:\n\n```text\n'+msg[:1000]+'\n```\n'})
     return cleaned
+
+
+def _cli_mobile_harden_html(content):
+    text = str(content or '')
+    low = text.lower()
+    if '<html' not in low and '<!doctype' not in low:
+        return text
+    if 'name="viewport"' not in low and "name='viewport'" not in low:
+        text = text.replace('<head>', '<head>\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">', 1)
+    if 'Goldie mobile-first hardening patch' in text:
+        return text
+    css = """
+/* Goldie mobile-first hardening patch */
+html,body{max-width:100%;overflow-x:hidden;}img,svg,canvas,video{max-width:100%;height:auto;}.container,.wrap,.panel,main,section{max-width:100%;}.btn,button,a{max-width:100%;}
+@media (max-width:820px){
+  body{font-size:15px;}h1{font-size:clamp(1.9rem,12vw,3rem)!important;line-height:.98!important;overflow-wrap:anywhere;}h2{font-size:clamp(1.45rem,8.5vw,2.25rem)!important;line-height:1.08!important;}p{font-size:.95rem;line-height:1.62;}
+  header,nav,.navbar,.topnav{max-width:calc(100vw - 1rem)!important;left:.5rem!important;right:.5rem!important;width:auto!important;gap:.45rem!important;padding:.55rem!important;}
+  main,section,.panel,.wrap,.container{width:100%!important;max-width:100%!important;padding-left:.75rem!important;padding-right:.75rem!important;}
+  .hero,.hero-grid,.grid,.cards,.feature-grid,.capability-grid,.asset-grid,.stats{display:grid!important;grid-template-columns:1fr!important;gap:1rem!important;}
+  .hero{min-height:auto!important;padding-top:5.5rem!important;}.hero-visual{min-height:220px!important;overflow:hidden!important;}.orbital-wrap,.visual,.coin,.phone,.mockup{max-width:78vw!important;width:min(300px,78vw)!important;}
+  .cta,.cta-row,.actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important;}.btn,button{width:100%;justify-content:center;text-align:center;min-height:44px;}
+  code,pre,.address,.contract,.address-box code{white-space:pre-wrap!important;word-break:break-all!important;overflow-wrap:anywhere!important;min-width:0!important;max-width:100%!important;}
+}
+@media (max-width:430px){h1{font-size:clamp(1.7rem,11.5vw,2.55rem)!important;}.hero-visual{min-height:190px!important;}main,section,.panel,.wrap,.container{padding-left:.55rem!important;padding-right:.55rem!important;}}
+"""
+    if '</style>' in text:
+        return text.replace('</style>', css + '\n</style>', 1)
+    return text.replace('</head>', '<style>' + css + '</style>\n</head>', 1) if '</head>' in text else text + '<style>' + css + '</style>'
 
 
 def _cli_write_generated_files(workspace, files):
@@ -1278,7 +1933,10 @@ def _cli_write_generated_files(workspace, files):
         rel=item['path']
         path=_cli_safe_path(workspace, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        _pathlib_cli.Path(path).write_text(item['content'], encoding='utf-8')
+        content = item['content']
+        if rel.lower().endswith('.html'):
+            content = _cli_mobile_harden_html(content)
+        _pathlib_cli.Path(path).write_text(content, encoding='utf-8')
         written.append(rel)
     if any(x == 'index.html' for x in written):
         _cli_set_active_project(workspace, '', 'command-build')
@@ -1289,21 +1947,100 @@ def _cli_write_generated_files(workspace, files):
                 break
     return written
 
+
+
+def _cli_repair_domain_files_with_llm(msg, failed_checks, memory_text='', kb_text='', workspace=''):
+    failed = ', '.join(failed_checks or []) or 'domain_validation_failed'
+    t=(msg or '').lower()
+    backend = any(w in t for w in ['api','backend','server','endpoint','route','fastapi','express','flask','rest api'])
+    system = (
+        'You are Goldie CLI repair builder. Return ONLY valid JSON: {"files":[{"path":"...","content":"..."}],"summary":"..."}. '
+        'No markdown, no prose, no templates. Fix the failed validation checks exactly. '
+        + ('This is a backend/API request: include a real runnable backend source file such as server.py/app.py/server.js with CRUD endpoints, JSON responses, error handling, and README.md. Do not satisfy it with only HTML. ' if backend else '') +
+        'Paths must be safe relative paths. Preserve the exact user request.'
+    )
+    prompt = (
+        'USER COMMAND:\n{cmd}\n\nFAILED CHECKS:\n{failed}\n\nGOLDIE KB/HOOKS:\n{kb}\n\nWORKSPACE:\n{ws}\n\n'
+        'Regenerate the files so validation passes. If backend/API, include runnable source file and README run instructions. If app/UI, include styled responsive interactive index.html.'
+    ).format(cmd=msg[:1800], failed=failed, kb=kb_text[:2000] or '(none)', ws=workspace)
+    raw = _cli_call_llm(prompt, system=system, tokens=3600, temp=0.18)
+    if raw.startswith('[LLM Error:'):
+        raise ValueError(raw)
+    try:
+        obj=_cli_extract_json_object(raw)
+        files=_cli_files_from_json_obj(obj, msg)
+    except Exception:
+        files=_cli_files_from_llm_text(raw, msg)
+    if not files:
+        raise ValueError('Domain repair did not return writable files')
+    return files
+
 def _cli_build_from_user_command(handler, data, sid, workspace, msg):
     existing = _cli_list_files(workspace, 120)
     mem = _cli_load_memory(sid, 12)
     mem_txt = '\n'.join('%s: %s' % (m.get('role','user').upper(), (m.get('text') or '')[:700]) for m in mem)
+    hook_matches = _cli_skill_hook_query(msg, limit=5)
     kb_txt = _cli_kb_context(msg)
+    # If a build command includes a URL, scan it first so the LLM has real reference data/assets.
+    try:
+        urls = _re_cli.findall(r'https?://[^\s<>"\']+', msg or '')[:1]
+        for u in urls:
+            _cli_scan_url_reference(handler, dict(data, url=u), sid, workspace, msg)
+    except Exception:
+        pass
+    ref_txt = _cli_reference_context(workspace)
+    if ref_txt:
+        kb_txt = (kb_txt + '\n\n' if kb_txt else '') + ref_txt
     gen_files = _cli_generate_project_files_with_llm(msg, existing, mem_txt, kb_txt, workspace)
+    if _cli_is_game_command(msg):
+        playable, checks = _cli_validate_playable_game(gen_files)
+        theme_terms = _cli_game_theme_terms(msg)
+        theme_ok = True if not theme_terms else any(term in '\n'.join(str(f.get('content','')).lower() for f in gen_files if isinstance(f, dict)) for term in theme_terms)
+        if not playable or not theme_ok:
+            failed = [k for k,v in checks.items() if not v]
+            if not theme_ok:
+                failed.append('theme_match_exact_user_request')
+            # Request-driven repair only: ask the LLM again with the exact command.
+            # No deterministic genre/template substitution; spaceship must stay spaceship, etc.
+            gen_files = _cli_repair_game_files_with_llm(msg, '', kb_txt, failed)
+            playable, checks = _cli_validate_playable_game(gen_files)
+            theme_ok = True if not theme_terms else any(term in '\n'.join(str(f.get('content','')).lower() for f in gen_files if isinstance(f, dict)) for term in theme_terms)
+        if not playable or not theme_ok:
+            failed = [k for k,v in checks.items() if not v]
+            if not theme_ok:
+                failed.append('theme_match_exact_user_request')
+            # Second repair is still LLM/request-driven (not template): ask for raw complete HTML and validate again.
+            gen_files = _cli_repair_game_html_only_with_llm(msg, '', kb_txt, failed)
+            playable, checks = _cli_validate_playable_game(gen_files)
+            theme_ok = True if not theme_terms else any(term in '\n'.join(str(f.get('content','')).lower() for f in gen_files if isinstance(f, dict)) for term in theme_terms)
+        if not playable or not theme_ok:
+            failed = [k for k,v in checks.items() if not v]
+            if not theme_ok:
+                failed.append('theme_match_exact_user_request')
+            raise ValueError('Game builder validation failed: ' + ', '.join(failed))
+    domain_ok, domain_checks = _cli_validate_domain_build(msg, gen_files, hook_matches)
+    if not domain_ok and not _cli_is_game_command(msg):
+        failed_domain = [k for k,v in domain_checks.items() if not v]
+        gen_files = _cli_repair_domain_files_with_llm(msg, failed_domain, mem_txt, kb_txt, workspace)
+        domain_ok, domain_checks = _cli_validate_domain_build(msg, gen_files, hook_matches)
+    if not domain_ok and not _cli_is_game_command(msg):
+        raise ValueError('Build validation failed: ' + ', '.join([k for k,v in domain_checks.items() if not v]))
     written = _cli_write_generated_files(workspace, gen_files)
     prev = _handle_cli_preview_to_dict(handler, {'session': data.get('session')})
+    post_verify = _cli_post_build_verify(workspace, msg, written, prev)
+    if not post_verify.get('ok'):
+        raise ValueError('Post-build verification failed: ' + ', '.join(post_verify.get('issues') or ['unknown']))
     files_now = _cli_file_tree(workspace, 120)
     return {
         'builder': 'goldie-pipeline-llm-writer',
-        'pipeline': ['user-command', 'cli-memory', 'goldie-kb', 'llm-json-files', 'hermes-write-file', 'preview'],
+        'pipeline': ['user-command', 'cli-memory', 'goldie-kb', 'cli-skill-hooks', 'llm-json-files', 'hermes-write-file', 'validator-proof', 'preview'],
+        'skill_hooks': [{'name': h.get('name'), 'source_repo': h.get('source_repo'), 'actions': h.get('actions'), 'validators': h.get('validators')} for h in hook_matches],
+        'validation': domain_checks,
+        'post_build_verify': post_verify,
         'written': written,
         'preview': prev,
         'files': files_now,
+        'playable_game': _cli_validate_playable_game(gen_files)[0] if _cli_is_game_command(msg) else False,
     }
 
 
@@ -1357,16 +2094,28 @@ def _cli_answer(handler, data):
                 _cli_set_active_project(workspace, '', 'write:root')
             output = 'wrote %d chars to %s' % (len(content[:200000]), rel_written)
             reply = 'File written inside sandbox.'
+        elif msg.startswith('/scan ') or msg.startswith('/url ') or _re_cli.search(r'(?i)\b(scan|scrape|ambil|referensi|reference)\b.*https?://', msg):
+            scanned = _cli_scan_url_reference(handler, data, sid, workspace, msg)
+            reply = 'URL scanned and saved as build reference.'
+            output = 'source: %s\nreference: %s\nscan json: %s\nassets saved: %s\ncolors: %s' % (scanned.get('url'), scanned.get('reference_file'), scanned.get('scan_file'), scanned.get('assets_saved'), ', '.join(scanned.get('colors') or []))
         elif _cli_is_build_command(msg):
             built = _cli_build_from_user_command(handler, data, sid, workspace, msg)
             reply = 'Command executed: real build persisted files. Builder: %s.' % built.get('builder')
             output = 'pipeline: ' + ' -> '.join(built.get('pipeline') or []) + '\nwrote files:\n- ' + '\n- '.join(built.get('written') or [])
+            if built.get('skill_hooks'):
+                output += '\nskill hooks: ' + str(len(built.get('skill_hooks') or [])) + ' applied'
             if built.get('preview', {}).get('preview_url'):
                 output += '\npreview: ' + built['preview']['preview_url']
+            files = built.get('files') or _cli_file_tree(workspace, 120)
+            preview_payload = built.get('preview') or {}
+            build_payload = built
         else:
             mem = _cli_load_memory(sid, 10)
             mem_txt = '\n'.join('%s: %s' % (m.get('role','user').upper(), (m.get('text') or '')[:700]) for m in mem)
             kb_txt = _cli_kb_context(msg)
+            ref_txt = _cli_reference_context(workspace)
+            if ref_txt:
+                kb_txt = (kb_txt + '\n\n' if kb_txt else '') + ref_txt
             sysmsg = (
                 'You are Goldie CLI, a secure coding assistant inside a per-user sandbox workspace. '
                 'You help users code. Natural non-build questions are advisory, but explicit user build/create commands may persist files in the sandbox. '
@@ -1376,13 +2125,24 @@ def _cli_answer(handler, data):
             )
             prompt = 'SESSION MEMORY:\n%s\n\nGOLDIE KB CONTEXT:\n%s\n\nCURRENT FILES:\n%s\n\nUSER REQUEST:\n%s' % (mem_txt, kb_txt or '(none)', '\n'.join(files[:40]) or '(empty)', msg)
             reply = _cli_call_llm(prompt, system=sysmsg, tokens=500, temp=0.25)
-            output = 'Tip commands: /files, /run pwd, /write app.py\\nprint("hi"), /read app.py'
+            output = 'Tip commands: /scan https://site.com, /files, /run pwd, /write app.py\\nprint("hi"), /read app.py'
     except Exception as e:
         reply = 'Error: ' + str(e)[:180]
     reply = _cli_redact(reply)
     output = _cli_redact(output)
     _cli_append_memory(sid, 'assistant', reply + ('\n' + output if output else ''))
-    return {'status': 'ok', 'session_id': sid, 'workspace_name': 'user_' + sid, 'workspace': workspace, 'reply': reply, 'output': output, 'files': files[:80], 'sandbox': True, 'rate_limit': {'cooldown_seconds': CLI_COOLDOWN_SECONDS}, 'model': {'provider': CLI_LLM_PROVIDER, 'name': CLI_LLM_MODEL, 'base_url': CLI_LLM_BASE_URL}, 'gmail': {'available': False, 'reason': 'Google OAuth client not configured yet'}}
+    resp = {'status': 'ok', 'session_id': sid, 'workspace_name': 'user_' + sid, 'workspace': workspace, 'reply': reply, 'output': output, 'files': files[:80], 'sandbox': True, 'rate_limit': {'cooldown_seconds': CLI_COOLDOWN_SECONDS}, 'model': {'provider': CLI_LLM_PROVIDER, 'name': CLI_LLM_MODEL, 'base_url': CLI_LLM_BASE_URL}, 'gmail': {'available': False, 'reason': 'Google OAuth client not configured yet'}}
+    if 'preview_payload' in locals() and preview_payload:
+        resp['preview'] = preview_payload
+        if preview_payload.get('preview_url'):
+            resp['preview_url'] = preview_payload.get('preview_url')
+    if 'build_payload' in locals() and build_payload:
+        resp['pipeline'] = build_payload.get('pipeline')
+        resp['skill_hooks'] = build_payload.get('skill_hooks')
+        resp['playable_game'] = build_payload.get('playable_game')
+        resp['validation'] = build_payload.get('validation')
+        resp['post_build_verify'] = build_payload.get('post_build_verify')
+    return resp
 
 
 def _handle_cli_session(handler, data):
@@ -1392,7 +2152,29 @@ def _handle_cli_session(handler, data):
     return _json_resp(handler, {'status': 'ok', 'session_id': sid, 'workspace_name': 'user_' + sid, 'workspace': workspace, 'sandbox': True, 'memory_turns': len(mem), 'files': _cli_file_tree(workspace, 80), 'security': {'path_locked': True, 'core_protected': True, 'secrets_redacted': True, 'shell_chaining_blocked': True}, 'rate_limit': {'cooldown_seconds': CLI_COOLDOWN_SECONDS}, 'model': {'provider': CLI_LLM_PROVIDER, 'name': CLI_LLM_MODEL, 'base_url': CLI_LLM_BASE_URL}, 'export': {'download_ready': True}, 'preview': {'enabled': True}})
 
 
+def _cli_run_request_job(job, handler, data):
+    try:
+        _cli_job_log(job, 'Started request-driven build')
+        result = _cli_answer(handler, data)
+        _cli_job_log(job, result.get('reply') or 'Build finished')
+        if result.get('output'):
+            _cli_job_log(job, result.get('output'))
+        _cli_job_finish(job, 'done' if result.get('status') != 'error' else 'error', result)
+    except Exception as e:
+        _cli_job_log(job, 'Error: ' + str(e)[:180])
+        _cli_job_finish(job, 'error', {'status':'error','reply':'Error: '+str(e)[:180], 'error':str(e)[:220]})
+
+
 def _handle_cli(handler, data):
+    msg = (data.get('message') or '').strip()
+    # Browser/nginx may timeout on rich LLM builds. Return a job immediately for build/game
+    # requests; frontend polls /api/cli/job until validator-backed files/preview are ready.
+    if _cli_is_build_command(msg):
+        sid, workspace = _cli_workspace(handler, data)
+        job = _cli_job_new(sid, 'request-build', msg)
+        t = threading.Thread(target=_cli_run_request_job, args=(job, handler, dict(data)), daemon=True)
+        t.start()
+        return _json_resp(handler, {'status':'queued','reply':'Build started. Goldie is generating real files from your request...','job_id':job['id'],'job':job,'session_id':sid,'workspace_name':'user_'+sid,'files':_cli_file_tree(workspace,80)})
     return _json_resp(handler, _cli_answer(handler, data))
 
 
@@ -1741,22 +2523,10 @@ def _cli_job_finish(job, status, result=None):
     with _CLI_JOB_LOCK:
         job['status'] = status; job['result'] = result or {}; job['updated_at'] = time.time()
 
-_CLI_TEMPLATES = {
- 'static-landing': {'index.html': '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Goldie Landing</title><style>body{margin:0;font-family:Inter,system-ui;background:#09111f;color:#eef}main{min-height:100vh;display:grid;place-items:center;padding:28px}.card{max-width:760px;background:linear-gradient(135deg,rgba(100,255,218,.14),rgba(244,197,66,.1));border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:34px;box-shadow:0 30px 90px #0008}h1{font-size:clamp(36px,8vw,82px);margin:0}p{font-size:18px;line-height:1.7;color:#b8c7d8}.btn{display:inline-block;margin-top:14px;padding:12px 18px;border-radius:999px;background:#64ffda;color:#07111d;text-decoration:none;font-weight:900}</style></head><body><main><section class="card"><h1>Built by Goldie</h1><p>A polished static landing page generated inside a locked CLI workspace.</p><a class="btn" href="#">Launch</a></section></main></body></html>', 'README.md': '# Goldie static landing\n\nPreview with the CLI Preview button.\n'},
- 'cyberpunk-landing': {'index.html': '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cyberpunk Landing</title><style>:root{--bg:#05020d;--pink:#ff2bd6;--cyan:#28f7ff;--yellow:#f8ff4a}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui;background:radial-gradient(circle at 20% 10%,#24114d,transparent 28%),radial-gradient(circle at 80% 20%,#3b0630,transparent 30%),linear-gradient(180deg,#05020d,#080816 70%,#02040b);color:#f7fbff;min-height:100vh;overflow-x:hidden}.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(40,247,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,43,214,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,transparent,#000 24%,#000 80%,transparent);pointer-events:none}.wrap{min-height:100vh;display:grid;place-items:center;padding:32px}.hero{width:min(1080px,94vw);border:1px solid rgba(40,247,255,.28);border-radius:34px;padding:42px;background:linear-gradient(135deg,rgba(255,43,214,.13),rgba(40,247,255,.08));box-shadow:0 0 80px rgba(255,43,214,.22),inset 0 0 60px rgba(40,247,255,.08);position:relative;overflow:hidden}.tag{color:var(--cyan);letter-spacing:.22em;text-transform:uppercase;font-weight:900;text-shadow:0 0 18px var(--cyan)}h1{font-size:clamp(48px,9vw,112px);line-height:.88;margin:18px 0;text-transform:uppercase;text-shadow:5px 0 var(--pink),-4px 0 var(--cyan),0 0 34px rgba(255,43,214,.55)}p{max-width:720px;color:#c9d7ff;font-size:20px;line-height:1.7}.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.btn{padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:950;color:#06010d;background:linear-gradient(90deg,var(--cyan),var(--yellow));box-shadow:0 0 26px rgba(40,247,255,.38)}.btn.alt{background:transparent;color:var(--pink);border:1px solid var(--pink)}.panel{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}.card{border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:18px;background:rgba(0,0,0,.28)}.card b{color:var(--cyan)}</style></head><body><div class="grid"></div><main class="wrap"><section class="hero"><div class="tag">neon systems online</div><h1>Cyberpunk Landing</h1><p>A high-voltage landing page with neon gradients, glass panels, and futuristic product positioning — generated inside Goldie CLI.</p><div class="cta"><a class="btn" href="#">Enter Night City</a><a class="btn alt" href="#">View Protocol</a></div><div class="panel"><div class="card"><b>01</b><br>Neon visual identity</div><div class="card"><b>02</b><br>Fast static preview</div><div class="card"><b>03</b><br>Export-ready workspace</div></div></section></main></body></html>', 'README.md': '# Cyberpunk Landing\n\nA neon cyberpunk landing page generated by Goldie CLI.\n\n## Preview\n\nUse the Goldie CLI **Preview** button or open `index.html`.\n'},
- 'todo-static': {'index.html': '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Todo</title><style>body{font-family:system-ui;background:#101827;color:#fff;display:grid;place-items:center;min-height:100vh}.app{width:min(560px,92vw);background:#172238;border:1px solid #2b3b5d;border-radius:22px;padding:24px}input,button{padding:12px;border-radius:12px;border:0}input{width:70%;background:#0d1424;color:#fff}button{background:#64ffda;font-weight:800}li{margin:10px 0;padding:10px;background:#0d1424;border-radius:10px;cursor:pointer}</style></head><body><div class="app"><h1>Todo App</h1><input id="i" placeholder="New task"><button onclick="add()">Add</button><ul id="l"></ul></div><script>let items=JSON.parse(localStorage.todos||\'[]\');function draw(){l.innerHTML=items.map((x,i)=>\'<li onclick="done(\'+i+\')">\'+x+\'</li>\').join(\'\')}function add(){if(i.value.trim()){items.push(i.value.trim());i.value=\'\';localStorage.todos=JSON.stringify(items);draw()}}function done(n){items.splice(n,1);localStorage.todos=JSON.stringify(items);draw()}draw()</script></body></html>', 'README.md': '# Todo Static App\n\nClick Preview in Goldie CLI.\n'}
-}
+_CLI_TEMPLATES = {}
 
 def _cli_apply_template(workspace, name, project_name=None):
-    tpl = _CLI_TEMPLATES.get(name)
-    if not tpl: raise ValueError('Unknown template: '+name)
-    written=[]
-    for rel, content in tpl.items():
-        out_rel = rel.replace('//','/')
-        path=_cli_safe_path(workspace, out_rel); os.makedirs(os.path.dirname(path), exist_ok=True)
-        _pathlib_cli.Path(path).write_text(content, encoding='utf-8'); written.append(out_rel)
-    _cli_set_active_project(workspace, '', 'template:'+name)
-    return written
+    raise RuntimeError('Templates are disabled. CLI builds must come from the exact user request via LLM + Goldie KB + Hermes tools.')
 
 def _handle_cli_preview_to_dict(handler, data):
     sid, workspace = _cli_workspace(handler, data)
@@ -1772,25 +2542,10 @@ def _handle_cli_export_to_dict(handler, data):
     return {'status':'ok','session_id':sid,'workspace_name':'user_'+sid,'download_url':'/api/cli/download?session='+urllib.parse.quote(sid),'size':os.path.getsize(zip_path)}
 
 def _cli_agent_build(job, handler, data):
-    sid, workspace = _cli_workspace(handler, data)
-    goal = (data.get('goal') or data.get('message') or '').strip()[:1200]
-    try:
-        job['status']='running'; _cli_job_log(job, 'Agent loop started: '+goal)
-        ok, stats = _cli_quota_ok(workspace)
-        if not ok: raise ValueError('Workspace quota exceeded before build')
-        low = goal.lower(); template = 'cyberpunk-landing' if 'cyberpunk' in low or 'neon' in low else ('todo-static' if 'todo' in low or 'task' in low else 'static-landing')
-        _cli_job_log(job, 'Plan: create '+template+' project')
-        written = _cli_apply_template(workspace, template, goal); _cli_job_log(job, 'Wrote: '+', '.join(written))
-        _cli_job_log(job, 'Validation: index.html exists')
-        prev = _handle_cli_preview_to_dict(handler, {'session': data.get('session')})
-        exp = _handle_cli_export_to_dict(handler, {'session': data.get('session')})
-        result = {'files': _cli_file_tree(workspace, 120), 'preview': prev, 'export': exp, 'template': template}
-        _cli_job_log(job, 'Preview: '+str(prev.get('preview_url'))); _cli_job_finish(job, 'done', result)
-    except Exception as e:
-        _cli_job_log(job, 'ERROR: '+str(e)[:160]); _cli_job_finish(job, 'error', {'error': str(e)[:160]})
+    _cli_job_finish(job, 'error', {'status':'disabled','reply':'Agent Build is disabled. CLI builds must be request-driven via LLM + Goldie KB + Hermes tools, not templates.'})
 
 def _handle_cli_agent(handler, data):
-    return _json_resp(handler, {'status':'disabled','reply':'Agent Build is disabled. Files only change from explicit user commands like /write, Save, or Template.'}, 403)
+    return _json_resp(handler, {'status':'disabled','reply':'Agent Build is disabled. Files only change from explicit user commands like /write, /run, Save, or direct build requests.'}, 403)
 
 
 def _handle_cli_job(handler, data):
@@ -1800,11 +2555,9 @@ def _handle_cli_job(handler, data):
     return _json_resp(handler, {'status':'ok','job':job})
 
 def _handle_cli_template(handler, data):
-    sid, workspace = _cli_workspace(handler, data); name = (data.get('template') or data.get('name') or 'static-landing').strip()
-    try:
-        written = _cli_apply_template(workspace, name, name)
-        return _json_resp(handler, {'status':'ok','session_id':sid,'template':name,'active_project':_cli_get_active_project(workspace),'written':written,'files':_cli_file_tree(workspace,120)})
-    except Exception as e: return _json_resp(handler, {'status':'error','error':str(e)[:120]}, 400)
+    # Public CLI is request-driven. Hidden/template creation is disabled so files only
+    # come from explicit LLM/Hermes build, /write, /run, or Save actions.
+    return _json_resp(handler, {'status':'disabled','reply':'Templates are disabled. Tell Goldie what to build; Hermes + LLM + Goldie KB will generate real files from your request.'}, 403)
 
 def _handle_cli_save(handler, data):
     sid, workspace = _cli_workspace(handler, data); rel=(data.get('path') or '').strip(); content=data.get('content') or ''
@@ -1862,9 +2615,63 @@ def _handle_cli_reset(handler, data):
         except Exception: pass
     return _json_resp(handler, {'status':'ok','reply':'Workspace reset complete','files':_cli_file_tree(workspace,80)})
 
+
+
+def _handle_cli_delete(handler, data):
+    """Delete all user-created files inside one sandbox workspace."""
+    import shutil
+    sid, workspace = _cli_workspace(handler, data)
+    if not data.get('confirm') or str(data.get('confirm_text') or '').strip().upper() != 'DELETE':
+        return _json_resp(handler, {
+            'status': 'needs_confirmation',
+            'reply': 'This will permanently delete all files in this workspace. Type DELETE to confirm.',
+            'required_text': 'DELETE'
+        })
+    root = os.path.realpath(WORKSPACES)
+    ws = os.path.realpath(workspace)
+    if not (os.path.basename(ws).startswith('user_') and (ws == root or ws.startswith(root + os.sep))):
+        return _json_resp(handler, {'status':'error','error':'workspace containment failed'}, 403)
+    deleted = 0; bytes_deleted = 0; errors = []
+    keep = {'.goldie-session.json'}
+    for item in list(os.listdir(ws)):
+        if item in keep:
+            continue
+        path = os.path.realpath(os.path.join(ws, item))
+        if not (path == ws or path.startswith(ws + os.sep)):
+            errors.append({'path': item, 'error': 'outside workspace'}); continue
+        try:
+            if os.path.islink(path):
+                os.unlink(path); deleted += 1
+            elif os.path.isdir(path):
+                for base, dirs, files in os.walk(path):
+                    for f in files:
+                        fp = os.path.join(base, f)
+                        try: bytes_deleted += os.path.getsize(fp)
+                        except Exception: pass
+                shutil.rmtree(path); deleted += 1
+            else:
+                try: bytes_deleted += os.path.getsize(path)
+                except Exception: pass
+                os.remove(path); deleted += 1
+        except Exception as e:
+            errors.append({'path': item, 'error': str(e)[:120]})
+    os.makedirs(os.path.join(ws, 'tmp'), exist_ok=True)
+    os.makedirs(os.path.join(ws, 'logs'), exist_ok=True)
+    files = _cli_file_tree(ws, 80)
+    return _json_resp(handler, {
+        'status': 'ok' if not errors else 'partial',
+        'reply': 'Workspace files deleted. Your sandbox session is still active.',
+        'session_id': sid,
+        'workspace_name': 'user_' + sid,
+        'deleted_items': deleted,
+        'bytes_deleted': bytes_deleted,
+        'errors': errors,
+        'files': files
+    })
+
 def _public_do_POST(self):
     p = urllib.parse.urlparse(self.path).path
-    if p not in ('/api/chat', '/api/image', '/api/song', '/api/cli/session', '/api/cli', '/api/cli/tree', '/api/cli/read', '/api/cli/export', '/api/cli/preview', '/api/cli/agent', '/api/cli/job', '/api/cli/template', '/api/cli/save', '/api/cli/quota', '/api/cli/git/scan', '/api/cli/git/push', '/api/cli/reset'):
+    if p not in ('/api/chat', '/api/image', '/api/song', '/api/cli/session', '/api/cli', '/api/cli/tree', '/api/cli/read', '/api/cli/export', '/api/cli/preview', '/api/cli/agent', '/api/cli/job', '/api/cli/template', '/api/cli/save', '/api/cli/quota', '/api/cli/git/scan', '/api/cli/git/push', '/api/cli/reset', '/api/cli/delete', '/api/cli/scan'):
         return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
     try:
         content_length = int(self.headers.get('Content-Length', 0))
@@ -1904,6 +2711,11 @@ def _public_do_POST(self):
             return _handle_cli_git_push(self, data)
         if p == '/api/cli/reset':
             return _handle_cli_reset(self, data)
+        if p == '/api/cli/delete':
+            return _handle_cli_delete(self, data)
+        if p == '/api/cli/scan':
+            sid, workspace = _cli_workspace(self, data)
+            return _json_resp(self, _cli_scan_url_reference(self, data, sid, workspace, data.get('message') or data.get('url') or ''))
         user_key = data.get('session') or data.get('user') or data.get('token') or 'anonymous'
         if not _rate_ok(self, user_key=user_key, limit=5, window=60):
             return _json_resp(self, {'status': 'error', 'reply': 'Rate limit exceeded. Please wait a moment — maximum 5 chats per minute per user/IP.', 'error': 'rate_limited', 'limit': '5/minute'}, 429)

@@ -238,37 +238,137 @@ def has_skill(skill, st=None):
 # ════════════════════════════════════════════════
 # ── LLM ──
 # ════════════════════════════════════════════════
-_MODEL_COST = {"input": 0.01, "output": 0.03}
-
-def _record_cost(prompt_t, completion_t, total_t, phase=""):
-    """Append one line to data/journal/cost_tracking.jsonl + increment cumulative in status.json."""
+# Goldie real LLM cost tracking shared helpers. Prices are USD per 1M tokens.
+def _openrouter_model_prices():
+    import os, json, time, urllib.request
+    cache = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'cache', 'openrouter_model_prices.json')
+    now = time.time()
+    cached_prices = None
     try:
-        inp_c = prompt_t * _MODEL_COST["input"] / 1e6
-        out_c = completion_t * _MODEL_COST["output"] / 1e6
-        run_cost = round(inp_c + out_c, 6)
-        entry = {
-            "ts": __import__("time").time(),
-            "date": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
-            "phase": phase,
-            "prompt_tokens": prompt_t,
-            "completion_tokens": completion_t,
-            "total_tokens": total_t,
-            "cost_usd": run_cost
-        }
-        path = DATA_DIR / "journal" / "cost_tracking.jsonl"
-        with open(path, "a") as f:
-            f.write(json.dumps(entry) + "\n")
-        # Persist cumulative cost in status.json so it survives jsonl resets
+        if os.path.exists(cache):
+            with open(cache, encoding='utf-8') as f:
+                cached_candidate = json.load(f)
+            if isinstance(cached_candidate, dict):
+                cached_prices = cached_candidate
+                if now - os.path.getmtime(cache) < 86400:
+                    return cached_prices
+    except Exception:
+        cached_prices = None
+    prices = {}
+    try:
+        req = urllib.request.Request('https://openrouter.ai/api/v1/models', headers={'User-Agent': 'GoldieCostTracker/1.0'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            payload = r.read()
+        if isinstance(payload, (bytes, bytearray)):
+            payload = payload.decode('utf-8')
+        data = json.loads(payload)
+        for m in data.get('data', []):
+            mid = m.get('id') or ''
+            pr = m.get('pricing') or {}
+            if mid:
+                prices[mid] = pr
+        os.makedirs(os.path.dirname(cache), exist_ok=True)
+        with open(cache, 'w', encoding='utf-8') as f:
+            json.dump(prices, f)
+        return prices
+    except Exception:
+        return cached_prices if cached_prices is not None else prices
+
+
+def _model_aliases(model):
+    m = (model or '').strip()
+    aliases = [m]
+    if '/' not in m:
+        aliases.append('openai/' + m)
+    fixed = {
+        'gpt-5.5': 'openai/gpt-5.5',
+        'gpt-5.5-pro': 'openai/gpt-5.5-pro',
+        'gpt-5.3-codex-spark': 'openai/gpt-5.3-codex',
+        'gpt-5.3-codex': 'openai/gpt-5.3-codex',
+        'gpt-5.3-chat': 'openai/gpt-5.3-chat',
+        'inclusionai/ling-2.6-flash': 'inclusionai/ling-2.6-flash',
+        'google/lyria-3-pro-preview': 'google/lyria-3-pro-preview',
+        'x-ai/grok-imagine-image-quality': 'x-ai/grok-imagine-image-quality',
+    }
+    if m in fixed:
+        aliases.insert(0, fixed[m])
+    # de-dupe preserving order
+    out=[]
+    for a in aliases:
+        if a and a not in out: out.append(a)
+    return out
+
+
+def _cost_price_for_model(model):
+    import os, re
+    m = (model or '').strip()
+    slug = re.sub(r'[^A-Za-z0-9]+', '_', m).strip('_').upper()
+    def _env_float(name, default=None):
         try:
-            with open(SF) as fh:
-                st = json.load(fh)
-            st["cumulative_cost_usd"] = round(st.get("cumulative_cost_usd", 0) + run_cost, 4)
-            with open(SF, "w") as fh:
-                json.dump(st, fh, indent=2)
+            v = os.environ.get(name)
+            if v is None or v == '': return default
+            return float(v)
+        except Exception:
+            return default
+    if slug:
+        inp = _env_float('LLM_PRICE_' + slug + '_INPUT_PER_M')
+        out = _env_float('LLM_PRICE_' + slug + '_OUTPUT_PER_M')
+        if inp is not None and out is not None:
+            return inp, out, 'env_model_price'
+    prices = _openrouter_model_prices()
+    for alias in _model_aliases(m):
+        pr = prices.get(alias)
+        if pr:
+            try:
+                # OpenRouter pricing is USD per token. Convert to USD per 1M tokens.
+                return float(pr.get('prompt') or 0) * 1000000.0, float(pr.get('completion') or 0) * 1000000.0, 'openrouter_models:' + alias
+            except Exception:
+                pass
+    return _env_float('LLM_DEFAULT_INPUT_PER_M', 0.01), _env_float('LLM_DEFAULT_OUTPUT_PER_M', 0.03), 'default_price_unmatched_model'
+
+
+def _record_llm_cost_usage(usage, model='', provider='', phase='unknown', source='autonomous_agent'):
+    try:
+        import os, json, time
+        if not isinstance(usage, dict): return None
+        prompt_t = int(usage.get('prompt_tokens') or usage.get('input_tokens') or 0)
+        completion_t = int(usage.get('completion_tokens') or usage.get('output_tokens') or 0)
+        total_t = int(usage.get('total_tokens') or (prompt_t + completion_t) or 0)
+        provider_cost = usage.get('cost') or usage.get('total_cost') or usage.get('cost_usd')
+        inp_per_m, out_per_m, price_source = _cost_price_for_model(model)
+        if provider_cost is not None:
+            cost = float(provider_cost)
+            price_source = 'provider_usage_cost'
+        else:
+            if total_t <= 0: return None
+            cost = (prompt_t * inp_per_m + completion_t * out_per_m) / 1000000.0
+        root = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(root, 'data', 'journal', 'cost_tracking.jsonl')
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        entry = {
+            'ts': time.time(), 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'phase': phase or 'unknown', 'source': source,
+            'provider': provider or '', 'model': model or '',
+            'prompt_tokens': prompt_t, 'completion_tokens': completion_t, 'total_tokens': total_t,
+            'input_cost_per_m': inp_per_m, 'output_cost_per_m': out_per_m,
+            'price_source': price_source, 'cost_usd': round(cost, 8),
+        }
+        with open(path, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + '\n')
+        try:
+            sf = os.path.join(root, 'data', 'state', 'status.json')
+            st = json.load(open(sf, encoding='utf-8')) if os.path.exists(sf) else {}
+            st['cumulative_cost_usd'] = round(float(st.get('cumulative_cost_usd', 0) or 0) + cost, 8)
+            with open(sf, 'w', encoding='utf-8') as f:
+                json.dump(st, f, indent=2)
         except Exception:
             pass
+        return entry
     except Exception:
-        pass
+        return None
+
+def _record_cost(prompt_t, completion_t, total_t, phase='', model='', provider=''):
+    return _record_llm_cost_usage({'prompt_tokens': prompt_t, 'completion_tokens': completion_t, 'total_tokens': total_t}, model=model or globals().get('LLM_MODEL',''), provider=provider or globals().get('LLM_PROVIDER',''), phase=phase, source='autonomous_agent')
 
 def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
     import time
@@ -295,7 +395,7 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
                 u = resp.get("usage", {})
                 if u and u.get("total_tokens"):
                     _record_cost(u.get("prompt_tokens", 0), u.get("completion_tokens", 0),
-                                 u.get("total_tokens", 0), phase=phase)
+                                 u.get("total_tokens", 0), phase=phase, model=model, provider=os.environ.get('LLM_PROVIDER') or ('openrouter' if 'openrouter.ai' in (LLM_BASE_URL or 'https://openrouter.ai') else 'custom'))
                 return resp.get("choices", [{}])[0].get("message", {}).get("content", "")
         except Exception as e:
             code = getattr(e, 'code', None)
@@ -465,6 +565,114 @@ import fcntl
 import os
 import tempfile
 
+
+# ════════════════════════════════════════════════
+# CLI SKILL HOOK LAYER — learned repo skills -> executable CLI context
+# ════════════════════════════════════════════════
+CLI_SKILL_HOOKS_FILE = os.path.join(DATA, "cli_skill_hooks.json")
+
+_HOOK_STOPWORDS = set("the and for with from this that into using use uses user build create make app web game code file files project repo pattern practice insight should must can will you your are was were has have not but very".split())
+_HOOK_ACTION_MAP = {
+    "game": ["write_files", "validate_gameplay", "preview"], "canvas": ["write_files", "validate_gameplay", "preview"],
+    "ui": ["write_files", "validate_responsive", "preview"], "frontend": ["write_files", "validate_responsive", "preview"],
+    "api": ["write_files", "run_tests"], "server": ["write_files", "run_tests"], "auth": ["write_files", "secret_scan", "run_tests"],
+    "test": ["write_files", "run_tests"], "database": ["write_files", "run_tests"], "performance": ["write_files", "run_tests"],
+}
+
+def _hook_load_registry():
+    try:
+        with open(CLI_SKILL_HOOKS_FILE, encoding="utf-8") as fh:
+            data = json.load(fh)
+            if isinstance(data, dict):
+                data.setdefault("version", 1); data.setdefault("hooks", []); data.setdefault("updated_at", "")
+                return data
+    except Exception:
+        pass
+    return {"version": 1, "updated_at": "", "hooks": []}
+
+def _hook_save_registry(reg):
+    os.makedirs(os.path.dirname(CLI_SKILL_HOOKS_FILE), exist_ok=True)
+    reg["updated_at"] = datetime.now(WIB).isoformat()
+    tmp = CLI_SKILL_HOOKS_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(reg, fh, ensure_ascii=False, indent=2)
+    os.replace(tmp, CLI_SKILL_HOOKS_FILE)
+
+def _hook_keywords(text, lang=""):
+    words = re.findall(r"[a-zA-Z][a-zA-Z0-9_\-]{2,}", (text or "").lower())
+    keep = []
+    for w in words:
+        if w in _HOOK_STOPWORDS: continue
+        if len(w) > 28: continue
+        keep.append(w)
+    for w in [lang.lower()] if lang else []:
+        if w and w not in keep: keep.append(w)
+    # preserve order, cap
+    out=[]
+    for w in keep:
+        if w not in out: out.append(w)
+    return out[:18]
+
+def _hook_domain_actions(keywords, topics=None):
+    ks = set(keywords or []) | set((topics or []))
+    domains=[]; actions=[]; validators=[]
+    def add(domain, acts, vals):
+        if domain not in domains: domains.append(domain)
+        for a in acts:
+            if a not in actions: actions.append(a)
+        for v in vals:
+            if v not in validators: validators.append(v)
+    if ks & {"game","canvas","playable","collision","animation","loop","score"}:
+        add("browser-game", ["write_files","preview"], ["has_playfield","has_input_handlers","has_game_loop","has_score_state"])
+    if ks & {"ui","frontend","react","component","responsive","css","html","design"}:
+        add("frontend-ui", ["write_files","preview"], ["responsive_layout","no_horizontal_overflow"])
+    if ks & {"api","server","backend","fastapi","express","route","endpoint"}:
+        add("backend-api", ["write_files","run_tests"], ["routes_compile","error_json"])
+    if ks & {"test","pytest","jest","unit","integration","coverage"}:
+        add("testing", ["write_files","run_tests"], ["tests_pass"])
+    if ks & {"auth","oauth","token","secret","credential","permission"}:
+        add("security", ["write_files","secret_scan"], ["no_secret_leak","safe_errors"])
+    if not domains:
+        add("general-coding", ["write_files"], ["files_written","request_match"])
+    return domains, actions, validators
+
+def cli_skill_hooks_upsert_from_repo(repo_name, study_level=0, patterns=None, best_practices=None, insights=None, code_examples=None, topics=None, summary="", lang=""):
+    """Patch CLI hook registry after every repo study update. Conservative: text -> hook metadata, not executable arbitrary code."""
+    try:
+        reg = _hook_load_registry(); hooks = reg.get("hooks", [])
+        by_id = {h.get("id"): h for h in hooks if h.get("id")}
+        source_items=[]
+        for kind, items in [("pattern", patterns or []), ("best_practice", best_practices or []), ("insight", insights or []), ("code_example", code_examples or [])]:
+            for txt in items:
+                if txt and len(str(txt).strip()) >= 18:
+                    source_items.append((kind, str(txt).strip()[:700]))
+        if summary and len(str(summary).strip()) >= 18:
+            source_items.append(("summary", str(summary).strip()[:700]))
+        for kind, text in source_items:
+            hid = hashlib.sha256((repo_name + "|" + kind + "|" + text[:240]).encode()).hexdigest()[:20]
+            kws = _hook_keywords(text + " " + " ".join(topics or []), lang)
+            domains, actions, validators = _hook_domain_actions(kws, topics)
+            hook = by_id.get(hid, {"id": hid})
+            hook.update({
+                "name": (kind + ": " + re.sub(r"[^a-zA-Z0-9]+", "-", text.lower()).strip("-")[:48]).strip("-"),
+                "source_repo": repo_name,
+                "study_level": max(int(study_level or 0), int(hook.get("study_level") or 0)),
+                "kind": kind,
+                "summary": text[:420],
+                "keywords": kws,
+                "applies_to": domains,
+                "actions": actions,
+                "validators": validators,
+                "updated_at": datetime.now(WIB).isoformat(),
+            })
+            by_id[hid] = hook
+        reg["hooks"] = sorted(by_id.values(), key=lambda h: (h.get("study_level",0), h.get("updated_at","")), reverse=True)[:500]
+        _hook_save_registry(reg)
+        return len(source_items)
+    except Exception as e:
+        journal("cli_skill_hooks_error", str(e)[:220]) if "journal" in globals() else None
+        return 0
+
 def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
                     best_practices=None, insights=None, code_examples=None,
                     topics=None, readme_insights="", stars=0, lang=""):
@@ -493,7 +701,7 @@ def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
             rd["stars"] = stars
         for key, new_items, max_items in [
             ("patterns", patterns, 25), ("best_practices", best_practices, 15),
-            ("insights", insights, 15), ("code_examples", code_examples, 8)]:
+            ("insights", insights, 15), ("code_examples", code_examples, 20)]:
             if new_items:
                 existing = set(rd.get(key, []))
                 for item in new_items:
@@ -519,6 +727,9 @@ def kb_add_to_repo(repo_name, study_level=0, summary="", patterns=None,
         kb["stats"]["total_patterns"] = sum(len(r.get("patterns",[])) for r in kb["repos"].values())
         kb["stats"]["total_insights"] = sum(len(r.get("insights",[])) for r in kb["repos"].values())
         kb["stats"]["last_study_date"] = datetime.now(WIB).strftime("%Y-%m-%d")
+        hooks_added = cli_skill_hooks_upsert_from_repo(repo_name, study_level, patterns, best_practices, insights, code_examples, topics, summary, lang)
+        if hooks_added:
+            kb["stats"]["total_cli_skill_hooks"] = len(_hook_load_registry().get("hooks", []))
         save_kb(kb)
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
@@ -1078,6 +1289,24 @@ def queue_today_count(q=None):
     return q["studied_today"]
 
 def queue_can_study(q=None):
+    q = q or load_queue()
+    # Strict mastery: once an active repo is locked, finish its target depth even if
+    # the daily repo discovery cap is already consumed. The cap should stop new
+    # repos, not strand an active repo at L1/L2.
+    try:
+        kb = load_kb()
+        active = q.get("active_repo")
+        if active:
+            target = 4
+            for item in q.get("repos", []):
+                if item.get("repo") == active:
+                    target = max(int(item.get("target_depth", 4) or 4), 4)
+                    break
+            lvl = kb.get("repos", {}).get(active, {}).get("study_level", 0)
+            if lvl < target:
+                return True
+    except Exception:
+        pass
     count = queue_today_count(q)
     q = q or load_queue()
     return count < q.get("max_daily", MAX_REPOS_PER_DAY)
@@ -1528,7 +1757,8 @@ def do_study_pass(repo_name, from_level=0):
             kb_add_to_repo(repo_name, study_level=4,
                 patterns=rd.get("coding_patterns",[]),
                 best_practices=rd.get("best_practices",[]),
-                insights=rd.get("insights",[]))
+                insights=rd.get("insights",[]),
+                code_examples=snippets[:4])
             journal("\U0001f4d6", "Pass 4 COMPLETE: " + repo_name,
                 "Patterns: " + str(rd.get("coding_patterns",[])[:2]))
             log("  PASS 4 COMPLETE")
