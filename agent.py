@@ -1292,19 +1292,40 @@ def queue_can_study(q=None):
     q = q or load_queue()
     # Strict mastery: once an active repo is locked, finish its target depth even if
     # the daily repo discovery cap is already consumed. The cap should stop new
-    # repos, not strand an active repo at L1/L2.
+    # repos, not strand an active repo at L1/L2. If the active repo was already
+    # removed from the queue after L4, ignore the stale active_repo pointer and let
+    # the next queued repo start.
     try:
         kb = load_kb()
+        repos = q.get("repos", [])
         active = q.get("active_repo")
         if active:
-            target = 4
-            for item in q.get("repos", []):
+            active_item = None
+            for item in repos:
                 if item.get("repo") == active:
-                    target = max(int(item.get("target_depth", 4) or 4), 4)
+                    active_item = item
                     break
-            lvl = kb.get("repos", {}).get(active, {}).get("study_level", 0)
-            if lvl < target:
-                return True
+            if active_item is not None:
+                target = max(int(active_item.get("target_depth", 4) or 4), 4)
+                lvl = kb.get("repos", {}).get(active, {}).get("study_level", 0)
+                if lvl < target:
+                    return True
+                q.pop("active_repo", None)
+                save_queue(q)
+            else:
+                # Stale active_repo from a completed/removed repo must not block the
+                # pending queue behind the daily cap.
+                q.pop("active_repo", None)
+                save_queue(q)
+        if repos:
+            for item in repos:
+                rn = item.get("repo")
+                if not rn:
+                    continue
+                target = max(int(item.get("target_depth", 4) or 4), 4)
+                lvl = kb.get("repos", {}).get(rn, {}).get("study_level", 0)
+                if lvl < target:
+                    return True
     except Exception:
         pass
     count = queue_today_count(q)
@@ -3163,6 +3184,10 @@ def _run_study():
                 log("  PR check skipped: " + str(e)[:80])
         else:
             log("  No pending studies")
+    else:
+        q = load_queue()
+        log("  Study cap reached: {}/{} today; pending={}".format(
+            queue_today_count(q), q.get("max_daily", MAX_REPOS_PER_DAY), len(q.get("repos", []))))
 
 def _run_build():
     """Run build phase with error isolation."""
