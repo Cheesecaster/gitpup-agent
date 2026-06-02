@@ -543,10 +543,18 @@ function formatDate(ts){
     {kind:'right',label:'slide',state:'thinking',emoji:'💡',cls:'facing-left'}
   ];
   function goldieX(kind){
-    var w=window.innerWidth||360;
-    if(kind==='left')return 86;
-    if(kind==='right')return Math.max(190,w-164);
-    return Math.max(120,(w/2)-38);
+    var pg=document.getElementById('pg');
+    var sceneW=pg ? pg.clientWidth : Math.min(window.innerWidth||360,600);
+    var dogW=76;
+    // Keep Goldie inside the 600px playground, not the desktop viewport.
+    // Desktop bug: using window.innerWidth sent him far beyond the slide and clipped him.
+    var minX=18;
+    var maxX=Math.max(minX, sceneW-dogW-16);
+    var slideX=Math.max(minX, sceneW-dogW-42);
+    var centerX=Math.max(minX, Math.min(maxX, (sceneW-dogW)/2));
+    if(kind==='left')return minX+68;
+    if(kind==='right')return slideX;
+    return centerX;
   }
   var pi=1; // start at center
   var walkTimer=null;
