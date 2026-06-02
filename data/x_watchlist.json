@@ -1,0 +1,29 @@
+{
+  "accounts": [
+    {"handle":"karpathy","tier":"core_ai","topics":["agents","llms","learning","software"],"max_replies_per_week":12},
+    {"handle":"andyayrey","tier":"core_ai_weird","topics":["agents","autonomy","social intelligence"],"max_replies_per_week":12},
+    {"handle":"pmarca","tier":"tech_investor","topics":["software","markets","ai"],"max_replies_per_week":8},
+    {"handle":"sama","tier":"ai_leader","topics":["ai","agents","products"],"max_replies_per_week":8},
+    {"handle":"base","tier":"onchain_platform","topics":["base","builders","onchain apps","agents"],"max_replies_per_week":12},
+    {"handle":"jessepollak","tier":"onchain_builder","topics":["base","builders","consumer crypto","onchain"],"max_replies_per_week":12},
+    {"handle":"0xdeployer","tier":"onchain_builder","topics":["base","onchain","agents","devtools"],"max_replies_per_week":12},
+    {"handle":"nearcyan","tier":"ai_builder","topics":["agents","llms","autonomy"],"max_replies_per_week":10},
+    {"handle":"aidan_mclau","tier":"ai_builder","topics":["agents","evals","llms"],"max_replies_per_week":10},
+    {"handle":"shl","tier":"ai_builder","topics":["ai","products","agents"],"max_replies_per_week":8},
+    {"handle":"teortaxes","tier":"ai_commentary","topics":["ai","society","models"],"max_replies_per_week":6},
+    {"handle":"dwarkesh_sp","tier":"ai_interviews","topics":["ai","research","agents"],"max_replies_per_week":6},
+    {"handle":"NousResearch","tier":"ai_lab","topics":["open models","agents","research"],"max_replies_per_week":10},
+    {"handle":"OpenAI","tier":"ai_lab","topics":["models","agents","products"],"max_replies_per_week":6},
+    {"handle":"AnthropicAI","tier":"ai_lab","topics":["safety","models","agents"],"max_replies_per_week":6},
+    {"handle":"github","tier":"devtools","topics":["open source","repos","developer tools"],"max_replies_per_week":8},
+    {"handle":"vercel","tier":"devtools","topics":["web","ai apps","deployment"],"max_replies_per_week":8},
+    {"handle":"v0","tier":"devtools","topics":["generation","ui","ai apps"],"max_replies_per_week":8},
+    {"handle":"cursor_ai","tier":"devtools","topics":["coding agents","devtools","llms"],"max_replies_per_week":8},
+    {"handle":"huggingface","tier":"mlops","topics":["models","open source","datasets"],"max_replies_per_week":8},
+    {"handle":"CloudflareDev","tier":"infra","topics":["edge","workers","infra","ai"],"max_replies_per_week":8},
+    {"handle":"supabase","tier":"devtools","topics":["database","open source","builders"],"max_replies_per_week":8},
+    {"handle":"railway","tier":"infra","topics":["deployment","builders","devtools"],"max_replies_per_week":8},
+    {"handle":"flydotio","tier":"infra","topics":["deployment","distributed systems"],"max_replies_per_week":8}
+  ],
+  "search_terms": ["agent memory", "autonomous agents", "coding agents", "open source agents", "base builders", "onchain agents", "llm evals", "developer tools ai"]
+}

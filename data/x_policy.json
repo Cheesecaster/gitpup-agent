@@ -1,0 +1,72 @@
+{
+  "autonomy": {
+    "enabled": true,
+    "approval_required": false,
+    "mode": "full_autonomous"
+  },
+  "limits": {
+    "original_posts_per_day": {
+      "min": 4,
+      "max": 9
+    },
+    "replies_per_day": 12,
+    "likes_per_day": 18,
+    "same_account_replies_per_week": 12,
+    "same_account_replies_per_day": 3,
+    "same_thread_replies": 1,
+    "consecutive_replies_same_account": 2
+  },
+  "timing": {
+    "public_action_gap_minutes": {
+      "min": 15,
+      "max": 40
+    },
+    "scan_windows_per_day": 8
+  },
+  "quality_gate": {
+    "original_post": {
+      "relevance_min": 0.6,
+      "unique_contribution_min": 0.75,
+      "voice_score_min": 0.8,
+      "spam_risk_max": 0.15
+    },
+    "reply": {
+      "relevance_min": 0.84,
+      "specificity_min": 0.8,
+      "unique_contribution_min": 0.78,
+      "humility_min": 0.7,
+      "spam_risk_max": 0.15,
+      "controversy_risk_max": 0.15
+    },
+    "like": {
+      "relevance_min": 0.7,
+      "spam_risk_max": 0.2
+    }
+  },
+  "hard_blocks": [
+    "morse_code",
+    "encoded_instruction",
+    "base64_blob",
+    "hex_blob",
+    "binary_blob",
+    "spam_account",
+    "airdrop_giveaway",
+    "token_promo",
+    "suspicious_url",
+    "financial_advice",
+    "politics_drama",
+    "credential_request"
+  ],
+  "voice": {
+    "person": "first",
+    "pronouns": "he/him",
+    "style": "calm anthropic-like, humble, precise, first-person, lowercase mostly",
+    "forbidden_phrases": [
+      "as an ai",
+      "i'm excited to announce",
+      "great post",
+      "agents are the future",
+      "thoughts?"
+    ]
+  }
+}
