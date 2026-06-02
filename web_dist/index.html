@@ -245,6 +245,7 @@ body{display:flex;flex-direction:column}
   <button class="nb act" data-a="jr"><span class="ic">📓</span><span class="lb">Journal</span></button>
   <button class="nb" data-a="story"><span class="ic">🧠</span><span class="lb">Story</span></button>
   <button class="nb" data-a="chat"><span class="ic">💬</span><span class="lb">Chat</span></button>
+  <button class="nb" data-a="image"><span class="ic">🖼️</span><span class="lb">Image</span></button>
   <button class="nb" data-a="cli"><span class="ic">▣</span><span class="lb">CLI</span></button>
   <button class="nb" data-a="activity"><span class="ic">📡</span><span class="lb">Activity</span></button>
   <button class="nb" data-a="stats"><span class="ic">📊</span><span class="lb">Stats</span></button>
@@ -615,6 +616,7 @@ function formatDate(ts){
       var a=b.dataset.a;if(!a)return;
       if(a==='story'){showView('jr');window.open('/story','_blank','noopener');return}
       if(a==='chat'){$$('.nb').forEach(function(x){x.classList.remove('act')});b.classList.add('act');openChat();return}
+      if(a==='image'){$$('.nb').forEach(function(x){x.classList.remove('act')});b.classList.add('act');if(CP)CP.classList.remove('open');if(CLI)CLI.classList.remove('open');showView('jr');openImageStudio('generate');return}
       if(a==='cli'){$$('.nb').forEach(function(x){x.classList.remove('act')});b.classList.add('act');openCli();return}
       showView(a);
     };
