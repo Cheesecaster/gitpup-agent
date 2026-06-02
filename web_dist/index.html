@@ -543,9 +543,7 @@ function formatDate(ts){
   function appendPromptText(txt){
     if(!ISPT)return;
     var cur=ISPT.value.trim();
-    ISPT.value=cur?(cur+'
-
-'+txt):txt;
+    ISPT.value=cur?(cur+'\n\n'+txt):txt;
     ISPT.focus();
   }
   function renderImageTemplates(){
