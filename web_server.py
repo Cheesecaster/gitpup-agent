@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """GitPup Web Server v3.0 — Full API with project build pipeline"""
-import http.server, json, os, urllib.parse, urllib.request, subprocess, time, threading, re
+import http.server, json, os, urllib.parse, urllib.request, subprocess, time, threading, re, hmac
 
 GITPUP = '/opt/gitpup'
 DATA = os.path.join(GITPUP, 'data')
