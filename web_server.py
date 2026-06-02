@@ -692,15 +692,45 @@ def _handle_image(self, data):
         for m in [primary_model, fallback_model]:
             if m and m not in models_to_try:
                 models_to_try.append(m)
+        def _decode_uploaded_image(value):
+            if not value:
+                return None, 'image.png', 'image/png'
+            if isinstance(value, str) and value.startswith('data:image'):
+                head, body = value.split(',', 1)
+                mime = head.split(';', 1)[0].split(':', 1)[-1] or 'image/png'
+                ext = 'jpg' if 'jpeg' in mime else (mime.split('/')[-1] or 'png')
+                return base64.b64decode(body), 'source.' + ext, mime
+            if isinstance(value, str):
+                return base64.b64decode(value), 'source.png', 'image/png'
+            return None, 'image.png', 'image/png'
+        def _multipart_body(fields, files):
+            import uuid
+            boundary = '----GoldieImage' + uuid.uuid4().hex
+            chunks = []
+            for k, v in fields.items():
+                chunks.append(('--' + boundary + '\r\nContent-Disposition: form-data; name="' + k + '"\r\n\r\n' + str(v) + '\r\n').encode('utf-8'))
+            for k, f in files.items():
+                filename, mime, content = f
+                chunks.append(('--' + boundary + '\r\nContent-Disposition: form-data; name="' + k + '"; filename="' + filename + '"\r\nContent-Type: ' + mime + '\r\n\r\n').encode('utf-8') + content + b'\r\n')
+            chunks.append(('--' + boundary + '--\r\n').encode('utf-8'))
+            return boundary, b''.join(chunks)
+        edit_raw, edit_filename, edit_mime = _decode_uploaded_image(image_data) if image_data else (None, '', '')
         for model in models_to_try:
-            payload = {'model': model, 'prompt': prompt, 'size': size, 'n': 1}
-            if quality:
-                payload['quality'] = quality
-            if image_data:
-                # Jatevo edit support can vary; keep the prompt explicit and include image as input_image when accepted.
-                payload['image'] = image_data
-            req = urllib.request.Request(base_url + '/images/generations', data=json.dumps(payload).encode('utf-8'), method='POST')
-            req.add_header('Content-Type','application/json')
+            if edit_raw:
+                # OpenAI-compatible image editing requires multipart/form-data on /images/edits.
+                # Sending image as JSON to /images/generations is accepted by some proxies but ignored by the model.
+                fields = {'model': model, 'prompt': prompt, 'size': size, 'n': '1'}
+                if quality:
+                    fields['quality'] = quality
+                boundary, body = _multipart_body(fields, {'image': (edit_filename, edit_mime, edit_raw)})
+                req = urllib.request.Request(base_url + '/images/edits', data=body, method='POST')
+                req.add_header('Content-Type','multipart/form-data; boundary=' + boundary)
+            else:
+                payload = {'model': model, 'prompt': prompt, 'size': size, 'n': 1}
+                if quality:
+                    payload['quality'] = quality
+                req = urllib.request.Request(base_url + '/images/generations', data=json.dumps(payload).encode('utf-8'), method='POST')
+                req.add_header('Content-Type','application/json')
             req.add_header('Authorization','Bearer ' + key)
             req.add_header('User-Agent','GoldieImage/Jatevo-gpt-image-2')
             try:
@@ -718,7 +748,7 @@ def _handle_image(self, data):
                         raw = rr.read()
                 if raw:
                     used_model = model
-                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='jatevo', phase='image_generation', source='api_image')
+                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='jatevo', phase='image_edit' if edit_raw else 'image_generation', source='api_image')
                     break
                 last_error = 'Jatevo image endpoint returned no image bytes.'
             except urllib.error.HTTPError as e:
@@ -771,9 +801,10 @@ def _handle_image(self, data):
             f.write(raw)
         size_bytes = os.path.getsize(out)
         url = '/generated/' + os.path.basename(out)
-        _append_chat_context(self, user_key, 'user', '[image prompt] ' + prompt)
-        _append_chat_context(self, user_key, 'assistant', '[generated image] ' + url)
-        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size_bytes,'model':used_model,'provider':used_provider,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':data.get('size') or os.environ.get('IMAGE_SIZE') or '1024x1024'})
+        mode = 'edit' if image_data else 'generate'
+        _append_chat_context(self, user_key, 'user', ('[image edit prompt] ' if mode == 'edit' else '[image prompt] ') + prompt)
+        _append_chat_context(self, user_key, 'assistant', ('[edited image] ' if mode == 'edit' else '[generated image] ') + url)
+        return _json_resp(self, {'status':'ok','reply':'Image edited.' if mode == 'edit' else 'Image generated.','mode':mode,'image_url':url,'size_bytes':size_bytes,'model':used_model,'provider':used_provider,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':data.get('size') or os.environ.get('JATEVO_IMAGE_SIZE') or os.environ.get('IMAGE_SIZE') or '1024x1024'})
     except Exception as e:
         return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}, 500)
 
