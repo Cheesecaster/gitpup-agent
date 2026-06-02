@@ -9,60 +9,76 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#050a1a;font-family:'Segoe UI',system-ui,sans-serif;color:#ddd}
 body{display:flex;flex-direction:column}
-#pg{position:relative;width:100%;max-width:600px;height:300px;margin:0 auto;overflow:hidden;background:linear-gradient(180deg,#030814 0%,#081030 20%,#0d2040 38%,#153525 58%,#1e5535 74%,#287045 88%,#308550 100%);flex-shrink:0}
+#pg{position:relative;width:100%;max-width:600px;height:300px;margin:0 auto;overflow:hidden;background:linear-gradient(180deg,#74d8ff 0%,#9ee8ff 32%,#bff3ff 48%,#37c6dc 49%,#168ebd 61%,#f7d98b 62%,#f3c96e 78%,#e9b45a 100%);flex-shrink:0}
 #ct{width:100%;max-width:600px;margin:0 auto;flex:1;display:flex;flex-direction:column;min-height:0;position:relative;background:rgba(8,12,28,.35);border-top:1px solid rgba(255,255,255,.03)}
 #nb{width:100%;max-width:600px;margin:0 auto;height:72px;background:rgba(6,10,24,.98);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;padding:0 6px}
-.st{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.5;animation:tw 3s ease-in-out infinite}
+.st{display:none}
 @keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}
-.moon{position:absolute;top:14px;right:25px;width:36px;height:36px;background:radial-gradient(circle at 36% 36%,#fef3c7,#fde68a,#d4a017);border-radius:50%;box-shadow:0 0 30px rgba(253,203,110,.25)}
-.cld{position:absolute;background:rgba(255,255,255,.05);border-radius:50px;animation:df 24s linear infinite}
-@keyframes df{0%{transform:translateX(0)}100%{transform:translateX(660px)}}
-.grb{position:absolute;bottom:0;width:100%;height:48px;background:linear-gradient(0deg,#1a5035,#2a6a40 50%,#388548)}
+.moon{position:absolute;top:14px;right:34px;width:48px;height:48px;background:radial-gradient(circle at 36% 34%,#fff7b8 0%,#ffe66d 42%,#ffc247 72%);border-radius:50%;box-shadow:0 0 26px rgba(255,213,74,.55),0 0 64px rgba(255,226,96,.32);animation:sunpulse 5s ease-in-out infinite}
+.cld{position:absolute;background:rgba(255,255,255,.84)!important;border-radius:50px;animation:df 34s linear infinite;box-shadow:14px -5px 0 rgba(255,255,255,.72),28px 1px 0 rgba(255,255,255,.58),0 5px 10px rgba(66,145,180,.12)}
+@keyframes df{0%{transform:translateX(0)}100%{transform:translateX(700px)}}@keyframes sunpulse{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.05);filter:saturate(1.18)}}
+.grb{position:absolute;bottom:0;width:100%;height:70px;background:linear-gradient(180deg,#f9dc8f 0%,#efc56d 45%,#d79f49 100%);box-shadow:inset 0 14px 18px rgba(255,255,255,.22)}.grb::before{content:'';position:absolute;left:-30px;right:-30px;top:-92px;height:104px;background:linear-gradient(180deg,rgba(80,217,225,.9) 0%,rgba(33,170,205,.95) 50%,rgba(240,252,255,.85) 52%,rgba(255,255,255,.45) 56%,rgba(38,160,198,.55) 61%,rgba(38,160,198,0) 78%);clip-path:polygon(0 22%,12% 18%,24% 24%,36% 17%,50% 23%,64% 18%,78% 25%,100% 17%,100% 100%,0 100%);animation:oceanroll 5.5s ease-in-out infinite;z-index:0}.grb::after{content:'';position:absolute;left:-40px;right:-40px;top:-12px;height:22px;background:radial-gradient(ellipse at 14% 45%,rgba(255,255,255,.9) 0 10px,transparent 11px),radial-gradient(ellipse at 42% 55%,rgba(255,255,255,.72) 0 13px,transparent 14px),radial-gradient(ellipse at 72% 45%,rgba(255,255,255,.78) 0 11px,transparent 12px);opacity:.75;animation:foamdrift 4s linear infinite;z-index:1}
 #tb{position:absolute;top:7px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:6px;align-items:center}
 .sb1{background:rgba(8,12,24,.7);border:1px solid rgba(212,160,23,.2);border-radius:14px;padding:3px 10px;font-size:9px;color:#d4a017;white-space:nowrap}
 .sb2{background:rgba(8,12,24,.7);border:1px solid rgba(100,255,218,.12);border-radius:12px;padding:3px 8px;font-size:8px;color:#64ffda;white-space:nowrap}
-.gt2{position:absolute;bottom:22px;width:0;height:0;border-left:2.5px solid transparent;border-right:2.5px solid transparent;border-bottom:8px solid #2a6a40}
-#gc{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none}
+.gt2{position:absolute;bottom:12px;width:4px;height:4px;background:rgba(150,92,30,.28);border-radius:50%;border:0;box-shadow:8px 4px 0 rgba(160,98,32,.2),16px -2px 0 rgba(130,82,30,.18)}@keyframes oceanroll{0%,100%{transform:translateX(0) translateY(0)}50%{transform:translateX(18px) translateY(4px)}}@keyframes foamdrift{0%{transform:translateX(-18px);opacity:.45}50%{opacity:.88}100%{transform:translateX(22px);opacity:.45}}
+#gc{position:absolute;bottom:24px;left:0;transform:translate3d(calc(50vw - 38px),0,0);z-index:10;pointer-events:none;transition:transform 2.8s cubic-bezier(.22,.9,.24,1),bottom .45s ease;will-change:transform;backface-visibility:hidden;contain:layout style;overflow:visible}
 #gs{animation:gb5 6s ease-in-out infinite;will-change:transform}
 @keyframes gb5{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.dog{position:relative;width:64px;height:60px}
-.d-body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:56px;height:36px;background:linear-gradient(155deg,#ecc42c,#d8a818,#c49410,#aa8208);border-radius:48% 48% 34% 34%;box-shadow:inset -4px -3px 10px rgba(120,80,0,.28),inset 2px 2px 6px rgba(255,230,140,.12),0 3px 10px rgba(0,0,0,.22);z-index:1}
-.d-head{position:absolute;top:0;left:8px;width:48px;height:40px;background:linear-gradient(150deg,#ecc42c,#d8a818,#c49410);border-radius:50% 48% 50% 52%;z-index:3;will-change:transform;animation:ht3 8s cubic-bezier(.42,0,.58,1) infinite}
+.dog{position:relative;width:76px;height:88px;overflow:visible;transition:transform .38s cubic-bezier(.22,.9,.24,1);transform-origin:center bottom;will-change:transform}
+.d-body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:62px;height:39px;background:linear-gradient(155deg,#ecc42c,#d8a818,#c49410,#aa8208);border-radius:48% 48% 34% 34%;box-shadow:inset -4px -3px 10px rgba(120,80,0,.28),inset 2px 2px 6px rgba(255,230,140,.12),0 3px 10px rgba(0,0,0,.22);z-index:1}
+.d-head{position:absolute;top:8px;left:12px;width:52px;height:43px;background:linear-gradient(150deg,#ecc42c,#d8a818,#c49410);border-radius:50% 48% 50% 52%;z-index:3;will-change:transform;animation:ht3 8s cubic-bezier(.42,0,.58,1) infinite}
 @keyframes ht3{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-2deg) translateY(-1px)}}
 .d-ear{position:absolute;z-index:4}
 .d-ear.l{top:-7px;left:-3px;width:14px;height:18px;background:linear-gradient(155deg,#c89410,#a87808);border-radius:44% 44% 48% 48%;transform:rotate(-7deg);animation:ew3 4s cubic-bezier(.42,0,.58,1) infinite}
 .d-ear.r{top:-5px;right:-3px;width:14px;height:16px;background:linear-gradient(155deg,#d8a818,#c89410);border-radius:44% 48% 48% 48%;transform:rotate(7deg);animation:ewr3 4s cubic-bezier(.42,0,.58,1) infinite 1s}
 @keyframes ew3{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(-12deg)}}
 @keyframes ewr3{0%,100%{transform:rotate(7deg)}50%{transform:rotate(12deg)}}
-.d-eye{position:absolute;width:11px;height:13px;background:radial-gradient(circle at 38% 33%,#281835,#180a28 55%);border-radius:50%;top:8px;z-index:2}
-.d-eye.l{left:4px}.d-eye.r{left:26px}
+.d-eye{position:absolute;width:13px;height:15px;background:radial-gradient(circle at 38% 33%,#281835,#180a28 55%);border-radius:50%;top:8px;z-index:2}
+.d-eye.l{left:5px}.d-eye.r{left:30px}
 .d-eye::before{content:'';position:absolute;top:1px;left:2px;width:6px;height:6px;background:radial-gradient(circle,#fff 55%,rgba(255,255,255,.75));border-radius:50%}
 .d-eye::after{content:'';position:absolute;bottom:1px;right:2px;width:2.5px;height:2.5px;background:rgba(255,255,255,.65);border-radius:50%}
 #gs:not(.sleeping) .d-eye{animation:bk 4s ease-in-out infinite}
-.d-snout{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:22px;height:18px;background:rgba(255,235,170,.4);border-radius:50%;z-index:1}
+.d-snout{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:25px;height:19px;background:rgba(255,235,170,.4);border-radius:50%;z-index:1}
 .d-nose{position:absolute;bottom:10px;left:50%;transform:translateX(-20%);width:10px;height:5px;background:radial-gradient(ellipse at 35% 28%,#3a2850,#1a0a28);border-radius:50%;z-index:5}
 .d-mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-20%);width:14px;height:2px;border-bottom:1.8px solid rgba(110,70,15,.4);border-radius:0 0 50% 50%;z-index:5}
 .d-mouth::after{content:'';position:absolute;bottom:-4px;right:-1px;width:4px;height:4.5px;background:linear-gradient(180deg,#ff7590,#e85565);border-radius:0 0 50% 50%;animation:tg3 2s ease-in-out infinite alternate;will-change:transform}
 @keyframes tg3{0%{transform:translateX(-50%) scaleY(1)}100%{transform:translateX(-50%) scaleY(1.2)}}
-.d-leg{position:absolute;bottom:-7px;width:9px;height:10px;background:linear-gradient(180deg,#d8a818,#c49410);border-radius:3px 3px 50% 50%;z-index:0}
+.d-leg{position:absolute;bottom:-7px;width:10px;height:12px;background:linear-gradient(180deg,#d8a818,#c49410);border-radius:3px 3px 50% 50%;z-index:0}
 .d-leg::after{content:'';position:absolute;bottom:0;left:-1px;width:11px;height:4px;background:#b08008;border-radius:50%}
 .d-leg.fl{left:8px}.d-leg.fr{left:20px}.d-leg.bl{right:12px}.d-leg.br{right:3px}
-.d-tail{position:absolute;top:-6px;right:1px;width:18px;height:10px;background:linear-gradient(90deg,#d8a818,#c49410);border-radius:32px 36%;transform-origin:left center;z-index:0;will-change:transform;animation:tw4 1.2s cubic-bezier(.42,0,.58,1) infinite alternate}
+.d-tail{position:absolute;top:-5px;right:0;width:22px;height:12px;background:linear-gradient(90deg,#d8a818,#c49410);border-radius:32px 36%;transform-origin:left center;z-index:0;will-change:transform;animation:tw4 1.2s cubic-bezier(.42,0,.58,1) infinite alternate}
 @keyframes tw4{0%{transform:rotate(-25deg)}100%{transform:rotate(20deg)}}
+.d-cap{position:absolute;top:-10px;left:5px;width:44px;height:20px;background:linear-gradient(160deg,#ff3b30,#c01620 70%,#82131a);border-radius:50% 50% 42% 42%;transform:rotate(-8deg);transform-origin:50% 80%;z-index:14;box-shadow:0 2px 4px rgba(0,0,0,.25),inset 1px 1px 3px rgba(255,255,255,.25)}
+.d-cap::before{content:'GOLDIE';position:absolute;left:6px;top:6px;font-size:5.2px;letter-spacing:.35px;font-weight:900;color:#ffe680;text-shadow:0 1px 1px rgba(0,0,0,.5)}
+.d-cap::after{content:'';position:absolute;right:-11px;top:9px;width:17px;height:7px;background:linear-gradient(90deg,#b9131b,#ff3b30);border-radius:0 8px 8px 0;transform:rotate(10deg);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.walking .d-cap{animation:capbob .42s ease-in-out infinite alternate}
+@keyframes capbob{0%{transform:rotate(-11deg) translateY(0)}100%{transform:rotate(-5deg) translateY(-2px)}}
+
 #gs.sleeping .d-eye{border-radius:0 0 50% 50%;width:11px;height:5px;top:10px;animation:none!important;border-bottom:2.2px solid #281835}
 #gs.sleeping .d-eye::before,#gs.sleeping .d-eye::after,#gs.sleeping .d-mouth::after{display:none}
 
-.walking .d-leg{animation:lg 0.35s ease-in-out infinite alternate}
-.walking .d-leg.fl{animation-delay:0s}
-.walking .d-leg.br{animation-delay:0.175s}
-.walking .d-leg.fr{animation-delay:0.175s}
-.walking .d-leg.bl{animation-delay:0s}
-.walking .d-body{animation:wb 0.35s ease-in-out infinite alternate}
+.walking .dog{animation:walkdog .46s ease-in-out infinite alternate}
+.walking .d-leg{animation:lg .34s cubic-bezier(.45,0,.55,1) infinite alternate;transform-origin:50% 0;will-change:transform}
+.walking .d-leg.fl,.walking .d-leg.br{animation-delay:0s}
+.walking .d-leg.fr,.walking .d-leg.bl{animation-delay:.17s}
+.walking .d-body{animation:wb .34s ease-in-out infinite alternate;will-change:transform}
+.walking .d-head{animation:headwalk .34s ease-in-out infinite alternate;will-change:transform}
+.walking .d-tail{animation:tw4 .24s cubic-bezier(.42,0,.58,1) infinite alternate}
 .facing-left .dog{transform:scaleX(-1)!important}
-@keyframes lg{0%{transform:translateY(0)}100%{transform:translateY(-4px)}}
-@keyframes wb{0%{transform:translateY(0)}100%{transform:translateY(-2px)}}
-#aind{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:14px;pointer-events:none;animation:fl 2s ease-in-out infinite;opacity:.75}
+@keyframes lg{0%{transform:translate3d(-1px,0,0) rotate(-16deg)}100%{transform:translate3d(1px,-7px,0) rotate(16deg)}}
+@keyframes wb{0%{transform:translateX(-50%) translateY(0) rotate(-2deg)}100%{transform:translateX(-50%) translateY(-4px) rotate(2deg)}}
+@keyframes headwalk{0%{transform:rotate(-4deg) translateY(1px)}100%{transform:rotate(4deg) translateY(-3px)}}
+@keyframes walkdog{0%{filter:drop-shadow(0 4px 4px rgba(0,0,0,.18))}100%{filter:drop-shadow(0 8px 5px rgba(0,0,0,.24))}}
+#aind{position:absolute;top:-34px;left:50%;transform:translateX(-50%);font-size:14px;pointer-events:none;animation:fl 2.4s ease-in-out infinite;opacity:.75;z-index:20}
 @keyframes fl{0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}50%{transform:translateX(-50%) translateY(-5px);opacity:1}}
+
+.wavelet{position:absolute;left:-35px;right:-35px;height:16px;border-radius:50%;border-top:2px solid rgba(255,255,255,.72);z-index:1;animation:wavelet 3.8s ease-in-out infinite;opacity:.78}.wavelet.w1{bottom:96px;animation-delay:-.4s}.wavelet.w2{bottom:78px;animation-delay:-1.8s;opacity:.55}.wavelet.w3{bottom:61px;animation-delay:-2.7s;opacity:.42}@keyframes wavelet{0%,100%{transform:translateX(-16px) scaleX(1)}50%{transform:translateX(18px) scaleX(1.05)}}
+.palm{position:absolute;bottom:46px;right:118px;width:86px;height:148px;z-index:3;pointer-events:none;transform-origin:42px 140px;animation:palmSway 5.8s ease-in-out infinite}.palm .trunk{position:absolute;bottom:0;left:38px;width:14px;height:100px;background:linear-gradient(90deg,#8a531f,#c48538 45%,#7a4218);border-radius:10px;transform:rotate(-8deg);transform-origin:50% 100%;box-shadow:inset 2px 0 rgba(255,224,148,.28)}.palm .trunk::before{content:'';position:absolute;inset:8px 1px;background:repeating-linear-gradient(180deg,transparent 0 12px,rgba(83,43,18,.24) 13px 15px);border-radius:10px}.palm .leaf{position:absolute;left:36px;top:48px;width:62px;height:18px;background:linear-gradient(90deg,#1f8f4f,#55c56d);border-radius:100% 10% 100% 10%;transform-origin:0 50%;filter:drop-shadow(0 1px 1px rgba(0,0,0,.14));animation:leafWind 3.1s ease-in-out infinite}.palm .l1{transform:rotate(-170deg)}.palm .l2{transform:rotate(-132deg);animation-delay:-.5s}.palm .l3{transform:rotate(-94deg);animation-delay:-1s}.palm .l4{transform:rotate(-50deg);animation-delay:-1.5s}.palm .l5{transform:rotate(-12deg);animation-delay:-2s}.palm .l6{transform:rotate(28deg);animation-delay:-2.5s}.palm .coco{position:absolute;left:33px;top:51px;width:9px;height:9px;background:#6f3f1c;border-radius:50%;box-shadow:9px 1px 0 #78461f,4px 8px 0 #5d3518}@keyframes palmSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(2.5deg)}}@keyframes leafWind{0%,100%{filter:drop-shadow(0 1px 1px rgba(0,0,0,.14));margin-top:0}50%{filter:drop-shadow(0 2px 1px rgba(0,0,0,.18));margin-top:-2px}}
+
+/* Goldie client-side interaction props */
+.d-prop{position:absolute;z-index:16;pointer-events:none;opacity:0;transition:opacity .26s ease,transform .36s cubic-bezier(.22,.9,.24,1);will-change:transform,opacity}.prop-mega{right:-9px;top:25px;width:26px;height:15px;background:linear-gradient(90deg,#d9dde6,#ffffff);border:2px solid #5f6b7a;border-radius:4px 12px 12px 4px;transform:rotate(5deg);box-shadow:0 2px 3px rgba(0,0,0,.18)}.prop-mega::before{content:'';position:absolute;left:-8px;top:4px;width:9px;height:7px;background:#5f6b7a;border-radius:4px}.prop-mega::after{content:'';position:absolute;right:-8px;top:2px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #f8fafc;filter:drop-shadow(1px 0 #5f6b7a)}.prop-brush{right:-13px;top:27px;width:34px;height:5px;background:linear-gradient(90deg,#8b5a2b 0 70%,#222 70% 82%,#44a3ff 82%);border-radius:8px;transform:rotate(25deg);box-shadow:0 2px 2px rgba(0,0,0,.2)}.prop-brush::after{content:'';position:absolute;right:-9px;top:-4px;width:12px;height:12px;background:radial-gradient(circle,#4ab3ff 0 45%,rgba(74,179,255,0) 48%);border-radius:50%;opacity:.8}.prop-mic{right:-18px;top:18px;width:8px;height:68px;background:#2d3748;border-radius:8px;transform:rotate(-2deg);box-shadow:0 2px 4px rgba(0,0,0,.25)}.prop-mic::before{content:'';position:absolute;left:-7px;top:-13px;width:22px;height:22px;background:radial-gradient(circle at 40% 30%,#e2e8f0,#475569 62%,#1e293b);border-radius:50%;box-shadow:inset 0 -2px 4px rgba(0,0,0,.35)}.prop-mic::after{content:'';position:absolute;left:-13px;bottom:-5px;width:34px;height:6px;background:#1e293b;border-radius:50%}.song-notes{position:absolute;right:-40px;top:-18px;width:52px;height:54px;z-index:12;pointer-events:none;opacity:0}.song-notes span{position:absolute;font-size:15px;color:#334155;text-shadow:0 1px 0 rgba(255,255,255,.7);animation:noteFloat 1.7s ease-in-out infinite}.song-notes span:nth-child(1){left:2px;bottom:2px;animation-delay:0s}.song-notes span:nth-child(2){left:22px;bottom:13px;animation-delay:-.45s}.song-notes span:nth-child(3){left:34px;bottom:0;animation-delay:-.9s}.sand-doodle{position:absolute;left:50%;bottom:-13px;width:76px;height:22px;transform:translateX(-32%);z-index:9;pointer-events:none;opacity:0}.sand-doodle::before{content:'';position:absolute;left:0;right:0;top:8px;height:10px;border-top:2px dashed rgba(124,78,28,.55);border-radius:50%;animation:doodle 1.5s linear infinite}.sand-doodle::after{content:'';position:absolute;left:34px;top:1px;width:18px;height:18px;border:2px solid rgba(124,78,28,.42);border-left:0;border-bottom:0;border-radius:50%;animation:doodle 1.5s linear infinite reverse}@keyframes noteFloat{0%{transform:translateY(12px) scale(.86);opacity:0}25%,70%{opacity:1}100%{transform:translateY(-18px) scale(1.08);opacity:0}}@keyframes doodle{0%{transform:translateX(-6px);opacity:.35}50%{opacity:.95}100%{transform:translateX(8px);opacity:.35}}
+#gs.action-chat .prop-mega,#gs.action-image .prop-brush,#gs.action-song .prop-mic,#gs.action-song .song-notes,#gs.action-image .sand-doodle{opacity:1}#gs.action-chat .d-head{animation:talkHeadSmooth .95s cubic-bezier(.45,0,.55,1) infinite alternate!important}#gs.action-chat .d-mouth{height:5px;border:1.6px solid rgba(110,70,15,.48);border-top:0;background:rgba(120,70,35,.14);animation:talkMouthSmooth .52s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-chat .d-mouth::after{display:none}#gs.action-chat .prop-mega{animation:megaTalkSmooth 1.05s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-image .dog{animation:drawLeanSmooth 2.2s cubic-bezier(.45,0,.55,1) infinite alternate;transform-origin:center bottom}#gs.action-image .d-head{animation:drawHeadSmooth 2.2s cubic-bezier(.45,0,.55,1) infinite alternate!important}#gs.action-image .prop-brush{animation:brushDrawSmooth 1.45s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-song .dog{animation:singBobSmooth 1.35s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-song .d-mouth{height:8px;width:10px;border:0;background:#35151d;border-radius:50%;animation:singMouthSmooth .75s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-song .d-mouth::after{display:none}#gs.action-song .prop-mic{animation:micGrooveSmooth 1.6s cubic-bezier(.45,0,.55,1) infinite alternate}#gs.action-chat .d-cap,#gs.action-image .d-cap,#gs.action-song .d-cap{animation:capActionSmooth 1.8s cubic-bezier(.45,0,.55,1) infinite alternate}@keyframes talkHeadSmooth{0%{transform:rotate(-1.8deg) translateY(0)}100%{transform:rotate(2deg) translateY(-1px)}}@keyframes talkMouthSmooth{0%{transform:translateX(-20%) scaleY(.85)}100%{transform:translateX(-20%) scaleY(1.28)}}@keyframes megaTalkSmooth{0%{transform:rotate(3deg) translateX(0)}100%{transform:rotate(7deg) translateX(1px)}}@keyframes drawLeanSmooth{0%{transform:rotate(3.5deg) translateY(0)}100%{transform:rotate(6.5deg) translateY(2px)}}@keyframes drawHeadSmooth{0%{transform:rotate(6deg) translateY(4px)}100%{transform:rotate(9deg) translateY(6px)}}@keyframes brushDrawSmooth{0%{transform:rotate(20deg) translate(0,0)}100%{transform:rotate(31deg) translate(6px,3px)}}@keyframes singBobSmooth{0%{transform:translateY(0) rotate(-.6deg)}100%{transform:translateY(-3px) rotate(1.2deg)}}@keyframes singMouthSmooth{0%{transform:translateX(-20%) scale(.9)}100%{transform:translateX(-20%) scale(1.15)}}@keyframes micGrooveSmooth{0%{transform:rotate(-2.5deg)}100%{transform:rotate(1deg)}}@keyframes capActionSmooth{0%{transform:rotate(-9deg) translateY(0)}100%{transform:rotate(-6deg) translateY(-1px)}}
 #jr{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .ji{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.035);border-left:2px solid rgba(212,160,23,.08);border-radius:0 6px 6px 0;background:rgba(212,160,23,.01)}
 .ji-t{font-size:10px;color:#d4a017;margin-bottom:6px;font-weight:600}
@@ -75,28 +91,28 @@ body{display:flex;flex-direction:column}
 .ji-b{font-size:11px;color:#999;line-height:1.5;border-left:2px solid rgba(212,160,23,.15);padding-left:8px;margin-top:3px;white-space:pre-wrap}
 .sr3{display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.035)}
 .sr3 span:first-child{font-size:11px;color:#666}.sr3 span:last-child{font-size:11px;color:#ddd;font-weight:600}
-#cp2{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgba(8,12,28,.97);z-index:60;height:0;overflow:hidden;transition:height .3s;border-top:2px solid rgba(212,160,23,.3);box-shadow:0 -4px 30px rgba(212,160,23,.15)}
-#cp2.open{height:68%}
+#cp2{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgba(8,12,28,.97);z-index:60;height:0;max-height:calc(100% - 8px);overflow:hidden;transition:height .3s;border-top:2px solid rgba(212,160,23,.3);box-shadow:0 -4px 30px rgba(212,160,23,.15)}
+#cp2.open{height:calc(100% - 8px)}
 #cp2::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#d4a017,#64ffda,#d4a017,transparent);animation:glow-sweep 3s ease-in-out infinite}
 @keyframes glow-sweep{0%,100%{opacity:.4;filter:blur(1px)}50%{opacity:1;filter:blur(2px)}}
 .cp2-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05)}
 .cp2-h h3{font-size:11px;font-weight:600;color:#fff}
 .cp2-x{background:none;border:none;color:#555;font-size:13px;cursor:pointer;padding:2px 5px}
 #cb2{flex:1;min-height:0;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:5px}
-.bb{max-width:85%;padding:7px 11px;border-radius:11px;font-size:11px;line-height:1.5}
+.bb{max-width:85%;padding:8px 11px;border-radius:11px;font-size:11px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.bb.bo{min-width:38px}.bb .md-b{font-weight:700;color:#f4c542}.bb .md-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:0 3px;color:#dff}.bb .md-line{display:block;margin:2px 0}
 .bb.bo{background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.1);align-self:flex-start;border-bottom-left-radius:2px;color:#ccc}
 .bb.bu{background:rgba(100,180,255,.07);border:1px solid rgba(100,180,255,.1);align-self:flex-end;border-bottom-right-radius:3px}
 .ca2{display:flex;gap:5px;padding:7px 12px;border-top:1px solid rgba(255,255,255,.05)}
 .ci2{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:15px;padding:7px 11px;color:#ddd;font-size:11px;outline:none}
-.cs2{background:#d4a017;border:none;border-radius:50%;width:28px;height:28px;color:#050a1a;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.medb{background:rgba(212,160,23,.14);border:1px solid rgba(212,160,23,.35);border-radius:50%;width:28px;height:28px;color:#f4c542;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.medb:disabled{opacity:.45}.bb audio.ga{width:190px;display:block;margin-top:6px}.dlb{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:6px 9px;border-radius:10px;background:rgba(212,160,23,.16);border:1px solid rgba(212,160,23,.42);color:#f4c542;text-decoration:none;font-size:10px;font-weight:700}.dlb:hover{background:rgba(212,160,23,.24)}.imgb{background:rgba(212,160,23,.14);border:1px solid rgba(212,160,23,.35);border-radius:50%;width:28px;height:28px;color:#f4c542;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.imgb:disabled{opacity:.45}.cs2{background:#d4a017;border:none;border-radius:50%;width:28px;height:28px;color:#050a1a;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}.bb img.gi{max-width:180px;max-height:180px;border-radius:12px;display:block;margin-top:6px;border:1px solid rgba(255,255,255,.12)}
 #lg{position:absolute;inset:0;background:rgba(5,10,20,.95);z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 #lg.show{display:flex}
 .lg-t{font-size:13px;color:#777;text-align:center;line-height:1.6}.lg-t b{color:#d4a017}
 .lg-a{background:linear-gradient(135deg,#24292e,#1b1f23);color:#fff;border:1px solid #30363d;border-radius:8px;padding:9px 20px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;text-decoration:none}
 .lg-a:hover{border-color:#d4a017}
-.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;color:#555;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .15s;min-width:52px;height:56px;text-decoration:none}
+.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;color:#555;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .15s;min-width:45px;height:56px;text-decoration:none}
 .nb .ic{width:22px;height:22px;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center}
-.nb .lb{font-size:9px;margin-top:2px;display:block;font-weight:500}
+.nb .lb{font-size:8px;margin-top:2px;display:block;font-weight:500}
 .nb.act{color:#d4a017;background:rgba(212,160,23,.06)}
 .nb:active{color:#fff}
 .ns{width:1px;height:32px;background:rgba(255,255,255,.06);margin:0 0}
@@ -105,13 +121,32 @@ body{display:flex;flex-direction:column}
 .ldp{width:28px;height:28px;border:2.5px solid rgba(212,160,23,.12);border-top-color:#d4a017;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.sc{position:absolute;top:12px;left:12px;width:98px;background:rgba(5,12,24,.75);border:1px solid rgba(100,255,218,.12);border-radius:10px;padding:10px 8px;z-index:20;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+.sc{position:absolute;top:12px;left:12px;width:132px;background:rgba(5,12,24,.75);border:1px solid rgba(100,255,218,.12);border-radius:10px;padding:10px 8px;z-index:20;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
 .sc:hover{background:rgba(8,16,32,.9);border-color:rgba(100,255,218,.25);transform:translateY(-1px)}
 .sc:active{transform:scale(.97)}
 .sc-h{font-size:11px;color:#d4a017;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:4px}
 .sc-r{font-size:9px;color:#777;margin-top:4px;display:flex;align-items:center;gap:3px}
 .sc-r .dot{width:5px;height:5px;border-radius:50%;display:inline-block}
 .sc-v{font-size:10px;color:#ddd;font-weight:600;margin-left:3px}
+.sc-links{margin-top:8px;padding-top:7px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:6px;justify-content:space-between}
+.sc-link{flex:1;height:28px;border-radius:8px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);color:#d7e0ea;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;font-size:8px;font-weight:700;letter-spacing:.1px;transition:all .16s ease}
+.sc-link:hover{background:rgba(100,255,218,.09);border-color:rgba(100,255,218,.22);color:#fff;transform:translateY(-1px)}
+.sc-link:active{transform:scale(.97)}
+.sc-link .sci{width:14px;height:14px;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+.sc-link svg{width:14px;height:14px;display:block}
+
+/* Goldie CLI Workspace Modal */
+#cli2{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgba(3,8,16,.985);z-index:65;height:0;max-height:calc(100% - 8px);overflow:hidden;transition:height .3s;border-top:2px solid rgba(100,255,218,.35);box-shadow:0 -4px 32px rgba(100,255,218,.12)}
+#cli2.open{height:calc(100% - 8px)}
+.cli-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(100,255,218,.07),rgba(212,160,23,.05))}
+.cli-title{font-size:11px;color:#fff;font-weight:800}.cli-sub{font-size:8px;color:#7f8b96;margin-top:2px}.cli-x{background:none;border:none;color:#70808f;font-size:14px;cursor:pointer}
+.cli-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-chip{border:1px solid rgba(100,255,218,.13);background:rgba(100,255,218,.045);border-radius:8px;padding:6px;font-size:8px;color:#83909a;min-width:0}.cli-chip b{display:block;color:#dbefff;font-size:9px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cli-log{flex:1;min-height:0;overflow-y:auto;padding:10px 11px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;line-height:1.45;color:#aeb8c2;background:radial-gradient(circle at 20% 0,rgba(100,255,218,.06),transparent 36%)}
+.cli-main{display:grid;grid-template-columns:116px 1fr;gap:0;flex:1;min-height:0;border-top:1px solid rgba(255,255,255,.05)}#cli-files{overflow-y:auto;border-right:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);padding:7px}.cli-file{font-size:9px;color:#aeb8c2;padding:5px 4px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cli-file:hover{background:rgba(100,255,218,.09);color:#fff}.cli-empty{font-size:9px;color:#66727d;padding:6px}.cli-tools{display:flex;gap:6px;padding:7px 10px;border-top:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.16)}.cli-tools button,.cli-tools a{border:1px solid rgba(100,255,218,.15);background:rgba(100,255,218,.055);color:#dbefff;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:800;text-decoration:none;cursor:pointer}.cli-tools a{display:none}.cli-tools a.show{display:inline-flex}#cli-reader{display:none;max-height:120px;overflow:auto;background:rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.06);padding:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:9px;color:#cbd6df;white-space:pre-wrap;outline:none}.cli-line{white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 8px}.cli-u{color:#64ffda}.cli-g{color:#f4c542}.cli-o{color:#b9c3cc}.cli-sec{color:#8fe7be}.cli-err{color:#ff9aa8}.cli-help{font-size:9px;color:#687684;padding:7px 10px;border-top:1px solid rgba(255,255,255,.05)}
+.cli-in{display:flex;gap:6px;padding:8px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.22)}
+#cli-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e8eef5;border-radius:9px;padding:9px 10px;font-size:11px;outline:none}#cli-input:focus{border-color:rgba(100,255,218,.35)}
+#cli-send{background:linear-gradient(135deg,#0f7f72,#0d4c63);border:none;border-radius:9px;color:white;padding:0 12px;font-size:11px;font-weight:800;cursor:pointer}
 
 </style>
 </head>
@@ -132,10 +167,16 @@ body{display:flex;flex-direction:column}
     <div class="sc-h">Day <span id="sc-day" class="sc-v">1</span></div>
     <div class="sc-r"><span class="dot" id="sc-mood-dot"></span><span id="sc-mood">Dreamer</span></div>
     <div class="sc-r" style="margin-top:6px;padding-top:5px;border-top:1px solid rgba(255,255,255,.05);justify-content:space-between">
-      <span>LLM Cost</span><span class="sc-v" id="sc-cost">$—</span>
+      <span>LLM Cost</span><span class="sc-v" id="sc-cost">loading</span>
+    </div>
+    <div class="sc-links" onclick="event.stopPropagation()">
+      <a class="sc-link" href="https://github.com/Cheesecaster/gitpup-agent" target="_blank" rel="noopener" title="GitHub repo"><span class="sci">🐙</span><span>GitHub</span></a>
+      <a class="sc-link" href="https://gitlawb.com/z6MkkX6ybebrEazheuHoe7ewbYJTVQV3qJxwX6vaLHZnHMan/gitpup-agent" target="_blank" rel="noopener" title="GitLawb repo"><span class="sci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="4" r="2" fill="currentColor" opacity=".3"/><circle cx="18" cy="4" r="2" fill="currentColor" opacity=".3"/><circle cx="12" cy="20" r="2.5" fill="currentColor" opacity=".3"/><path d="M6 6v8"/><path d="M18 6v8"/><path d="M7 8l5 6"/><path d="M17 8l-5 6"/></svg></span><span>GLawb</span></a>
     </div>
   </div>
   <div id="tb"><span class="sb1" id="stg">Loading...</span><span class="sb2" id="sts">...</span></div>
+  <div class="wavelet w1"></div><div class="wavelet w2"></div><div class="wavelet w3"></div>
+  <div class="palm"><div class="trunk"></div><div class="leaf l1"></div><div class="leaf l2"></div><div class="leaf l3"></div><div class="leaf l4"></div><div class="leaf l5"></div><div class="leaf l6"></div><div class="coco"></div></div>
   <div class="dogh" style="position:absolute;bottom:28px;left:0;width:90px;height:70px;z-index:2"><div style="position:absolute;bottom:0;left:0;width:90px;height:52px;background:linear-gradient(180deg,#8B6914,#6B4E12);border-radius:3px"></div><div style="position:absolute;bottom:48px;left:-5px;width:0;height:0;border-left:50px solid transparent;border-right:50px solid transparent;border-bottom:30px solid #8B2500"></div><div style="position:absolute;bottom:4px;left:30px;width:30px;height:26px;background:#1a0a05;border-radius:50%"></div></div>
   <div class="slide" style="position:absolute;bottom:28px;right:24px;width:85px;height:32px;z-index:2"><svg width="85" height="32" viewBox="0 0 85 32"><rect x="0" y="0" width="4" height="32" fill="#6B4E12" rx="1"/><rect x="80" y="0" width="4" height="32" fill="#6B4E12" rx="1"/><rect x="0" y="0" width="84" height="3" fill="#8B2500" rx="1"/><line x1="4" y1="3" x2="80" y2="30" stroke="#4A90D9" stroke-width="4" stroke-linecap="round"/><rect x="74" y="28" width="10" height="4" fill="#4A90D9" rx="1"/></svg></div>
   <div class="grb"></div>
@@ -145,11 +186,13 @@ body{display:flex;flex-direction:column}
     <div class="d-leg fl"></div><div class="d-leg fr"></div><div class="d-leg bl"></div><div class="d-leg br"></div>
     <div class="d-tail"></div>
     <div class="d-head">
+      <div class="d-cap"></div>
       <div class="d-ear l"></div><div class="d-ear r"></div>
       <div class="d-eye l"></div><div class="d-eye r"></div>
       <div class="d-snout" style="position:absolute;bottom:3px;right:-2px;width:16px;height:12px;background:rgba(255,235,160,.3);border-radius:50%;z-index:1"></div>
       <div class="d-nose"></div><div class="d-mouth"></div>
     </div>
+    <div class="d-prop prop-mega"></div><div class="d-prop prop-brush"></div><div class="d-prop prop-mic"></div><div class="song-notes"><span>♪</span><span>♫</span><span>♬</span></div><div class="sand-doodle"></div>
   </div></div></div>
 </div>
 <div id="ct">
@@ -157,21 +200,36 @@ body{display:flex;flex-direction:column}
   <div id="cp2">
     <div class="cp2-h"><h3>💬 Chat with Goldie</h3><button class="cp2-x" id="cc">✕</button></div>
     <div id="cb2"></div>
-    <div class="ca2"><input class="ci2" id="chati" placeholder="Ask Goldie..." autocomplete="off"><button class="cs2" id="cssb">➤</button></div>
+    <div class="ca2"><button class="medb imgb" id="imgb" title="Generate/edit image">🖼️</button><button class="medb" id="micb" title="Generate song">🎙️</button><input type="file" id="imgf" accept="image/*" style="display:none"><input class="ci2" id="chati" placeholder="Ask Goldie..." autocomplete="off"><button class="cs2" id="cssb">➤</button></div>
   </div>
+
+  <div id="cli2">
+    <div class="cli-h"><div><div class="cli-title">▣ Goldie CLI Workspace</div><div class="cli-sub">coding • building • push • deploy — sandboxed</div></div><button class="cli-x" id="cli-close">✕</button></div>
+    <div class="cli-meta">
+      <div class="cli-chip">Workspace<b id="cli-ws">initializing...</b></div>
+      <div class="cli-chip">Model<b id="cli-model">jatevo / gpt-5.3-codex-spark</b></div>
+      <div class="cli-chip">Core<b>Hermes-style tools + Goldie KB</b></div>
+      <div class="cli-chip">Export<b>download link + preview</b></div>
+    </div>
+    <div class="cli-tools"><button id="cli-template">Home</button><button id="cli-save">Save</button><button id="cli-refresh">Files</button><button id="cli-export">Download ZIP</button><button id="cli-preview">Preview</button><button id="cli-scan" title="Scan URL reference/assets">URL Scan</button><button id="cli-delete" title="Delete all files in this workspace">Delete</button><a id="cli-preview-link" target="_blank" rel="noopener">Open preview</a></div>
+    <div class="cli-main"><div id="cli-files"><div class="cli-empty">No files yet</div></div><div id="cli-log"><div class="cli-line cli-sec">Goldie CLI booting workspace...</div></div></div>
+    <div id="cli-reader"></div>
+    <div class="cli-help">Commands: /scan https://site.com · /files · /run pwd · /write app.py + newline + code · /read app.py. URL Scan saves reference data/assets inside the sandbox.</div>
+    <div class="cli-in"><input id="cli-input" placeholder="Ask/build or /scan https://site.com for reference/assets..." autocomplete="off"><button id="cli-send">↵</button></div>
+  </div>
+
   <div id="lg">
-    <div class="lg-t">Chat requires<br><b>GitHub authentication</b></div>
-    <a class="lg-a" id="lg-link"> Login with GitHub</a>
+    <div class="lg-t">Chat is open<br><b>Ask Goldie anything</b></div>
+    <a class="lg-a" id="lg-link">Start chatting</a>
   </div>
 </div>
 <nav id="nb">
   <button class="nb act" data-a="jr"><span class="ic">📓</span><span class="lb">Journal</span></button>
+  <button class="nb" data-a="story"><span class="ic">🧠</span><span class="lb">Story</span></button>
   <button class="nb" data-a="chat"><span class="ic">💬</span><span class="lb">Chat</span></button>
+  <button class="nb" data-a="cli"><span class="ic">▣</span><span class="lb">CLI</span></button>
   <button class="nb" data-a="activity"><span class="ic">📡</span><span class="lb">Activity</span></button>
   <button class="nb" data-a="stats"><span class="ic">📊</span><span class="lb">Stats</span></button>
-  <div class="ns"></div>
-  <a class="nb" href="https://gitlawb.com/z6MkkX6ybebrEazheuHoe7ewbYJTVQV3qJxwX6vaLHZnHMan/gitpup-agent" target="_blank"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><circle cx="6" cy="4" r="2" fill="currentColor" opacity=".3"/><circle cx="18" cy="4" r="2" fill="currentColor" opacity=".3"/><circle cx="12" cy="20" r="2.5" fill="currentColor" opacity=".3"/><path d="M6 6v8"/><path d="M18 6v8"/><path d="M7 8l5 6"/><path d="M17 8l-5 6"/></svg></span><span class="lb">GLawb</span></a>
-  <a class="nb" href="https://github.com/Cheesecaster/gitpup-agent" target="_blank"><span class="ic">🐙</span><span class="lb">GitHub</span></a>
 </nav>
 <script>
 function formatDate(ts){
@@ -192,33 +250,155 @@ function formatDate(ts){
   var GH_CLIENT_ID='Ov23liLMEsHCQUzsfIKX';
   var GH_REDIRECT='https://gitpup.fun/auth/callback';
   var LD=$('#ld'),GS=$('#gs'),STG=$('#stg'),STS=$('#sts'),JR=$('#jr'),AIND=$('#aind');
-  var CP=$('#cp2'),CB=$('#cb2'),CI2=$('#chati'),CS2=$('#cssb'),CC=$('#cc'),LG=$('#lg'),LG_LINK=$('#lg-link');
+  var CP=$('#cp2'),CB=$('#cb2'),CI2=$('#chati'),CS2=$('#cssb'),CC=$('#cc'),LG=$('#lg'),LG_LINK=$('#lg-link'),IMGB=$('#imgb'),IMGF=$('#imgf'),MICB=$('#micb');
   var ghToken=localStorage.getItem('gp_gh_token');
   if(!ghToken){try{var u=JSON.parse(localStorage.getItem('gp_gh_user')||'{}');ghToken=u.token||null}catch(e){}}
-  LG_LINK.onclick=function(){window.location.href='https://github.com/login/oauth/authorize?client_id='+encodeURIComponent(GH_CLIENT_ID)+'&redirect_uri='+encodeURIComponent(GH_REDIRECT)+'&scope=read:user'};
-  if(ghToken){CS2.disabled=false}else{CS2.disabled=true}
+  var goldieAction=null,goldieActionTimer=null,goldieActionLocked=false;
+  function setGoldieAction(action, locked){
+    if(!GS)return;
+    clearTimeout(goldieActionTimer);
+    goldieAction=action||null;goldieActionLocked=!!locked;
+    ['action-chat','action-image','action-song','thinking'].forEach(function(c){GS.classList.remove(c)});
+    if(action){
+      GS.classList.remove('walking');
+      GS.classList.add('action-'+action);
+    }
+    if(AIND){AIND.textContent=action==='chat'?'📣':(action==='image'?'🎨':(action==='song'?'🎵':'🐾'));}
+  }
+  function clearGoldieAction(delay){
+    clearTimeout(goldieActionTimer);
+    goldieActionTimer=setTimeout(function(){
+      setGoldieAction(null,false);
+      if(AIND)AIND.textContent='🐾';
+    }, delay||700);
+  }
+  LG_LINK.onclick=function(){LG.classList.remove('show');openChat()};
+  CS2.disabled=false
+  /* Goldie Secure CLI Workspace */
+  var CLI=document.getElementById('cli2'),CL=document.getElementById('cli-log'),CLIIN=document.getElementById('cli-input'),CLIS=document.getElementById('cli-send'),CLIX=document.getElementById('cli-close'),CLIWS=document.getElementById('cli-ws'),CLIM=document.getElementById('cli-model'),CLIF=document.getElementById('cli-files'),CLIR=document.getElementById('cli-reader'),CLIRF=document.getElementById('cli-refresh'),CLIEX=document.getElementById('cli-export'),CLIPV=document.getElementById('cli-preview'),CLIPL=document.getElementById('cli-preview-link'),CLIT=document.getElementById('cli-template'),CLISV=document.getElementById('cli-save'),CLISC=document.getElementById('cli-scan'),CLIDEL=document.getElementById('cli-delete');
+  var cliSession=null;
+  function cliEsc(s){return String(s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+  function cliAdd(text,cls){if(!CL)return;var d=document.createElement('div');d.className='cli-line '+(cls||'cli-o');d.innerHTML=cliEsc(text);CL.appendChild(d);CL.scrollTop=CL.scrollHeight;}
+  function cliParseJson(r){
+    return r.text().then(function(t){
+      try{return JSON.parse(t||'{}');}
+      catch(e){
+        var head=(t||'').replace(/\s+/g,' ').slice(0,180);
+        return {status:'error',error:'non_json_response',reply:'Server returned non-JSON response. Retry or refresh. '+head};
+      }
+    });
+  }
+  function cliPost(path,obj){return fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({session:getSession()},obj||{}))}).then(cliParseJson);}
+  function cliRenderFiles(files){if(!CLIF)return; if(!files||!files.length){CLIF.innerHTML='<div class="cli-empty">No files yet</div>';return;} CLIF.innerHTML=files.map(function(f){return '<div class="cli-file" data-p="'+cliEsc(f.path)+'" title="'+cliEsc(f.path)+'">'+cliEsc(f.path)+'</div>'}).join(''); Array.prototype.forEach.call(CLIF.querySelectorAll('.cli-file'),function(el){el.onclick=function(){cliReadFile(el.dataset.p)}});}
+  function cliRefreshFiles(){return initCli().then(function(){return cliPost('/api/cli/tree')}).then(function(d){if(d.files)cliRenderFiles(d.files);return d;}).catch(function(e){cliAdd('file refresh failed: '+e,'cli-err')});}
+  function cliReadFile(path){cliPost('/api/cli/read',{path:path}).then(function(d){if(d.status==='ok'){CLIR.style.display='block';CLIR.contentEditable='true';CLIR.textContent='// '+d.path+'\n'+d.content;}else cliAdd(d.error||'read failed','cli-err')}).catch(function(e){cliAdd('read failed: '+e,'cli-err')});}
+
+
+  function cliClearPreview(){if(CLIPL){CLIPL.removeAttribute('href');CLIPL.classList.remove('show');}}
+
+  function cliPollJob(id){var n=0;var timer=setInterval(function(){cliPost('/api/cli/job',{job_id:id}).then(function(d){if(!d.job)return; var logs=d.job.logs||[]; if(logs.length>n){logs.slice(n).forEach(function(x){cliAdd(x,'cli-o')}); n=logs.length;} if(d.job.status==='done'||d.job.status==='error'){clearInterval(timer); cliAdd('job '+d.job.status,'cli-g'); if(d.job.result&&d.job.result.preview&&d.job.result.preview.preview_url){if(CLIPL){CLIPL.href=d.job.result.preview.preview_url;CLIPL.classList.add('show');}} cliRefreshFiles();}}).catch(function(e){clearInterval(timer);cliAdd('job poll failed: '+e,'cli-err')});},1200);}
+  function cliAgentBuild(){cliAdd('Agent Build disabled. Use explicit /write, Save, Template, or /run commands.','cli-sec');}
+  function cliHome(){
+    if(CLIR){CLIR.style.display='none';CLIR.contentEditable='false';CLIR.textContent='';}
+    if(CLIF){CLIF.innerHTML='<div class="cli-empty">No files yet</div>';}
+    cliClearPreview();
+    if(CLIIN)CLIIN.value='';
+    if(CL){CL.innerHTML='<div class="cli-line cli-sec">Goldie CLI home. Ask, build, or run commands inside your sandbox workspace.</div>';}
+  }
+  function cliTemplate(){cliHome();}
+  function cliSave(){if(!CLIR||CLIR.style.display==='none'){cliAdd('Open/read a file first, then edit text and Save.','cli-err');return;} var txt=CLIR.textContent||''; var first=txt.split('\n')[0]||''; var path=first.replace(/^\/\/\s*/,'').trim(); var body=txt.split('\n').slice(1).join('\n'); if(!path){cliAdd('No file path in editor.','cli-err');return;} cliPost('/api/cli/save',{path:path,content:body}).then(function(d){if(d.status==='ok'){cliAdd('saved: '+d.path,'cli-g'); if(d.files)cliRenderFiles(d.files); if((d.path||'').endsWith('index.html'))cliPreview();}else cliAdd(d.error||'save failed','cli-err')});}
+  function cliScan(){var u=prompt('URL to scan for build reference/assets:'); if(!u)return; cliAdd('scanning URL reference: '+u,'cli-sec'); initCli().then(function(){return cliPost('/api/cli/scan',{url:u,message:'/scan '+u})}).then(function(d){if(d.status==='ok'){cliAdd('URL scanned: '+(d.title||d.url),'cli-g'); cliAdd('reference: '+d.reference_file+'\nassets saved: '+d.assets_saved,'cli-o'); cliRefreshFiles();}else cliAdd(d.error||d.reply||'URL scan failed','cli-err')}).catch(function(e){cliAdd('URL scan failed: '+e,'cli-err')});}
+  function cliDeleteWorkspace(){
+    var ok=confirm('Delete all files in this workspace? This cannot be undone. Download ZIP first if you need a backup.');
+    if(!ok)return;
+    var txt=prompt('Type DELETE to permanently clear this workspace:');
+    if((txt||'').trim().toUpperCase()!=='DELETE'){cliAdd('delete cancelled','cli-sec');return;}
+    cliAdd('deleting workspace files...','cli-sec');
+    initCli().then(function(){return cliPost('/api/cli/delete',{confirm:true,confirm_text:'DELETE'})}).then(function(d){
+      if(d.status==='ok'||d.status==='partial'){
+        cliAdd((d.reply||'Workspace cleared')+' deleted items: '+(d.deleted_items||0),'cli-g');
+        cliRenderFiles(d.files||[]); cliClearPreview();
+        if(CLIR){CLIR.style.display='none';CLIR.textContent='';}
+      }else cliAdd(d.reply||d.error||'delete failed','cli-err');
+    }).catch(function(e){cliAdd('delete failed: '+e,'cli-err')});
+  }
+
+  function cliExportZip(){initCli().then(function(){return cliPost('/api/cli/export')}).then(function(d){if(d.status==='ok'){cliAdd('download ready: '+d.download_url,'cli-g'); window.open(d.download_url,'_blank','noopener');}else cliAdd(d.error||'export failed','cli-err')});}
+  function cliPreview(){initCli().then(function(){return cliPost('/api/cli/preview')}).then(function(d){if(d.status==='ok'){if(CLIPL){CLIPL.href=d.preview_url;CLIPL.classList.add('show');} cliAdd('preview ready: '+d.preview_url,'cli-g'); window.open(d.preview_url,'_blank','noopener');}else cliAdd(d.error||'preview needs an index.html first','cli-err')});}
+  function initCli(){
+    if(cliSession)return Promise.resolve(cliSession);
+    cliAdd('creating/resuming sandbox workspace...','cli-sec');
+    return fetch('/api/cli/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:getSession()})}).then(cliParseJson).then(function(d){
+      cliSession=d.session_id||getSession(); if(CLIWS)CLIWS.textContent=d.workspace_name||('user_'+cliSession); if(CLIM&&d.model)CLIM.textContent=(d.model.provider||'llm')+' / '+(d.model.name||'default');
+      cliAdd('workspace: '+(d.workspace_name||cliSession),'cli-sec');
+      if(d.model)cliAdd('model: '+(d.model.provider||'llm')+' / '+(d.model.name||'default'),'cli-sec');
+      if(d.rate_limit)cliAdd('rate limit: 1 command / '+(d.rate_limit.cooldown_seconds||60)+'s per workspace','cli-sec');
+      if(d.files)cliRenderFiles(d.files);
+      if(d.memory_turns)cliAdd('memory: resumed '+d.memory_turns+' previous turns','cli-sec');
+      return cliSession;
+    }).catch(function(e){cliAdd('failed to init workspace: '+e,'cli-err');});
+  }
+  function openCli(){CP.classList.remove('open');LG.classList.remove('show');JR.style.display='none';CLI.classList.add('open');setTimeout(function(){CLIIN&&CLIIN.focus()},120);initCli();}
+
+  var cliCooldownTimer=null;
+  function cliStartCooldown(sec){sec=parseInt(sec||0,10); if(!CLIS||sec<=0)return; clearInterval(cliCooldownTimer); var original='↵'; CLIS.disabled=true; CLIS.style.opacity='.55'; function tick(){CLIS.textContent=sec+'s'; sec--; if(sec<0){clearInterval(cliCooldownTimer); CLIS.disabled=false; CLIS.style.opacity='1'; CLIS.textContent=original;}} tick(); cliCooldownTimer=setInterval(tick,1000);}
+  function sendCli(){
+    var m=(CLIIN.value||'').trim(); if(!m)return; CLIIN.value=''; cliAdd('goldie@workspace $ '+m,'cli-u');
+    initCli().then(function(){
+      return fetch('/api/cli',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:getSession(),message:m})});
+    }).then(cliParseJson).then(function(d){
+      if(d.workspace_name&&CLIWS)CLIWS.textContent=d.workspace_name;
+      if(d.error==='cooldown'&&d.retry_after)cliStartCooldown(d.retry_after);
+      if(d.reply)cliAdd(d.reply,d.status==='error'?'cli-err':'cli-g');
+      if(d.job_id){cliPollJob(d.job_id);}
+      if(d.output)cliAdd(d.output,'cli-o');
+      if(d.files)cliRenderFiles(d.files);
+      var pv=(d.preview&&d.preview.preview_url)||d.preview_url;
+      if(pv&&CLIPL){CLIPL.href=pv;CLIPL.classList.add('show');cliAdd('preview ready: '+pv,'cli-g');}
+      cliRefreshFiles();
+    }).catch(function(e){cliAdd('CLI error: '+e,'cli-err')});
+  }
+  if(CLIS)CLIS.onclick=sendCli;
+  if(CLIIN)CLIIN.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey)sendCli();};
+  if(CLIX)CLIX.onclick=function(){CLI.classList.remove('open');showView('jr')};
+  if(CLIRF)CLIRF.onclick=cliRefreshFiles;
+  if(CLIEX)CLIEX.onclick=cliExportZip;
+  if(CLIPV)CLIPV.onclick=cliPreview;
+  if(CLIT)CLIT.onclick=cliTemplate;
+  if(CLISV)CLISV.onclick=cliSave;
+  if(CLISC)CLISC.onclick=cliScan;
+  if(CLIDEL)CLIDEL.onclick=cliDeleteWorkspace;
+
   function showView(id){
     $$('.nb').forEach(function(b){b.classList.remove('act')});
     $$('.nb').forEach(function(b){if(b.dataset.a===id)b.classList.add('act')});
-    CP.classList.remove('open');LG.classList.remove('show');
-    if(id==='jr'){JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading journal...</p>';loadJournal();}
-    else{JR.style.display='';}
+    CP.classList.remove('open');
+    if(typeof CLI!=='undefined'&&CLI)CLI.classList.remove('open');
+    LG.classList.remove('show');
+    JR.style.display='';
+    if(id==='jr')viewJournal();
+    else if(id==='activity')viewActivity();
+    else if(id==='stats')viewStats();
   }
   function viewJournal(){JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading journal...</p>';loadJournal()}
-  function viewStats(){JR.style.display='';JR.innerHTML='<div class="sr3"><span>Stage</span><span id="vst">Loading...</span></div><div class="sr3"><span>Score</span><span id="vsc">...</span></div><div class="sr3"><span>Runs</span><span id="vru">...</span></div><div class="sr3"><span>State</span><span id="vsta">...</span></div><div class="sr3"><span>LLM</span><span id="vllm">qwen/qwen3.6-flash</span></div><div class="sr3"><span>Day</span><span id="vday">...</span></div><div class="sr3"><span>Last Run</span><span id="vlr">...</span></div>';
-    loadStatus();
-  }
+  function viewStats(){JR.style.display='';JR.innerHTML='<div class="sr3"><span>Stage</span><span id="vst">Loading...</span></div><div class="sr3"><span>Score</span><span id="vsc">...</span></div><div class="sr3"><span>Runs</span><span id="vru">...</span></div><div class="sr3"><span>State</span><span id="vsta">...</span></div><div class="sr3"><span>Provider</span><span id="vprov">Loading...</span></div><div class="sr3"><span>LLM</span><span id="vllm">-</span></div><div class="sr3"><span>Day</span><span id="vday">...</span></div><div class="sr3"><span>Last Run</span><span id="vlr">...</span></div>';loadStatus();}
   function viewActivity(){JR.style.display='';JR.innerHTML='<p style="padding:14px;color:#555;font-size:11px">Loading...</p>';loadActivity()}
   
   // Story Card Logic
   var MOOD_COLORS = {'explorer':'#5cb88a','scholar':'#d4a24c','builder':'#5eadb8','contributor':'#8b82b8','architect':'#c9a24c','dreamer':'#c95c5c'};
-  setInterval(function(){
+  function formatRealCost(total){
+    total = Number(total || 0);
+    if(total >= 1000) return '$' + total.toFixed(1);
+    if(total >= 1) return '$' + total.toFixed(2);
+    if(total >= 0.01) return '$' + total.toFixed(3);
+    return '$' + total.toFixed(4);
+  }
+  function refreshStoryCard(){
     var scDay = document.getElementById('sc-day');
     var scMood = document.getElementById('sc-mood');
     var scDot = document.getElementById('sc-mood-dot');
     var scCost = document.getElementById('sc-cost');
 
-    // Fetch mood from personality
     fetch('/api/personality').then(function(r){return r.json()}).then(function(d) {
       var vals = d.data || [];
       var maxVal = 0, maxIdx = 0;
@@ -229,24 +409,21 @@ function formatDate(ts){
       var moodLabel = labels[maxIdx] || 'Dreamer';
       if(scMood) scMood.textContent = moodLabel;
       if(scDot) scDot.style.background = MOOD_COLORS[dominant] || '#888';
-    });
+    }).catch(function(){});
 
-    // Fetch day from /api/status (computed dynamically)
     fetch('/api/status').then(function(r){return r.json()}).then(function(d) {
       if(scDay) scDay.textContent = d.day || 1;
-    });
+    }).catch(function(){});
 
-    // Fetch real LLM cost from /api/cost
+    // Real LLM cost: /api/cost excludes estimated historical_baseline rows.
     fetch('/api/cost').then(function(r){return r.json()}).then(function(d) {
-      if(scCost) {
-        var total = (d && d.total_cost_usd) || 0;
-        if(total >= 1000) scCost.textContent = '$' + total.toFixed(1);
-        else scCost.textContent = '$' + total.toFixed(2);
-      }
+      if(scCost) scCost.textContent = formatRealCost(d && d.total_cost_usd);
     }).catch(function(){
-      if(scCost) scCost.textContent = '/A';
+      if(scCost) scCost.textContent = 'N/A';
     });
-  }, 8000);
+  }
+  refreshStoryCard();
+  setInterval(refreshStoryCard, 8000);
 
   function loadJournal(){
     fetch('/api/journal').then(function(r){return r.json()}).then(function(d){
@@ -276,6 +453,8 @@ function formatDate(ts){
           }
       }
       var el7=document.getElementById('sts');if(el7)el7.textContent=d.score?d.score.toFixed(2):'0.05';
+      var elP=document.getElementById('vprov');if(elP){var pr=d.llm_provider||'unknown';elP.textContent=pr.charAt(0).toUpperCase()+pr.slice(1);}
+      var elM=document.getElementById('vllm');if(elM){var m=d.llm_model||'unknown';if(m.indexOf('gpt-')===0){elM.textContent='OpenAI '+m.replace('gpt-','GPT-');}else if(m.indexOf('claude')===0){elM.textContent='Anthropic '+m;}else{elM.textContent=m;}}
     }).catch(function(){});
   }
   function loadActivity(){
@@ -285,51 +464,115 @@ function formatDate(ts){
       }else{JR.innerHTML='<p style="padding:14px;color:#444;font-size:11px">No recent activity</p>'}
     }).catch(function(){});
   }
+  function getSession(){return (localStorage.getItem('gp_public_session')||(function(){var s='pub_'+Math.random().toString(36).slice(2);localStorage.setItem('gp_public_session',s);return s})())}
+  function escapeHtml(x){return String(x||'').replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function formatGoldieReply(text){
+    var t=escapeHtml(text||'...').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    t=t.replace(/\*\*([^*]+)\*\*/g,'<span class="md-b">$1</span>');
+    t=t.replace(/`([^`]+)`/g,'<span class="md-code">$1</span>');
+    return t.split('\n').map(function(line){return '<span class="md-line">'+(line||'&nbsp;')+'</span>'}).join('');
+  }
+  function addBotText(text){var bb=document.createElement('div');bb.className='bb bo';bb.innerHTML=formatGoldieReply(text||'...');CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;return bb;}
+  function addBotImage(url, caption){var bb=document.createElement('div');bb.className='bb bo';bb.textContent=caption||'Image generated';var im=document.createElement('img');im.className='gi';im.src=url;im.onclick=function(){window.open(url,'_blank')};bb.appendChild(im);CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;}
+  function sendImagePrompt(prompt,imgData){
+    if(!prompt)return;
+    var ub=document.createElement('div');ub.className='bb bu';ub.textContent=(imgData?'Edit image: ':'Generate image: ')+prompt;CB.appendChild(ub);CB.scrollTop=CB.scrollHeight;
+    var wait=document.createElement('div');wait.className='bb bo';wait.textContent='Generating image...';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
+    if(IMGB)IMGB.disabled=true;
+    setGoldieAction('image',true);
+    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.json().then(function(d){d._status=r.status;return d})}).then(function(d){
+      wait.remove();
+      if(d.image_url){addBotImage(d.image_url,d.reply||'Image generated');}
+      else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=d.reply||d.error||'Image failed';CB.appendChild(bb);}
+      CB.scrollTop=CB.scrollHeight;
+    }).catch(function(e){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Image failed';CB.appendChild(bb);}).finally(function(){if(IMGB)IMGB.disabled=false;clearGoldieAction(900);});
+  }
+  if(IMGB){IMGB.onclick=function(){
+    var existing=CI2.value.trim();
+    if(confirm('Edit existing image? OK = upload image, Cancel = generate new image')){IMGF.click();return;}
+    var p=existing||prompt('Describe the image Goldie should generate:','');
+    sendImagePrompt(p,null);
+  };}
+  if(IMGF){IMGF.onchange=function(){var f=IMGF.files&&IMGF.files[0];if(!f)return;var p=CI2.value.trim()||prompt('Describe how Goldie should edit this image:','');if(!p){IMGF.value='';return;}var r=new FileReader();r.onload=function(){sendImagePrompt(p,r.result);IMGF.value='';};r.readAsDataURL(f);};}
+  function addBotAudio(url, caption){var bb=document.createElement('div');bb.className='bb bo';var cap=document.createElement('div');cap.textContent=caption||'Song generated';bb.appendChild(cap);var au=document.createElement('audio');au.className='ga';au.controls=true;au.src=url;bb.appendChild(au);var dl=document.createElement('a');dl.className='dlb';dl.href=url;dl.download=(url.split('/').pop()||'goldie-song.mp3');dl.textContent='Download song';bb.appendChild(dl);CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;}
+  function sendSongPrompt(prompt){
+    if(!prompt)return;
+    var ub=document.createElement('div');ub.className='bb bu';ub.textContent='Generate song: '+prompt;CB.appendChild(ub);CB.scrollTop=CB.scrollHeight;
+    var wait=document.createElement('div');wait.className='bb bo';wait.textContent='Generating song... this can take a bit';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
+    if(MICB)MICB.disabled=true;
+    setGoldieAction('song',true);
+    fetch('/api/song',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,session:getSession()})}).then(function(r){return r.json().then(function(d){d._status=r.status;return d})}).then(function(d){
+      wait.remove();
+      if(d.audio_url){addBotAudio(d.audio_url,d.reply||'Song generated');}
+      else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=d.reply||d.error||'Song failed';CB.appendChild(bb);}
+      CB.scrollTop=CB.scrollHeight;
+    }).catch(function(e){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Song failed';CB.appendChild(bb);}).finally(function(){if(MICB)MICB.disabled=false;clearGoldieAction(1200);});
+  }
+  if(MICB){MICB.onclick=function(){var p=CI2.value.trim()||prompt('Describe the song Goldie should generate:','short upbeat puppy theme song, warm synths, playful, no vocals');sendSongPrompt(p);};}
   function sendChat(){
     var m=CI2.value.trim();if(!m)return;
     var b=document.createElement('div');b.className='bb bu';b.textContent=m;CB.appendChild(b);CB.scrollTop=CB.scrollHeight;
     CI2.value='';
-    var body={message:m};if(ghToken)body.token=ghToken;
+    var body={message:m, session:getSession()};
+    setGoldieAction('chat',true);
     fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(d){
-      var bb=document.createElement('div');bb.className='bb bo';bb.textContent=d.reply||'...';CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;
-    }).catch(function(e){var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Error';CB.appendChild(bb);CB.scrollTop=CB.scrollHeight});
+      addBotText(d.reply||'...');
+    }).catch(function(e){addBotText('Error');}).finally(function(){clearGoldieAction(1000);});
   }
   CS2.onclick=sendChat;
   CI2.onkeydown=function(e){if(e.key==='Enter')sendChat()};
   CC.onclick=function(){CP.classList.remove('open');showView('jr')};
   function openChat(){
-    if(!ghToken){LG.classList.add('show');JR.style.display='none';return}
-    LG.classList.remove('show');JR.style.display='none';CP.classList.add('open');
+    LG.classList.remove('show');JR.style.display='none';if(CLI)CLI.classList.remove('open');CP.classList.add('open');
     setTimeout(function(){CI2&&CI2.focus()},200);
   }
   $$('.nb').forEach(function(b){
     b.onclick=function(e){
       var a=b.dataset.a;if(!a)return;
-      if(a==='chat'){openChat();return}
-      CP.classList.remove('open');LG.classList.remove('show');
-      if(a==='jr')viewJournal();else if(a==='activity')viewActivity();else if(a==='stats')viewStats();
+      if(a==='story'){showView('jr');window.open('/story','_blank','noopener');return}
+      if(a==='chat'){$$('.nb').forEach(function(x){x.classList.remove('act')});b.classList.add('act');openChat();return}
+      if(a==='cli'){$$('.nb').forEach(function(x){x.classList.remove('act')});b.classList.add('act');openCli();return}
+      showView(a);
     };
   });
   /* Goldie position + walk system */
   var GC=document.getElementById('gc');
   var pos=[
-    {left:'90px',label:'home',state:'sleeping',emoji:'😴',cls:'facing-left'},
-    {left:'50%',tx:'translate(-50%)',label:'center',state:'idle',emoji:'🐾',cls:''},
-    {left:'calc(100% - 160px)',label:'slide',state:'thinking',emoji:'💡',cls:'facing-left'}
+    {kind:'left',label:'home',state:'sleeping',emoji:'😴',cls:'facing-left'},
+    {kind:'center',label:'center',state:'idle',emoji:'🐾',cls:''},
+    {kind:'right',label:'slide',state:'thinking',emoji:'💡',cls:'facing-left'}
   ];
-  var pi=1; // start at center
-  function walkTo(idx){
-    var p=pos[idx];
-    GS.className='walking'+(p.cls?' '+p.cls:'');
-    GC.style.left=p.left;
-    GC.style.bottom='24px';
-    GC.style.transform=p.tx?p.tx:'none';
-    GS.className=p.state+(p.cls?' '+p.cls:'');
-    AIND.textContent=p.emoji;
+  function goldieX(kind){
+    var w=window.innerWidth||360;
+    if(kind==='left')return 86;
+    if(kind==='right')return Math.max(190,w-164);
+    return Math.max(120,(w/2)-38);
   }
+  var pi=1; // start at center
+  var walkTimer=null;
+  GC.style.transform='translate3d('+goldieX('center')+'px,0,0)';
+  function walkTo(idx){
+    if(goldieActionLocked)return;
+    var from=pi, p=pos[idx];
+    var dirCls = idx < from ? 'facing-left' : '';
+    clearTimeout(walkTimer);
+    GS.className='walking '+dirCls;
+    AIND.textContent='🐾';
+    // Force one frame with walking class before movement begins, so gait is visible.
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      GC.style.transform='translate3d('+goldieX(p.kind)+'px,0,0)';
+    });});
+    pi=idx;
+    walkTimer=setTimeout(function(){
+      if(goldieActionLocked)return;
+      GS.className=p.state+(p.cls?' '+p.cls:'');
+      AIND.textContent=p.emoji;
+    },3050);
+  }
+  window.addEventListener('resize',function(){GC.style.transform='translate3d('+goldieX(pos[pi].kind)+'px,0,0)';});
   setInterval(function(){
-    pi=(pi+1)%pos.length;
-    walkTo(pi);
+    if(goldieActionLocked)return;
+    walkTo((pi+1)%pos.length);
   },8000);
   LD.classList.add('hide');setTimeout(function(){LD.style.display='none'},400);
   loadJournal();loadStatus();

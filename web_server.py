@@ -96,7 +96,6 @@ def load_jsonl(path):
 def _json_resp(handler, data, status=200):
     handler.send_response(status)
     handler.send_header('Content-Type', 'application/json')
-    handler.send_header('Access-Control-Allow-Origin', '*')
     handler.end_headers()
     handler.wfile.write(json.dumps(data, ensure_ascii=False, default=str).encode())
 
@@ -1051,45 +1050,111 @@ def _record_llm_cost_usage(usage, model='', provider='', phase='unknown', source
     except Exception:
         return None
 def _cli_call_llm(prompt, system, tokens=500, temp=0.25):
-    import urllib.request
+    import urllib.request, time
     key = os.environ.get('CLI_LLM_API_KEY') or os.environ.get('LLM_API_KEY') or os.environ.get('JATEVO_API_KEY')
     if not key:
         return '[LLM Error: missing CLI/Jatevo API key]'
-    payload = {
-        'model': CLI_LLM_MODEL,
-        'messages': [
-            {'role': 'system', 'content': system},
-            {'role': 'user', 'content': prompt[:4000]},
-        ],
-        'max_tokens': tokens,
-        'temperature': temp,
-    }
-    if 'ONLY valid JSON' in (system or '') or 'JSON shape' in (system or ''):
-        payload['response_format'] = {'type': 'json_object'}
-    req = urllib.request.Request(CLI_LLM_BASE_URL + '/chat/completions', json.dumps(payload).encode())
-    req.add_header('Content-Type', 'application/json')
-    req.add_header('Authorization', 'Bearer ' + key)
-    req.add_header('User-Agent', 'GoldieCLIWorkspace/1.0')
-    req.add_header('HTTP-Referer', 'https://gitpup.fun')
-    req.add_header('X-Title', 'GitPup Goldie CLI Workspace')
-    try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            resp = json.loads(r.read())
-            _record_llm_cost_usage(resp.get('usage', {}), model=CLI_LLM_MODEL, provider=CLI_LLM_PROVIDER, phase='cli_workspace', source='api_cli')
-            return resp.get('choices', [{}])[0].get('message', {}).get('content', '')
-    except Exception as e:
-        detail = str(e)[:80]
-        try:
-            if hasattr(e, 'read'):
-                detail = e.read().decode('utf-8', errors='replace')[:180]
-        except Exception:
-            pass
-        return '[LLM Error: ' + detail + ']'
+    models=[]
+    for m in [
+        os.environ.get('CLI_LLM_MODEL') or CLI_LLM_MODEL,
+        os.environ.get('CLI_LLM_FALLBACK_MODEL'),
+        os.environ.get('LLM_MODEL_SPEED'),
+        os.environ.get('LLM_MODEL')
+    ]:
+        if m and m not in models:
+            models.append(m)
+    if not models:
+        models=[CLI_LLM_MODEL]
+    wants_json = 'ONLY valid JSON' in (system or '') or 'JSON shape' in (system or '')
+    last_detail='unknown error'
+    for model in models:
+        for attempt in range(3):
+            prompt_limit = 4000 if attempt == 0 else (2800 if attempt == 1 else 1800)
+            max_tokens = int(tokens if attempt == 0 else max(900, min(tokens, 2600 if attempt == 1 else 1800)))
+            payload = {
+                'model': model,
+                'messages': [
+                    {'role': 'system', 'content': system},
+                    {'role': 'user', 'content': prompt[:prompt_limit]},
+                ],
+                'max_tokens': max_tokens,
+                'temperature': temp,
+            }
+            if wants_json and attempt < 2:
+                payload['response_format'] = {'type': 'json_object'}
+            req = urllib.request.Request(CLI_LLM_BASE_URL + '/chat/completions', json.dumps(payload).encode())
+            req.add_header('Content-Type', 'application/json')
+            req.add_header('Authorization', 'Bearer ' + key)
+            req.add_header('User-Agent', 'GoldieCLIWorkspace/1.0')
+            req.add_header('HTTP-Referer', 'https://gitpup.fun')
+            req.add_header('X-Title', 'GitPup Goldie CLI Workspace')
+            try:
+                with urllib.request.urlopen(req, timeout=120) as r:
+                    resp = json.loads(r.read())
+                    _record_llm_cost_usage(resp.get('usage', {}), model=model, provider=CLI_LLM_PROVIDER, phase='cli_workspace', source='api_cli')
+                    content = resp.get('choices', [{}])[0].get('message', {}).get('content', '')
+                    if content:
+                        return content
+                    last_detail = 'empty model response'
+            except Exception as e:
+                detail = str(e)[:120]
+                try:
+                    if hasattr(e, 'read'):
+                        detail = e.read().decode('utf-8', errors='replace')[:260]
+                except Exception:
+                    pass
+                last_detail = detail
+                # 502/503/504/timeouts are usually transient or JSON-mode overload; retry with smaller prompt/model.
+                if any(x in detail.lower() for x in ['502','503','504','timed out','timeout','bad gateway','service unavailable']):
+                    time.sleep(1.5 * (attempt + 1))
+                    continue
+                break
+    return '[LLM Error: ' + last_detail + ']'
 
 
 def _cli_session_id(handler, data=None):
     key = _cli_user_key(handler, data)
     return hashlib.sha256(key.encode('utf-8')).hexdigest()[:18]
+
+
+def _cli_signing_secret():
+    secret = (os.environ.get('GOLDIE_CLI_SIGNING_SECRET') or os.environ.get('SECRET_KEY') or os.environ.get('OPENROUTER_API_KEY') or '').strip()
+    if not secret:
+        secret = 'goldie-local-dev-' + os.path.realpath(GITPUP)
+    return secret.encode('utf-8')
+
+
+def _cli_sign_token(sid, purpose, rel='', ttl=900):
+    exp = int(time.time()) + int(ttl or 900)
+    rel = (rel or '').replace('\\', '/')
+    msg = '%s|%s|%s|%s' % (sid, purpose, rel, exp)
+    sig = hmac.new(_cli_signing_secret(), msg.encode('utf-8'), hashlib.sha256).hexdigest()[:32]
+    return '%s.%s' % (exp, sig)
+
+
+def _cli_verify_token(sid, purpose, rel, token):
+    try:
+        exp_s, sig = str(token or '').split('.', 1)
+        exp = int(exp_s)
+        if exp < int(time.time()):
+            return False
+        rel = (rel or '').replace('\\', '/')
+        msg = '%s|%s|%s|%s' % (sid, purpose, rel, exp)
+        expected = hmac.new(_cli_signing_secret(), msg.encode('utf-8'), hashlib.sha256).hexdigest()[:32]
+        return hmac.compare_digest(sig, expected)
+    except Exception:
+        return False
+
+
+def _cli_signed_preview_url(sid, rel, mtime=None):
+    rel = (rel or 'index.html').replace('\\', '/')
+    token = _cli_sign_token(sid, 'preview', rel, ttl=1800)
+    return '/preview/' + urllib.parse.quote(sid) + '/' + urllib.parse.quote(rel) + '?v=' + str(mtime or int(time.time())) + '&token=' + urllib.parse.quote(token)
+
+
+def _cli_signed_download_url(sid):
+    token = _cli_sign_token(sid, 'download', '', ttl=900)
+    return '/api/cli/download?session=' + urllib.parse.quote(sid) + '&token=' + urllib.parse.quote(token)
 
 
 def _cli_workspace(handler, data=None):
@@ -2384,7 +2449,7 @@ def _handle_cli_export(handler, data):
     _cli_ensure_current_project(workspace)
     try:
         zip_path = _cli_zip_workspace(sid, workspace)
-        return _json_resp(handler, {'status': 'ok', 'session_id': sid, 'workspace_name': 'user_' + sid, 'download_url': '/api/cli/download?session=' + urllib.parse.quote(sid), 'size': os.path.getsize(zip_path)})
+        return _json_resp(handler, {'status': 'ok', 'session_id': sid, 'workspace_name': 'user_' + sid, 'download_url': _cli_signed_download_url(sid), 'size': os.path.getsize(zip_path), 'expires_in': 900})
     except Exception as e:
         return _json_resp(handler, {'status': 'error', 'error': str(e)[:120]}, 500)
 
@@ -2432,8 +2497,8 @@ def _handle_cli_preview(handler, data):
     found, mtime = _cli_find_preview_index(workspace)
     if not found:
         return _json_resp(handler, {'status': 'error', 'error': 'No index.html found. Create one first, then preview.'}, 404)
-    url = '/preview/' + urllib.parse.quote(sid) + '/' + found + '?v=' + str(mtime or int(time.time()))
-    return _json_resp(handler, {'status': 'ok', 'session_id': sid, 'preview_url': url, 'preview_path': found})
+    url = _cli_signed_preview_url(sid, found, mtime)
+    return _json_resp(handler, {'status': 'ok', 'session_id': sid, 'preview_url': url, 'preview_path': found, 'expires_in': 1800})
 
 
 def _serve_cli_download(handler):
@@ -2441,6 +2506,9 @@ def _serve_cli_download(handler):
     sid = ''.join(ch for ch in (q.get('session', [''])[0]) if ch.isalnum() or ch in ('_', '-'))[:80]
     if not sid:
         return _json_resp(handler, {'status': 'error', 'error': 'missing session'}, 400)
+    token = q.get('token', [''])[0]
+    if not _cli_verify_token(sid, 'download', '', token):
+        return _json_resp(handler, {'status': 'error', 'error': 'invalid or expired download token'}, 403)
     workspace = os.path.realpath(os.path.join(os.path.realpath(WORKSPACES), 'user_' + sid))
     if not workspace.startswith(os.path.realpath(WORKSPACES) + os.sep):
         return _json_resp(handler, {'status': 'error', 'error': 'invalid session'}, 400)
@@ -2454,7 +2522,6 @@ def _serve_cli_download(handler):
     handler.send_header('Content-Type', 'application/zip')
     handler.send_header('Content-Disposition', 'attachment; filename="goldie-workspace-' + sid + '.zip"')
     handler.send_header('Content-Length', str(os.path.getsize(zip_path)))
-    handler.send_header('Access-Control-Allow-Origin', '*')
     handler.end_headers()
     with open(zip_path, 'rb') as f:
         handler.wfile.write(f.read())
@@ -2466,7 +2533,11 @@ def _serve_cli_preview(handler):
     if len(parts) < 3:
         handler.send_error(404); return
     sid = ''.join(ch for ch in urllib.parse.unquote(parts[2]) if ch.isalnum() or ch in ('_', '-'))[:80]
-    rel = urllib.parse.unquote('/'.join(parts[3:]) or 'index.html')
+    rel = urllib.parse.unquote('/'.join(parts[3:]) or 'index.html').replace('\\', '/')
+    q = urllib.parse.parse_qs(urllib.parse.urlparse(handler.path).query)
+    token = q.get('token', [''])[0]
+    if not _cli_verify_token(sid, 'preview', rel, token):
+        handler.send_error(403); return
     workspace = os.path.realpath(os.path.join(os.path.realpath(WORKSPACES), 'user_' + sid))
     if not workspace.startswith(os.path.realpath(WORKSPACES) + os.sep):
         handler.send_error(403); return
@@ -2533,13 +2604,13 @@ def _handle_cli_preview_to_dict(handler, data):
     _cli_ensure_current_project(workspace)
     found, mtime = _cli_find_preview_index(workspace)
     if not found: return {'status':'error','error':'No index.html found. Create one first, then preview.'}
-    return {'status':'ok','session_id':sid,'preview_url':'/preview/'+urllib.parse.quote(sid)+'/'+found+'?v='+str(mtime or int(time.time())),'preview_path':found}
+    return {'status':'ok','session_id':sid,'preview_url':_cli_signed_preview_url(sid, found, mtime),'preview_path':found,'expires_in':1800}
 
 def _handle_cli_export_to_dict(handler, data):
     sid, workspace = _cli_workspace(handler, data)
     _cli_ensure_current_project(workspace)
     zip_path = _cli_zip_workspace(sid, workspace)
-    return {'status':'ok','session_id':sid,'workspace_name':'user_'+sid,'download_url':'/api/cli/download?session='+urllib.parse.quote(sid),'size':os.path.getsize(zip_path)}
+    return {'status':'ok','session_id':sid,'workspace_name':'user_'+sid,'download_url':_cli_signed_download_url(sid),'size':os.path.getsize(zip_path),'expires_in':900}
 
 def _cli_agent_build(job, handler, data):
     _cli_job_finish(job, 'error', {'status':'disabled','reply':'Agent Build is disabled. CLI builds must be request-driven via LLM + Goldie KB + Hermes tools, not templates.'})

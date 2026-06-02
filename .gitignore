@@ -29,3 +29,18 @@ story.html.bak*
 fix_ast.py
 start_bot.sh
 personality.py.selfmod.bak
+# Goldie CLI public sandbox/runtime junk
+workspaces/
+data/cli_memory/
+data/logs/cli_cleanup.log
+data/locks/
+*.zip
+*.bak*
+web_dist/*.bak*
+# Goldie runtime/generated artifacts
+projects/
+web_dist/generated/
+prune-mem/
+# local secrets and virtualenvs
+.env.*
+!.env.example
