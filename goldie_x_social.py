@@ -7,7 +7,7 @@ study knowledge, blocks spam/encoded requests, rate-limits public actions, and
 persists social memory.
 """
 from __future__ import annotations
-import argparse, datetime as dt, hashlib, json, os, random, re, shutil, subprocess, time, urllib.request
+import argparse, datetime as dt, hashlib, json, os, random, re, shutil, subprocess, time, urllib.request, urllib.parse, base64
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -214,6 +214,54 @@ def evaluate_candidate(kind: str, text: str, source_text: str = "", topics=None)
         should = should and rel + eps >= gate.get("relevance_min",0.78) and uniq + eps >= gate.get("unique_contribution_min",0.75) and voice + eps >= gate.get("voice_score_min",0.80) and sr <= gate.get("spam_risk_max",0.15)
     return {"relevance":round(rel,3),"specificity":round(spec,3),"unique_contribution":round(uniq,3),"humility":round(humility,3),"voice_score":round(voice,3),"spam_risk":round(sr,3),"controversy_risk":round(cr,3),"encoded_request":encoded or False,"should_interact":bool(should),"blocked_reason":encoded or ("spam_risk" if sr>0.35 else "controversy_risk" if cr>0.30 else None)}
 
+
+X_AUTH_FILE = DATA / "x_auth.json"
+
+def x_auth_load():
+    return load_json(X_AUTH_FILE, {})
+
+def x_token(refresh=True):
+    auth = x_auth_load()
+    tok = auth.get("token", {}) if isinstance(auth, dict) else {}
+    if not tok.get("access_token"):
+        return None
+    if refresh and tok.get("expires_at") and tok["expires_at"] <= time.time() + 120 and tok.get("refresh_token"):
+        try:
+            body = urllib.parse.urlencode({"grant_type":"refresh_token", "refresh_token": tok["refresh_token"]}).encode()
+            req = urllib.request.Request("https://api.x.com/2/oauth2/token", data=body, method="POST")
+            basic = base64.b64encode((auth["client_id"] + ":" + auth["client_secret"]).encode()).decode()
+            req.add_header("Authorization", "Basic " + basic)
+            req.add_header("Content-Type", "application/x-www-form-urlencoded")
+            with urllib.request.urlopen(req, timeout=25) as r:
+                nt = json.loads(r.read())
+            nt["expires_at"] = int(time.time()) + int(nt.get("expires_in", 7200)) - 90
+            auth["token"] = nt
+            tmp = X_AUTH_FILE.with_suffix(".tmp")
+            tmp.write_text(json.dumps(auth, indent=2))
+            os.chmod(tmp, 0o600); tmp.replace(X_AUTH_FILE); os.chmod(X_AUTH_FILE, 0o600)
+            tok = nt
+        except Exception as e:
+            log("x token refresh failed: " + str(e)[:120])
+    return tok.get("access_token")
+
+def x_api(method, path, payload=None):
+    token = x_token()
+    if not token:
+        return None, "x_oauth_missing"
+    data = json.dumps(payload).encode() if payload is not None else None
+    req = urllib.request.Request("https://api.x.com" + path, data=data, method=method)
+    req.add_header("Authorization", "Bearer " + token)
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(req, timeout=45) as r:
+            return json.loads(r.read()), None
+    except urllib.error.HTTPError as e:
+        try: detail = e.read().decode()[:500]
+        except Exception: detail = str(e)
+        return None, f"x_api_http_{e.code}: {detail}"
+    except Exception as e:
+        return None, str(e)[:500]
+
 def xurl_available() -> bool: return shutil.which("xurl") is not None
 
 def xurl_json(args, timeout=45):
@@ -225,10 +273,11 @@ def xurl_json(args, timeout=45):
     except Exception as e: return None, str(e)[:400]
 
 def auth_ok() -> bool:
+    if x_token(refresh=False): return True
     if not xurl_available(): return False
     try:
         cp = subprocess.run(["xurl","auth","status"], text=True, capture_output=True, timeout=20); out = cp.stdout + cp.stderr
-        return cp.returncode == 0 and "oauth2" in out.lower() and "none" not in out.lower()
+        return cp.returncode == 0 and "No apps registered" not in out and ("oauth2" in out.lower() or "authenticated" in out.lower())
     except Exception: return False
 
 def parse_x_items(data, fallback_author=""):
@@ -282,10 +331,19 @@ def mark_action(kind: str, author=""):
 def publish_candidate(cand, dry_run=True):
     kind = cand.get("kind"); author = cand.get("source", {}).get("author", ""); ok, reason = within_rate_limits("original" if kind == "original_post" else "reply", author)
     if not ok: cand["publish_status"] = "rate_limited"; cand["rate_reason"] = reason; return cand
-    if dry_run or not auth_ok(): cand["publish_status"] = "queued_dry_run" if dry_run else "queued_no_xurl_auth"; return cand
-    if kind == "reply": data, err = xurl_json(["reply", str(cand.get("source", {}).get("id")), cand["text"]], timeout=60)
-    elif kind == "original_post": data, err = xurl_json(["post", cand["text"]], timeout=60)
-    else: data, err = None, "unsupported_kind"
+    if dry_run or not auth_ok(): cand["publish_status"] = "queued_dry_run" if dry_run else "queued_no_x_auth"; return cand
+    data, err = None, None
+    if x_token(refresh=True):
+        if kind == "reply":
+            data, err = x_api("POST", "/2/tweets", {"text": cand["text"], "reply": {"in_reply_to_tweet_id": str(cand.get("source", {}).get("id"))}})
+        elif kind == "original_post":
+            data, err = x_api("POST", "/2/tweets", {"text": cand["text"]})
+        else:
+            err = "unsupported_kind"
+    else:
+        if kind == "reply": data, err = xurl_json(["reply", str(cand.get("source", {}).get("id")), cand["text"]], timeout=60)
+        elif kind == "original_post": data, err = xurl_json(["post", cand["text"]], timeout=60)
+        else: err = "unsupported_kind"
     if err: cand["publish_status"] = "error"; cand["error"] = err
     else: cand["publish_status"] = "posted"; cand["x_response"] = data; mark_action("original" if kind == "original_post" else "reply", author)
     append_jsonl(INTERACTIONS_FILE, cand); return cand
