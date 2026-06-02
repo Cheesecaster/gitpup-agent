@@ -653,65 +653,113 @@ def _song_rate_refund(handler, user_key='anonymous'):
 
 
 def _handle_image(self, data):
-    import time, json, urllib.request, base64, os
+    import time, json, urllib.request, urllib.error, base64, os
     user_key = data.get('session') or data.get('user') or 'anonymous'
     if not _image_rate_ok(self, user_key=user_key, limit=1, window=300):
         return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image every 5 minutes per user/IP.','limit':'1/5 minutes'}, 429)
     prompt = (data.get('prompt') or data.get('message') or '').strip()
     if not prompt:
+        _image_rate_refund(self, user_key)
         return _json_resp(self, {'status':'error','error':'missing_prompt','reply':'Please enter an image prompt.'}, 400)
     if len(prompt) > 1500:
         prompt = prompt[:1500]
     _load_env_file_once()
-    key = os.environ.get('OPENROUTER_API_KEY','')
-    if not key:
-        return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
-    primary_model = os.environ.get('IMAGE_MODEL','x-ai/grok-imagine-image-quality')
-    fallback_model = os.environ.get('IMAGE_FALLBACK_MODEL','')
-    models_to_try = []
-    for m in [primary_model, fallback_model]:
-        if m and m not in models_to_try:
-            models_to_try.append(m)
+    provider = (os.environ.get('IMAGE_PROVIDER') or 'jatevo').strip().lower()
+    primary_model = os.environ.get('JATEVO_IMAGE_MODEL') or os.environ.get('IMAGE_MODEL') or 'gpt-image-2'
+    fallback_model = os.environ.get('JATEVO_IMAGE_FALLBACK_MODEL') or os.environ.get('IMAGE_FALLBACK_MODEL') or 'gpt-image-1'
     image_data = data.get('image') or data.get('image_base64') or ''
-    # OpenRouter Grok Imagine docs expect plain string content + modalities:["image"] for generation.
-    if image_data:
-        if image_data.startswith('data:image'):
-            image_url = image_data
-        else:
-            image_url = 'data:image/png;base64,' + image_data
-        content = [{'type':'text','text':prompt}, {'type':'image_url','image_url':{'url': image_url}}]
-    else:
-        content = prompt
     last_error = ''
     raw = None
     resp = None
     used_model = None
-    for model in models_to_try:
-        payload = {
-            'model': model,
-            'messages': [{'role':'user','content': content}],
-            'modalities': ['image']
-        }
-        req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
-        req.add_header('Content-Type','application/json')
-        req.add_header('Authorization','Bearer ' + key)
-        req.add_header('HTTP-Referer','https://gitpup.fun')
-        req.add_header('X-Title','Goldie Image Chat')
-        req.add_header('User-Agent','GoldieImage/1.0')
-        try:
-            with urllib.request.urlopen(req, timeout=180) as r:
-                resp = json.loads(r.read())
-            raw = _extract_openrouter_image(resp)
-            if raw:
-                used_model = model
-                _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='openrouter', phase='image_generation', source='api_image')
-                break
-            text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content','')
-            last_error = text[:500] or 'Image model did not return an image.'
-        except Exception as e:
-            last_error = str(e)[:300]
-            # Try fallback when primary model is not routed/available.
-            continue
+    used_provider = provider
+
+    if provider == 'jatevo':
+        key = os.environ.get('JATEVO_API_KEY') or os.environ.get('LLM_API_KEY') or os.environ.get('OPENAI_API_KEY') or ''
+        base_url = (os.environ.get('JATEVO_BASE_URL') or os.environ.get('LLM_BASE_URL') or 'https://jatevo.ai/v1').rstrip('/')
+        if not key:
+            _image_rate_refund(self, user_key)
+            return _json_resp(self, {'status':'error','error':'missing_jatevo_key','reply':'Image generation is not configured.'}, 500)
+        # Jatevo gpt-image-2 rejects tiny sizes; 1024x1024 is inside its valid pixel range.
+        size = (data.get('size') or os.environ.get('JATEVO_IMAGE_SIZE') or os.environ.get('IMAGE_SIZE') or '1024x1024').strip()
+        quality = (data.get('quality') or os.environ.get('JATEVO_IMAGE_QUALITY') or os.environ.get('IMAGE_QUALITY') or 'auto').strip()
+        # Existing IMAGE_MODEL may be an OpenRouter slug (x-ai/...). Do not send that to Jatevo.
+        if '/' in primary_model or not primary_model.startswith('gpt-image-'):
+            primary_model = 'gpt-image-2'
+        if '/' in fallback_model or not fallback_model.startswith('gpt-image-'):
+            fallback_model = 'gpt-image-1'
+        models_to_try = []
+        for m in [primary_model, fallback_model]:
+            if m and m not in models_to_try:
+                models_to_try.append(m)
+        for model in models_to_try:
+            payload = {'model': model, 'prompt': prompt, 'size': size, 'n': 1}
+            if quality:
+                payload['quality'] = quality
+            if image_data:
+                # Jatevo edit support can vary; keep the prompt explicit and include image as input_image when accepted.
+                payload['image'] = image_data
+            req = urllib.request.Request(base_url + '/images/generations', data=json.dumps(payload).encode('utf-8'), method='POST')
+            req.add_header('Content-Type','application/json')
+            req.add_header('Authorization','Bearer ' + key)
+            req.add_header('User-Agent','GoldieImage/Jatevo-gpt-image-2')
+            try:
+                with urllib.request.urlopen(req, timeout=240) as r:
+                    resp = json.loads(r.read())
+                item = (resp.get('data') or [{}])[0]
+                b64 = item.get('b64_json') or item.get('base64') or item.get('image_base64') or ''
+                url0 = item.get('url') or item.get('image_url') or ''
+                if b64:
+                    raw = base64.b64decode(b64.split(',',1)[-1])
+                elif isinstance(url0, str) and url0.startswith('data:image'):
+                    raw = base64.b64decode(url0.split(',',1)[1])
+                elif isinstance(url0, str) and url0.startswith('http'):
+                    with urllib.request.urlopen(urllib.request.Request(url0, headers={'User-Agent':'GoldieImage/Fetch'}), timeout=180) as rr:
+                        raw = rr.read()
+                if raw:
+                    used_model = model
+                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='jatevo', phase='image_generation', source='api_image')
+                    break
+                last_error = 'Jatevo image endpoint returned no image bytes.'
+            except urllib.error.HTTPError as e:
+                last_error = e.read().decode(errors='replace')[:500]
+                continue
+            except Exception as e:
+                last_error = str(e)[:300]
+                continue
+    else:
+        key = os.environ.get('OPENROUTER_API_KEY','')
+        if not key:
+            _image_rate_refund(self, user_key)
+            return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
+        models_to_try = []
+        for m in [primary_model or 'x-ai/grok-imagine-image-quality', fallback_model]:
+            if m and m not in models_to_try:
+                models_to_try.append(m)
+        if image_data:
+            image_url = image_data if image_data.startswith('data:image') else 'data:image/png;base64,' + image_data
+            content = [{'type':'text','text':prompt}, {'type':'image_url','image_url':{'url': image_url}}]
+        else:
+            content = prompt
+        for model in models_to_try:
+            payload = {'model': model, 'messages': [{'role':'user','content': content}], 'modalities': ['image']}
+            req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
+            for k,v in {'Content-Type':'application/json','Authorization':'Bearer ' + key,'HTTP-Referer':'https://gitpup.fun','X-Title':'Goldie Image Chat','User-Agent':'GoldieImage/1.0'}.items():
+                req.add_header(k,v)
+            try:
+                with urllib.request.urlopen(req, timeout=180) as r:
+                    resp = json.loads(r.read())
+                raw = _extract_openrouter_image(resp)
+                if raw:
+                    used_model = model
+                    used_provider = 'openrouter'
+                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='openrouter', phase='image_generation', source='api_image')
+                    break
+                text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content','')
+                last_error = text[:500] or 'Image model did not return an image.'
+            except Exception as e:
+                last_error = str(e)[:300]
+                continue
     if not raw:
         _image_rate_refund(self, user_key)
         return _json_resp(self, {'status':'error','error':last_error or 'no_image_returned','reply':'Image model did not return an image.'}, 502)
@@ -721,11 +769,11 @@ def _handle_image(self, data):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, 'wb') as f:
             f.write(raw)
-        size = os.path.getsize(out)
+        size_bytes = os.path.getsize(out)
         url = '/generated/' + os.path.basename(out)
         _append_chat_context(self, user_key, 'user', '[image prompt] ' + prompt)
         _append_chat_context(self, user_key, 'assistant', '[generated image] ' + url)
-        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size,'model':used_model,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':'model_default'})
+        return _json_resp(self, {'status':'ok','reply':'Image generated.','image_url':url,'size_bytes':size_bytes,'model':used_model,'provider':used_provider,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':data.get('size') or os.environ.get('IMAGE_SIZE') or '1024x1024'})
     except Exception as e:
         return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}, 500)
 
