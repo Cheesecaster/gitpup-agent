@@ -749,6 +749,11 @@ def _handle_image_result(data):
     primary_model = os.environ.get('JATEVO_IMAGE_MODEL') or os.environ.get('IMAGE_MODEL') or 'gpt-image-2'
     fallback_model = os.environ.get('JATEVO_IMAGE_FALLBACK_MODEL') or os.environ.get('IMAGE_FALLBACK_MODEL') or 'gpt-image-1'
     image_data = data.get('image') or data.get('image_base64') or ''
+    if provider != 'jatevo' and image_data:
+        # OpenRouter edit-capable image models can differ from generate models.
+        # Keep IMAGE_MODEL for generation, and allow IMAGE_EDIT_MODEL to drive uploaded-source edits.
+        primary_model = os.environ.get('IMAGE_EDIT_MODEL') or os.environ.get('OPENROUTER_IMAGE_EDIT_MODEL') or primary_model
+        fallback_model = os.environ.get('IMAGE_EDIT_FALLBACK_MODEL') or os.environ.get('OPENROUTER_IMAGE_EDIT_FALLBACK_MODEL') or fallback_model
     if image_data:
         face_lock = (
             "CRITICAL FACE PRESERVATION INSTRUCTIONS: Before editing, carefully inspect every visible person in the uploaded image. "
@@ -894,7 +899,7 @@ def _handle_image_result(data):
                 if raw:
                     used_model = model
                     used_provider = 'openrouter'
-                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='openrouter', phase='image_generation', source='api_image')
+                    _record_llm_cost_usage(resp.get('usage', {}), model=used_model, provider='openrouter', phase='image_edit' if image_data else 'image_generation', source='api_image')
                     break
                 text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content','')
                 last_error = text[:500] or 'Image model did not return an image.'
