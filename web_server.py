@@ -84,7 +84,10 @@ def load_json(path, default=None):
             return default
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    except (file_errors + (decode_error, ValueError, TypeError, UnicodeError)):
+    except decode_error:
+        # Handle corrupt or partially written JSON safely.
+        return default
+    except (file_errors + (ValueError, TypeError, UnicodeError)):
         return default
     except Exception:
         return default
