@@ -739,6 +739,15 @@ def _handle_image_result(data):
     primary_model = os.environ.get('JATEVO_IMAGE_MODEL') or os.environ.get('IMAGE_MODEL') or 'gpt-image-2'
     fallback_model = os.environ.get('JATEVO_IMAGE_FALLBACK_MODEL') or os.environ.get('IMAGE_FALLBACK_MODEL') or 'gpt-image-1'
     image_data = data.get('image') or data.get('image_base64') or ''
+    if image_data:
+        face_lock = (
+            "CRITICAL FACE PRESERVATION INSTRUCTIONS: Before editing, carefully inspect every visible person in the uploaded image. "
+            "Identify and preserve each person's original facial identity and all subtle face details: face shape, proportions, eyes, eyelids, eyebrows, nose bridge and nostrils, lips and mouth shape, teeth if visible, jawline, cheeks, chin, skin texture, moles, wrinkles, age, expression, gaze direction, and unique recognizable features. "
+            "Do not invent a new face. Do not beautify, reshape, swap identity, change ethnicity, change age, over-smooth skin, enlarge eyes, alter nose/lips/teeth, or exaggerate smiles. "
+            "Keep the original facial expression as close as possible unless the user explicitly asks for an expression change; if expression change is requested, make it extremely subtle and identity-preserving. "
+            "Apply the requested edit only to the scene, outfit, lighting, background, pose, or body styling while keeping every face recognizably the same person. "
+        )
+        prompt = face_lock + '\n\nUSER EDIT REQUEST: ' + prompt
     last_error = ''
     raw = None
     resp = None
