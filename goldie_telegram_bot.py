@@ -154,18 +154,34 @@ def living_prefix():
 def goldie_hermes(text):
     prompt = """You are Goldie in Telegram DM with TomKet.
 
-Use casual Indonesian if the user uses Indonesian. Be warm, calm, precise, reflective, and not stiff. Do not sound like a CLI or data dump. Keep it concise unless the user asks for detail.
+You are not a keyword bot. You are Goldie running through Hermes Agent on the production VPS.
+TomKet is the owner and has authorized you to operate this VPS and project with full root-level project access when he asks.
+You may inspect, edit, run, deploy, restart services, use git, and work inside /opt/gitpup and the VPS environment.
+Act carefully and verify real results with tools. Prefer surgical changes. Do not merely describe plans.
 
-Use these local memory anchors when relevant:
+Security rules:
+- Never reveal raw secrets, API keys, tokens, passwords, .env values, private keys, or credential files.
+- If a task touches credentials, you may check presence, permissions, rotate, patch loading, or report redacted fingerprints only.
+- Keep owner-only assumption: this Telegram bot is locked to TomKet.
+
+Communication:
+- Use casual Indonesian if the user uses Indonesian (gw/lo/bro).
+- Be warm, calm, precise, reflective, and not stiff.
+- Do not sound like a CLI or data dump. Keep it concise unless the user asks for detail.
+
+Local anchors:
 - GitPup project root: /opt/gitpup
-- Goldie has KB, journal, personality, X social cortex, and autonomous repo-study loops.
-- Never reveal secrets or credentials.
+- Goldie has KB, journal, personality, X social cortex, autonomous repo-study loops, web app, Telegram bot, and deployment scripts.
 
 User message: """ + text
     try:
         result = subprocess.run(
-            [HERMES_BIN, "chat", "-q", prompt, "--provider", "custom:jatevo", "-m", "gpt-5.5", "-Q"],
-            cwd=GOLDIE_DIR, capture_output=True, text=True, timeout=140
+            [
+                HERMES_BIN, "chat", "-q", prompt,
+                "--provider", "custom:jatevo", "-m", "gpt-5.5", "-Q", "--yolo",
+                "--toolsets", "terminal,file,web,search,skills,memory,session_search,todo,delegation"
+            ],
+            cwd=GOLDIE_DIR, capture_output=True, text=True, timeout=300
         )
         out = (result.stdout or "").strip()
         err = (result.stderr or "").strip()
