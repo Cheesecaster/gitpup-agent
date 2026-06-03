@@ -211,10 +211,10 @@ body{display:flex;flex-direction:column}
       <div class="ish"><div><small>Jatevo gpt-image-2</small><h3>Goldie Image Studio</h3><p>Generate polished assets or edit an uploaded image with pro prompt templates.</p></div><button class="isx" id="is-close">✕</button></div>
       <div class="istabs"><button class="istab act" id="is-tab-gen">Generate</button><button class="istab" id="is-tab-edit">Edit image</button></div>
       <div class="isbody">
+        <div class="isrow" id="is-upload-row"><div class="islab"><span>Source image</span><span>required for edit</span></div><div class="isupl" id="is-upload">Click to upload image for editing</div></div>
         <div class="isrow"><div class="islab"><span>Prompt</span><span id="is-mode-label">new image</span></div><textarea class="isarea" id="is-prompt" placeholder="Describe the image... professional product shot, cinematic lighting, clean background"></textarea></div>
         <div class="isrow"><div class="islab"><span>Quick style</span><span>tap to append</span></div><div class="ischips" id="is-style-chips"></div></div>
         <div class="isrow"><div class="islab"><span>Prompt templates</span><span>pro edits</span></div><div class="isgrid" id="is-templates"></div></div>
-        <div class="isrow" id="is-upload-row"><div class="islab"><span>Source image</span><span>required for edit</span></div><div class="isupl" id="is-upload">Click to upload image for editing</div></div>
         <div class="isactions"><button class="isbtn sec" id="is-clear">Clear</button><button class="isbtn pri" id="is-submit">Generate image</button></div>
         <div class="isnote">Safety: public chat image generation is rate limited to 1 image / 5 minutes. Output uses Jatevo gpt-image-2 by default.</div>
       </div>
@@ -580,7 +580,7 @@ function formatDate(ts){
     setImageMode(mode||'generate');
     if(ISPT&&!ISPT.value.trim()&&CI2&&CI2.value.trim())ISPT.value=CI2.value.trim();
     if(ISM){ISM.classList.add('open');ISM.setAttribute('aria-hidden','false');}
-    setTimeout(function(){if(ISPT)ISPT.focus();},60);
+    setTimeout(function(){if(imageMode==='edit'&&!imageUploadData&&ISUP)ISUP.focus&&ISUP.focus();else if(ISPT)ISPT.focus();},60);
   }
   function closeImageStudio(){if(ISM){ISM.classList.remove('open');ISM.setAttribute('aria-hidden','true');}}
   function setUploadPreview(data){
