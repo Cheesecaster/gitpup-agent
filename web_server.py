@@ -121,7 +121,7 @@ def do_GET(self):
         '/api/status', '/api/journal', '/api/reflections', '/api/config', '/api/activity',
         '/api/personality', '/api/soul', '/api/story', '/story', '/api/kb', '/api/repos',
         '/api/cost', '/api/x_queue', '/api/x_queue/clear', '/api/relationships', '/api/mood_arc',
-        '/auth/callback'
+        '/auth/callback', '/api/image/job'
     }:
         self.send_error(404)
         return
@@ -261,6 +261,14 @@ def do_GET(self):
         if os.path.exists(qf):
             open(qf, 'w').close()
         _json_resp(self, {'cleared': True})
+
+    elif p == '/api/image/job':
+        qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        job = _image_job_get((qs.get('id') or [''])[0])
+        if not job:
+            _json_resp(self, {'status':'error','error':'job not found'}, 404)
+        else:
+            _json_resp(self, {'status':'ok','job':_image_job_public(job)})
 
     elif p == '/api/relationships':
         kb = load_json(KB)
@@ -660,15 +668,70 @@ def _song_rate_refund(handler, user_key='anonymous'):
             else: _SONG_RATE.pop(key, None)
 
 
-def _handle_image(self, data):
+_IMAGE_JOBS = {}
+_IMAGE_JOB_TTL = 1800
+
+def _image_job_public(job):
+    keep = ['id','status','reply','mode','image_url','size_bytes','model','provider','requested_model','fallback_model','limit','output_size','error','created_at','updated_at']
+    return {k: job.get(k) for k in keep if k in job}
+
+def _image_job_store(job):
+    import time, threading
+    lock = globals().setdefault('_IMAGE_JOBS_LOCK', threading.Lock())
+    now = time.time()
+    with lock:
+        for jid, old in list(_IMAGE_JOBS.items()):
+            if now - old.get('created_at', now) > _IMAGE_JOB_TTL:
+                _IMAGE_JOBS.pop(jid, None)
+        _IMAGE_JOBS[job['id']] = job
+
+def _image_job_get(job_id):
+    import threading
+    lock = globals().setdefault('_IMAGE_JOBS_LOCK', threading.Lock())
+    with lock:
+        return _IMAGE_JOBS.get(str(job_id or ''))
+
+def _image_job_update(job_id, **updates):
+    import time, threading
+    lock = globals().setdefault('_IMAGE_JOBS_LOCK', threading.Lock())
+    with lock:
+        job = _IMAGE_JOBS.get(str(job_id or ''))
+        if not job:
+            return None
+        job.update(updates)
+        job['updated_at'] = time.time()
+        return job
+
+def _handle_image_async(self, data):
+    import time, uuid, threading
+    job_id = 'img_' + uuid.uuid4().hex[:16]
+    user_key = data.get('session') or data.get('user') or 'anonymous'
+    mode = 'edit' if data.get('image') else 'generate'
+    job = {'id': job_id, 'status': 'queued', 'reply': 'Image edit started.' if mode == 'edit' else 'Image generation started.', 'mode': mode, 'created_at': time.time(), 'updated_at': time.time(), 'limit': '1/5 minutes'}
+    _image_job_store(job)
+    def run():
+        try:
+            _image_job_update(job_id, status='running', reply='Editing image with uploaded source...' if mode == 'edit' else 'Generating image...')
+            result = _handle_image_result(data)
+            if result.get('status') == 'ok':
+                result.pop('status', None)
+                _image_job_update(job_id, status='done', **result)
+            else:
+                _image_rate_refund(self, user_key)
+                _image_job_update(job_id, status='error', reply=result.get('reply') or 'Image model did not return an image.', error=result.get('error') or 'image_failed')
+        except Exception as e:
+            _image_rate_refund(self, user_key)
+            _image_job_update(job_id, status='error', reply='Image generation failed.', error=str(e)[:300])
+    threading.Thread(target=run, daemon=True).start()
+    return _json_resp(self, {'status': 'queued', 'job_id': job_id, 'job': _image_job_public(job), 'reply': job['reply']})
+
+
+def _handle_image_result(data):
     import time, json, urllib.request, urllib.error, base64, os
     user_key = data.get('session') or data.get('user') or 'anonymous'
-    if not _image_rate_ok(self, user_key=user_key, limit=1, window=300):
-        return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image every 5 minutes per user/IP.','limit':'1/5 minutes'}, 429)
     prompt = (data.get('prompt') or data.get('message') or '').strip()
     if not prompt:
-        _image_rate_refund(self, user_key)
-        return _json_resp(self, {'status':'error','error':'missing_prompt','reply':'Please enter an image prompt.'}, 400)
+        return {'status':'error','error':'missing_prompt','reply':'Please enter an image prompt.'}
     if len(prompt) > 1500:
         prompt = prompt[:1500]
     _load_env_file_once()
@@ -686,8 +749,7 @@ def _handle_image(self, data):
         key = os.environ.get('JATEVO_API_KEY') or os.environ.get('LLM_API_KEY') or os.environ.get('OPENAI_API_KEY') or ''
         base_url = (os.environ.get('JATEVO_BASE_URL') or os.environ.get('LLM_BASE_URL') or 'https://jatevo.ai/v1').rstrip('/')
         if not key:
-            _image_rate_refund(self, user_key)
-            return _json_resp(self, {'status':'error','error':'missing_jatevo_key','reply':'Image generation is not configured.'}, 500)
+            return {'status':'error','error':'missing_jatevo_key','reply':'Image generation is not configured.'}
         # Jatevo gpt-image-2 rejects tiny sizes; 1024x1024 is inside its valid pixel range.
         size = (data.get('size') or os.environ.get('JATEVO_IMAGE_SIZE') or os.environ.get('IMAGE_SIZE') or '1024x1024').strip()
         quality = (data.get('quality') or os.environ.get('JATEVO_IMAGE_QUALITY') or os.environ.get('IMAGE_QUALITY') or 'auto').strip()
@@ -768,8 +830,7 @@ def _handle_image(self, data):
     else:
         key = os.environ.get('OPENROUTER_API_KEY','')
         if not key:
-            _image_rate_refund(self, user_key)
-            return _json_resp(self, {'status':'error','error':'missing_openrouter_key'}, 500)
+            return {'status':'error','error':'missing_openrouter_key','reply':'Image generation is not configured.'}
         models_to_try = []
         for m in [primary_model or 'x-ai/grok-imagine-image-quality', fallback_model]:
             if m and m not in models_to_try:
@@ -799,8 +860,7 @@ def _handle_image(self, data):
                 last_error = str(e)[:300]
                 continue
     if not raw:
-        _image_rate_refund(self, user_key)
-        return _json_resp(self, {'status':'error','error':last_error or 'no_image_returned','reply':'Image model did not return an image.'}, 502)
+        return {'status':'error','error':last_error or 'no_image_returned','reply':'Image model did not return an image.'}
     try:
         fname = 'goldie_%d.png' % int(time.time()*1000)
         out = '/opt/gitpup/web_dist/generated/' + fname
@@ -810,12 +870,26 @@ def _handle_image(self, data):
         size_bytes = os.path.getsize(out)
         url = '/generated/' + os.path.basename(out)
         mode = 'edit' if image_data else 'generate'
-        _append_chat_context(self, user_key, 'user', ('[image edit prompt] ' if mode == 'edit' else '[image prompt] ') + prompt)
-        _append_chat_context(self, user_key, 'assistant', ('[edited image] ' if mode == 'edit' else '[generated image] ') + url)
-        return _json_resp(self, {'status':'ok','reply':'Image edited.' if mode == 'edit' else 'Image generated.','mode':mode,'image_url':url,'size_bytes':size_bytes,'model':used_model,'provider':used_provider,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':data.get('size') or os.environ.get('JATEVO_IMAGE_SIZE') or os.environ.get('IMAGE_SIZE') or '1024x1024'})
+        if data.get('chat_log', True):
+            _CHAT_CONTEXT.setdefault('image|' + user_key, []).append({'role':'user','text':('[image edit prompt] ' if mode == 'edit' else '[image prompt] ') + prompt,'ts':time.time()})
+            _CHAT_CONTEXT.setdefault('image|' + user_key, []).append({'role':'assistant','text':('[edited image] ' if mode == 'edit' else '[generated image] ') + url,'ts':time.time()})
+        return {'status':'ok','reply':'Image edited.' if mode == 'edit' else 'Image generated.','mode':mode,'image_url':url,'size_bytes':size_bytes,'model':used_model,'provider':used_provider,'requested_model':primary_model,'fallback_model':fallback_model,'limit':'1/5 minutes','output_size':data.get('size') or os.environ.get('JATEVO_IMAGE_SIZE') or os.environ.get('IMAGE_SIZE') or '1024x1024'}
     except Exception as e:
-        return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}, 500)
+        return {'status':'error','error':str(e)[:300],'reply':'Image generation failed: ' + str(e)[:180]}
 
+
+def _handle_image(self, data):
+    user_key = data.get('session') or data.get('user') or 'anonymous'
+    if not _image_rate_ok(self, user_key=user_key, limit=1, window=300):
+        return _json_resp(self, {'status':'error','error':'image_rate_limited','reply':'Image rate limit exceeded. Please wait a moment — maximum 1 image every 5 minutes per user/IP.','limit':'1/5 minutes'}, 429)
+    if data.get('async') or data.get('background'):
+        return _handle_image_async(self, data)
+    result = _handle_image_result(data)
+    if result.get('status') == 'ok':
+        return _json_resp(self, result)
+    _image_rate_refund(self, user_key)
+    code = 400 if result.get('error') in ('missing_prompt',) else 502
+    return _json_resp(self, result, code)
 
 
 def _handle_song(self, data):
@@ -890,6 +964,7 @@ def _public_do_GET(self):
     if (normalized_p == '/api' or
             normalized_p.startswith('/api/') or
             normalized_p == '/story' or
+            normalized_p == '/api/image/job' or
             normalized_p == '/auth/callback' or
             normalized_p == '/status'):
         return do_GET(self)
@@ -2845,7 +2920,7 @@ def _handle_cli_delete(handler, data):
 
 def _public_do_POST(self):
     p = urllib.parse.urlparse(self.path).path
-    if p not in ('/api/chat', '/api/image', '/api/song', '/api/cli/session', '/api/cli', '/api/cli/tree', '/api/cli/read', '/api/cli/export', '/api/cli/preview', '/api/cli/agent', '/api/cli/job', '/api/cli/template', '/api/cli/save', '/api/cli/quota', '/api/cli/git/scan', '/api/cli/git/push', '/api/cli/reset', '/api/cli/delete', '/api/cli/scan'):
+    if p not in ('/api/chat', '/api/image', '/api/image/job', '/api/song', '/api/cli/session', '/api/cli', '/api/cli/tree', '/api/cli/read', '/api/cli/export', '/api/cli/preview', '/api/cli/agent', '/api/cli/job', '/api/cli/template', '/api/cli/save', '/api/cli/quota', '/api/cli/git/scan', '/api/cli/git/push', '/api/cli/reset', '/api/cli/delete', '/api/cli/scan'):
         return _json_resp(self, {'status': 'error', 'error': 'not found'}, 404)
     try:
         content_length = int(self.headers.get('Content-Length', 0))
@@ -2855,6 +2930,8 @@ def _public_do_POST(self):
             raise ValueError('Invalid JSON payload')
         if p == '/api/image':
             return _handle_image(self, data)
+        if p == '/api/image/job':
+            return _handle_image_async(self, data)
         if p == '/api/song':
             return _handle_song(self, data)
         if p == '/api/cli/session':

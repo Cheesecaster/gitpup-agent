@@ -519,12 +519,17 @@ function formatDate(ts){
     var wait=document.createElement('div');wait.className='bb bo';wait.textContent=imgData?'Editing image with uploaded source...':'Generating image...';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
     if(IMGB)IMGB.disabled=true;
     setGoldieAction('image',true);
-    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.text().then(function(t){var d;try{d=JSON.parse(t||'{}');}catch(_){d={status:'error',reply:'Image request failed',error:('HTTP '+r.status+' '+(t||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()).slice(0,260)}}d._status=r.status;return d})}).then(function(d){
-      wait.remove();
-      if(d.image_url){addBotImage(d.image_url,d.reply||((d.mode==='edit')?'Image edited':'Image generated'));}
-      else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=(d.reply||'Image failed')+(d.error?' — '+d.error:'');CB.appendChild(bb);}
-      CB.scrollTop=CB.scrollHeight;
-    }).catch(function(e){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent='Image failed — '+(e&&e.message?e.message:'network error');CB.appendChild(bb);}).finally(function(){if(IMGB)IMGB.disabled=false;clearGoldieAction(900);});
+    function parseImageResp(r){return r.text().then(function(t){var d;try{d=JSON.parse(t||'{}');}catch(_){d={status:'error',reply:'Image request failed',error:('HTTP '+r.status+' '+(t||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()).slice(0,260)}}d._status=r.status;return d});}
+    function showImageErr(d){wait.remove();var bb=document.createElement('div');bb.className='bb bo';bb.textContent=(d.reply||'Image failed')+(d.error?' — '+d.error:'');CB.appendChild(bb);CB.scrollTop=CB.scrollHeight;if(IMGB)IMGB.disabled=false;clearGoldieAction(900);}
+    function finishImage(d){wait.remove();if(d.image_url){addBotImage(d.image_url,d.reply||((d.mode==='edit')?'Image edited':'Image generated'));}else showImageErr(d);CB.scrollTop=CB.scrollHeight;if(IMGB)IMGB.disabled=false;clearGoldieAction(900);}
+    function pollImageJob(id, tries){
+      fetch('/api/image/job?id='+encodeURIComponent(id)).then(parseImageResp).then(function(d){var j=d.job||{};if(j.status==='done'){finishImage(j);return;}if(j.status==='error'){showImageErr(j);return;}tries=tries||0;wait.textContent=(j.reply||'Goldie is still editing image...')+' '+Math.min(99,Math.floor(tries*3))+'%';setTimeout(function(){pollImageJob(id,tries+1);},3000);}).catch(function(e){showImageErr({reply:'Image job check failed',error:(e&&e.message)||'network error'});});
+    }
+    fetch('/api/image/job',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession(),async:true})}).then(parseImageResp).then(function(d){
+      if(d.job_id){wait.textContent=(imgData?'Image edit queued. Goldie will keep working...':'Image generation queued. Goldie will keep working...');pollImageJob(d.job_id,0);}
+      else if(d.image_url){finishImage(d);}
+      else{showImageErr(d);}
+    }).catch(function(e){showImageErr({reply:'Image failed',error:(e&&e.message)||'network error'});});
   }
   var imageMode='generate', imageUploadData='';
   var imgStylePrompts=[
