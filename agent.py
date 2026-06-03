@@ -21,7 +21,11 @@ except ImportError:
 # Personality helper — get dominant trait
 def _get_dominant_trait(p):
     """Get the strongest personality dimension."""
-    dims = p.get('dimensions', {})
+    try:
+        dims = p.get('dimensions', {})
+    except AttributeError:
+        return {}
+
     if not isinstance(dims, dict) or not dims:
         return {}
 
@@ -30,16 +34,26 @@ def _get_dominant_trait(p):
         return {}
 
     def _value_for(k):
-        trait = dims[k]
+        trait = dims.get(k)
+        if not isinstance(trait, dict):
+            return 0
         raw = trait.get('value', 0)
         try:
             return float(raw)
         except (TypeError, ValueError):
             return 0
 
-    best_k = max(valid_keys, key=_value_for)
-    dims[best_k]['key'] = best_k
-    return dims[best_k]
+    try:
+        best_k = max(valid_keys, key=_value_for)
+    except (ValueError, TypeError):
+        return {}
+
+    trait = dims.get(best_k)
+    if not isinstance(trait, dict):
+        return {}
+
+    trait['key'] = best_k
+    return trait
 WIB = timezone(timedelta(hours=7))
 
 # ── Paths ──
