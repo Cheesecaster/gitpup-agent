@@ -442,7 +442,7 @@ function formatDate(ts){
     });
   }
   refreshStoryCard();
-  setInterval(refreshStoryCard, 8000);
+  setInterval(refreshStoryCard, 60000);
 
   function loadJournal(){
     fetch('/api/journal').then(function(r){return r.json()}).then(function(d){
@@ -698,7 +698,7 @@ function formatDate(ts){
     walkTo((pi+1)%pos.length);
   },8000);
   LD.classList.add('hide');setTimeout(function(){LD.style.display='none'},400);
-  loadJournal();loadStatus();
+  loadStatus();
 })();
 </script>
 </body>
