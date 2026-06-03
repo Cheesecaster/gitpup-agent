@@ -746,6 +746,7 @@ def _handle_image_result(data):
             "Do not invent a new face. Do not beautify, reshape, swap identity, change ethnicity, change age, over-smooth skin, enlarge eyes, alter nose/lips/teeth, or exaggerate smiles. "
             "Keep the original facial expression as close as possible unless the user explicitly asks for an expression change; if expression change is requested, make it extremely subtle and identity-preserving. "
             "Apply the requested edit only to the scene, outfit, lighting, background, pose, or body styling while keeping every face recognizably the same person. "
+            "REALISTIC PHONE PHOTO STYLE: Make the final image look like an ordinary amateur photo taken by a real iPhone/phone user, not a professional photoshoot or AI render. Use natural imperfect lighting, realistic phone-camera perspective, normal dynamic range, mild handheld framing, subtle grain/noise, everyday color, and believable shadows. Avoid cinematic lighting, glossy editorial retouching, over-sharp details, perfect studio composition, hyperreal skin, plastic texture, excessive bokeh, and luxury ad aesthetics unless the user explicitly asks for those. "
         )
         prompt = face_lock + '\n\nUSER EDIT REQUEST: ' + prompt
     last_error = ''
