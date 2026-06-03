@@ -72,12 +72,19 @@ import personality as pers
 def load_json(path, default=None):
     import json
     decode_error = getattr(json, "JSONDecodeError", ValueError)
+
+    file_errors = (OSError,)
+    try:
+        file_errors = (FileNotFoundError, OSError)
+    except NameError:
+        pass
+
     try:
         if not path:
             return default
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    except (FileNotFoundError, OSError, decode_error, ValueError, TypeError, UnicodeError):
+    except (file_errors + (decode_error, ValueError, TypeError, UnicodeError)):
         return default
     except Exception:
         return default
