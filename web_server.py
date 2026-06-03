@@ -742,7 +742,7 @@ def _handle_image(self, data):
             req.add_header('Authorization','Bearer ' + key)
             req.add_header('User-Agent','GoldieImage/Jatevo-gpt-image-2')
             try:
-                with urllib.request.urlopen(req, timeout=240) as r:
+                with urllib.request.urlopen(req, timeout=480) as r:
                     resp = json.loads(r.read())
                 item = (resp.get('data') or [{}])[0]
                 b64 = item.get('b64_json') or item.get('base64') or item.get('image_base64') or ''

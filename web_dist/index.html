@@ -519,7 +519,7 @@ function formatDate(ts){
     var wait=document.createElement('div');wait.className='bb bo';wait.textContent=imgData?'Editing image with uploaded source...':'Generating image...';CB.appendChild(wait);CB.scrollTop=CB.scrollHeight;
     if(IMGB)IMGB.disabled=true;
     setGoldieAction('image',true);
-    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.json().catch(function(){return {reply:'Image request failed'}}).then(function(d){d._status=r.status;return d})}).then(function(d){
+    fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,image:imgData||'',session:getSession()})}).then(function(r){return r.text().then(function(t){var d;try{d=JSON.parse(t||'{}');}catch(_){d={status:'error',reply:'Image request failed',error:('HTTP '+r.status+' '+(t||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()).slice(0,260)}}d._status=r.status;return d})}).then(function(d){
       wait.remove();
       if(d.image_url){addBotImage(d.image_url,d.reply||((d.mode==='edit')?'Image edited':'Image generated'));}
       else{var bb=document.createElement('div');bb.className='bb bo';bb.textContent=(d.reply||'Image failed')+(d.error?' — '+d.error:'');CB.appendChild(bb);}
