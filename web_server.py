@@ -785,13 +785,35 @@ def _handle_image_result(data):
             chunks.append(('--' + boundary + '--\r\n').encode('utf-8'))
             return boundary, b''.join(chunks)
         edit_raw, edit_filename, edit_mime = _decode_uploaded_image(image_data) if image_data else (None, '', '')
+        if edit_raw:
+            try:
+                import io
+                from PIL import Image, ImageOps
+                im = ImageOps.exif_transpose(Image.open(io.BytesIO(edit_raw))).convert('RGB')
+                w, h = im.size
+                max_side = int(os.environ.get('JATEVO_EDIT_INPUT_MAX_SIDE') or '768')
+                if max(w, h) > max_side:
+                    ratio = float(max_side) / float(max(w, h))
+                    im = im.resize((max(256, int(w * ratio)), max(256, int(h * ratio))), Image.LANCZOS)
+                buf = io.BytesIO()
+                im.save(buf, format='JPEG', quality=int(os.environ.get('JATEVO_EDIT_INPUT_QUALITY') or '86'), optimize=True, progressive=True)
+                edit_raw, edit_filename, edit_mime = buf.getvalue(), 'source.jpg', 'image/jpeg'
+            except Exception:
+                pass
+        # Jatevo image edits can hit Cloudflare 524 when the source/prompt is complex.
+        # Try the faster fallback edit model first, then gpt-image-2, so users get an image instead of a 5-minute timeout.
+        if edit_raw:
+            ordered = []
+            for m in [fallback_model, primary_model]:
+                if m and m not in ordered:
+                    ordered.append(m)
+            models_to_try = ordered or models_to_try
         for model in models_to_try:
             if edit_raw:
                 # OpenAI-compatible image editing requires multipart/form-data on /images/edits.
                 # Sending image as JSON to /images/generations is accepted by some proxies but ignored by the model.
                 fields = {'model': model, 'prompt': prompt, 'size': size, 'n': '1'}
-                if quality:
-                    fields['quality'] = quality
+                # Do not send quality=auto for edit requests; it can make upstream edits slower and is not required.
                 boundary, body = _multipart_body(fields, {'image': (edit_filename, edit_mime, edit_raw)})
                 req = urllib.request.Request(base_url + '/images/edits', data=body, method='POST')
                 req.add_header('Content-Type','multipart/form-data; boundary=' + boundary)
