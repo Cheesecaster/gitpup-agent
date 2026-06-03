@@ -73,9 +73,11 @@ def load_json(path, default=None):
     import json
     decode_error = getattr(json, "JSONDecodeError", ValueError)
     try:
+        if not path:
+            return default
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    except (FileNotFoundError, OSError, decode_error, TypeError, UnicodeError):
+    except (FileNotFoundError, OSError, decode_error, ValueError, TypeError, UnicodeError):
         return default
     except Exception:
         return default
