@@ -88,7 +88,11 @@ def load_jsonl(path):
         with open(path, encoding='utf-8') as f:
             for line in f:
                 if line.strip():
-                    entries.append(json.loads(line))
+                    try:
+                        entries.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        # Skip malformed JSON lines and continue loading the rest.
+                        continue
     except FileNotFoundError:
         raise FileNotFoundError(f"JSONL file not found: {path}")
     except json.JSONDecodeError as e:
