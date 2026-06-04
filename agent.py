@@ -343,13 +343,14 @@ def _cost_price_for_model(model):
     import os, re
     m = (model or '').strip()
     slug = re.sub(r'[^A-Za-z0-9]+', '_', m).strip('_').upper()
-    def _env_float(name, default=None):
-        try:
-            v = os.environ.get(name)
-            if v is None or v == '': return default
-            return float(v)
-        except Exception:
+def _env_float(name, default=None):
+    try:
+        v = os.environ.get(name)
+        if v is None or str(v).strip() == '':
             return default
+        return float(v)
+    except Exception:
+        return default
     if slug:
         inp = _env_float('LLM_PRICE_' + slug + '_INPUT_PER_M')
         out = _env_float('LLM_PRICE_' + slug + '_OUTPUT_PER_M')
