@@ -20,9 +20,19 @@ def load():
 def save(p):
     os.makedirs(os.path.dirname(PFILE), exist_ok=True)
     tmp = PFILE + '.tmp'
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(p, f, indent=2, ensure_ascii=False)
-    os.replace(tmp, PFILE)
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(p, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, PFILE)
+    except Exception:
+        try:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        except OSError:
+            pass
+        raise
 
 def default():
     return {
