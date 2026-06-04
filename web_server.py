@@ -71,7 +71,11 @@ import personality as pers
 
 def load_json(path, default=None):
     import json
-    decode_error = getattr(json, "JSONDecodeError", ValueError)
+    decode_error = getattr(json, "JSONDecodeError", None)
+    if decode_error is None:
+        decode_error = getattr(getattr(json, "decoder", None), "JSONDecodeError", ValueError)
+    if not isinstance(decode_error, type) or not issubclass(decode_error, BaseException):
+        decode_error = ValueError
 
     file_errors = (OSError,)
     try:
