@@ -303,7 +303,11 @@ def _openrouter_model_prices():
 
 
 def _model_aliases(model):
-    m = (model or '').strip()
+    if not isinstance(model, str):
+        return []
+    m = model.strip()
+    if not m:
+        return []
     aliases = [m]
     if '/' not in m:
         aliases.append('openai/' + m)
@@ -319,10 +323,10 @@ def _model_aliases(model):
     }
     if m in fixed:
         aliases.insert(0, fixed[m])
-    # de-dupe preserving order
-    out=[]
+    out = []
     for a in aliases:
-        if a and a not in out: out.append(a)
+        if a and a not in out:
+            out.append(a)
     return out
 
 
