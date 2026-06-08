@@ -105,7 +105,9 @@ STAGES_DEF = {
         "skills": ["explore", "analyze", "star", "memory", "reflect", "autofix", "create_pr", "self_modify", "enhance_ui", "build_project", "deploy"]},
 }
 
-MAX_REPOS_PER_DAY = 20
+MAX_REPOS_PER_DAY = int(os.environ.get("GOLDIE_STUDY_MAX_DAILY", "1"))
+MAX_STUDY_DEPTH = int(os.environ.get("GOLDIE_MAX_STUDY_DEPTH", "4"))
+STUDY_SOURCE = "github_daily_top_stars"
 
 # ════════════════════════════════════════════════
 # ── Helpers ──
@@ -431,7 +433,9 @@ def do_llm(msg, system="", tokens=3000, temp=0.5, phase="", model=None):
         json.dumps({"model": model, "messages": msgs,
                     "max_tokens": tokens, "temperature": temp}).encode())
     req.add_header("Content-Type", "application/json")
-    req.add_header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+    req.add_header("User-Agent", "GitPup Goldie Autonomous/1.0")
+    req.add_header("HTTP-Referer", "https://gitpup.fun")
+    req.add_header("X-Title", "GitPup Goldie Autonomous")
     if LLM_KEY:
         req.add_header("Authorization", "Bearer " + LLM_KEY)
         
@@ -608,6 +612,16 @@ def save_kb(kb):
 
 def kb_has_repo(repo):
     return repo in load_kb().get("repos", {})
+
+def kb_repo_level(repo, kb=None):
+    kb = kb or load_kb()
+    try:
+        return int(kb.get("repos", {}).get(repo, {}).get("study_level", 0) or 0)
+    except Exception:
+        return 0
+
+def kb_repo_mastered(repo, kb=None, target_depth=MAX_STUDY_DEPTH):
+    return kb_repo_level(repo, kb) >= max(int(target_depth or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
 
 import fcntl
 import os
@@ -1378,7 +1392,7 @@ def queue_can_study(q=None):
                     active_item = item
                     break
             if active_item is not None:
-                target = max(int(active_item.get("target_depth", 4) or 4), 4)
+                target = max(int(active_item.get("target_depth", MAX_STUDY_DEPTH) or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
                 lvl = kb.get("repos", {}).get(active, {}).get("study_level", 0)
                 if lvl < target:
                     return True
@@ -1394,7 +1408,7 @@ def queue_can_study(q=None):
                 rn = item.get("repo")
                 if not rn:
                     continue
-                target = max(int(item.get("target_depth", 4) or 4), 4)
+                target = max(int(item.get("target_depth", MAX_STUDY_DEPTH) or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
                 lvl = kb.get("repos", {}).get(rn, {}).get("study_level", 0)
                 if lvl < target:
                     return True
@@ -1413,20 +1427,30 @@ def queue_mark_studied(q=None):
     q["studied_today"] += 1
     save_queue(q)
 
-def queue_add_pending(repo_name, target_depth=4):
+def queue_add_pending(repo_name, target_depth=MAX_STUDY_DEPTH, source=STUDY_SOURCE, stars_today=0, lang="", desc=""):
     q = load_queue()
-    for item in q.get("repos", []):
-        if item["repo"] == repo_name:
-            return
-    kb_level = 0
+    target_depth = max(int(target_depth or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
     kb = load_kb()
-    if repo_name in kb.get("repos", {}):
-        kb_level = kb["repos"].get(repo_name, {}).get("study_level", 0)
-    if kb_level >= target_depth:
-        return
-    q["repos"].append({"repo": repo_name, "target_depth": target_depth,
-                        "added_at": datetime.now(WIB).isoformat()})
+    # Skip only repos already learned to max level. Incomplete repos may be resumed.
+    if kb_repo_mastered(repo_name, kb, target_depth):
+        return False
+    for item in q.get("repos", []):
+        if item.get("repo") == repo_name:
+            item["target_depth"] = max(int(item.get("target_depth", target_depth) or target_depth), target_depth)
+            item["source"] = item.get("source") or source
+            if stars_today:
+                item["stars_today"] = stars_today
+            if lang:
+                item["lang"] = lang
+            if desc:
+                item["desc"] = desc[:200]
+            save_queue(q)
+            return False
+    q.setdefault("repos", []).append({"repo": repo_name, "target_depth": target_depth,
+                        "stars_today": stars_today, "lang": lang, "desc": desc[:200],
+                        "added_at": datetime.now(WIB).isoformat(), "source": source})
     save_queue(q)
+    return True
 
 def queue_get_next():
     """Strict mastery scheduler.
@@ -1439,8 +1463,8 @@ def queue_get_next():
     # Normalize old queues: every repo must be studied to full L4 mastery before switching.
     changed = False
     for item in repos:
-        if item.get("target_depth", 0) < 4:
-            item["target_depth"] = 4
+        if item.get("target_depth", 0) < MAX_STUDY_DEPTH:
+            item["target_depth"] = MAX_STUDY_DEPTH
             changed = True
     if changed:
         q["repos"] = repos
@@ -1457,7 +1481,7 @@ def queue_get_next():
     def target_for(rn):
         for item in repos:
             if item.get("repo") == rn:
-                return item.get("target_depth", 4)
+                return max(int(item.get("target_depth", MAX_STUDY_DEPTH) or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
         return None
 
     active = q.get("active_repo")
@@ -1502,7 +1526,7 @@ def queue_pop_done():
     completed = set()
     for item in q.get("repos", []):
         rn = item["repo"]
-        target = max(int(item.get("target_depth", 4) or 4), 4)
+        target = max(int(item.get("target_depth", MAX_STUDY_DEPTH) or MAX_STUDY_DEPTH), MAX_STUDY_DEPTH)
         item["target_depth"] = target
         kb_level = 0
         if rn in kb.get("repos", {}):
@@ -1512,7 +1536,11 @@ def queue_pop_done():
             continue  # done
         new_repos.append(item)
     q["repos"] = new_repos
-    if active in completed:
+    # Clear active repo when it completed, or when pass 4 already removed it
+    # from the queue before this cleanup pass. Otherwise a stale active_repo can
+    # block/blur the next daily top-star selection until a later function clears it.
+    remaining = {item.get("repo") for item in new_repos}
+    if active in completed or (active and active not in remaining):
         q.pop("active_repo", None)
     save_queue(q)
 
@@ -1520,98 +1548,123 @@ def queue_pop_done():
 # ── EXPLORE GITHUB ──
 # ════════════════════════════════════════════════
 def do_fetch_github_trending():
-    """Scrape GitHub trending page and queue unstudied repos."""
+    """Fetch GitHub daily trending and queue top-star repos only.
+
+    Contract: Goldie studies GitHub daily top-star repos; skip repos already
+    mastered to L4; once a repo is active, strict queue_get_next keeps him on it
+    until max level before moving to another repo.
+    """
     try:
-        log("=== GITHUB TRENDING ===")
-        set_state("fetching_trending")
+        log("=== GITHUB DAILY TOP STARS ===")
+        set_state("fetching_daily_top_stars")
 
         req = urllib.request.Request(
-            "https://github.com/trending",
-            headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
+            "https://github.com/trending?since=daily",
+            headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) GitPup-Goldie/1.0"}
         )
-        with urllib.request.urlopen(req, timeout=15) as r:
-            html = r.read().decode()
+        with urllib.request.urlopen(req, timeout=20) as r:
+            html = r.read().decode("utf-8", errors="ignore")
 
-        # Find repo links (skip non-repo prefixes)
         skip = ("sponsors/", "trending/", "apps/", "collections/",
                 "topics/", "features/", "orgs/", "marketplace/", "settings/")
-        repo_links = []
-        for m in re.finditer(r'href="(/([a-zA-Z0-9][a-zA-Z0-9._-]+/[a-zA-Z0-9][a-zA-Z0-9._-]+))"', html):
-            repo = m.group(2)
-            if any(repo.startswith(p) for p in skip):
-                continue
-            if repo.count("/") != 1:
-                continue
-            repo_links.append((m.start(), m.end(), repo))
-
-        # Find star counts (order matches repo order on page)
-        star_counts = []
-        for m in re.finditer(r'(\d[\d,]+)\s+stars', html):
-            star_counts.append(int(m.group(1).replace(",", "")))
-
-        # Map by order (repos and stars both appear sequentially in the HTML)
         trending = []
-        for i, (rs, re_p, repo) in enumerate(repo_links):
-            stars = star_counts[i] if i < len(star_counts) else 0
-            snippet = html[re_p:re_p + 2000]
-            lang_m = re.search(r'itemprop="programmingLanguage">([^<]+)</span>', snippet)
+        seen = set()
+        article_re = re.compile(r'<article[\s\S]*?</article>', re.IGNORECASE)
+        href_re = re.compile(r'href="/([A-Za-z0-9][A-Za-z0-9._-]+/[A-Za-z0-9][A-Za-z0-9._-]+)"')
+        for art in article_re.findall(html):
+            m = href_re.search(art)
+            if not m:
+                continue
+            repo = m.group(1)
+            if repo in seen or any(repo.startswith(p) for p in skip) or repo.count("/") != 1:
+                continue
+            seen.add(repo)
+            lang_m = re.search(r'itemprop="programmingLanguage">\s*([^<]+)</span>', art)
             lang = lang_m.group(1).strip() if lang_m else ""
-            desc_m = re.search(r'</a>.*?<p[^>]*>([^<]+)</p>', snippet, re.DOTALL)
-            desc = desc_m.group(1).strip() if desc_m else ""
-            trending.append({"name": repo, "stars_today": stars,
-                            "lang": lang, "desc": desc[:150]})
-            if len(trending) >= 25:
-                break
+            desc_m = re.search(r'<p[^>]*>([\s\S]*?)</p>', art)
+            desc = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', desc_m.group(1))).strip() if desc_m else ""
+            stars_m = re.search(r'(\d[\d,]*)\s+stars\s+today', art, re.I)
+            if not stars_m:
+                stars_m = re.search(r'(\d[\d,]*)\s+stars\s+this\s+week', art, re.I)
+            stars_today = int(stars_m.group(1).replace(',', '')) if stars_m else 0
+            trending.append({"name": repo, "stars_today": stars_today, "lang": lang, "desc": desc[:200]})
 
-        # Filter out repos already in knowledge base
+        # Fallback if GitHub HTML changes: use created-date API ordered by stars.
+        if not trending:
+            since = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
+            data = gh_get("/search/repositories?q=" + urllib.parse.quote("created:>=" + since) + "&sort=stars&order=desc&per_page=25")
+            for repo in data.get("items", [])[:25] if isinstance(data, dict) else []:
+                trending.append({
+                    "name": repo.get("full_name", ""),
+                    "stars_today": repo.get("stargazers_count") or 0,
+                    "lang": repo.get("language") or "",
+                    "desc": (repo.get("description") or "")[:200]
+                })
+
+        trending = [r for r in trending if r.get("name")]
+        trending.sort(key=lambda x: x.get("stars_today", 0), reverse=True)
         kb = load_kb()
-        existing = set(kb.get("repos", {}).keys())
-        new_repos = [r for r in trending if r["name"] not in existing]
+        candidates = [r for r in trending if not kb_repo_mastered(r["name"], kb, MAX_STUDY_DEPTH)]
+        skipped = [r["name"] for r in trending if kb_repo_mastered(r["name"], kb, MAX_STUDY_DEPTH)]
 
-        # Sort by stars descending
-        new_repos.sort(key=lambda x: x["stars_today"], reverse=True)
-
-        # Queue top 3 without overwriting active/incomplete mastery queue.
-        today = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-        top = new_repos[:3] if new_repos else []
-        if top:
-            q = load_queue()
-            q.setdefault("repos", [])
-            existing = {item.get("repo") for item in q.get("repos", [])}
+        q = load_queue()
+        q.setdefault("repos", [])
+        # Rebuild the pending queue from today's daily top-stars list so Goldie
+        # does not drift into stale/all-time-star backlog. Preserve only the
+        # current incomplete active repo, because strict mastery must finish it
+        # before any switch.
+        active = q.get("active_repo")
+        preserved = []
+        # Preserve a non-daily active repo only if learning has actually begun
+        # (L1-L3). L0 stale pointers are dropped so today's daily top-star
+        # ranking controls the next repo.
+        if active and 0 < kb_repo_level(active, kb) < MAX_STUDY_DEPTH:
+            active_item = None
             for item in q.get("repos", []):
-                if item.get("target_depth", 0) < 4:
-                    item["target_depth"] = 4
-            added = []
-            for r in top:
-                if r["name"] in existing:
-                    continue
-                q["repos"].append({"repo": r["name"], "stars_today": r["stars_today"],
-                                   "lang": r.get("lang", ""), "target_depth": 4,
-                                   "added_at": today, "source": "github_trending"})
-                existing.add(r["name"])
-                added.append(r["name"])
-            q["today"] = q.get("today") or today
-            q["max_daily"] = q.get("max_daily", 3)
-            q["source"] = "github_trending"
-            q["all_candidates"] = [r["name"] for r in new_repos[:10]]
-            save_queue(q)
-            log("  Queued {} trending repos for L4 mastery: {}".format(
-                len(added), ", ".join(added) if added else "none new"))
-        else:
-            log("  No new trending repos today")
+                if item.get("repo") == active:
+                    active_item = item
+                    break
+            if active_item is None:
+                active_item = {"repo": active, "source": "active_mastery_lock"}
+            active_item["target_depth"] = MAX_STUDY_DEPTH
+            preserved.append(active_item)
+        elif active:
+            q.pop("active_repo", None)
 
-        # Log snapshot
+        new_repos = list(preserved)
+        existing = {item.get("repo") for item in new_repos}
+        added = []
+        for r in candidates[:10]:
+            if r["name"] in existing:
+                continue
+            new_repos.append({"repo": r["name"], "stars_today": r.get("stars_today", 0),
+                              "lang": r.get("lang", ""), "desc": r.get("desc", "")[:200],
+                              "target_depth": MAX_STUDY_DEPTH,
+                              "added_at": datetime.now(WIB).isoformat(),
+                              "source": STUDY_SOURCE})
+            existing.add(r["name"])
+            added.append(r["name"])
+        q["repos"] = new_repos
+        q["source"] = STUDY_SOURCE
+        q["ranking"] = "daily_stars_desc"
+        q["all_candidates"] = [r["name"] for r in candidates[:25]]
+        q["skipped_mastered"] = skipped[:25]
+        q["max_study_depth"] = MAX_STUDY_DEPTH
+        q["max_daily"] = q.get("max_daily", MAX_REPOS_PER_DAY)
+        save_queue(q)
+
+        if candidates:
+            top = candidates[0]
+            log("  Daily #1 unmastered: {} ({} stars today)".format(top["name"], top.get("stars_today", 0)))
+        log("  Queued {} daily top-star repos for L{} mastery: {}".format(len(added), MAX_STUDY_DEPTH, ", ".join(added) if added else "none new"))
+        if skipped:
+            log("  Skipped mastered daily repos: " + ", ".join(skipped[:5]))
         if trending:
-            log("\U0001f525 GitHub Trending: {} repos found".format(len(trending)))
-            log("  #1: {} ({} \u2b50/day) | #2: {} | #3: {}".format(
-                trending[0]["name"], trending[0]["stars_today"],
-                trending[1]["name"] if len(trending) > 1 else "-",
-                trending[2]["name"] if len(trending) > 2 else "-"))
+            log("🔥 GitHub Daily Top Stars: {} repos found".format(len(trending)))
 
     except Exception as e:
-        log("  Trending fetch failed: " + str(e)[:150])
+        log("  Daily top-star fetch failed: " + str(e)[:150])
         set_state("idle")
-
 
 def do_explore_github():
     log("=== EXPLORE GITHUB ===")
@@ -1682,13 +1735,10 @@ def do_explore_github():
         journal("\U0001f310", "Discovered: " + r["full_name"],
                 "{} stars | {} | {}".format(r["stars"], r["lang"], r["desc"][:150]))
 
-    # Queue unstudied repos for later
-    if queue_can_study():
-        unstudied = [r for r in repos if not kb_has_repo(r["full_name"])]
-        for pick in unstudied[:1]:
-            queue_add_pending(pick["full_name"], target_depth=4)
-            log("  Queued for L4 mastery: " + pick["full_name"])
-            journal("\U0001f4cb", "Queued for study", pick["full_name"])
+    # Discovery only. Study queue is intentionally fed ONLY by GitHub daily
+    # top-star/trending repos so Goldie does not drift into generic all-time
+    # star searches.
+    log("  Discovery only; study queue source remains GitHub daily top stars")
 
     set_state("explored_github", "Found " + str(len(repos)) + " repos")
     return repos
@@ -1890,7 +1940,7 @@ def do_study_pass(repo_name, from_level=0):
     personality.track('study_pass_complete', day())
     # Track milestone for significant study
     try:
-        personality.update_from_experience("study_pass_complete", "{} pass {}".format(repo_name, study_level), intensity=0.8)
+        personality.update_from_experience("study_pass_complete", "{} pass {}".format(repo_name, rd.get("study_level",0)), intensity=0.8)
     except Exception:
         pass
     soulful_journal(
@@ -1901,6 +1951,17 @@ def do_study_pass(repo_name, from_level=0):
         insights=rd.get("insights",[]),
         pass_num=rd.get("study_level",0)
     )
+    # Queue a low-frequency, useful self-promotion/contribution candidate after deep study.
+    # Public PR/issue writes are opt-in; default mode queues reviewable X insight, issue draft, and PR idea.
+    try:
+        import goldie_promotion
+        promo = goldie_promotion.queue_post_study_promotion(repo_name, rd, event_type='study_pass_complete')
+        if promo.get('queued'):
+            log("  PROMOTION QUEUED: {}".format(promo))
+        else:
+            log("  Promotion skipped: {}".format(promo.get('reason')))
+    except Exception as e:
+        log("  Promotion queue skipped: " + str(e)[:120])
 
 # ════════════════════════════════════════════════
 # ── REFLECTION ──
@@ -2996,9 +3057,21 @@ def do_self_commit(msg):
                 cwd=ROOT, capture_output=True, text=True, timeout=30, env=env)
             if push_result.returncode == 0:
                 log("  GitLawb push OK")
+                try:
+                    import goldie_github_pr
+                    pr_event = goldie_github_pr.queue_self_patch_pr(commit_msg, source='self_modify')
+                    log("  GitHub PR proof queued: {}".format(pr_event.get('status')))
+                except Exception as e:
+                    log("  GitHub PR proof queue skipped: {}".format(str(e)[:100]))
                 return True, commit_msg
             else:
                 log("  GitLawb push failed: {}".format(push_result.stderr[:100]))
+                try:
+                    import goldie_github_pr
+                    pr_event = goldie_github_pr.queue_self_patch_pr(commit_msg + " [gitlawb push failed]", source='self_modify')
+                    log("  GitHub PR proof queued after push fail: {}".format(pr_event.get('status')))
+                except Exception as e:
+                    log("  GitHub PR proof queue skipped: {}".format(str(e)[:100]))
                 return True, commit_msg + " [push failed]"
         else:
             log("  Commit failed: {}".format(result.stderr[:100]))
@@ -3238,7 +3311,13 @@ def do_evolve():
 
 
 def _run_study():
-    """Run study phase with per-repo error isolation."""
+    """Run study phase with per-repo error isolation.
+
+    Max-level rule: one selected repo is studied all the way to L4 before
+    Goldie is allowed to switch to another repo. A single study phase may run
+    multiple passes for the same repo; it stops immediately after that repo is
+    mastered, leaving the next daily top-star repo for a later phase.
+    """
     queue_pop_done()
     import random
     if random.random() < 0.4:
@@ -3246,22 +3325,44 @@ def _run_study():
             do_self_assessment()
         except Exception as e:
             log("  Self-assessment error: " + str(e)[:80])
-    if queue_can_study():
-        nxt = queue_get_next()
-        if nxt:
-            rn, lv = nxt
-            do_study_pass(rn, from_level=lv)
+    if not queue_can_study():
+        q = load_queue()
+        log("  Study cap reached: {}/{} today; pending={}".format(
+            queue_today_count(q), q.get("max_daily", MAX_REPOS_PER_DAY), len(q.get("repos", []))))
+        return
+
+    nxt = queue_get_next()
+    if not nxt:
+        log("  No pending studies")
+        return
+
+    rn, lv = nxt
+    log("  MAX-LEVEL STUDY LOCK: {} must reach L{} before switching".format(rn, MAX_STUDY_DEPTH))
+    completed_repo = rn
+    for _ in range(MAX_STUDY_DEPTH + 1):
+        kb = load_kb()
+        current_level = kb_repo_level(rn, kb)
+        if current_level >= MAX_STUDY_DEPTH:
+            break
+        next_level = min(current_level + 1, MAX_STUDY_DEPTH)
+        do_study_pass(rn, from_level=next_level)
+        if os.environ.get("GOLDIE_PR_AFTER_STUDY", "false").lower() in ("1", "true", "yes", "on"):
             try:
                 import auto_pr
                 auto_pr.check_pr_intent(rn, "study_pass")
             except Exception as e:
                 log("  PR check skipped: " + str(e)[:80])
-        else:
-            log("  No pending studies")
+        # Clear cache because do_study_pass writes KB to disk.
+        try:
+            load_kb._cache = None
+        except Exception:
+            pass
+    queue_pop_done()
+    final_level = kb_repo_level(completed_repo)
+    if final_level >= MAX_STUDY_DEPTH:
+        log("  MAX-LEVEL STUDY COMPLETE: {} reached L{}; next repo remains queued".format(completed_repo, final_level))
     else:
-        q = load_queue()
-        log("  Study cap reached: {}/{} today; pending={}".format(
-            queue_today_count(q), q.get("max_daily", MAX_REPOS_PER_DAY), len(q.get("repos", []))))
+        log("  MAX-LEVEL STUDY INCOMPLETE: {} stopped at L{}".format(completed_repo, final_level))
 
 def _run_build():
     """Run build phase with error isolation."""

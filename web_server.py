@@ -1002,12 +1002,125 @@ def _handle_song(self, data):
         return _json_resp(self, {'status':'error','error':str(e)[:300],'reply':'Song generation failed.'}, 500)
 
 
+
+# === Goldie public proof layer: Yoyo-surpass transparency APIs/pages ===
+PROOF_DATA = os.path.join(GITPUP, 'data')
+
+def _proof_read_json(path, default=None):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return default if default is not None else {}
+
+def _proof_read_jsonl(path, limit=50):
+    rows=[]
+    try:
+        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+            for line in f:
+                line=line.strip()
+                if not line: continue
+                try: rows.append(json.loads(line))
+                except Exception: pass
+        return rows[-limit:]
+    except Exception:
+        return []
+
+def _proof_tail(path, lines=80):
+    try:
+        from collections import deque
+        dq=deque(maxlen=lines)
+        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+            for line in f: dq.append(line.rstrip('\n'))
+        return list(dq)
+    except Exception:
+        return []
+
+def _proof_git_summary():
+    def run(args, timeout=8):
+        try:
+            r=subprocess.run(args, cwd=GITPUP, capture_output=True, text=True, timeout=timeout)
+            return {'ok': r.returncode == 0, 'stdout': (r.stdout or '').strip(), 'stderr': (r.stderr or '').strip()}
+        except Exception as e:
+            return {'ok': False, 'stdout': '', 'stderr': str(e)[:180]}
+    rem = run(['git','remote','-v']).get('stdout','')
+    safe=[re.sub(r'https://[^/@:]+(:[^/@]+)?@', 'https://[REDACTED]@', ln) for ln in rem.splitlines()]
+    return {'branch': run(['git','branch','--show-current']).get('stdout',''), 'head': run(['git','rev-parse','--short','HEAD']).get('stdout',''), 'status_short': run(['git','status','--short']).get('stdout','').splitlines()[:40], 'recent_commits': run(['git','log','--oneline','-8']).get('stdout','').splitlines(), 'remotes': safe}
+
+def _goldie_knowledge_payload():
+    kb=_proof_read_json(os.path.join(PROOF_DATA,'knowledge.json'), {})
+    repos=kb.get('repos') or {}; concepts=kb.get('concepts') or {}; relationships=kb.get('relationships') or []
+    repo_rows=[]
+    for name, rd in repos.items():
+        repo_rows.append({'name': name, 'study_level': rd.get('study_level', rd.get('level', 0)), 'lang': rd.get('lang',''), 'stars': rd.get('stars',0), 'patterns': len(rd.get('patterns') or []), 'insights': len(rd.get('insights') or []), 'last_studied': rd.get('last_studied') or rd.get('updated_at') or ''})
+    repo_rows.sort(key=lambda r: (r.get('study_level') or 0, r.get('patterns') or 0, r.get('stars') or 0), reverse=True)
+    return {'stats': kb.get('stats') or {}, 'totals': {'repos': len(repos), 'patterns': sum(len((v or {}).get('patterns') or []) for v in repos.values()), 'insights': sum(len((v or {}).get('insights') or []) for v in repos.values()), 'concepts': len(concepts) if isinstance(concepts, dict) else 0, 'relationships': len(relationships) if isinstance(relationships, list) else 0}, 'top_repos': repo_rows[:30], 'top_relationships': relationships[:30] if isinstance(relationships, list) else [], 'positioning': 'Goldie studies top GitHub repos to L4 mastery, distills reusable engineering skills, patches himself, and contributes back.'}
+
+def _goldie_personality_dynamic():
+    raw=_proof_read_json(os.path.join(PROOF_DATA,'personality.json'), {})
+    dims=raw.get('dimensions') or raw.get('profile') or {}; labels=[]; keys=[]; colors=[]; lifetime=[]; recent=[]; growth=[]; now=time.time()
+    for k,v in dims.items():
+        if isinstance(v, dict):
+            val=float(v.get('value', 0) or 0); gc=float(v.get('growth_count', 0) or 0); last=float(v.get('last_activity', 0) or 0); label=v.get('label') or k.replace('_',' ').title(); color=v.get('color') or '#d4a017'
+        else:
+            val=float(v or 0); gc=val; last=0; label=k.replace('_',' ').title(); color='#d4a017'
+        days_idle=max(0.0,(now-last)/86400.0) if last else 7.0
+        rec=min(0.92, 0.18 + (gc ** 0.5) / 50.0) * (0.98 ** min(days_idle, 14))
+        labels.append(label); keys.append(k); colors.append(color); lifetime.append(round(val,3)); recent.append(round(max(0.05,rec),3)); growth.append(int(gc))
+    return {'labels':labels,'keys':keys,'colors':colors,'lifetime_data':lifetime,'data':recent,'growth_count':growth,'mode':'recent_activity_normalized','note':'data is dynamic recent shape; lifetime_data preserves full progress so the radar no longer appears saturated.'}
+
+def _goldie_contributions_payload():
+    files={'promotion_queue':'promotion_queue.jsonl','github_issue_drafts':'github_issue_drafts.jsonl','github_pr_ideas':'github_pr_ideas.jsonl','x_post_candidates':'x_post_candidates.jsonl'}; out={}
+    for key_name, fname in files.items():
+        rows=_proof_read_jsonl(os.path.join(PROOF_DATA, fname), 30); out[key_name]={'recent_count':len(rows),'recent':rows[-10:]}
+    hist=_proof_read_json(os.path.join(PROOF_DATA,'promotion_history.json'), {'events':[]})
+    out['promotion_history']={'events':(hist.get('events') or [])[-20:],'total':len(hist.get('events') or [])}
+    log='\n'.join(_proof_tail(os.path.join(PROOF_DATA,'x_social.log'),80)).lower()
+    out['x_auth_live']=('auth_ok=true' in log or 'posted' in log) and 'auth_ok=false' not in log[-1200:]
+    return out
+
+def _goldie_self_patch_payload():
+    status=_proof_read_json(os.path.join(PROOF_DATA,'state','status.json'), {})
+    attempts=[]
+    for line in _proof_tail(os.path.join(PROOF_DATA,'evolve.log'),260):
+        low=line.lower()
+        if any(x in low for x in ['self-modify','gap analysis','syntax fail','committed:', 'gitlawb push', 'github pr', 'no fixes applied', 'applied']): attempts.append(line)
+    return {'status':{'self_modifications':status.get('self_modifications',0),'last_self_modify':status.get('last_self_modify'),'runs':status.get('runs'),'stage':status.get('stage')},'git':_proof_git_summary(),'recent_attempt_log':attempts[-80:],'github_pr_mode':'safe_queue_first','missing_for_full_auto_pr':[] if os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN') else ['GITHUB_TOKEN/GH_TOKEN not visible to web process']}
+
+def _goldie_backstage_payload():
+    st=_proof_read_json(os.path.join(PROOF_DATA,'state','status.json'), {}); q=_proof_read_json(os.path.join(PROOF_DATA,'study_queue.json'), {}); kb=_goldie_knowledge_payload()
+    return {'identity':{'name':'Goldie','benchmark':'surpass Yoyo by combining living self-evolution with deep repo mastery','public_site':'gitpup.fun'},'status':st,'study_queue':{'mode':q.get('mode'),'today':q.get('today'),'studied_today':q.get('studied_today'),'max_daily':q.get('max_daily'),'active_repo':q.get('active_repo'),'pending':len(q.get('repos') or [])},'knowledge':kb.get('totals'),'personality':_goldie_personality_dynamic(),'contributions':_goldie_contributions_payload(),'self_patch':_goldie_self_patch_payload(),'logs':{'autonomous_loop_tail':_proof_tail(os.path.join(PROOF_DATA,'logs','autonomous-loop.log'),40),'evolve_tail':_proof_tail(os.path.join(PROOF_DATA,'evolve.log'),40)}}
+
+def _goldie_html_page(title, api_path, subtitle):
+    safe_title=title.replace('<','&lt;')
+    html = """<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>__TITLE__</title><style>body{margin:0;background:#050a1a;color:#e8e8ef;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}.wrap{max-width:1050px;margin:auto;padding:28px 16px 60px}a{color:#d4a017}.nav{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 22px}.card{background:rgba(8,14,32,.78);border:1px solid rgba(212,160,23,.14);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 18px 60px rgba(0,0,0,.22)}h1{color:#d4a017;margin:.2rem 0}h2{font-size:1rem;color:#f1c65b}pre{white-space:pre-wrap;word-break:break-word;background:#020612;border:1px solid #1f2433;border-radius:12px;padding:12px;max-height:70vh;overflow:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.metric{font-size:2rem;color:#fff;font-weight:800}.muted{color:#8b91a3}</style></head><body><main class='wrap'><h1>__TITLE__</h1><p class='muted'>__SUBTITLE__</p><nav class='nav'><a href='/'>home</a><a href='/about'>about</a><a href='/story'>story</a><a href='/backstage'>backstage</a><a href='/knowledge'>knowledge</a><a href='/contributions'>contributions</a><a href='/self-patches'>self-patches</a></nav><div id='app' class='card'>Loading real Goldie data...</div></main><script>const api='__API__';function esc(x){return String(x??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}function card(k,v){return `<div class='card'><div class='muted'>${esc(k)}</div><div class='metric'>${esc(v)}</div></div>`}fetch(api).then(r=>r.json()).then(d=>{let html='';if(api.includes('knowledge')){let t=d.totals||{};html+=`<div class='grid'>${card('repos',t.repos)}${card('patterns',t.patterns)}${card('insights',t.insights)}${card('relationships',t.relationships)}</div><h2>Top mastered repos</h2>`;html+=(d.top_repos||[]).slice(0,20).map(r=>`<div class='card'><b>${esc(r.name)}</b><br><span class='muted'>L${esc(r.study_level)} · ${esc(r.lang)} · patterns ${esc(r.patterns)} · insights ${esc(r.insights)}</span></div>`).join('')}else if(api.includes('contributions')){html+='<h2>Contribution queues</h2><pre>'+esc(JSON.stringify(d,null,2))+'</pre>'}else if(api.includes('self')){html+='<h2>Self-patch proof</h2><pre>'+esc(JSON.stringify(d,null,2))+'</pre>'}else{let s=d.status||{}, k=d.knowledge||{};html+=`<div class='grid'>${card('runs',s.runs)}${card('self modifications',s.self_modifications)}${card('repos studied',k.repos)}${card('patterns',k.patterns)}</div><h2>Raw backstage proof</h2><pre>${esc(JSON.stringify(d,null,2))}</pre>`}document.getElementById('app').innerHTML=html}).catch(e=>document.getElementById('app').textContent='Failed: '+e);</script></body></html>"""
+    return html.replace('__TITLE__', safe_title).replace('__SUBTITLE__', subtitle).replace('__API__', api_path).encode('utf-8')
+
+def _goldie_serve_html(handler, title, api_path, subtitle):
+    data=_goldie_html_page(title, api_path, subtitle); handler.send_response(200); handler.send_header('Content-Type','text/html; charset=utf-8'); handler.send_header('Content-Length',str(len(data))); handler.end_headers(); handler.wfile.write(data)
+
+def _goldie_handle_public_proof_get(handler, path):
+    if path in ('/api/knowledge','/api/kb_full'): return _json_resp(handler, _goldie_knowledge_payload())
+    if path == '/api/personality_live': return _json_resp(handler, _goldie_personality_dynamic())
+    if path == '/api/backstage': return _json_resp(handler, _goldie_backstage_payload())
+    if path == '/api/contributions': return _json_resp(handler, _goldie_contributions_payload())
+    if path == '/api/self_patches': return _json_resp(handler, _goldie_self_patch_payload())
+    if path == '/about': return _goldie_serve_html(handler, 'Goldie · about', '/api/backstage', 'A living golden retriever agent built to surpass Yoyo: study repos deeply, distill skills, self-patch safely, and contribute back.')
+    if path == '/backstage': return _goldie_serve_html(handler, 'Goldie · backstage', '/api/backstage', 'Transparent live proof: status, queues, logs, self-patch attempts, and knowledge totals.')
+    if path == '/knowledge': return _goldie_serve_html(handler, 'Goldie · knowledge', '/api/knowledge', 'Goldie real advantage: L4 repo mastery and reusable engineering patterns.')
+    if path == '/contributions': return _goldie_serve_html(handler, 'Goldie · contributions', '/api/contributions', 'Queued X insights, issue drafts, and PR ideas generated from completed study.')
+    if path == '/self-patches': return _goldie_serve_html(handler, 'Goldie · self-patches', '/api/self_patches', 'Self-modification attempts with git proof and failure/success traces.')
+    return False
+
 def _public_do_GET(self):
     p = urllib.parse.urlparse(self.path).path
     normalized_p = p.rstrip('/')
     if normalized_p == '':
         normalized_p = '/'
 
+    proof_paths = {'/api/knowledge','/api/kb_full','/api/personality_live','/api/backstage','/api/contributions','/api/self_patches','/about','/backstage','/knowledge','/contributions','/self-patches'}
+    if normalized_p in proof_paths:
+        return _goldie_handle_public_proof_get(self, normalized_p)
     if normalized_p == '/api/cli/download':
         return _serve_cli_download(self)
     if normalized_p.startswith('/preview/'):
@@ -1555,6 +1668,12 @@ def _cli_kb_context(message):
 
 
 
+def _cli_wants_image_asset(msg):
+    t = (msg or '').lower()
+    asset_words = ['image asset', 'asset image', 'assets image', 'image assets', 'hero image', 'hero asset', 'illustration', 'poster', 'cover art', 'cover image', 'logo image', 'mascot image', 'background image', 'grok imagine']
+    direct_words = ['/image ', '/asset ', '/imagine ']
+    return any(w in t for w in asset_words) or any(t.startswith(w) for w in direct_words)
+
 def _cli_is_build_command(msg):
     t = (msg or '').lower()
     build_words = ['build', 'buat', 'bikin', 'create', 'generate', 'kodekan', 'make']
@@ -1562,7 +1681,8 @@ def _cli_is_build_command(msg):
         'landing', 'website', 'web', 'page', 'html', 'app', 'aplikasi', 'portfolio', 'todo',
         'game', 'browser', 'canvas', 'snake', 'quiz', 'arcade',
         'backend', 'api', 'rest', 'server', 'endpoint', 'route', 'fastapi', 'express', 'flask',
-        'crud', 'database', 'dashboard', 'admin', 'auth', 'login', 'realtime', 'websocket', 'payment'
+        'crud', 'database', 'dashboard', 'admin', 'auth', 'login', 'realtime', 'websocket', 'payment',
+        'image', 'asset', 'assets', 'illustration', 'poster', 'logo', 'hero image', 'grok imagine'
     ]
     return any(w in t for w in build_words) and any(w in t for w in target_words)
 
@@ -1584,6 +1704,89 @@ def _cli_extract_json_object(text):
 
 def _cli_generate_project_files_locally(msg):
     raise RuntimeError('Local/default website templates are disabled. Use the request-driven LLM writer only.')
+
+def _cli_image_prompt_from_request(msg):
+    text = (msg or '').strip()
+    for prefix in ['/image ', '/asset ', '/imagine ']:
+        if text.lower().startswith(prefix):
+            text = text[len(prefix):].strip()
+            break
+    return (
+        'Create a production-ready website asset image for this exact request. '
+        'Style: polished but usable in a modern responsive web UI, clean composition, no text unless explicitly requested, safe commercial visual design. '
+        'Request: ' + text[:1200]
+    )
+
+def _cli_generate_grok_image_asset(workspace, msg, rel='assets/grok-imagine.png'):
+    import base64, json, os, time, urllib.request, urllib.error
+    _load_env_file_once()
+    key = os.environ.get('OPENROUTER_API_KEY', '')
+    if not key:
+        raise ValueError('OpenRouter API key is not configured for CLI image assets')
+    prompt = _cli_image_prompt_from_request(msg)
+    models = []
+    for m in ['x-ai/grok-imagine-image-quality', 'x-ai/grok-imagine-image']:
+        if m and m not in models:
+            models.append(m)
+    raw = None
+    used_model = None
+    last_error = ''
+    for model in models:
+        payload = {
+            'model': model,
+            'messages': [{'role': 'user', 'content': prompt}],
+            'modalities': ['image']
+        }
+        req = urllib.request.Request('https://openrouter.ai/api/v1/chat/completions', data=json.dumps(payload).encode('utf-8'), method='POST')
+        for k, v in {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + key,
+            'HTTP-Referer': 'https://gitpup.fun',
+            'X-Title': 'Goldie CLI Image Assets',
+            'User-Agent': 'GoldieCLIImageAssets/1.0'
+        }.items():
+            req.add_header(k, v)
+        try:
+            with urllib.request.urlopen(req, timeout=220) as r:
+                resp = json.loads(r.read())
+            raw = _extract_openrouter_image(resp)
+            if raw:
+                used_model = model
+                _record_llm_cost_usage(resp.get('usage', {}), model=model, provider='openrouter', phase='cli_image_asset', source='api_cli')
+                break
+            text = ((resp.get('choices') or [{}])[0].get('message') or {}).get('content', '')
+            last_error = text[:300] or 'OpenRouter Grok Imagine returned no image bytes'
+        except urllib.error.HTTPError as e:
+            try:
+                last_error = e.read().decode('utf-8', errors='replace')[:300]
+            except Exception:
+                last_error = str(e)[:300]
+        except Exception as e:
+            last_error = str(e)[:300]
+    if not raw:
+        raise ValueError('Grok Imagine image asset failed: ' + (last_error or 'no image returned'))
+    rel = rel.strip('/').replace('\\', '/') or 'assets/grok-imagine.png'
+    if rel.startswith('../') or '/../' in rel:
+        rel = 'assets/grok-imagine.png'
+    path = _cli_safe_path(workspace, rel)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    try:
+        path, size_bytes = _compress_image_max(raw, path, max_bytes=1400*1024)
+        rel = os.path.relpath(path, workspace).replace(os.sep, '/')
+    except Exception:
+        with open(path, 'wb') as f:
+            f.write(raw)
+        size_bytes = os.path.getsize(path)
+    meta = {
+        'path': rel,
+        'size_bytes': size_bytes,
+        'provider': 'openrouter',
+        'model': used_model,
+        'prompt': prompt[:1000],
+        'created_at': time.time()
+    }
+    _pathlib_cli.Path(_cli_safe_path(workspace, 'assets/grok-imagine.json')).write_text(json.dumps(meta, indent=2), encoding='utf-8')
+    return meta
 
 def _cli_files_from_llm_text(raw, msg):
     import re as _re_mod
@@ -2227,10 +2430,17 @@ def _cli_write_generated_files(workspace, files):
         rel=item['path']
         path=_cli_safe_path(workspace, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        content = item['content']
-        if rel.lower().endswith('.html'):
-            content = _cli_mobile_harden_html(content)
-        _pathlib_cli.Path(path).write_text(content, encoding='utf-8')
+        if item.get('binary'):
+            content = item.get('content') or b''
+            if isinstance(content, str):
+                import base64
+                content = base64.b64decode(content.split(',', 1)[-1])
+            _pathlib_cli.Path(path).write_bytes(content)
+        else:
+            content = item['content']
+            if rel.lower().endswith('.html'):
+                content = _cli_mobile_harden_html(content)
+            _pathlib_cli.Path(path).write_text(content, encoding='utf-8')
         written.append(rel)
     if any(x == 'index.html' for x in written):
         _cli_set_active_project(workspace, '', 'command-build')
@@ -2285,6 +2495,19 @@ def _cli_build_from_user_command(handler, data, sid, workspace, msg):
     ref_txt = _cli_reference_context(workspace)
     if ref_txt:
         kb_txt = (kb_txt + '\n\n' if kb_txt else '') + ref_txt
+    image_asset = None
+    if _cli_wants_image_asset(msg):
+        image_asset = _cli_generate_grok_image_asset(workspace, msg)
+        existing = _cli_list_files(workspace, 120)
+        kb_txt = (kb_txt + '\n\n' if kb_txt else '') + (
+            'REAL GENERATED IMAGE ASSET AVAILABLE:\n'
+            '- path: {path}\n'
+            '- provider: {provider}\n'
+            '- model: {model}\n'
+            'Use this actual asset in index.html with <img src="{path}" alt="..."> when building a visual website/UI. '
+            'Do not use placeholder image services. '
+            'If validation repair is needed, keep using this same asset path. '
+        ).format(**image_asset)
     gen_files = _cli_generate_project_files_with_llm(msg, existing, mem_txt, kb_txt, workspace)
     if _cli_is_game_command(msg):
         playable, checks = _cli_validate_playable_game(gen_files)
@@ -2318,6 +2541,10 @@ def _cli_build_from_user_command(handler, data, sid, workspace, msg):
         gen_files = _cli_repair_domain_files_with_llm(msg, failed_domain, mem_txt, kb_txt, workspace)
         domain_ok, domain_checks = _cli_validate_domain_build(msg, gen_files, hook_matches)
     if not domain_ok and not _cli_is_game_command(msg):
+        failed_domain = [k for k,v in domain_checks.items() if not v]
+        gen_files = _cli_repair_domain_files_with_llm(msg, failed_domain, mem_txt, kb_txt, workspace)
+        domain_ok, domain_checks = _cli_validate_domain_build(msg, gen_files, hook_matches)
+    if not domain_ok and not _cli_is_game_command(msg):
         raise ValueError('Build validation failed: ' + ', '.join([k for k,v in domain_checks.items() if not v]))
     written = _cli_write_generated_files(workspace, gen_files)
     prev = _handle_cli_preview_to_dict(handler, {'session': data.get('session')})
@@ -2327,7 +2554,8 @@ def _cli_build_from_user_command(handler, data, sid, workspace, msg):
     files_now = _cli_file_tree(workspace, 120)
     return {
         'builder': 'goldie-pipeline-llm-writer',
-        'pipeline': ['user-command', 'cli-memory', 'goldie-kb', 'cli-skill-hooks', 'llm-json-files', 'hermes-write-file', 'validator-proof', 'preview'],
+        'pipeline': ['user-command', 'cli-memory', 'goldie-kb', 'cli-skill-hooks'] + (['openrouter-grok-imagine-asset'] if 'image_asset' in locals() and image_asset else []) + ['llm-json-files', 'hermes-write-file', 'validator-proof', 'preview'],
+        'image_asset': image_asset if 'image_asset' in locals() else None,
         'skill_hooks': [{'name': h.get('name'), 'source_repo': h.get('source_repo'), 'actions': h.get('actions'), 'validators': h.get('validators')} for h in hook_matches],
         'validation': domain_checks,
         'post_build_verify': post_verify,
@@ -2365,6 +2593,11 @@ def _cli_answer(handler, data):
                 raise ValueError('File too large for modal preview')
             output = _pathlib_cli.Path(p).read_text(encoding='utf-8', errors='replace')[:CLI_MAX_OUTPUT]
             reply = 'Read: ' + os.path.relpath(p, workspace)
+        elif msg.startswith('/image ') or msg.startswith('/asset ') or msg.startswith('/imagine '):
+            asset = _cli_generate_grok_image_asset(workspace, msg)
+            files = _cli_file_tree(workspace, 80)
+            reply = 'Image asset generated with OpenRouter Grok Imagine.'
+            output = 'asset: {path}\nprovider: {provider}\nmodel: {model}\nsize: {size_bytes} bytes'.format(**asset)
         elif msg.startswith('/write '):
             rest = msg[7:]
             if '\n' in rest:
@@ -2436,6 +2669,8 @@ def _cli_answer(handler, data):
         resp['playable_game'] = build_payload.get('playable_game')
         resp['validation'] = build_payload.get('validation')
         resp['post_build_verify'] = build_payload.get('post_build_verify')
+        if build_payload.get('image_asset'):
+            resp['image_asset'] = build_payload.get('image_asset')
     return resp
 
 
@@ -2765,7 +3000,18 @@ def _serve_cli_preview(handler):
     rel = urllib.parse.unquote('/'.join(parts[3:]) or 'index.html').replace('\\', '/')
     q = urllib.parse.parse_qs(urllib.parse.urlparse(handler.path).query)
     token = q.get('token', [''])[0]
-    if not _cli_verify_token(sid, 'preview', rel, token):
+    rel_low = (rel or '').lower()
+    safe_preview_asset = (
+        rel_low not in ('', 'index.html')
+        and not rel_low.startswith('.')
+        and '/.' not in rel_low
+        and not rel_low.endswith(('.env', '.key', '.pem', '.sqlite', '.db', '.zip'))
+        and rel_low.endswith(('.css', '.js', '.mjs', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.otf', '.json', '.mp3', '.wav', '.mp4', '.webm'))
+    )
+    # The signed preview URL opens index.html, but browser subresources (CSS/JS/images)
+    # requested via relative paths do not inherit the query token. Allow only safe static
+    # asset extensions under the same random workspace id; keep HTML/index token-gated.
+    if not _cli_verify_token(sid, 'preview', rel, token) and not safe_preview_asset:
         handler.send_error(403); return
     workspace = os.path.realpath(os.path.join(os.path.realpath(WORKSPACES), 'user_' + sid))
     if not workspace.startswith(os.path.realpath(WORKSPACES) + os.sep):
