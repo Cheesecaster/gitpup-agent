@@ -10,9 +10,11 @@ def load():
     if os.path.exists(PFILE):
         try:
             with open(PFILE, encoding='utf-8') as f:
-                return json.load(f)
+                p = json.load(f)
+            if isinstance(p, dict) and p:
+                return p
         except Exception:
-            pass
+            p = None
     p = default()
     save(p)
     return p

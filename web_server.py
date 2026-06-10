@@ -1099,6 +1099,254 @@ def _goldie_html_page(title, api_path, subtitle):
 def _goldie_serve_html(handler, title, api_path, subtitle):
     data=_goldie_html_page(title, api_path, subtitle); handler.send_response(200); handler.send_header('Content-Type','text/html; charset=utf-8'); handler.send_header('Content-Length',str(len(data))); handler.end_headers(); handler.wfile.write(data)
 
+
+
+_TRADING_BALANCE_CACHE = {'at': 0.0, 'data': {}}
+
+def _read_wavebot_balance_cached(bot_dir='/opt/goldie-pacifica-wavebot', ttl=60):
+    """Read sanitized WaveBot balance cache with web-side 60s TTL.
+    No live Pacifica account call is made from the public website.
+    """
+    now = time.time()
+    cached = _TRADING_BALANCE_CACHE.get('data') or {}
+    if cached and now - float(_TRADING_BALANCE_CACHE.get('at') or 0) < ttl:
+        out = dict(cached); out['cacheSource'] = 'web-60s'; return out
+    candidates = [
+        os.path.join(bot_dir, 'state', 'balance_cache.json'),
+        os.path.join(bot_dir, 'state', 'account_cache.json'),
+        os.path.join(bot_dir, 'state', 'status_cache.json'),
+        os.path.join(bot_dir, 'state', 'trading_balance_cache.json'),
+    ]
+    raw = {}
+    source = ''
+    for path in candidates:
+        if os.path.exists(path):
+            try:
+                val = load_json(path, {})
+                if isinstance(val, dict):
+                    raw = val.get('data') if isinstance(val.get('data'), dict) else val
+                    source = os.path.basename(path)
+                    break
+            except Exception:
+                pass
+    def pick(*keys):
+        cur = raw
+        for k in keys:
+            if isinstance(cur, dict) and k in cur:
+                cur = cur[k]
+            else:
+                return None
+        return cur
+    def num(v):
+        try: return round(float(v), 4)
+        except Exception: return None
+    # Public Trading Desk shows available balance, not active/account equity.
+    # Prefer free balance fields first; equity is only a last-resort fallback for older cache shapes.
+    # The web layer keeps its own 60s TTL and never calls Pacifica directly.
+    available = num(pick('available_to_spend'))
+    if available is None: available = num(pick('available_to_withdraw'))
+    if available is None: available = num(pick('raw','available_to_spend'))
+    if available is None: available = num(pick('raw','available_to_withdraw'))
+    balance = available
+    if balance is None: balance = num(pick('balance'))
+    if balance is None: balance = num(pick('raw','balance'))
+    if balance is None: balance = num(pick('account_equity'))
+    if balance is None: balance = num(pick('raw','account_equity'))
+    updated = str(raw.get('updated_at') or raw.get('updatedAt') or raw.get('at') or '') if isinstance(raw, dict) else ''
+    data = {'balanceUsd': balance, 'availableBalanceUsd': available, 'updatedAt': updated[:40], 'cacheSource': source or 'none'}
+    _TRADING_BALANCE_CACHE['at'] = now
+    _TRADING_BALANCE_CACHE['data'] = data
+    return dict(data)
+
+def _trading_public_snapshot(handler):
+    """Sanitized public Trading Desk snapshot for gitpup.fun modal.
+    Reads local WaveBot state only; never exposes chat IDs, order IDs, wallet/account secrets, or raw env.
+    """
+    bot_dir = '/opt/goldie-pacifica-wavebot'
+    state_dir = os.path.join(bot_dir, 'state')
+    cfg_path = os.path.join(state_dir, 'autoscalp_config_preview.json')
+    pos_path = os.path.join(state_dir, 'autoscalp_positions.json')
+    audit_path = os.path.join(state_dir, 'audit.jsonl')
+
+    def _safe_float(v, default=0):
+        try: return float(v)
+        except Exception: return default
+
+    def _short_reason(text):
+        s = str(text or '')
+        # strip any accidental identifiers and keep UI concise
+        s = re.sub(r'\b\d{7,}\b', '***', s)
+        s = re.sub(r'chatId\s*[:=]\s*\S+', 'chatId:***', s, flags=re.I)
+        return s[:180]
+
+    cfg = load_json(cfg_path, {}) if os.path.exists(cfg_path) else {}
+    positions_raw = load_json(pos_path, []) if os.path.exists(pos_path) else []
+    if not isinstance(positions_raw, list): positions_raw = []
+    balance_snapshot = _read_wavebot_balance_cached(bot_dir)
+    positions = []
+    for p in positions_raw[-12:]:
+        if not isinstance(p, dict): continue
+        side = str(p.get('side') or '').lower()
+        positions.append({
+            'symbol': str(p.get('symbol') or '')[:16],
+            'side': 'LONG' if side in ('bid','buy','long') else ('SHORT' if side in ('ask','sell','short') else side.upper()[:8]),
+            'entry': _safe_float(p.get('entry')),
+            'margin': _safe_float(p.get('margin')),
+            'leverage': _safe_float(p.get('leverage')),
+            'notionalUsd': _safe_float(p.get('notionalUsd')),
+            'takeProfit1': _safe_float(p.get('takeProfit1')),
+            'stopLoss': _safe_float(p.get('stopLoss')),
+            'confidence': _safe_float(p.get('confidence')),
+            'openedAt': str(p.get('openedAt') or '')[:40],
+            'rationale': [_short_reason(x) for x in (p.get('rationale') or [])[:3]],
+        })
+
+    events = []
+    counts = {}
+    last_scan = ''
+    last_signal = ''
+    last_guard = ''
+    realized_pnl_today = 0.0
+    total_realized_pnl = 0.0
+    closed_trades_today = 0
+    winning_trades_today = 0
+    losing_trades_today = 0
+    auto_closed_today = 0
+    today = time.strftime('%Y-%m-%d', time.gmtime())
+    # Metrics must be derived from the full durable audit log, not only the
+    # recent UI event tail. The previous implementation used deque(maxlen=220)
+    # for both UI events and aggregates, so Daily PnL/Total PnL/Win Rate
+    # appeared to reset whenever close events scrolled out of the last ~220
+    # audit lines. Keep aggregation full-history, then trim only the display.
+    try:
+        import collections
+        event_tail = collections.deque(maxlen=40)
+
+        def _event_pnl(typ, payload):
+            pnl_val = None
+            if isinstance(payload, dict):
+                for key in ('pnlUsd', 'realizedPnlUsd', 'profitUsd', 'lossUsd'):
+                    if key in payload:
+                        try:
+                            pnl_val = float(payload.get(key))
+                        except Exception:
+                            pnl_val = 0.0
+                        break
+                if pnl_val is None and str(payload.get('hit') or '').upper() == 'SL':
+                    pnl_val = -abs(_safe_float(cfg.get('slUsd'), 0))
+                if pnl_val is None and str(payload.get('hit') or '').upper() in ('TP', 'TAKE_PROFIT'):
+                    pnl_val = abs(_safe_float(cfg.get('tpUsd'), 0))
+            return pnl_val
+
+        with open(audit_path, encoding='utf-8') as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                try: e = json.loads(line)
+                except Exception: continue
+                typ = str(e.get('type') or 'event')[:64]
+                at = str(e.get('at') or '')[:40]
+                payload = e.get('payload') if isinstance(e.get('payload'), dict) else {}
+
+                counts[typ] = counts.get(typ, 0) + 1
+                if typ in ('autoscalp_position_close_notified', 'autoscalp_tp_sl_auto_close'):
+                    pnl_val = _event_pnl(typ, payload)
+                    if pnl_val is not None:
+                        total_realized_pnl += pnl_val
+                        if at[:10] == today:
+                            realized_pnl_today += pnl_val
+                            closed_trades_today += 1
+                            if pnl_val >= 0: winning_trades_today += 1
+                            else: losing_trades_today += 1
+                    if typ == 'autoscalp_tp_sl_auto_close' and at[:10] == today:
+                        auto_closed_today += 1
+                if typ == 'autoscalp_scan_window': last_scan = at
+                if typ in ('autoscalp_live_order','autoscalp_signal','autoscalp_manual_opened'): last_signal = at
+                if typ == 'autoscalp_account_guard_block': last_guard = at
+
+                if typ.startswith('telegram_'):
+                    continue
+                item = {'type': typ, 'at': at}
+                if 'symbol' in payload: item['symbol'] = str(payload.get('symbol') or '')[:16]
+                if typ == 'autoscalp_live_order':
+                    sig = payload.get('signal') if isinstance(payload.get('signal'), dict) else {}
+                    side = str(sig.get('side') or '').lower()
+                    item.update({'symbol': str(sig.get('symbol') or item.get('symbol',''))[:16], 'side': 'LONG' if side in ('bid','buy','long') else 'SHORT', 'confidence': _safe_float(sig.get('confidence')), 'note': 'Live order opened with TP/SL protection'})
+                elif typ == 'autoscalp_no_signal':
+                    r = payload.get('rejections') if isinstance(payload.get('rejections'), list) else []
+                    item['note'] = '; '.join(_short_reason(x) for x in r[:2]) or 'No setup passed filters'
+                elif typ == 'autoscalp_account_guard_block':
+                    item['note'] = _short_reason(payload.get('reason') or payload.get('code') or 'Account guard block')
+                elif typ == 'autoscalp_symbol_error':
+                    item['note'] = _short_reason(payload.get('message') or 'Symbol error')
+                elif typ in ('autoscalp_start','startup'):
+                    item['note'] = 'Bot startup / AutoScalp active'
+                elif typ == 'autoscalp_position_status_notified':
+                    item['note'] = 'Open positions: ' + str(payload.get('count','?'))
+                else:
+                    item['note'] = _short_reason(payload.get('reason') or payload.get('message') or typ)
+                event_tail.append(item)
+        events = list(event_tail)
+    except Exception:
+        pass
+    events.reverse()
+
+    now = time.time()
+    audit_mtime = os.path.getmtime(audit_path) if os.path.exists(audit_path) else 0
+    status = 'live' if audit_mtime and (now - audit_mtime) < 600 else ('stale' if audit_mtime else 'offline')
+    open_count = len(positions)
+    max_pos = int(_safe_float(cfg.get('maxOpenPositions'), open_count or 0)) if cfg else open_count
+    active_margin = sum(_safe_float(p.get('margin')) for p in positions)
+    active_notional = sum(_safe_float(p.get('notionalUsd')) for p in positions)
+    win_rate_today = (winning_trades_today / closed_trades_today * 100.0) if closed_trades_today else 0.0
+    activity_line = 'Monitoring open positions' if open_count else 'Scanning for clean wave setup'
+    if last_guard: activity_line = 'Capacity full; guarding existing trades'
+    if counts.get('autoscalp_rate_limit_backoff'): activity_line = 'Pacifica cooldown; using cached trading state'
+    payload = {
+        'ok': True,
+        'status': status,
+        'mode': 'live' if cfg else 'unknown',
+        'updatedAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(audit_mtime or now)),
+        'privacy': 'sanitized public snapshot; no chat IDs, order IDs, keys, wallet addresses, or raw account data',
+        'config': {
+            'symbols': cfg.get('symbols') or [],
+            'scanSeconds': cfg.get('scanSeconds'),
+            'margin': cfg.get('margin'),
+            'leverage': cfg.get('leverage'),
+            'tpUsd': cfg.get('tpUsd'),
+            'slUsd': cfg.get('slUsd'),
+            'maxOpenPositions': max_pos,
+            'precision': {'enabled': cfg.get('precisionEnabled'), 'interval': cfg.get('precisionInterval'), 'lookback': cfg.get('precisionLookback')},
+            'risk': cfg.get('risk') or {},
+        },
+        'summary': {
+            'openPositions': open_count,
+            'maxOpenPositions': max_pos,
+            'capacityText': str(open_count) + '/' + str(max_pos),
+            'balanceUsd': balance_snapshot.get('balanceUsd'),
+            'availableBalanceUsd': balance_snapshot.get('availableBalanceUsd'),
+            'balanceCacheSource': balance_snapshot.get('cacheSource'),
+            'balanceUpdatedAt': balance_snapshot.get('updatedAt'),
+            'activeMarginUsd': round(active_margin, 4),
+            'activeNotionalUsd': round(active_notional, 4),
+            'dailyPnlUsd': round(realized_pnl_today, 4),
+            'totalRealizedPnlUsd': round(total_realized_pnl, 4),
+            'closedTradesToday': closed_trades_today,
+            'winningTradesToday': winning_trades_today,
+            'losingTradesToday': losing_trades_today,
+            'winRateTodayPct': round(win_rate_today, 2),
+            'autoClosedToday': auto_closed_today,
+            'activityLine': activity_line,
+            'lastScanAt': last_scan,
+            'lastSignalAt': last_signal,
+            'lastGuardAt': last_guard,
+            'recentCounts': counts,
+        },
+        'positions': positions,
+        'events': events,
+    }
+    return _json_resp(handler, payload)
+
 def _goldie_handle_public_proof_get(handler, path):
     if path in ('/api/knowledge','/api/kb_full'): return _json_resp(handler, _goldie_knowledge_payload())
     if path == '/api/personality_live': return _json_resp(handler, _goldie_personality_dynamic())
@@ -1121,6 +1369,8 @@ def _public_do_GET(self):
     proof_paths = {'/api/knowledge','/api/kb_full','/api/personality_live','/api/backstage','/api/contributions','/api/self_patches','/about','/backstage','/knowledge','/contributions','/self-patches'}
     if normalized_p in proof_paths:
         return _goldie_handle_public_proof_get(self, normalized_p)
+    if normalized_p == '/api/trading':
+        return _trading_public_snapshot(self)
     if normalized_p == '/api/cli/download':
         return _serve_cli_download(self)
     if normalized_p.startswith('/preview/'):
