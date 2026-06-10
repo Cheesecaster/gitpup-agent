@@ -28,12 +28,18 @@ def save(p):
             f.flush()
             os.fsync(f.fileno())
         os.replace(tmp, PFILE)
+        dirpath = os.path.dirname(PFILE) or '.'
+        dirfd = os.open(dirpath, os.O_DIRECTORY)
+        try:
+            os.fsync(dirfd)
+        finally:
+            os.close(dirfd)
     except Exception:
         try:
             if os.path.exists(tmp):
                 os.remove(tmp)
         except OSError:
-            pass
+            _cleanup_failed = True
         raise
 
 def default():
