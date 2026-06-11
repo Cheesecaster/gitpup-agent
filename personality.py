@@ -20,15 +20,27 @@ def load():
     return p
 
 def save(p):
-    os.makedirs(os.path.dirname(PFILE), exist_ok=True)
-    tmp = PFILE + '.tmp'
+    import tempfile
+
+    dirpath = os.path.dirname(PFILE) or '.'
+    os.makedirs(dirpath, exist_ok=True)
+
+    tmp = None
     try:
-        with open(tmp, 'w', encoding='utf-8') as f:
+        fd, tmp = tempfile.mkstemp(
+            prefix=os.path.basename(PFILE) + '.',
+            suffix='.tmp',
+            dir=dirpath,
+            text=True
+        )
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
             json.dump(p, f, indent=2, ensure_ascii=False)
             f.flush()
             os.fsync(f.fileno())
+
         os.replace(tmp, PFILE)
-        dirpath = os.path.dirname(PFILE) or '.'
+        tmp = None
+
         dirfd = os.open(dirpath, os.O_DIRECTORY)
         try:
             os.fsync(dirfd)
@@ -36,7 +48,7 @@ def save(p):
             os.close(dirfd)
     except Exception:
         try:
-            if os.path.exists(tmp):
+            if tmp and os.path.exists(tmp):
                 os.remove(tmp)
         except OSError:
             _cleanup_failed = True
