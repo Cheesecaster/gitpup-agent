@@ -97,6 +97,16 @@ def load_json(path, default=None):
         return default
 
 def load_jsonl(path):
+    global _cached_jsonl
+
+    try:
+        _cached_jsonl
+    except NameError:
+        _cached_jsonl = {}
+
+    if path in _cached_jsonl:
+        return _cached_jsonl[path]
+
     entries = []
     try:
         with open(path, encoding='utf-8') as f:
@@ -113,6 +123,8 @@ def load_jsonl(path):
         raise ValueError(f"Malformed JSON in file {path}: {e}")
     except Exception as e:
         raise RuntimeError(f"Failed to load JSONL file {path}: {e}")
+
+    _cached_jsonl[path] = entries
     return entries
 
 def _json_resp(handler, data, status=200):
