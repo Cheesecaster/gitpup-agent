@@ -7,15 +7,34 @@ PFILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'person
 MLOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'journal', 'personality_growth.jsonl')
 
 def load():
+    def merge_defaults(defaults, loaded):
+        if not isinstance(defaults, dict):
+            return loaded if loaded is not None else defaults
+        merged = dict(defaults)
+        if isinstance(loaded, dict):
+            for k, v in loaded.items():
+                if k in merged and isinstance(merged[k], dict) and isinstance(v, dict):
+                    merged[k] = merge_defaults(merged[k], v)
+                elif v is not None:
+                    merged[k] = v
+        return merged
+
+    p = None
     if os.path.exists(PFILE):
         try:
             with open(PFILE, encoding='utf-8') as f:
                 p = json.load(f)
-            if isinstance(p, dict) and p:
-                return p
+            if not isinstance(p, dict):
+                p = None
         except Exception:
             p = None
-    p = default()
+
+    defaults = default()
+    if isinstance(defaults, dict):
+        p = merge_defaults(defaults, p if isinstance(p, dict) else {})
+    elif p is None:
+        p = defaults
+
     save(p)
     return p
 
