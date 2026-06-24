@@ -209,6 +209,30 @@ def log(msg):
 
 def journal(icon, title, body="", etype="evolve"):
     try:
+        if body is None:
+            return None
+
+        if isinstance(body, str):
+            body_check = body.strip()
+        else:
+            try:
+                body_check = json.dumps(body, ensure_ascii=False).strip()
+            except Exception:
+                body_check = str(body).strip()
+
+        if not body_check or body_check in ("{}", "[]"):
+            return None
+
+        lowered = body_check.lower()
+        provider_error_markers = (
+            "provider-error",
+            "provider_error",
+            "provider error",
+            "providererror",
+        )
+        if any(marker in lowered for marker in provider_error_markers):
+            return None
+
         os.makedirs(os.path.dirname(JF), exist_ok=True)
         entry = {"ts": datetime.now(WIB).strftime("%Y-%m-%d %H:%M:%S"),
                  "t": datetime.now(WIB).strftime("%H:%M"),
@@ -217,7 +241,7 @@ def journal(icon, title, body="", etype="evolve"):
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
         save()
     except Exception:
-        pass
+        return None
 
 def set_state(s, action=None):
     import json
