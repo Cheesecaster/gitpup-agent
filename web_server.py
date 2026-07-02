@@ -549,7 +549,11 @@ def _image_rate_ok(handler, user_key='anonymous', limit=1, window=300):
     import time, threading
     lock = globals().setdefault('_IMAGE_RATE_LOCK', threading.Lock())
     ip = _client_ip(handler)
-    safe_user = ''.join(ch for ch in str(user_key or 'anonymous') if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    raw_user = str(user_key or 'anonymous')
+    safe_user = ''.join(ch for ch in raw_user if ch.isalnum() or ch in ('_', '-', ':'))[:80] or 'anonymous'
+    if safe_user == 'anonymous' and raw_user == 'anonymous':
+        safe_ip = ''.join(ch if (ch.isalnum() or ch in ('_', '-', ':')) else '_' for ch in str(ip or 'unknown'))[:80] or 'unknown'
+        safe_user = ('anonymous:' + safe_ip)[:80] or 'anonymous'
     keys = ['ip:' + ip, 'user:' + safe_user]
     now = time.time()
     with lock:
