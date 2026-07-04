@@ -128,10 +128,31 @@ def load_jsonl(path):
     return entries
 
 def _json_resp(handler, data, status=200):
+    try:
+        body = json.dumps(data, ensure_ascii=False, default=str).encode()
+    except Exception as exc:
+        if status < 400:
+            status = 500
+        try:
+            body = json.dumps(
+                {
+                    "error": "Failed to serialize JSON response",
+                    "detail": str(exc),
+                },
+                ensure_ascii=False,
+                default=str,
+            ).encode()
+        except Exception:
+            body = b'{"error":"Failed to serialize JSON response"}'
+
     handler.send_response(status)
     handler.send_header('Content-Type', 'application/json')
+    handler.send_header('Access-Control-Allow-Origin', '*')
+    handler.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+    handler.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    handler.send_header('Content-Length', str(len(body)))
     handler.end_headers()
-    handler.wfile.write(json.dumps(data, ensure_ascii=False, default=str).encode())
+    handler.wfile.write(body)
 
 class H(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
